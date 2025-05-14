@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,7 +21,7 @@
                 android:text="Bill Type"
                 android:textSize="20dp"
                 android:textStyle="bold"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:padding="10dp"
                 android:drawableTint="@android:color/white"
                 android:drawablePadding="12dp"
@@ -47,53 +48,66 @@
             android:layout_height="1dp"
             android:background="#bfbdbd" />
 
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:background="@drawable/editbackground"
-            android:layout_marginLeft="0dp"
-            android:id="@+id/radiopaymentgroup"
-            android:orientation="horizontal"
-            android:layout_below="@id/View1"
-            android:gravity="center">
-            <RadioButton android:id="@+id/conform_radio_cash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:checked="true"
-                android:focusable="true"
-                android:textColor="@android:color/black"
-                android:text="Cash"/>
-            <RadioButton android:id="@+id/conform_radio_credit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="@android:color/black"
-                android:layout_marginLeft="5dp"
-                android:text="Credit"/>
-        </RadioGroup>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/LLSalesType"
-            android:id="@+id/LL4"
-            android:gravity="right"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="0dp">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="Conform"
-                android:id="@+id/btnconformbillType"
-                android:textColor="@android:color/white"
-                android:textSize="16dp"
-                android:textAllCaps="false"
-                android:padding="6dp"
-                android:background="@color/colorPrimary"/>
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:background="@drawable/editbackground">
+
+            <RadioGroup
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:padding="3dp"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/radiopaymentgroup"
+                android:orientation="horizontal"
+                android:layout_below="@id/View1"
+                android:gravity="left|center"
+                android:layout_weight="0.6">
+
+                <RadioButton android:id="@+id/conform_radio_cash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:checked="true"
+                    android:focusable="true"
+                    android:textColor="@android:color/black"
+                    android:text="Cash" />
+                <RadioButton android:id="@+id/conform_radio_credit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginLeft="6dp"
+                    android:text="Credit"/>
+            </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/LLSalesType"
+                android:id="@+id/LL4"
+                android:gravity="right"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="0.4">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Confirm"
+                    android:id="@+id/btnconformbillType"
+                    android:textColor="@android:color/white"
+                    android:textSize="16dp"
+                    android:textAllCaps="false"
+                    android:padding="6dp"
+                    android:background="@color/colorPrimary"/>
+            </LinearLayout>
+
         </LinearLayout>
+
+
     </LinearLayout>
 
 </RelativeLayout>

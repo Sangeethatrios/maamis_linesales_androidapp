@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+
+    android:background="@drawable/bg_rectangle"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/llay"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Items"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:drawablePadding="12dp"
+            android:textColor="@android:color/white"
+            android:layout_weight="0.9"
+            android:id="@+id/tt1"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/order_close"
+            android:padding="5dp"
+            android:src="@drawable/ic_close"
+            android:layout_gravity="center"
+            android:tint="@color/white"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0.1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/darkgrey"
+        android:id="@+id/LLHeader"
+        android:visibility="visible">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/transheader"
+            android:weightSum="1">
+            <TextView android:id="@+id/header1"
+                android:text="Item name"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@color/white"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:textSize="12dp"
+                android:textStyle="bold"
+                android:layout_weight="0.40"
+
+                />
+            <TextView android:id="@+id/header2"
+                android:text="Rate"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@color/white"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:textSize="12dp"
+                android:textStyle="bold"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:layout_weight="0.20"
+
+                />
+            <TextView android:id="@+id/header3"
+                android:text="Qty"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@color/white"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:textSize="12dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:layout_weight="0.20"
+                android:textStyle="bold"
+
+                />
+            <TextView android:id="@+id/header4"
+                android:text="Amount"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@color/white"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:textSize="12dp"
+
+                android:layout_weight="0.20"
+                android:textStyle="bold"
+
+                />
+
+
+
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+    <ListView
+        android:id="@+id/listordereditems"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/graycolor"
+        android:dividerHeight="1dip"></ListView>
+</LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/LL18"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/LL17"
+        android:layout_margin="5dp"
+        android:gravity="right">
+
+        <Button
+            android:id="@+id/btnSaveItems"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:text="OK"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</LinearLayout>

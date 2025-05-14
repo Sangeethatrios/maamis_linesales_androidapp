@@ -11,6 +11,7 @@
         android:orientation="vertical"
         android:weightSum="1">
         <TextView
+            android:id="@+id/popup_salesclose_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Previous Schedule"

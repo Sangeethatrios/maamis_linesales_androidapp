@@ -12,7 +12,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimaryDark"
-        android:layout_below="@+id/MainLL"
         android:id="@+id/HeadingLL"
         android:layout_marginRight="5dp"
         android:layout_marginLeft="5dp"

@@ -1,215 +1,284 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="thanjavurvansales.sss">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="34" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:maxSdkVersion="28"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="30"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"/>
+    <uses-permission android:name="android.permission.MANAGE_MEDIA"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
+    <uses-permission android:name="ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.MANAGE_DEVICE_POLICY_RUNTIME_PERMISSIONS"/>
 
     <application
-        android:name=".App"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_vanlauncher"
+        android:name="trios.linesales.App"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_van"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_vanlauncher"
+        android:roundIcon="@mipmap/ic_van_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:icon"
-        android:requestLegacyExternalStorage="true">
+        tools:replace="android:icon,android:allowBackup"
+        android:requestLegacyExternalStorage="true"
+        android:resizeableActivity="false"
+        android:debuggable="false"
+        tools:ignore="HardcodedDebugMode"
+        android:preserveLegacyExternalStorage="true">
         <activity
-            android:name=".PrinterSettingsActivity"
+            android:name="trios.linesales.PrinterSettingsActivity"
             android:label="@string/title_activity_printer_Settings"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SettingsActivity"
+            android:name="trios.linesales.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SyncActivity"
+            android:name="trios.linesales.SyncActivity"
             android:label="@string/title_activity_sync"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SalesOrderItemWiseActivity"
+            android:name="trios.linesales.SalesOrderItemWiseActivity"
             android:label="@string/title_activity_sales_order_item_wise"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SalesOrderBillwiseReportActivity"
+            android:name="trios.linesales.SalesOrderBillwiseReportActivity"
             android:label="@string/title_activity_sales_order_billwise_report"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SalesOrderViewActivity"
+            android:name="trios.linesales.SalesOrderViewActivity"
             android:label="@string/title_activity_sales_order_view"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SalesOrderListActivity"
+            android:name="trios.linesales.SalesOrderListActivity"
             android:label="@string/title_activity_sales_order_list"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SalesOrderCartActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".SalesOrderActivity"
+            android:name="trios.linesales.SalesOrderCartActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:exported="false" />
         <activity
-            android:name=".ReviewCashNotpaidDetails"
+            android:name="trios.linesales.SalesOrderActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
+        <activity
+            android:name="trios.linesales.ReviewCashNotpaidDetails"
             android:label="@string/title_activity_review_cash_notpaid_details"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SalesReturnBillwiseReportActivity"
+            android:name="trios.linesales.SalesReturnBillwiseReportActivity"
             android:label="@string/title_activity_sales_return_billwise_report"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".CashSummaryActivity"
+            android:name="trios.linesales.CashSummaryActivity"
             android:label="@string/title_activity_cash_summary"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SalesViewActivity"
+            android:name="trios.linesales.SalesViewActivity"
             android:label="@string/title_activity_sales_view"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SalesReturnViewActivity"
+            android:name="trios.linesales.SalesReturnViewActivity"
             android:label="@string/title_activity_sales_return_view"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SalesReturnItemWiseReportActivity"
+            android:name="trios.linesales.SalesReturnItemWiseReportActivity"
             android:label="@string/title_activity_sales_return_item_wise_report"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".OrderFormCartActivity"
+            android:name="trios.linesales.OrderFormCartActivity"
             android:label="@string/title_activity_order_form_cart"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".ReturnReviewActivity"
+            android:name="trios.linesales.ReturnReviewActivity"
             android:label="@string/title_activity_return_review"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SalesReturnActivity"
+            android:name="trios.linesales.SalesReturnActivity"
             android:label="@string/title_activity_sales_return"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
         <activity
-            android:name=".OrderFormActivity"
+            android:name="trios.linesales.OrderFormActivity"
             android:label="@string/title_activity_stock_order"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
         <activity
-            android:name=".PriceListActivity"
+            android:name="trios.linesales.PriceListActivity"
             android:label="@string/title_activity_price_list"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".MyScheduleActivity"
+            android:name="trios.linesales.MyScheduleActivity"
             android:label="@string/title_activity_my_schedule"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SalesReturnListActivity"
+            android:name="trios.linesales.SalesReturnListActivity"
             android:label="@string/title_activity_sales_return"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SalesBillWiseReportActivity"
+            android:name="trios.linesales.SalesBillWiseReportActivity"
             android:label="@string/title_activity_sales_bill_wise_report"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".CustomerActivity"
+            android:name="trios.linesales.CustomerActivity"
             android:label="@string/title_activity_customer"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".ExpenseReportActivity"
+            android:name="trios.linesales.ExpenseReportActivity"
             android:label="@string/title_activity_expense_report"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".CashReportActivity"
+            android:name="trios.linesales.CashReportActivity"
             android:label="@string/title_activity_van_stock"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
         <activity
-            android:name=".VanStockActivity"
+            android:name="trios.linesales.VanStockActivity"
             android:label="@string/title_activity_van_stock"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SalesItemWiseReportActivity"
+            android:name="trios.linesales.SalesItemWiseReportActivity"
             android:label="@string/title_activity_expenses"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".ReceiptActivity"
+            android:name="trios.linesales.ReceiptActivity"
             android:label="@string/title_activity_expenses"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".ExpensesActivity"
+            android:name="trios.linesales.ExpensesActivity"
             android:label="@string/title_activity_expenses"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".ReviewActivity"
+            android:name="trios.linesales.ReviewActivity"
             android:label="@string/title_activity_review"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
         <activity
-            android:name=".SalesListActivity"
+            android:name="trios.linesales.SalesListActivity"
             android:label="@string/title_activity_sales_list"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
         <activity
-            android:name=".MenuActivity"
+            android:name="trios.linesales.MenuActivity"
             android:label="@string/title_activity_menu"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".ScheduleActivity"
+            android:name="trios.linesales.ScheduleActivity"
             android:label="@string/title_activity_schedule"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name="trios.linesales.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -217,26 +286,29 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activation"
+            android:name="trios.linesales.Activation"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
         <activity
-            android:name=".SalesActivity"
+            android:name="trios.linesales.SalesActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
         <activity
-            android:name=".AdditionalStockReceiptActivity"
+            android:name="trios.linesales.AdditionalStockReceiptActivity"
             android:label="@string/title_activity_addtional_stock_receipt"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}"
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="androidx.multidex"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

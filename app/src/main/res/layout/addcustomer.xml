@@ -463,6 +463,19 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
+                    android:text="Update Location"
+                    android:id="@+id/btnUpdateCustomerLocation"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:textAllCaps="false"
+                    android:padding="6dp"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginRight="8dp"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
                     android:text="Save"
                     android:id="@+id/btnSaveCustomer"
                     android:textColor="@android:color/white"

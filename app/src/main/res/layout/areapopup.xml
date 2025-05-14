@@ -37,14 +37,112 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#bfbdbd" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/llay"
+        android:id="@+id/LLTab"
 
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="0.5"
+            android:background="@color/colorPrimaryDark"
+            android:id="@+id/ScheduleTab">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Schedule Route"
+                android:textSize="16dp"
+                android:textStyle="normal"
+                android:padding="6dp"
+
+                android:textColor="@android:color/white"
+
+                android:id="@+id/ScheduleRouteTxt"/>
+        </LinearLayout>
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+
+            android:background="@color/gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:id="@+id/OtherTab"
+            android:gravity="center"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Other Routes"
+                android:textSize="16dp"
+                android:textStyle="normal"
+                android:padding="6dp"
+
+                android:textColor="@android:color/black"
+                android:id="@+id/OtherRouteTxt"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/OtherRoutesDrp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:orientation="vertical"
+        android:layout_below="@id/LLTab"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtroutes"
+            android:background="@drawable/editbackground"
+            android:hint="Route"
+            android:layout_marginTop="6dp"
+            android:textColorHint="@color/graycolor"
+            android:inputType="text"
+            android:gravity="center|left"
+            android:padding="7dp"
+            android:layout_weight="0.52"
+            android:textColor="@android:color/black"
+            android:drawablePadding="10dp"
+            android:drawableRight="@drawable/ic_keyboard_arrow_down"
+            android:textSize="12dp"/>
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/txtAreas"-->
+<!--            android:background="@drawable/editbackground"-->
+<!--            android:hint="Area"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:textColorHint="@color/graycolor"-->
+<!--            android:inputType="text"-->
+<!--            android:gravity="center|left"-->
+<!--            android:padding="7dp"-->
+<!--            android:layout_weight="0.52"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:drawablePadding="10dp"-->
+<!--            android:drawableRight="@drawable/ic_keyboard_arrow_down"-->
+<!--            android:textSize="12dp"/>-->
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginTop="8dp"
         android:layout_marginRight="10dp"
-        android:layout_below="@+id/View1"
+        android:layout_below="@+id/OtherRoutesDrp"
         android:id="@+id/LL1"
         android:weightSum="1">
 

@@ -41,6 +41,7 @@
                 android:paddingTop="10dp"/>
 
             <TextView
+                android:id="@+id/tvheading"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.9"
@@ -108,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:text="Note: Please wait until the printer connectivity."
+                android:text="Note: Please wait until the printer is connected."
                 android:id="@+id/printprogressBar"
                 android:layout_gravity="left"
                 android:padding="10dp"

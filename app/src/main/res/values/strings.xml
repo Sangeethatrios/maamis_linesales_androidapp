@@ -68,4 +68,17 @@
     <string name="title_activity_sync">SyncActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="mobilestatus">Mobile status</string>
+    <string name="cus_menu_order">Convert order to sales</string>
+    <string name="cus_menu_transactions">Transaction history</string>
+    <string name="cus_menu_nosales">Not purchased</string>
+    <string name="toast_already_cus_in_not_purchase">Already you marked this customer as not purchased</string>
+    <string name="remarks_warning">Please select the remarks</string>
+    <string name="GPSAlertDialogTitle">Warning</string>
+    <string name="GPSAlertDialogMessage">NetWork or GPS not working</string>
+    <string name="savedSuccessfully">Saved Successfully</string>
+    <string name="notSavedSuccessfully">Not saved. Please try again</string>
+    <string name="previous_schedule_close_popup_title">Previous Schedule</string>
+    <string name="billSaved_wantPrint">Bill saved, Do you want to print?</string>
+    <string name="orderSaved_wantPrint">Order saved, Do you want to print?</string>
+    <string name="unauthorizedDeviceID">Your device ID is not authorized. Please contact admin with this device ID %1$s</string>
 </resources>

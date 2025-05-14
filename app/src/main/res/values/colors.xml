@@ -36,5 +36,12 @@
     <color name="purple">#A020F0</color>
     <color name="lightyellow">#fff799</color>
     <color name="blue">#249ebd</color>
+    <color name="gray_color_dot">#585858</color>
+    <color name="colorPrimary1">#0081d6</color>
+    <color name="billedcustomer">#DCF4FB</color>
+    <color name="login_dial_paid_number_blue">#2F01CA</color>
+    <color name="disable_password">#161453</color>
+    <color name="payment_upi">#A31FC8</color>
+    <color name="payment_notpaid">#CA1919</color>
 
 </resources>

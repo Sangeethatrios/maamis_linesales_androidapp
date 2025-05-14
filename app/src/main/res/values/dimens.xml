@@ -46,4 +46,6 @@
     <dimen name="toolbarpadleft">10dp</dimen>
     <dimen name="toolbarpadright">10dp</dimen>
     <dimen name="toolbardrawablepad">5dp</dimen>
+    <dimen name="ordertosalesbuttontxtsize">13dp</dimen>
+    <dimen name="ordertosalestxtsize">14dp</dimen>
 </resources>

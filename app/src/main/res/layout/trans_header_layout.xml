@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/gray"
+
+    >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/darkgrey"
+        android:id="@+id/LLHeader"
+        android:visibility="visible">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/transheader"
+            android:weightSum="1">
+            <TextView android:id="@+id/header1"
+                android:text="Item name"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@color/white"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:textSize="@dimen/ordertosalestxtsize"
+                android:textStyle="bold"
+                android:layout_weight="0.40"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                />
+            <TextView android:id="@+id/header2"
+                android:text="Rate"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@color/white"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:textSize="@dimen/ordertosalestxtsize"
+                android:textStyle="bold"
+                android:layout_weight="0.20"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+
+                />
+            <TextView android:id="@+id/header3"
+                android:text="Qty"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@color/white"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:textSize="@dimen/ordertosalestxtsize"
+
+                android:layout_weight="0.20"
+                android:textStyle="bold"
+
+                />
+            <TextView android:id="@+id/header4"
+                android:text="Amount"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@color/white"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:textSize="@dimen/ordertosalestxtsize"
+
+                android:layout_weight="0.20"
+                android:textStyle="bold"
+
+                />
+
+
+
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
+
+
+
+    <!--</ScrollView>-->
+</LinearLayout>

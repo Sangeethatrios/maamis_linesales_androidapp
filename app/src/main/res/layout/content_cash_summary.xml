@@ -7,28 +7,27 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".CashSummaryActivity"
     tools:showIn="@layout/activity_cash_summary"
-    android:background="@drawable/bgimg">
+    android:background="@drawable/bgimg_old">
 
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="70dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/mainLL"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:layout_above="@+id/LL_total">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                android:id="@+id/cashLL"
-                android:weightSum="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:id="@+id/cashLL"
+            android:background="@drawable/editbackground"
+            android:elevation="10dp"
+            android:weightSum="1">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -51,87 +50,129 @@
                 android:textSize="15sp"
                 android:gravity="right"/>
         </LinearLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@drawable/txtbgliine"/>
+
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
             android:id="@+id/LVCashSummary"
             android:divider="@null"
-            android:background="@color/white">
+            android:background="@color/white"/>
 
-        </ListView>
+    </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                android:weightSum="1">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.1"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.4"
-                    android:text="@string/netcash"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:id="@+id/txtnetcash"
-                    android:gravity="left"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="0.00"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:id="@+id/txtnetcashamt"
-                    android:gravity="right"/>
-            </LinearLayout>
+    <LinearLayout
+        android:id="@+id/LL_total"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/editbackground"
+        android:elevation="10dp"
+        android:layout_above="@+id/LL33">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                android:weightSum="1">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.1"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.4"
-                    android:text="Expense: "
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:gravity="right"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="0.00"
-                    android:id="@+id/txtexpenseamt"
-                    android:textColor="@color/red"
-                    android:textSize="15sp"
-                    android:gravity="right"/>
-            </LinearLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/txtbgliine"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp"
+            android:padding="8dp"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text="@string/netcash"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:id="@+id/txtnetcash"
+                android:gravity="left"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="0.00"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:id="@+id/txtnetcashamt"
+                android:gravity="right"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text="Expense: "
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:gravity="right"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="0.00"
+                android:id="@+id/txtexpenseamt"
+                android:textColor="@color/red"
+                android:textSize="15sp"
+                android:gravity="right"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text="UPI Payment: "
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:gravity="right"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="0.00"
+                android:id="@+id/txttotalupiamt"
+                android:textColor="@color/red"
+                android:textSize="15sp"
+                android:gravity="right"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/txtbgliine"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
             android:layout_marginBottom="10dp"
             android:weightSum="1">
             <TextView
@@ -159,9 +200,8 @@
                 android:gravity="right"/>
         </LinearLayout>
 
-
     </LinearLayout>
-    </ScrollView>
+
     <LinearLayout
         android:id="@+id/LL33"
         android:layout_width="match_parent"
@@ -171,5 +211,6 @@
         android:background="@color/colorPrimary"
         android:orientation="horizontal"
         android:weightSum="1">
+
     </LinearLayout>
 </RelativeLayout>

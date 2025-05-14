@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/cusMenuOrder"
+        android:title="@string/cus_menu_order"> </item>
+    <item android:id="@+id/cusMenuTransactions"
+        android:title="@string/cus_menu_transactions"> </item>
+    <item android:id="@+id/cusMenuNotPurchase"
+        android:title="@string/cus_menu_nosales"> </item>
+</menu>

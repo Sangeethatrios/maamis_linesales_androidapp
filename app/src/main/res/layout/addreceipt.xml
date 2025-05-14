@@ -62,36 +62,36 @@
             android:id="@+id/LvLinear"
             android:layout_height="match_parent"
             android:orientation="vertical">
-           <!-- <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@color/colorPrimaryDark"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:padding="1dp"
-                android:weightSum="1">
-                <TextView
-                    android:id="@+id/txtreceiptdate"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_date_range"
-                    android:drawablePadding="5dp"
-                    android:gravity="center"
-                    android:text="26-04-2019"
-                    android:layout_weight="0.55"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
-               &lt;!&ndash; <TextView
-                    android:id="@+id/txtreceiptnum"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="# VA0001"
-                    android:layout_weight="0.45"
-                    android:gravity="right"
-                    android:textSize="14sp"
-                    android:textColor="@color/white" />&ndash;&gt;
-            </LinearLayout>-->
+            <!-- <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:orientation="horizontal"
+                 android:background="@color/colorPrimaryDark"
+                 android:layout_marginLeft="10dp"
+                 android:layout_marginRight="10dp"
+                 android:padding="1dp"
+                 android:weightSum="1">
+                 <TextView
+                     android:id="@+id/txtreceiptdate"
+                     android:layout_width="0dp"
+                     android:layout_height="wrap_content"
+                     android:drawableLeft="@drawable/ic_date_range"
+                     android:drawablePadding="5dp"
+                     android:gravity="center"
+                     android:text="26-04-2019"
+                     android:layout_weight="0.55"
+                     android:textColor="@android:color/white"
+                     android:textSize="14sp" />
+                &lt;!&ndash; <TextView
+                     android:id="@+id/txtreceiptnum"
+                     android:layout_width="0dp"
+                     android:layout_height="wrap_content"
+                     android:text="# VA0001"
+                     android:layout_weight="0.45"
+                     android:gravity="right"
+                     android:textSize="14sp"
+                     android:textColor="@color/white" />&ndash;&gt;
+             </LinearLayout>-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -265,14 +265,13 @@
                 android:orientation="horizontal"
                 android:gravity="left"
                 android:layout_marginTop="8dp"
-                android:weightSum="1"
+
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:id="@+id/LL12">
                 <RadioGroup
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.55"
                     android:paddingTop="3dp"
                     android:paddingBottom="3dp"
                     android:background="@drawable/editbackground"
@@ -285,22 +284,109 @@
                         android:textSize="12sp"
                         android:checked="true"
                         android:focusable="true"
+                        android:paddingRight="3dp"
                         android:textColor="@android:color/black"
                         android:text="Cash"/>
                     <RadioButton android:id="@+id/radio_cheque"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
+                        android:paddingLeft="3dp"
+                        android:paddingRight="3dp"
                         android:textColor="@android:color/black"
                         android:layout_marginLeft="2dp"
                         android:text="Cheque"/>
+
+                    <RadioButton
+                        android:id="@+id/radio_upi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:text="UPI"
+                        android:paddingLeft="3dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="12sp" />
                 </RadioGroup>
 
-                <EditText
-                    android:layout_width="0dp"
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/LLUPIDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.45"
-                    android:layout_marginLeft="5dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/LLUPIImage">
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="match_parent"
+                        android:background="@drawable/editbackground"
+
+                        android:layout_height="250dp"
+                        android:padding="10dp"
+                        android:layout_gravity="center"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:weightSum="1"
+                    android:id="@+id/LLUPIVender">
+
+                    <RelativeLayout
+                        android:id="@+id/RLUPIVender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/txtupivendername"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/editbackground"
+                            android:drawableRight="@drawable/ic_keyboard_arrow_down"
+                            android:drawablePadding="10dp"
+                            android:gravity="center|left"
+                            android:hint="Payment Type"
+                            android:inputType="text"
+                            android:padding="8dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/graycolor"
+                            android:textSize="14sp" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="left"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/LL13">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text=""
                     android:hint="Amount"
                     android:textColorHint="@color/graycolor"
@@ -318,92 +404,142 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/LL2UPIDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="8dp"
-                android:weightSum="1"
-                android:id="@+id/LL17">
-                <EditText
-                    android:layout_width="0dp"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/edittxtchequerefno"
-                    android:background="@drawable/editbackground"
-                    android:hint="Cheque No."
-                    android:textColorHint="@color/graycolor"
-                    android:inputType="text"
-                    android:visibility="gone"
-                    android:maxLength="6"
-                    android:textColor="@color/black"
-                    android:drawablePadding="10dp"
-                    android:padding="10dp"
-                    android:textSize="14sp"/>
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="10dp"
+                    android:weightSum="1"
+                    android:id="@+id/LLUPITransactionID">
+
+                    <RelativeLayout
+                        android:id="@+id/RLUPITransactionID"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/txtupitransactionID"
+                            android:background="@drawable/editbackground"
+                            android:hint="Transaction ID"
+                            android:textColorHint="@color/graycolor"
+                            android:inputType="text"
+                            android:gravity="center|left"
+                            android:padding="10dp"
+                            android:cursorVisible="false"
+                            android:textColor="@color/black"
+                            android:maxLength="200"
+                            android:textSize="14sp"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
             </LinearLayout>
+
             <LinearLayout
+                android:id="@+id/LLChequeDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="8dp"
-                android:weightSum="1"
-                android:id="@+id/LL18">
-                <EditText
-                    android:layout_width="0dp"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/edittxtchequebankname"
-                    android:background="@drawable/editbackground"
-                    android:hint="Bank Name"
-                    android:textColorHint="@color/graycolor"
-                    android:inputType="text"
-                    android:visibility="gone"
-                    android:textColor="@color/black"
-                    android:drawablePadding="10dp"
-                    android:padding="10dp"
-                    android:textSize="14sp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="8dp"
-                android:weightSum="1"
-                android:id="@+id/LL19">
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:layout_marginLeft="5dp"-->
-<!--                    android:drawableLeft="@drawable/ic_date_range_black"-->
-<!--                    android:drawablePadding="5dp"-->
-<!--                    android:text="16-03-2019"-->
-<!--                    android:padding="5dp"-->
-<!--                    android:gravity="left|center"-->
-<!--                    android:id="@+id/txtvanstockdate"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:textSize="14sp" />-->
-                <TextView
-                    android:layout_width="0dp"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="8dp"
+                    android:weightSum="1"
+                    android:id="@+id/LL17">
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/edittxtchequerefno"
+                        android:background="@drawable/editbackground"
+                        android:hint="Cheque No."
+                        android:textColorHint="@color/graycolor"
+                        android:inputType="text"
+                        android:visibility="gone"
+                        android:maxLength="6"
+                        android:textColor="@color/black"
+                        android:drawablePadding="10dp"
+                        android:padding="10dp"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/edittxtchequedate"
-                    android:background="@drawable/editbackground"
-                    android:drawableLeft="@drawable/ic_date_range_black"
-                    android:hint="Cheque Date"
-                    android:textColorHint="@color/graycolor"
-                    android:inputType="text"
-                    android:visibility="gone"
-                    android:textColor="@color/black"
-                    android:drawablePadding="10dp"
-                    android:padding="10dp"
-                    android:textSize="14sp"/>
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="8dp"
+                    android:weightSum="1"
+                    android:id="@+id/LL18">
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/edittxtchequebankname"
+                        android:background="@drawable/editbackground"
+                        android:hint="Bank Name"
+                        android:textColorHint="@color/graycolor"
+                        android:inputType="text"
+                        android:visibility="gone"
+                        android:textColor="@color/black"
+                        android:drawablePadding="10dp"
+                        android:padding="10dp"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="8dp"
+                    android:weightSum="1"
+                    android:id="@+id/LL19">
+                    <!--                <TextView-->
+                    <!--                    android:layout_width="0dp"-->
+                    <!--                    android:layout_height="wrap_content"-->
+                    <!--                    android:layout_weight="1"-->
+                    <!--                    android:layout_marginLeft="5dp"-->
+                    <!--                    android:drawableLeft="@drawable/ic_date_range_black"-->
+                    <!--                    android:drawablePadding="5dp"-->
+                    <!--                    android:text="16-03-2019"-->
+                    <!--                    android:padding="5dp"-->
+                    <!--                    android:gravity="left|center"-->
+                    <!--                    android:id="@+id/txtvanstockdate"-->
+                    <!--                    android:textColor="@color/black"-->
+                    <!--                    android:textSize="14sp" />-->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/edittxtchequedate"
+                        android:background="@drawable/editbackground"
+                        android:drawableLeft="@drawable/ic_date_range_black"
+                        android:hint="Cheque Date"
+                        android:textColorHint="@color/graycolor"
+                        android:inputType="text"
+                        android:visibility="gone"
+                        android:textColor="@color/black"
+                        android:drawablePadding="10dp"
+                        android:padding="10dp"
+                        android:textSize="14sp"/>
+                </LinearLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
