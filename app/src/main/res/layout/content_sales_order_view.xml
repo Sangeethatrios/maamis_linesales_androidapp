@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".SalesOrderViewActivity"
+    tools:showIn="@layout/activity_sales_order_view">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.325"
+                android:text="B.No. : 1"
+                android:gravity="center"
+                android:visibility="gone"
+                android:id="@+id/txtviewbookingno"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:padding="3dp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.35"
+                android:text="Cash Invoice"
+                android:gravity="center"
+                android:id="@+id/viewpaymenttypeinvoice"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:padding="3dp"
+                android:visibility="gone"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.675"
+                android:gravity="center"
+                android:id="@+id/txtdummy"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:padding="3dp"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.325"
+                android:text="14-05-2019"
+                android:gravity="center"
+                android:drawableLeft="@drawable/ic_date_range"
+                android:id="@+id/txtviewreviewdate"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:padding="3dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.325"
+                android:text="NCO"
+                android:visibility="gone"
+                android:gravity="center"
+                android:id="@+id/txtviewshortname"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:padding="3dp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.675"
+                android:text="0.00"
+                android:gravity="right"
+                android:layout_marginRight="10dp"
+                android:id="@+id/txtviewtotamt"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:padding="3dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="0.55"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pandiyan Maligai Stores In Chennai"
+                    android:gravity="left"
+                    android:id="@+id/txtviewcustomername"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:padding="1dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Anna Nagar , Chennai"
+                    android:gravity="center"
+                    android:id="@+id/txtviewareacity"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:padding="1dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gstnLL"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="0.45"
+                android:gravity="left"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:id="@+id/txtbillno"
+                    android:padding="1dp"
+                    android:text="Bill No. : 10001"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/viewcartgstnnumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:background="@color/green"
+                    android:padding="1dp"
+                    android:text="33AADFN3829P1ZX"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:id="@+id/HeadingLL"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:padding="10dp"
+            android:weightSum="1">
+
+            <TextView android:id="@+id/item_head"
+                android:text="Item"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:layout_width="0dp"
+                android:layout_weight="0.45"
+                />
+
+            <TextView android:id="@+id/itemrate_head"
+                android:text="Rate"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:gravity="left"
+                android:layout_weight="0.15"
+                />
+            <TextView android:id="@+id/itemqty_head"
+                android:text="Qty"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:gravity="center"
+                android:layout_weight="0.16"
+                />
+            <TextView android:id="@+id/itemtotal_head"
+                android:text="Sub Total"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:gravity="center"
+                android:layout_weight="0.25"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/viewSalesListview"
+                android:layout_marginRight="5dp"
+                android:divider="@color/graycolor"
+                android:dividerHeight="1dip"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="100dp">
+            </ListView>
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/LL3"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:padding="5dp"
+        android:layout_below="@+id/LL4"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="vertical"
+        android:weightSum="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/TotalSubLinear"
+            android:orientation="horizontal"
+            android:gravity="right"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="Cancel"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:id="@+id/txtviewcancel"
+                android:drawableLeft="@drawable/ic_cancel_black"
+                android:drawableTint="@color/white"
+                android:background="@color/colorPrimary"
+                android:padding="10dp"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:gravity="center"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:visibility="gone"
+                android:id="@+id/txtviewcanceldummy"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:gravity="center"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:padding="3dp"
+                android:layout_marginLeft="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+                    <TextView android:layout_width="0dp"
+                        android:id="@+id/lblviewsubtotalamt"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:gravity="left"
+                        android:layout_gravity="right"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black"
+                        android:text="Total"/>
+                    <TextView android:layout_width="0dp"
+                        android:id="@+id/txtviewsubtotalamt"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:layout_weight="0.75"
+                        android:layout_gravity="right"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black"
+                        android:text="₹ 000.00"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:gravity="left"
+                        android:textSize="14sp"
+                        android:id="@+id/lblviewdiscountamt"
+                        android:textColor="@android:color/black"
+                        android:text="Discount "/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.75"
+                        android:gravity="right"
+                        android:layout_gravity="right"
+                        android:textSize="14sp"
+                        android:id="@+id/txtviewdiscountamt"
+                        android:textColor="@android:color/black"
+                        android:text="₹ 000.00"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/TotlaLinear"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="Print"
+                android:id="@+id/txtviewSalesprint"
+                android:drawableLeft="@drawable/ic_print"
+                android:drawableTint="@color/white"
+                android:background="@color/colorPrimary"
+                android:padding="10dp"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:gravity="center"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:visibility="gone"
+                android:id="@+id/txtviewSalesprintdummy"
+                android:textColor="@color/white"
+                android:gravity="center"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="0.7"
+                android:layout_marginLeft="5dp"
+                android:padding="10dp"
+                android:background="@color/white"
+                android:weightSum="1">
+                <TextView android:layout_width="0dp"
+                    android:layout_weight="0.25"
+                    android:id="@+id/lblviewcarttotalamt"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:text="Net "/>
+                <TextView android:layout_width="0dp"
+                    android:layout_weight="0.75"
+                    android:id="@+id/txtviewcarttotalamt"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:text="₹ 000.00"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

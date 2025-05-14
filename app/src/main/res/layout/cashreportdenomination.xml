@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollview">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/linear"
+            android:background="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:weightSum="1">
+            <TextView android:id="@+id/txtvalue"
+                android:text="\u20B9 0"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@android:color/white"
+                android:padding="5dp"
+                android:gravity="right"
+                android:textSize="14dp"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="0.25"
+                android:background="@color/orangecolor"
+                />
+            <TextView android:id="@+id/txtmultiply"
+                android:text="X"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@android:color/black"
+                android:padding="5dp"
+                android:layout_marginLeft="3dp"
+                android:gravity="center"
+                android:background="@android:color/white"
+                android:maxLength="8"
+                android:textSize="14dp"
+                android:layout_weight="0.1"
+
+                />
+            <!--  <EditText
+                  android:layout_height="wrap_content"
+                  android:layout_width="0dp"
+                  android:layout_weight="0.2"
+                  android:id="@+id/txtqty"
+                  android:inputType="number"/>-->
+            <EditText android:id="@+id/txtqty"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:gravity="right"
+                android:textColor="@android:color/black"
+                android:padding="5dp"
+                android:background="@drawable/editbackground"
+                android:layout_marginLeft="5dp"
+                android:inputType="number"
+                android:maxLength="8"
+                android:textSize="14dp"
+                android:layout_weight="0.2"
+                ></EditText>
+            <TextView android:id="@+id/txtequal"
+                android:text=" = "
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@android:color/black"
+                android:padding="5dp"
+                android:gravity="center"
+                android:maxLength="8"
+                android:textSize="14dp"
+                android:background="@android:color/white"
+                android:layout_weight="0.1"
+                />
+            <TextView android:id="@+id/txttotal"
+                android:text="0.00"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@android:color/black"
+                android:background="@color/graycolor"
+                android:padding="5dp"
+                android:gravity="right"
+                android:textSize="14dp"
+                android:layout_weight="0.34"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:id="@+id/txtgetvalue"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

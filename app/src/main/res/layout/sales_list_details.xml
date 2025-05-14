@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/salescard_view"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="1dp"
+        card_view:cardUseCompatPadding="true">
+        <LinearLayout
+            android:id="@+id/listLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="6dp"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/saleslistSno"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.07"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="@android:color/black"
+                android:textSize="12dp" />
+            <LinearLayout
+                android:id="@+id/listLLBill"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="0.24"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/saleslistbillno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.24"
+                    android:gravity="left"
+                    android:text="VANCA00001"
+                    android:textColor="@android:color/black"
+                    android:textSize="12dp" />
+                <TextView
+                    android:id="@+id/saleslistbookingno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.24"
+                    android:gravity="left"
+                    android:text="B.No. 0000000"
+                    android:textColor="@color/black"
+                    android:textSize="12dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.24">
+                    <TextView
+                        android:id="@+id/saleslistcompanyname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.24"
+                        android:gravity="left"
+                        android:text="NCO"
+                        android:textColor="@color/black"
+                        android:textSize="12dp" />
+                    <TextView
+                        android:id="@+id/saleslistbillcopyrequired"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.24"
+                        android:layout_marginLeft="5dp"
+                        android:background="@color/pink"
+                        android:gravity="left"
+                        android:visibility="gone"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="BCR"
+                        android:textColor="@color/white"
+                        android:textSize="12dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/listLL1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="0.36"
+                android:weightSum="1">
+                <TextView
+                    android:id="@+id/saleslistretailer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:gravity="left"
+                    android:text="Retailer list"
+                    android:textColor="@android:color/black"
+                    android:textSize="12dp" />
+                <TextView
+                    android:id="@+id/saleslistarea"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:gravity="left"
+                    android:text="Area list"
+                    android:textColor="@android:color/black"
+                    android:textSize="12dp" />
+                <TextView
+                    android:id="@+id/saleslistcity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:gravity="left"
+                    android:text="City list"
+                    android:textColor="@android:color/black"
+                    android:textSize="12dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.12"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/saleslistpaymenttype"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_weight="0.1"
+                    android:gravity="center"
+                    android:text="Cash"
+                    android:padding="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:textColor="@color/black"
+                    android:textSize="12dp" />
+                <TextView
+                    android:id="@+id/saleslisteinvoice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_weight="0.1"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:text="e-Inv"
+                    android:visibility="gone"
+                    android:background="#A020F0"
+                    android:textColor="@color/white"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/saleslistgstin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_weight="0.1"
+                    android:background="@color/green"
+                    android:padding="2dp"
+                    android:text="No GST"
+                    android:textColor="@color/white"
+                    android:textSize="10dp" />
+            </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/listLLamount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0.2"
+            android:weightSum="1">
+            <TextView
+                android:id="@+id/saleslisttotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.24"
+                android:layout_gravity="right"
+                android:text="10000.00"
+                android:textColor="@android:color/black"
+                android:textSize="12dp" />
+            <TextView
+                android:id="@+id/saleslistamounttype"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.24"
+                android:layout_gravity="right"
+                android:visibility="gone"
+                android:padding="2dp"
+                android:text="Not Paid"
+                android:background="@color/voilet"
+                android:textColor="@color/white"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

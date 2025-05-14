@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/llay"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Server Settings"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:drawableTint="@android:color/white"
+            android:drawablePadding="12dp"
+            android:textColor="@android:color/white"
+            android:layout_weight="0.5"
+            android:id="@+id/tt1"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/closepopup"
+            android:padding="5dp"
+            android:src="@drawable/ic_close"
+            android:layout_gravity="center"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0.1"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/View1"
+        android:layout_below="@+id/llay"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#bfbdbd" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/View1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/LLbillcopy"
+            android:weightSum="1"
+            android:id="@+id/LL14">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.52"
+                    android:textSize="14sp"
+                    android:text="URL Name"
+                    android:textColor="@color/black"
+                    android:padding="5dp"/>
+                <!--<TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.38"
+                    android:textSize="14sp"
+                    android:text="Port"
+                    android:gravity="right"
+                    android:textColor="@color/black"
+                    android:padding="5dp"/>-->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:padding="5dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!--                <TextView-->
+                <!--                    android:layout_width="0dp"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_weight="0.2"-->
+                <!--                    android:padding="5dp"-->
+                <!--                    android:text="http://"-->
+                <!--                    android:textColor="@color/black"-->
+                <!--                    android:textSize="14sp" />-->
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_weight="0.8"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edittxturlname"
+                    android:hint=""
+                    android:textColorHint="@color/graycolor"
+                    android:background="@drawable/editbackground"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"/>
+                <requestFocus/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.52"
+                    android:textSize="14sp"
+                    android:text="Server URL"
+                    android:textColor="@color/black"
+                    android:padding="5dp"/>
+                <!--<TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.38"
+                    android:textSize="14sp"
+                    android:text="Port"
+                    android:gravity="right"
+                    android:textColor="@color/black"
+                    android:padding="5dp"/>-->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:padding="5dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+<!--                <TextView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="0.2"-->
+<!--                    android:padding="5dp"-->
+<!--                    android:text="http://"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="14sp" />-->
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_weight="0.8"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edittxtip"
+                    android:hint=""
+                    android:textColorHint="@color/graycolor"
+                    android:background="@drawable/editbackground"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"/>
+                <requestFocus/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/LL16"
+            android:id="@+id/LL4"
+            android:gravity="right"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:text="Add"
+                android:id="@+id/btnAddSettings"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:padding="6dp"
+                android:textAllCaps="false"
+                android:layout_marginRight="10dp"
+                android:background="@color/colorPrimary"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/firstlinear"
+            android:id="@+id/LLListviewlayout"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:cardBackgroundColor="@color/colorPrimaryDark"
+                card_view:cardUseCompatPadding="true">
+                <LinearLayout
+                    android:id="@+id/listLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/headingsno"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:gravity="center"
+                        android:text="Status"
+                        android:textColor="@android:color/white"
+                        android:textSize="12dp" />
+
+                    <TextView
+                        android:id="@+id/headingserver"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:gravity="left"
+                        android:text="URL Name/Server URL"
+                        android:textColor="@android:color/white"
+                        android:textSize="12dp" />
+
+
+                    <TextView
+                        android:id="@+id/headingstatus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:gravity="center"
+                        android:text="Action"
+                        android:textColor="@android:color/white"
+                        android:textSize="12dp" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="60dp"
+                android:orientation="horizontal"
+                android:id="@+id/LLIPList"
+                android:weightSum="1">
+             <!--   <com.baoyz.swipemenulistview.SwipeMenuListView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/LL1"
+                    android:layout_marginBottom="60dp"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:id="@+id/LVServerURLList">
+
+                </com.baoyz.swipemenulistview.SwipeMenuListView>-->
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@color/graycolor"
+                    android:dividerHeight="1dip"
+                    android:id="@+id/LVServerURLList">
+                </ListView>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

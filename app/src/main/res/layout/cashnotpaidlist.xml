@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="2dp"
+        card_view:cardUseCompatPadding="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:id="@+id/listLL"
+            android:padding="3dp"
+            android:background="@color/lightcolorred"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:gravity="right"
+                android:textSize="13sp"
+                android:padding="5dp"
+                android:text="1"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:id="@+id/cashnotpaid_sno"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:padding="5dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/black"
+                    android:text="Item Name"
+                    android:id="@+id/cashnotpaid_customername"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/black"
+                    android:text="Item Name"
+                    android:id="@+id/cashnotpaid_areaname"/>
+
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:textSize="13sp"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:padding="5dp"
+                android:textColor="@color/black"
+                android:text="Unit"
+                android:id="@+id/cashnotpaid_amt"/>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

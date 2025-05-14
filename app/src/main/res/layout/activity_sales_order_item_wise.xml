@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SalesOrderItemWiseActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" >
+                <ImageButton
+                    android:id="@+id/goback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginRight="@dimen/toolbarmarright"
+                    android:src="@drawable/ic_arrow_back"
+                    />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Order Item-wise "
+                        android:layout_marginLeft="@dimen/toolbarsmallmarright"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/toolbartextsize"
+                        android:layout_gravity="left"
+                        android:id="@+id/toolbar_title1" />
+
+                </LinearLayout>
+
+
+                <ImageButton
+                    android:id="@+id/salesitemwiselogout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginRight="@dimen/toolbarmarright"
+                    android:padding="@dimen/toolbarpad"
+                    android:src="@drawable/ic_power_settings"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="25-04-2019"
+                    android:layout_marginRight="@dimen/toolbarsmallmarright"
+                    android:textColor="@android:color/white"
+                    android:drawableLeft="@drawable/ic_date_range"
+                    android:drawablePadding="@dimen/toolbardrawablepad"
+                    android:drawableTint="@color/white"
+                    android:textSize="@dimen/toolbarsmalltxtsize"
+                    android:gravity="center"
+                    android:layout_gravity="right|center"
+                    android:id="@+id/salesreturnitemfilterdate" />
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.AppBarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_sales_order_item_wise" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/printbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        app:srcCompat="@drawable/ic_print"
+        app:backgroundTint="@color/colorPrimaryDark"
+        tools:ignore="VectorDrawableCompat" />
+
+</android.support.design.widget.CoordinatorLayout>

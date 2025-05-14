@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".OrderFormCartActivity"
+    tools:showIn="@layout/activity_order_form_cart">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:id="@+id/listLL"
+            android:padding="10dp"
+            android:background="@color/colorPrimaryDark"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:text="#"
+                android:textColor="@color/white"
+                android:id="@+id/ordersnoheading"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:textSize="12sp"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/white"
+                android:text="Item Name"
+                android:id="@+id/orderitemnameheading"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.15"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:text="CL Stk"
+                android:id="@+id/orderunitheading"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:text="Required Qty"
+                android:gravity="left"
+                android:id="@+id/orderamountheading"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:text="Total Qty"
+                android:gravity="left"
+                android:id="@+id/ordertotalheading"/>
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/lightcolorred">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/orderlistview"
+            android:layout_marginRight="5dp"
+            android:divider="@color/graycolor"
+            android:dividerHeight="1dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="50dp">
+
+        </ListView>
+    </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/LL3"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:padding="5dp"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/TotlaLinear"
+            android:orientation="horizontal"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="More"
+                android:id="@+id/addmorecart"
+                android:drawableLeft="@drawable/ic_add"
+                android:background="@color/colorPrimary"
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:gravity="center"/>
+
+            <TextView android:layout_width="0dp"
+                android:layout_weight="0.4"
+                android:padding="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtcapacity"
+                android:background="@color/white"
+                android:textColor="@color/black"
+                android:gravity="right"
+                android:text="Capacity 1000.00"
+               />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:layout_marginLeft="10dp"
+                android:text="Save"
+                android:id="@+id/cartprint"
+                android:background="@color/colorPrimary"
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:gravity="center"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/llay"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Company"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:drawablePadding="12dp"
+            android:textColor="@android:color/white"
+            android:layout_weight="0.9"
+            android:id="@+id/tt1"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/close"
+            android:padding="5dp"
+            android:src="@drawable/ic_close"
+            android:layout_gravity="center"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0.1"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/View1"
+        android:layout_below="@+id/llay"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#bfbdbd" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/View1"
+        android:id="@+id/LL1"
+        android:weightSum="1">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lv_CompanyList"
+            android:dividerHeight="2dp"
+            android:divider="@color/colorPrimaryDark">
+
+        </ListView>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

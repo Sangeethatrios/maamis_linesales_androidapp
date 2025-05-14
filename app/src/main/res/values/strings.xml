@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">Line Sales</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">Line Sales</string>
+    <string name="title_activity_schedule">ScheduleActivity</string>
+    <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_activity_sales_list">SalesListActivity</string>
+
+    <string-array name="paymenttype">
+        <item>All Bills</item>
+        <item>Cash</item>
+        <item>Credit</item>
+    </string-array>
+    <string-array name="paymentstatus">
+        <item>All Pays</item>
+        <item>Paid</item>
+        <item>Not Paid</item>
+    </string-array>
+    <string-array name="itemstatus">
+        <item>All Items</item>
+        <item>Parent</item>
+        <item>Child</item>
+    </string-array>
+    <string-array name="mobilestatus">
+        <item>All Mobile status</item>
+        <item>Verified</item>
+        <item>Not Verified</item>
+    </string-array>
+    <string name="title_activity_review">ReviewActivity</string>
+    <string name="title_activity_expenses">ExpensesActivity</string>
+    <string name="title_activity_van_stock">VanStockActivity</string>
+    <string name="title_activity_expense_report">ExpenseReportActivity</string>
+    <string name="title_activity_customer">CustomerActivity</string>
+    <string name="title_activity_sales_bill_wise_report">SalesBillWiseReportActivity</string>
+    <string name="title_activity_sales_return">SalesReturnActivity</string>
+    <string name="title_activity_my_schedule">MyScheduleActivity</string>
+    <string name="title_activity_price_list">PriceListActivity</string>
+    <string name="title_activity_stock_order">StockOrderActivity</string>
+    <string name="title_activity_return_review">ReturnReviewActivity</string>
+    <string name="title_activity_order_form_cart">OrderFormCartActivity</string>
+    <string name="title_activity_sales_return_item_wise_report">SalesReturnItemWiseReportActivity
+    </string>
+    <string name="title_activity_addtional_stock_receipt">AdditionalStockReceiptActivity
+    </string>
+    <string name="tt_time_gmt">TrueTime: %1$s [GMT]</string>
+    <string name="tt_time_pst">TrueTime: %1$s [PST]</string>
+    <string name="tt_time_device">Device Time: %1$s [PST]</string>
+    <string name="title_activity_sales_view">SalesViewActivity</string>
+    <string name="title_activity_sales_return_view">SalesReturnViewActivity</string>
+    <string name="write_file">This app needs access to your file storage so that it can write files.</string>
+    <string name="title_activity_cash_summary">CashSummaryActivity</string>
+    <string name="title_activity_sales_return_billwise_report">SalesReturnBillwiseReportActivity
+    </string>
+    <string name="companyheading1"><u>Natarajan &amp; Co</u></string>
+    <string name="netcash"><u>Nett Cash (A+B+C)</u></string>
+    <string name="lunchstarted">Operation restricted because lunch time started...</string>
+    <string name="lunchsavestartmsg">Your lunch time has been started...</string>
+    <string name="lunchsaveendmsg">Your lunch time is over...</string>
+    <string name="title_activity_review_cash_notpaid_details">ReviewCashNotpaidDetails</string>
+    <string name="title_activity_sales_order">SalesOrderActivity</string>
+    <string name="title_activity_sales_order_cart">SalesOrderCartActivity</string>
+    <string name="title_activity_sales_order_list">SalesOrderListActivity</string>
+    <string name="title_activity_sales_order_view">SalesOrderViewActivity</string>
+    <string name="title_activity_sales_order_billwise_report">SalesOrderBillwiseReportActivity
+    </string>
+    <string name="title_activity_sales_order_item_wise">SalesOrderItemWiseActivity</string>
+    <string name="title_activity_printer_Settings">PrinterSettingsActivity</string>
+    <string name="title_activity_sync">SyncActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="mobilestatus">Mobile status</string>
+</resources>

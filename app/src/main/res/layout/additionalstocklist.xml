@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="1dp"
+        card_view:cardUseCompatPadding="true">
+        <LinearLayout
+            android:id="@+id/listLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:weightSum="1">
+            <LinearLayout
+                android:id="@+id/listLL1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <TextView
+                    android:id="@+id/addtionalsno"
+                    android:layout_width="0.10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:gravity="left"
+                    android:text="SNo."
+                    android:textColor="@android:color/black"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/addtionalitemname"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:gravity="left"
+                    android:text="Item Name"
+                    android:textColor="@android:color/black"
+                    android:textSize="13dp" />
+                <TextView
+                    android:id="@+id/addtionalqty"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:gravity="right"
+                    android:text="Qty"
+                    android:textColor="@android:color/black"
+                    android:textSize="14dp" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/listLL"
+            android:weightSum="1">
+
+
+            <!-- <TextView
+                 android:id="@+id/listopening"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="0.14"
+                 android:gravity="right"
+                 android:text="Opening"
+                 android:textColor="@android:color/black"
+                 android:textSize="12dp" />
+             <TextView
+                 android:id="@+id/listinward"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="0.14"
+                 android:gravity="right"
+                 android:text="Inward"
+                 android:textColor="@android:color/black"
+                 android:textSize="12dp" />
+             <TextView
+                 android:id="@+id/listoutward"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="0.14"
+                 android:gravity="right"
+                 android:text="Outward"
+                 android:textColor="@android:color/black"
+                 android:textSize="12dp" />
+             <TextView
+                 android:id="@+id/listclosing"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="0.14"
+                 android:gravity="right"
+                 android:text="Closing"
+                 android:textColor="@android:color/black"
+                 android:textSize="12dp" />-->
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ExpensesActivity"
+    tools:showIn="@layout/activity_expenses">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+               <android.support.v7.widget.CardView
+                    android:id="@+id/card_view1"
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    card_view:cardBackgroundColor="@color/green"
+                    card_view:cardCornerRadius="10dp"
+                    card_view:cardElevation="2dp"
+                    card_view:cardUseCompatPadding="true">
+            <LinearLayout
+                android:id="@+id/listLL1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/openingsno"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.15"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@android:color/white"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/openingexpenses"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.60"
+                    android:gravity="left"
+                    android:text="Advance"
+                    android:textColor="@android:color/white"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/expensestripadvance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:gravity="right"
+                    android:text="0.00"
+                    android:textColor="@android:color/white"
+                    android:textSize="12dp" />
+            </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/LL2"
+            android:id="@+id/LL1"
+            android:background="@color/colorPrimaryDark"
+            android:orientation="vertical">
+
+          <!--  <android.support.v7.widget.CardView
+                android:id="@+id/card_view"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:cardBackgroundColor="@color/colorPrimaryDark"
+                card_view:cardCornerRadius="1dp"
+                card_view:cardElevation="2dp"
+                card_view:cardUseCompatPadding="true">-->
+                <LinearLayout
+                    android:id="@+id/listLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/headingsno"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.10"
+                        android:gravity="center"
+                        android:text="#"
+                        android:textColor="@android:color/white"
+                        android:textSize="12dp" />
+                    <TextView
+                        android:id="@+id/headingdate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.20"
+                        android:gravity="left"
+                        android:text="Date"
+                        android:textColor="@android:color/white"
+                        android:textSize="12dp" />
+                    <TextView
+                        android:id="@+id/headingexpenses"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.45"
+                        android:gravity="left"
+                        android:text="Expense Head"
+                        android:textColor="@android:color/white"
+                        android:textSize="12dp" />
+
+                    <TextView
+                        android:id="@+id/headingamount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:gravity="right"
+                        android:text="Amount"
+                        android:textColor="@android:color/white"
+                        android:textSize="12dp" />
+                </LinearLayout>
+           <!-- </android.support.v7.widget.CardView>-->
+
+        </LinearLayout>
+        <com.baoyz.swipemenulistview.SwipeMenuListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:layout_marginBottom="50dp"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:id="@+id/expenseslistView">
+        </com.baoyz.swipemenulistview.SwipeMenuListView>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/LL3"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:padding="5dp"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text=""
+                android:textColor="@color/white"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.35"
+                android:text="Total Expenses"
+                android:textColor="@color/white"
+                android:gravity="right"
+                android:textSize="14dp"
+                />
+
+            <TextView android:id="@+id/expensestotalamt"
+                android:textColor="@color/white"
+                android:textSize="14dp"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:text="₹ 0.00"
+                android:gravity="right"
+                android:layout_gravity="center"
+                android:layout_weight="0.35"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text=""
+                android:textColor="@color/white"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.35"
+                android:text="Balance"
+                android:textColor="@color/white"
+                android:gravity="right"
+                android:textSize="14dp"
+                />
+
+            <TextView android:id="@+id/expensesremainingamt"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:text="₹ 0.00"
+                android:gravity="right"
+                android:layout_gravity="center"
+                android:layout_weight="0.35"
+                android:textSize="14dp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

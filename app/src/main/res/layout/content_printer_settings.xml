@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".PrinterSettingsActivity"
+    tools:showIn="@layout/activity_printer_settings">
+
+
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical">
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:id="@+id/ConnectPrintLL"
+          android:padding="15dp"
+          android:layout_margin="5dp"
+          android:background="@android:color/white"
+          android:visibility="gone">
+         <TextView
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="?android:attr/selectableItemBackground"
+             android:drawablePadding="10dp"
+             android:gravity="center|left"
+             android:text="Connected printer"
+             android:textColor="@color/colorPrimary"
+             android:textSize="13dp" />
+         <TextView
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:id="@+id/txtconnectedprinter"
+             android:background="?android:attr/selectableItemBackground"
+             android:drawablePadding="10dp"
+             android:gravity="center|left"
+             android:textColor="@color/colorPrimary"
+             android:textSize="18dp" />
+      </LinearLayout>
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="?android:attr/selectableItemBackground"
+          android:drawablePadding="10dp"
+          android:gravity="center|left"
+          android:text="Paired printers list"
+          android:textColor="@color/colorPrimary"
+          android:textSize="16dp"
+          android:layout_marginLeft="5dp"/>
+      <ListView
+          android:id="@+id/lv_printlistwithradio"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content" />
+
+
+   </LinearLayout>
+
+
+
+   <Button
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="Search for Printer"
+       android:id="@+id/but_SearchPrint"
+       android:gravity="center"
+       android:textColor="@color/colorPrimary"
+       android:textSize="18dp"
+       android:layout_alignParentBottom="true"
+       android:visibility="visible"/>
+
+</RelativeLayout>

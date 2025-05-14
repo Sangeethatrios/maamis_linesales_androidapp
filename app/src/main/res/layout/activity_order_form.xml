@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".OrderFormActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+            <ImageButton
+                android:id="@+id/goback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:background="@color/colorPrimary"
+                android:layout_marginRight="@dimen/toolbarmarright"
+                android:src="@drawable/ic_arrow_back"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Next Day Requirement "
+                android:layout_marginLeft="@dimen/toolbarmarleft"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/toolbartextsize"
+                android:layout_gravity="left"
+                android:id="@+id/toolbar_title_username" />
+            <ImageButton
+                android:id="@+id/orderlogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@color/colorPrimary"
+                android:layout_marginLeft="@dimen/toolbarmarleft"
+                android:layout_marginRight="@dimen/toolbarmarright"
+                android:padding="@dimen/toolbarpad"
+                android:src="@drawable/ic_power_settings"/>
+
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_order_form" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabgroupitem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_add"
+        app:backgroundTint="@color/colorPrimary"
+        tools:ignore="VectorDrawableCompat" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addsordertocart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        app:srcCompat="@drawable/ic_add_to_cart"
+        android:tint="@color/white"
+        android:visibility="gone"
+        app:backgroundTint="@color/colorPrimary"
+        tools:ignore="VectorDrawableCompat" />
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0f657f</color>
+    <color name="colorPrimaryDark">#1daad1</color>
+    <color name="colorAccent">#0f657f</color>
+    <color name="graycolor">#ccc</color>
+    <color name="gray">#E6E5E5</color>
+    <color name="darkgreen">#06323F</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="orange">#ac571f</color>
+    <color name="darkblue">#084F66</color>
+    <color name="green">#0DA428</color>
+    <color name="red">#F90D23</color>
+    <color name="lightred">#E22D3E</color>
+    <color name="lightcolorred">#F8D3D6</color>
+    <color name="lightgray">#EEECEC</color>
+    <color name="orangecolor">#FFA500</color>
+    <color name="pink">#FFF05876</color>
+    <color name="lightpink">#CFFFD4</color>
+    <color name="yellow">#FCFC07</color>
+    <color name="colorOpening">#FFF05876</color>
+    <color name="colorexpense">#009688</color>
+    <color name="colortotalexpense">#36439B</color>
+    <color name="colordeeppink">#990c58</color>
+    <color name="voilet">#A567C3</color>
+    <color name="lightblue">#caeaf3</color>
+    <color name="lunchred">#F44336</color>
+    <color name="lunchgreen">#1D970F</color>
+    <color name="darkgraycolor">#817F7F</color>
+    <color name="lightbiscuit">#fff5c3</color>
+    <color name="lightgreen">#c2f2d0</color>
+    <color name="lightredgray">#FBEEE6</color>
+    <color name="lightvoilet">#E8DAEF</color>
+    <color name="darkgrey">#4F5451</color>
+    <color name="purple">#A020F0</color>
+    <color name="lightyellow">#fff799</color>
+    <color name="blue">#249ebd</color>
+
+</resources>

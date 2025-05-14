@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ReviewCashNotpaidDetails"
+    tools:showIn="@layout/activity_review_cash_notpaid_details">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:layout_below="@+id/MainLL"
+        android:id="@+id/HeadingLL"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:padding="10dp"
+        android:weightSum="1">
+
+        <TextView android:id="@+id/item_sno"
+            android:text="S.No."
+            android:textColor="@color/white"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_width="0dp"
+            android:layout_weight="0.1"
+            android:gravity="center"
+            />
+
+        <TextView android:id="@+id/itemrate_head"
+            android:text="Customer"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:gravity="left"
+            android:layout_weight="0.6"
+            />
+        <TextView android:id="@+id/itemqty_head"
+            android:text="Amount"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:gravity="right"
+            android:layout_weight="0.3"
+            />
+    </LinearLayout>
+    <ListView
+        android:id="@+id/lv_cashnotpaid_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/footerLL"
+        android:layout_below="@+id/HeadingLL"
+        android:layout_marginRight="5dp"
+        android:divider="@color/graycolor"
+        android:dividerHeight="1dip"
+        android:layout_marginLeft="5dp"/>
+    <LinearLayout
+        android:id="@+id/footerLL"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:padding="5dp"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:weightSum="1">
+
+        <TextView android:layout_width="wrap_content"
+            android:padding="10dp"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:drawableRight="@drawable/ic_keyboard_arrow_right"
+            android:drawableTint="@color/white"
+            android:drawablePadding="5dp"
+            android:background="@color/colorPrimary"
+            android:id="@+id/txt_next"
+            android:text="Next"/>
+
+    </LinearLayout>
+</RelativeLayout>

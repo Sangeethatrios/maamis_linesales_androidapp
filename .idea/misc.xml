@@ -1,0 +1,343 @@
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/editbackground.xml" value="0.197" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/editbackgroundgray.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/ic_arrow_upward_black_small_24dp.xml" value="0.1965" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/ic_checked.xml" value="0.1255" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/ic_delete_red.xml" value="0.127" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/ic_edit_24.xml" value="0.127" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/ic_km.xml" value="0.197" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/ic_pay.xml" value="0.127" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/ic_pdf.xml" value="0.1965" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/ic_power_settings.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/ic_price_list.xml" value="0.1255" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/ic_print.xml" value="0.1255" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/ic_settings.xml" value="0.1255" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/ic_van_stock.xml" value="0.1255" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/drawable/ic_view.xml" value="0.1255" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_additional_stock_receipt.xml" value="0.1675213675213675" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_cash_report.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_customer.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_login.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_menu.xml" value="0.10787037037037037" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_my_schedule.xml" value="0.1743659420289855" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_order_form.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_order_form_cart.xml" value="0.17074275362318841" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_receipt.xml" value="0.17074275362318841" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_return_review.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_review.xml" value="0.18" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_sales.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_sales_bill_wise_report.xml" value="0.17481884057971014" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_sales_list.xml" value="0.17481884057971014" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_sales_order.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_sales_order_cart.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_schedule.xml" value="0.1743659420289855" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_sync.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/activity_van_stock.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/additionalstocklist.xml" value="0.22" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/additonalstockpopup.xml" value="0.17074275362318841" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/addreceipt.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/billtypepopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/child_layout.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/companypopup.xml" value="0.1743659420289855" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_additional_stock_receipt.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_customer.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_expenses.xml" value="0.17074275362318841" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_login.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_menu.xml" value="0.14" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_my_schedule.xml" value="0.22799097065462753" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_order_form_cart.xml" value="0.17074275362318841" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_review.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_sales.xml" value="0.17074275362318841" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_sales_bill_wise_report.xml" value="0.17481884057971014" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_sales_list.xml" value="0.17481884057971014" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_sales_order_cart.xml" value="0.22" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_sales_view.xml" value="0.17074275362318841" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_schedule.xml" value="0.17481884057971014" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_settings.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_sync.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/content_van_stock.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/customerlist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/customerpopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/customerpopuplist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/customertypepopuplist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/deviceidinfnpopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/driverpopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/generalsettings.xml" value="0.2" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/grouppopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/itemgrouppopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/itemgrouppopuplist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/itemsubgrouppopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/itemsubgrouppopuplist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/loadimage.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/orderformcartlist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/orderlist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/parent_layout.xml" value="0.1743659420289855" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/pdflayout.xml" value="0.15" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/pricelist.xml" value="0.1743659420289855" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/printerlist_radio.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/printpopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/printprogresspopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/receipt_list.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/remarkspopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/remarkspopuplist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/routepopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/routepopuplist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/sales_list_details.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/sales_order__list_details.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salescashclose_popup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salesitemlist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salesitemwisereport.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salesorderitemlist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salesorderreviewlist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salesorderviewitemlist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salesreceipt.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salesreppopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salesreppopuplist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salesreturnitemlist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salesreturnlist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salesreturnreviewlist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salesreturnviewitemlist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salesreviewlist.xml" value="0.15" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salestypepopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/salesviewitemlist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/schedule_review_popup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/serverpopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/serverpopuplist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/stockconversion.xml" value="0.22" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/subgrouppopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/subgrouppopuplist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/transportpopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/transportpopuplist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/validatepinumber.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/vansaleslist.xml" value="0.25" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/vehiclepopup.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/layout/vehiclepopuplist.xml" value="0.1" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/menu/menu.xml" value="0.10787037037037037" />
+        <entry key="..\:/Linesales app/ncolinesales_billingapp/app/src/main/res/menu/menu_main.xml" value="0.10787037037037037" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/drawable/editbackgroundgray.xml" value="0.1" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/drawable/ic_invoice_download.xml" value="0.1" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/activity_customer.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/activity_sales.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/activity_sales_list.xml" value="0.1" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/activity_sales_view.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/content_sales.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/content_sales_list.xml" value="0.18" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/content_sales_view.xml" value="0.1539855072463768" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/routepopuplist.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/sales_list_details.xml" value="0.5" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/salesreviewlist.xml" value="0.1" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/salesviewitemlist.xml" value="0.1" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/serverpopup.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/subgrouppopuplist.xml" value="0.1" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/temp.xml" value="0.1" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/validatepinnumber_einvoice.xml" value="0.25" />
+        <entry key="..\:/linesalesapp/ncolinesales_billingapp/app/src/main/res/layout/validatepinumber.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/border.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/cercleshape.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/circle_background_big_size.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/circle_small.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/circular_progress_bar.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/cornerbackground.xml" value="0.1325" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/editbackground.xml" value="0.1325" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/editbackgroundgray.xml" value="0.1325" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/editbackgroundlightgray.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/gradient_btn.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_access_time.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_add.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_add_to_cart.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_arrow_back.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_arrow_downward.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_arrow_downward_small.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_arrow_downward_white.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_arrow_upward.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_arrow_upward_black_24dp.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_arrow_upward_black_small_24dp.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_arrow_upward_white.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_backup.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_baseline_check_20.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_baseline_check_24.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_baseline_cloud_download_24.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_baseline_cloud_upload_24.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_baseline_cloud_upload_24_disabled.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_baseline_local_phone_24.xml" value="0.1325" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_baseline_location_city_24.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_cart.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_close.xml" value="0.1325" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_close_sales.xml" value="0.1325" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_closeall.xml" value="0.1325" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_compare.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_cross_mark.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_customer.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_customer_shop.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_date_range.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_date_range_black.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_edit_24.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_expense.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_helper.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_home.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_image.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_indian_rupee_symbol.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_indian_rupee_symbol24.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_indian_rupee_symbol_24.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_indian_rupee_symbol_40.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_invoice_download.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_key_hole.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_key_hole_img.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_keyboard_arrow_down.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_keyboard_arrow_right_small.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_keyboard_arrow_up.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_km.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_price_list.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_reports.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_reshot_icon_email.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_reshot_icon_telephone.xml" value="0.1325" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_reshot_icon_telephone_ts8cj6xagd.xml" value="0.1325" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_route.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_rupee.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_rupees.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_sale.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_salesman.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_salesrep.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_schedule.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_schedulevan.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_search.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_settings.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_share.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_shopping_bag.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_start_time.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_telephone_phone.xml" value="0.1325" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_truck.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_upload.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_van.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_van_stock.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_view.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_warning.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ic_watch.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/noborder.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/ovalwhitebg.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/paswd_disable.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/paswd_enable.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/plain_circlebackground.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/popuptextbg.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/round.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/rupeeicon.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/searcheditbackground.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/shadow.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/smallcircle.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/toast_drawable.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/drawable/txtbgliine.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_activation.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_cash_summary.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_customer.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_expenses.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_login.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_menu.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_my_schedule.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_price_list.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_receipt.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_return_review.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_review.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_review_cash_notpaid_details.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_sales.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_sales_list.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_sales_order_item_wise.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_sales_return.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_sales_view.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_schedule.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_sync.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/activity_van_stock.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/addcustomer.xml" value="0.20102564102564102" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/addexpenses.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/additionalstocklist.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/addreceipt.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/areapopuplist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/cashclosevalidatepinumber.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/companypopuplist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_activation.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_additional_stock_receipt.xml" value="0.20102564102564102" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_customer.xml" value="0.20102564102564102" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_login.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_menu.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_my_schedule.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_price_list.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_receipt.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_review.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_sales.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_sales_list.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_sales_order_item_wise.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_sales_return.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_sales_view.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_schedule.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_sync.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/content_van_stock.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/customerlist.xml" value="0.25" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/customerpopup.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/customerpopuplist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/customertypepopuplist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/deviceidinfnpopup.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/driverpopup.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/driverpopuplist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/einvoicepopup.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/expenseheadpopup.xml" value="0.20102564102564102" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/expenseheadpopuplist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/expenseslist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/freeitemexcesslist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/freeitemexcesspopup.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/generalsettings.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/itemsubgrouppopup.xml" value="0.20102564102564102" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/loadimage.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/otpverificationpopup.xml" value="0.25" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/pricelist.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/printerlist_radio.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/printpopup.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/routepopup.xml" value="0.20102564102564102" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/sales_list_details.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/salescashclose_popup.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/salesitemlist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/salesitemwisereport.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/salesreceipt.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/salesreviewlist.xml" value="0.17255434782608695" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/salestypepopup.xml" value="0.20102564102564102" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/salestypepopuplist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/salesviewitemlist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/serverpopup.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/serverpopuplist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/stockconversion.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/subgrouppopup.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/subgrouppopuplist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/transportpopuplist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/validatepinnumber_einvoice.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/validatepinumber.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/vansaleslist.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/vehiclepopup.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/layout/vehiclepopuplist.xml" value="0.1" />
+        <entry key="..\:/linesalesappbotheinvoiceandscheme/ncolinesales_billingapp/app/src/main/res/menu/menu.xml" value="0.20416666666666666" />
+        <entry key="..\:/linesaleseinvoice/ncolinesales_billingapp/app/src/main/res/drawable/ic_invoice_download.xml" value="0.1" />
+        <entry key="..\:/linesaleseinvoice/ncolinesales_billingapp/app/src/main/res/drawable/ic_share.xml" value="0.1" />
+        <entry key="..\:/linesaleseinvoice/ncolinesales_billingapp/app/src/main/res/layout/activity_additional_stock_receipt.xml" value="0.1" />
+        <entry key="..\:/linesaleseinvoice/ncolinesales_billingapp/app/src/main/res/layout/activity_customer.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesaleseinvoice/ncolinesales_billingapp/app/src/main/res/layout/activity_sales_list.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesaleseinvoice/ncolinesales_billingapp/app/src/main/res/layout/content_additional_stock_receipt.xml" value="0.25" />
+        <entry key="..\:/linesaleseinvoice/ncolinesales_billingapp/app/src/main/res/layout/content_customer.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesaleseinvoice/ncolinesales_billingapp/app/src/main/res/layout/content_sales_list _backup.xml" value="0.1" />
+        <entry key="..\:/linesaleseinvoice/ncolinesales_billingapp/app/src/main/res/layout/content_sales_list.xml" value="0.22" />
+        <entry key="..\:/linesaleseinvoice/ncolinesales_billingapp/app/src/main/res/layout/content_sales_list_old.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesaleseinvoice/ncolinesales_billingapp/app/src/main/res/layout/sales_list_details.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesaleseinvoice/ncolinesales_billingapp/app/src/main/res/layout/salesreceipt.xml" value="0.17074275362318841" />
+        <entry key="..\:/linesaleseinvoice/ncolinesales_billingapp/app/src/main/res/layout/validatepinumber.xml" value="0.17074275362318841" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="corretto-1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

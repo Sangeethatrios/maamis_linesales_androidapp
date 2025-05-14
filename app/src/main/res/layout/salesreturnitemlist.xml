@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/itemLL"
+    android:background="@color/lightgreen">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollview">
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*"
+            >
+            <TableRow>
+                <TextView android:id="@+id/listitemname"
+                    android:text="100 kg Jeeni"
+                    android:layout_marginTop="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:textColor="@android:color/black"
+                    android:padding="5dp"
+                    android:textSize="12dp"
+                    android:layout_weight="0.44"
+                    />
+                <ImageView android:id="@+id/pricearrow"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.04"
+                    android:src="@drawable/ic_arrow_upward_black_24dp"
+                    />
+                <TableLayout android:layout_weight="0.46">
+                    <TableRow>
+
+                        <EditText android:id="@+id/listitemrate"
+                            android:text="0.00"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:background="@drawable/editbackground"
+                            android:textColor="@android:color/black"
+                            android:padding="5dp"
+                            android:gravity="right"
+                            android:inputType="number"
+                            android:maxLength="8"
+                            android:layout_marginTop="5dp"
+                            android:textSize="12dp"
+                            android:layout_weight="0.18"
+                            />
+
+                        <EditText android:id="@+id/listitemqty"
+                            android:text=""
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:gravity="right"
+                            android:background="@drawable/editbackground"
+                            android:textColor="@android:color/black"
+                            android:padding="6dp"
+                            android:inputType="number"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="5dp"
+                            android:maxLength="5"
+                            android:textSize="12dp"
+                            android:layout_weight="0.15"
+
+                            />
+                        <TextView android:id="@+id/dummyspace"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.01"/>
+                        <TextView android:id="@+id/listitemtotal"
+                            android:text="0.00"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:textColor="@android:color/white"
+                            android:padding="6dp"
+                            android:gravity="right"
+                            android:background="@color/colorPrimaryDark"
+                            android:textSize="12dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="0.22"
+                            />
+                    </TableRow>
+                    <TableRow>
+                        <TextView android:id="@+id/labelhsntax"
+                            android:text="100.00"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:textColor="@color/white"
+                            android:background="@color/voilet"
+                            android:gravity="center"
+                            android:textSize="11dp"
+                            android:layout_weight="0.175"
+                            />
+                        <LinearLayout
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_marginLeft="5dp"
+                            android:id="@+id/stockvalueLL"
+                            android:visibility="visible"
+                            android:orientation="horizontal"
+                            android:layout_weight="0.36">
+
+                        </LinearLayout>
+
+
+                    </TableRow>
+                </TableLayout>
+
+
+
+                <TextView android:id="@+id/listitemcode"
+                    android:text=""
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:textColor="@android:color/black"
+                    android:padding="5dp"
+                    android:textSize="14dp"
+                    android:visibility="gone"
+                    android:layout_weight="0.26"
+                    />
+                <TextView android:id="@+id/listitemuom"
+                    android:text=""
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:textColor="@android:color/black"
+                    android:padding="5dp"
+                    android:textSize="14dp"
+                    android:visibility="gone"
+                    android:layout_weight="0.26"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/listitemtax"
+                    android:visibility="gone"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/listitemstock"
+                    android:visibility="gone"/>
+
+
+            </TableRow>
+        </TableLayout>
+
+
+        <!-- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:orientation="vertical"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content">
+
+                 <LinearLayout
+                     android:layout_width="0dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight=".34">
+
+                     <TextView android:id="@+id/listitemname"
+                         android:text=""
+                         android:layout_height="match_parent"
+                         android:layout_width="match_parent"
+                         android:textColor="@android:color/black"
+                         android:padding="5dp"
+                         android:textSize="12dp"
+                         />
+                 </LinearLayout>
+
+                 <LinearLayout
+                     android:layout_width="0dp"
+                     android:layout_height="match_parent"
+                     android:layout_weight="0.7"
+                     android:orientation="vertical">
+
+                     <LinearLayout
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:orientation="horizontal"
+                         >
+                         <EditText
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:layout_weight=".5"
+                             android:text="Text1"
+                             android:paddingLeft="10dp"
+                             android:gravity="center_vertical"/>
+                         <TextView
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:layout_weight=".5"
+                             android:text="Text1"
+                             android:paddingLeft="10dp"
+                             android:gravity="center_vertical"/>
+
+                     </LinearLayout>
+
+
+                     <LinearLayout
+                         android:layout_width="match_parent"
+                         android:layout_height="match_parent"
+                         android:orientation="horizontal">
+                     <TextView
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:layout_weight="1"
+                         android:text="Text1"
+                         android:paddingLeft="10dp"
+                         android:gravity="center_vertical"/>
+                     </LinearLayout>
+                 </LinearLayout>
+
+                 <LinearLayout
+                     android:layout_width="0dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight=".26">
+                     <TextView android:id="@+id/listitemtotal"
+                         android:text="0.00"
+                         android:layout_height="wrap_content"
+                         android:layout_width="match_parent"
+                         android:textColor="@android:color/black"
+                         android:padding="6dp"
+                         android:gravity="right"
+                         android:textSize="12dp"
+                         android:layout_marginTop="5dp"
+                         />
+                 </LinearLayout>
+             </LinearLayout>
+         </LinearLayout>-->
+    </ScrollView>
+</LinearLayout>

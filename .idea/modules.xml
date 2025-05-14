@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ncolinesales_billingapp.iml" filepath="$PROJECT_DIR$/ncolinesales_billingapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.iml" filepath="$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.iml" filepath="$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.main.iml" filepath="$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.unitTest.iml" />
+    </modules>
+  </component>
+</project>

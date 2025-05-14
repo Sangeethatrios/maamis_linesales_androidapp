@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/LLL">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/linear"
+            android:weightSum="1">
+            <TextView android:id="@+id/listcustomername"
+                android:text="Customer"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@android:color/black"
+                android:padding="8dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textSize="16dp"
+                android:layout_weight="0.65"
+                />
+            <TextView android:id="@+id/listcustomertype"
+                android:text=""
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:padding="8dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:textSize="16dp"
+                android:visibility="visible"
+                android:layout_weight="0.15"
+                android:textColor="@color/black"
+                android:textAlignment="textStart"/>
+
+            <TextView android:id="@+id/listgstin"
+                android:text="GSTIN"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textColor="@android:color/white"
+                android:padding="8dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:background="@color/green"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="5dp"
+                android:textSize="9dp"
+                android:visibility="gone"
+                android:layout_weight="0.2"
+                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+    <!--</ScrollView>-->
+</LinearLayout>

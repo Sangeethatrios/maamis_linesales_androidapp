@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ReviewActivity"
+    tools:showIn="@layout/activity_review">
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="horizontal">
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.325"
+          android:text="Booking No. : 1"
+          android:gravity="center"
+          android:id="@+id/txtbookingno"
+          android:background="@color/colorPrimaryDark"
+          android:textColor="@color/white"
+          android:textSize="15sp"
+          android:padding="3dp"/>
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.35"
+          android:text="Cash Invoice"
+          android:gravity="center"
+          android:id="@+id/paymenttypeinvoice"
+          android:background="@color/colorPrimaryDark"
+          android:textColor="@color/white"
+          android:textSize="15sp"
+          android:padding="3dp"
+          android:textStyle="bold"/>
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.325"
+          android:text="14-05-2019"
+          android:gravity="center"
+          android:drawableLeft="@drawable/ic_date_range"
+          android:id="@+id/txtreviewdate"
+          android:background="@color/colorPrimaryDark"
+          android:textColor="@color/white"
+          android:textSize="15sp"
+          android:padding="3dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+      <LinearLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:layout_weight="0.55"
+          android:layout_marginRight="5dp"
+          android:layout_marginLeft="5dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pandiyan Maligai Stores In Chennai"
+            android:gravity="left"
+            android:id="@+id/txtcustomername"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:padding="1dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Anna Nagar , Chennai"
+            android:gravity="center"
+            android:id="@+id/txtareacity"
+            android:textColor="@color/black"
+            android:textSize="13sp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:padding="1dp"/>
+
+      </LinearLayout>
+      <LinearLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:layout_weight="0.45"
+          android:layout_marginRight="5dp"
+          android:gravity="center"
+          android:id="@+id/gstnLL"
+          android:background="@color/green"
+          android:layout_marginLeft="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GSTN"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:padding="1dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="33AADFN3829P1ZX"
+            android:id="@+id/cartgstnnumber"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:padding="1dp"/>
+      </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:id="@+id/HeadingLL"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:padding="10dp"
+        android:weightSum="1">
+
+      <TextView android:id="@+id/item_head"
+          android:text="Item"
+          android:textColor="@color/white"
+          android:layout_height="wrap_content"
+          android:textSize="12sp"
+          android:layout_width="0dp"
+          android:layout_weight="0.45"
+          />
+
+      <TextView android:id="@+id/itemrate_head"
+          android:text="Rate"
+          android:textColor="@color/white"
+          android:textSize="12sp"
+          android:layout_height="wrap_content"
+          android:layout_width="0dp"
+          android:gravity="left"
+          android:layout_weight="0.15"
+          />
+      <TextView android:id="@+id/itemqty_head"
+          android:text="Qty"
+          android:textColor="@color/white"
+          android:textSize="12sp"
+          android:layout_height="wrap_content"
+          android:layout_width="0dp"
+          android:gravity="center"
+          android:layout_weight="0.16"
+          />
+      <TextView android:id="@+id/itemtotal_head"
+          android:text="Sub Total"
+          android:textColor="@color/white"
+          android:textSize="12sp"
+          android:layout_height="wrap_content"
+          android:layout_width="0dp"
+          android:gravity="center"
+          android:layout_weight="0.25"
+          />
+
+    </LinearLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/reviewlistview"
+        android:layout_marginRight="5dp"
+        android:divider="@color/graycolor"
+        android:background="@color/lightpink"
+        android:dividerHeight="1dip"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="100dp">
+
+    </ListView>
+  </LinearLayout>
+  <LinearLayout
+      android:id="@+id/LL3"
+      android:layout_width="match_parent"
+      android:layout_height="100dp"
+      android:layout_alignParentBottom="true"
+      android:padding="5dp"
+      android:layout_below="@+id/LL4"
+      android:background="@color/colorPrimaryDark"
+      android:orientation="vertical"
+      android:weightSum="1">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/TotalSubLinear"
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:weightSum="1">
+      <EditText android:layout_width="0dp"
+          android:layout_weight="0.5"
+          android:padding="14dp"
+          android:id="@+id/txtremarks"
+          android:layout_height="45dp"
+          android:gravity="left"
+          android:background="@drawable/editbackground"
+          android:textSize="14sp"
+          android:textColor="@android:color/black"
+          android:hint="Remarks"
+          android:maxLength="100"
+          android:maxLines="1"
+          android:ellipsize="end"
+          android:textColorHint="@color/graycolor"
+          android:text=""/>
+
+      <LinearLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.5"
+          android:layout_marginLeft="5dp"
+          android:background="@color/white"
+          android:orientation="vertical">
+        <TextView android:layout_width="wrap_content"
+            android:id="@+id/txtsubtotalamt"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:layout_gravity="right"
+            android:textSize="14sp"
+            android:padding="2dp"
+            android:textColor="@android:color/black"
+            android:text="Total  ₹ 000.00"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="right"
+            android:layout_gravity="right"
+            android:textSize="14sp"
+            android:padding="2dp"
+            android:id="@+id/txtdiscountamt"
+            android:textColor="@android:color/black"
+            android:text="Discount  ₹ 000.00"/>
+
+      </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/TotlaLinear"
+        android:orientation="horizontal"
+        android:layout_marginTop="1dp"
+
+        android:weightSum="1">
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.3"
+          android:text="More"
+          android:id="@+id/addmore"
+          android:drawableLeft="@drawable/ic_add"
+          android:background="@color/colorPrimary"
+          android:padding="10dp"
+          android:textSize="16sp"
+          android:textColor="@color/white"
+          android:gravity="center"/>
+
+      <TextView android:layout_width="0dp"
+          android:layout_weight="0.4"
+          android:padding="10dp"
+          android:background="@color/white"
+          android:id="@+id/txtcarttotalamt"
+          android:drawableLeft="@drawable/ic_rupee"
+          android:layout_height="wrap_content"
+          android:gravity="center|top"
+          android:textSize="16sp"
+          android:layout_marginLeft="10dp"
+          android:textColor="@android:color/black"
+          android:text="000.00"/>
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.0"
+          android:layout_marginLeft="10dp"
+          android:id="@+id/hidedummy"
+          android:padding="10dp"
+          android:textSize="16sp"
+          android:textColor="@color/white"
+          android:gravity="center"/>
+      <Button
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.15"
+          android:layout_marginLeft="10dp"
+          android:id="@+id/imgcamera"
+          android:text="Camera "
+          android:drawableRight="@drawable/ic_photo_camera"
+          android:tint="@color/white"
+          android:background="@color/colorPrimary"
+          android:padding="10dp"
+          android:visibility="gone"
+          android:textSize="16sp"
+          android:textColor="@color/white"
+          android:gravity="center"/>
+
+
+
+      <Button
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.3"
+          android:layout_marginLeft="10dp"
+          android:id="@+id/txtSalesprint"
+          android:text="Print "
+          android:textAllCaps="false"
+          android:drawableRight="@drawable/ic_print"
+          android:background="@color/colorPrimary"
+          android:padding="10dp"
+          android:textSize="16sp"
+          android:textColor="@color/white"
+          android:gravity="center"/>
+
+
+
+    </LinearLayout>
+
+  </LinearLayout>
+
+</RelativeLayout>

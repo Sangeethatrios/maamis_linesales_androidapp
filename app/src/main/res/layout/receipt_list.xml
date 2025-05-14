@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/receiptcard_view"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="2dp"
+        card_view:cardUseCompatPadding="true">
+        <LinearLayout
+            android:id="@+id/listLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/receiptlistSno"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.07"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="@android:color/black"
+                android:textSize="12dp" />
+        <LinearLayout
+            android:id="@+id/listLL2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0.20"
+            android:weightSum="1">
+            <TextView
+                android:id="@+id/receiptlistdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.24"
+                android:gravity="left"
+                android:text="09-09-2019"
+                android:textColor="@android:color/black"
+                android:textSize="12dp" />
+            <TextView
+                android:id="@+id/receiptlistno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.24"
+                android:gravity="left"
+                android:text="VA0001"
+                android:textColor="@android:color/black"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/listLL3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0.38"
+            android:weightSum="1">
+            <TextView
+                android:id="@+id/receiptlistcustomername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.46"
+                android:gravity="left"
+                android:text="Customername"
+                android:textColor="@android:color/black"
+                android:textSize="12dp" />
+            <TextView
+                android:id="@+id/receiptlistarea"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.46"
+                android:gravity="left"
+                android:text="Customername"
+                android:textColor="@android:color/black"
+                android:textSize="12dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/listLL4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0.15"
+            android:weightSum="1">
+             <TextView
+                android:id="@+id/receiptlistreceiptmode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.15"
+                android:gravity="left"
+                android:text="Retailer"
+                android:textColor="@android:color/black"
+                android:textSize="12dp" />
+            <TextView
+                android:id="@+id/receiptlistshortname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.15"
+                android:gravity="left"
+                android:text="NCO"
+                android:textColor="@android:color/black"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/receiptlisttotal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.20"
+            android:gravity="right"
+            android:text="1000000.00"
+            android:textColor="@android:color/black"
+            android:textSize="12dp" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

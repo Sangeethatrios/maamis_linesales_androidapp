@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MyScheduleActivity"
+    tools:showIn="@layout/activity_my_schedule"
+    android:background="@drawable/bgimg">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/editbackground"
+            android:layout_margin="10dp">
+
+            <LinearLayout
+                android:id="@+id/LLDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:background="@color/colorPrimaryDark"
+                android:weightSum="1">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"/>
+                <TextView
+                    android:id="@+id/txtscheduledate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_date_range"
+                    android:layout_weight="0.4"
+                    android:gravity="center|right"
+                    android:text="30-04-2019"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LLscheduledetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:orientation="vertical"
+                android:visibility="visible">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:id="@+id/txtschedulevanname"
+                    android:text="Van A"
+                    android:padding="8dp"
+                    android:drawablePadding="15dp"
+                    android:drawableLeft="@drawable/ic_schedulevan"
+                    android:gravity="left|center"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:id="@+id/txtschedulevehiclename"
+                    android:drawableLeft="@drawable/ic_delivery_truck"
+                    android:drawablePadding="15dp"
+                    android:text="TATA TN-68 4822"
+                    android:gravity="left"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:weightSum="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:id="@+id/txtscheduleroutename"
+                        android:text="Van A Monday"
+                        android:drawablePadding="15dp"
+                        android:drawableLeft="@drawable/ic_route"
+                        android:gravity="left|center"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:weightSum="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:drawablePadding="15dp"
+                        android:id="@+id/txtschedulesalesrepname"
+                        android:drawableLeft="@drawable/ic_salesman"
+                        android:text="A.Manikandan"
+                        android:gravity="left|center"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:weightSum="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableLeft="@drawable/ic_driver"
+                        android:drawablePadding="15dp"
+                        android:text="H.Gopi Kannan"
+                        android:id="@+id/txtscheduledrivername"
+                        android:gravity="center|left"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:weightSum="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableLeft="@drawable/ic_helper"
+                        android:drawablePadding="15dp"
+                        android:id="@+id/txtschedulehelpername"
+                        android:text="Rajesh,Suresh,Kannan"
+                        android:gravity="center|left"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:weightSum="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:drawableLeft="@drawable/ic_rupee"
+                        android:drawablePadding="18dp"
+                        android:text="0.00"
+                        android:id="@+id/txtscheduletripadvance"
+                        android:gravity="center|left"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:weightSum="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableLeft="@drawable/ic_km"
+                        android:drawablePadding="15dp"
+                        android:id="@+id/txtschedulestartingkm"
+                        android:text="0 Km"
+                        android:gravity="center|left"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:id="@+id/LLEndingkm"
+                    android:weightSum="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableLeft="@drawable/ic_km"
+                        android:drawablePadding="15dp"
+                        android:visibility="gone"
+                        android:id="@+id/txtscheduleendingkm"
+                        android:text="0 Km"
+                        android:gravity="center|left"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:background="@color/graycolor"
+                    android:id="@+id/LLvehicledoc"
+                    android:visibility="gone"
+                    android:weightSum="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableLeft="@drawable/ic_arrow_downward"
+                        android:drawablePadding="15dp"
+                        android:id="@+id/txtvechicledoc"
+                        android:text="Vechicle Document"
+                        android:gravity="center|left"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/LLlunctime"
+                    android:padding="8dp"
+                    android:weightSum="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableLeft="@drawable/ic_breakfast"
+                        android:drawablePadding="15dp"
+                        android:id="@+id/txtschedulelunctime"
+                        android:text="10:00 AM"
+                        android:gravity="center|left"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+
+<!--                    <ListView-->
+<!--                        android:id="@+id/listView1"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="horizontal"-->
+<!--                        >-->
+
+<!--                    </ListView>-->
+
+                <LinearLayout
+                    android:id="@+id/LLlunch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:weightSum="1">
+                    <TextView android:layout_width="0dp"
+                        android:layout_weight="0.45"
+                        android:padding="10dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:drawableLeft="@drawable/ic_start_time"
+                        android:drawableTint="@color/white"
+                        android:textSize="14sp"
+                        android:drawablePadding="5dp"
+                        android:background="@color/lunchgreen"
+                        android:id="@+id/btn_launch_start_time"
+                        android:text="  Lunch Start"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.05"/>
+                    <TextView android:layout_width="0dp"
+                        android:layout_weight="0.45"
+                        android:padding="10dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:drawableLeft="@drawable/ic_watch"
+                        android:drawableTint="@color/white"
+                        android:textSize="14sp"
+                        android:drawablePadding="5dp"
+                        android:background="@color/lunchred"
+                        android:id="@+id/btn_launch_end_time"
+                        android:text="  Lunch End"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/LLeway">
+
+                    <LinearLayout
+                        android:id="@+id/LLView"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/gray"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:weightSum="1">
+                        <!--                    <View-->
+                        <!--                        android:layout_width="match_parent"-->
+                        <!--                        android:layout_height="2dp"-->
+                        <!--                        android:background="@color/green"-->
+                        <!--                       />-->
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="4dp"
+                        android:paddingRight="8dp"
+                        android:paddingLeft="25dp"
+                        android:weightSum="1">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:paddingTop="8dp"
+                            android:drawablePadding="15dp"
+                            android:text="Eway bill"
+                            android:gravity="center|left"
+                            android:textColor="@color/black"
+                            android:visibility="invisible"
+                            android:id="@+id/txt_eway"
+                            android:textSize="16sp"/>
+                        <TextView android:layout_width="0dp"
+                            android:layout_weight="0.5"
+                            android:padding="10dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:drawableLeft="@drawable/ic_schedulevan"
+                            android:drawableTint="@color/white"
+                            android:textSize="14sp"
+                            android:drawablePadding="5dp"
+                            android:background="@color/blue"
+                            android:id="@+id/btn_vieweway"
+                            android:text="View Eway Bills"/>
+                    </LinearLayout>
+                    <GridLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:columnCount="3"
+                        android:padding="8dp"
+                        android:weightSum="1"
+                        android:id="@+id/GLView">
+
+                    </GridLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LLnoscheduledetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="No Schedule Available "
+                    android:padding="10dp"
+                    android:drawablePadding="15dp"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.7"
+                    android:padding="10dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:drawableLeft="@drawable/ic_add"
+                    android:drawableTint="@color/white"
+                    android:textSize="16sp"
+                    android:drawablePadding="5dp"
+                    android:background="@color/lunchgreen"
+                    android:id="@+id/txtnewschedule"
+                    android:text="  New Schedule"
+                    android:gravity="center"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

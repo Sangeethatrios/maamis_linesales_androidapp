@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/LLL">
+        <LinearLayout
+            android:id="@+id/listLLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:id="@+id/listLLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.75"
+                android:orientation="horizontal"
+                android:weightSum="1">
+            <TextView
+                android:id="@+id/txtserversno"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:text="S.No"
+                android:visibility="gone"
+                android:textSize="12dp" />
+            <ImageView
+                android:id="@+id/imgserverstatus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_backup" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="0.7">
+
+                        <TextView
+                            android:id="@+id/txturlname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.7"
+                            android:gravity="center|left"
+                            android:text="URL Name"
+                            android:textColor="@color/darkgrey"
+                            android:textSize="12dp" />
+                        <TextView
+                            android:id="@+id/txtserverurl"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.7"
+                            android:gravity="center|left"
+                            android:text="Server URL"
+                            android:textColor="@color/black"
+                            android:textSize="12dp" />
+                </LinearLayout>
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/imgserverurledit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.10"
+                android:paddingHorizontal="5dp"
+                android:gravity="center|right"
+                android:layout_gravity="right"
+                android:src="@drawable/ic_edit_24" />
+            <ImageView
+                android:id="@+id/imgserverurldelete"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.10"
+                android:paddingHorizontal="5dp"
+                android:gravity="center|right"
+                android:layout_gravity="right"
+                android:src="@drawable/ic_delete_red" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+    <!--</ScrollView>-->
+</LinearLayout>

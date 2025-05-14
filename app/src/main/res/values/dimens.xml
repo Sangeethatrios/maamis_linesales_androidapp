@@ -1,0 +1,49 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Menu Page-->
+    <dimen name="menutxtsize">17sp</dimen>
+    <dimen name="menutxtpad">10dp</dimen>
+    <dimen name="menullheight">150dp</dimen>
+    <dimen name="menullwidth">170dp</dimen>
+    <dimen name="menullmartop">3dp</dimen>
+    <dimen name="menuimgsizeheight">64dp</dimen>
+    <dimen name="menuimgsizewidth">64dp</dimen>
+    <dimen name="menuimgpad">10dp</dimen>
+    <dimen name="menutxtmartop">5dp</dimen>
+    <dimen name="menuimgtxtsize">15dp</dimen>
+    <dimen name="menuimgrupeetxtsize">15dp</dimen>
+    <dimen name="menuimgrupeepad">5dp</dimen>
+
+    <!--  &lt;!&ndash; Toolbar &ndash;&gt;
+    <dimen name="toolmarright">10dp</dimen>
+    <dimen name="tooltxtsize">20sp</dimen>
+    <dimen name="toolimgpadding">4dp</dimen>
+    <dimen name="tooltxtmarleft">10dp</dimen>
+    <dimen name="adddatasmarbottom">6dp</dimen>
+    <dimen name="salesheadingtxtsize">12dp</dimen>
+    <dimen name="salestxtsize">14dp</dimen>
+    <dimen name="salestxtpadding">7dp</dimen>
+    <dimen name="salesmartop">8dp</dimen>
+    <dimen name="salesedittxtpadding">5dp</dimen>
+    <dimen name="toolbartxtsize">15dp</dimen>
+    -->
+    <!-- Toolbar -->
+    <dimen name="normaltextsize">14sp</dimen>
+    <dimen name="toolbartextsize">18sp</dimen>
+    <dimen name="toolbarmediumtextsize">16sp</dimen>
+    <dimen name="toolbarmarleft">10dp</dimen>
+    <dimen name="toolbarpad">4dp</dimen>
+    <dimen name="toolbarmarright">10dp</dimen>
+    <dimen name="toolbarsmalltxtsize">12sp</dimen>
+    <dimen name="toolbarstxtsize">10sp</dimen>
+    <dimen name="toolbarmarbottom">50dp</dimen>
+    <dimen name="toolbarimgmarleft">5dp</dimen>
+    <dimen name="toolbarsmallmarright">5dp</dimen>
+    <dimen name="toolbarimgmarbottom">5dp</dimen>
+    <dimen name="toolbarpadtop">8dp</dimen>
+    <dimen name="toolbarpadbottom">10dp</dimen>
+    <dimen name="toolbarpadleft">10dp</dimen>
+    <dimen name="toolbarpadright">10dp</dimen>
+    <dimen name="toolbardrawablepad">5dp</dimen>
+</resources>

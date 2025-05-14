@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/itemLL"
+    android:background="@color/lightvoilet">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollview">
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*"
+            >
+            <TableRow>
+                <TextView android:id="@+id/listitemname"
+                    android:text="100 kg Jeeni"
+                    android:layout_marginTop="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:textColor="@android:color/black"
+                    android:padding="5dp"
+                    android:textSize="12dp"
+                    android:layout_weight="0.39"
+                    />
+                <TextView
+                    android:id="@+id/dummycount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.05" />
+                <TextView
+                    android:id="@+id/schemecount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.05"
+                    android:text="R"
+                    android:visibility="gone"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:background="@drawable/circle_small"/>
+                <ImageView android:id="@+id/pricearrow"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.04"
+                    android:src="@drawable/ic_arrow_upward_black_24dp"
+                    />
+                <TableLayout android:layout_weight="0.46">
+                    <TableRow>
+
+                        <EditText android:id="@+id/listitemrate"
+                            android:text="0.00"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:background="@drawable/editbackground"
+                            android:textColor="@android:color/black"
+                            android:padding="5dp"
+                            android:gravity="right"
+                            android:inputType="numberDecimal"
+                            android:maxLength="8"
+                            android:layout_marginTop="5dp"
+                            android:textSize="12dp"
+                            android:layout_weight="0.18"
+                            />
+
+                        <EditText
+                            android:id="@+id/listitemqty"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="0.15"
+                            android:inputType="number"
+                            android:background="@drawable/editbackground"
+                            android:gravity="right"
+                            android:maxLength="5"
+                            android:padding="6dp"
+                            android:text=""
+                            android:textColor="@android:color/black"
+                            android:textSize="12dp"
+
+                            />
+                        <TextView android:id="@+id/listitemtotal"
+                            android:text="0.00"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:textColor="@android:color/white"
+                            android:padding="6dp"
+                            android:layout_marginLeft="1dp"
+                            android:background="@color/colorPrimaryDark"
+                            android:gravity="right"
+                            android:textSize="12dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="0.23"
+                            />
+                    </TableRow>
+                    <TableRow>
+                        <TextView android:id="@+id/labelhsntax"
+                            android:text="100.00"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:textColor="@color/white"
+                            android:background="@color/voilet"
+                            android:gravity="center"
+                            android:textSize="11dp"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:layout_weight="0.18"
+                            />
+                        <LinearLayout
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_marginLeft="5dp"
+                            android:id="@+id/stockvalueLL"
+                            android:visibility="visible"
+                            android:layout_weight="0.15">
+                            <TextView android:id="@+id/labelstock"
+                                android:text="0"
+                                android:layout_height="wrap_content"
+                                android:layout_width="0dp"
+                                android:textColor="@color/white"
+                                android:background="@color/green"
+                                android:gravity="right"
+                                android:textSize="11dp"
+                                android:visibility="gone"
+                                android:layout_weight="0.08"
+                                />
+                            <TextView android:id="@+id/labelstockunit"
+                                android:text="Bags"
+                                android:layout_height="wrap_content"
+                                android:layout_width="0dp"
+                                android:textColor="@color/white"
+                                android:background="@color/green"
+                                android:gravity="left"
+                                android:ellipsize="end"
+                                android:singleLine="true"
+                                android:visibility="gone"
+                                android:textSize="11dp"
+                                android:layout_weight="0.07"
+                                />
+                        </LinearLayout>
+                        <TextView android:id="@+id/labelnilstock"
+                            android:text="Nil Stock"
+                            android:visibility="gone"
+                            android:layout_marginLeft="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:textColor="@color/white"
+                            android:background="@color/red"
+                            android:gravity="center"
+                            android:textSize="10dp"
+                            android:layout_weight="0.15"
+                            />
+                        <TextView android:id="@+id/listdiscount"
+                            android:text="Disc 0.00"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:textColor="@android:color/black"
+                            android:gravity="left"
+                            android:background="@color/lightbiscuit"
+                            android:textSize="11dp"
+                            android:layout_marginLeft="7dp"
+                            android:layout_weight="0.21"
+                            android:paddingRight="5dp"
+                            />
+
+                    </TableRow>
+                </TableLayout>
+
+
+
+                <TextView android:id="@+id/listitemcode"
+                    android:text=""
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:textColor="@android:color/black"
+                    android:padding="5dp"
+                    android:textSize="14dp"
+                    android:visibility="gone"
+                    android:layout_weight="0.26"
+                    />
+                <TextView android:id="@+id/listitemuom"
+                    android:text=""
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:textColor="@android:color/black"
+                    android:padding="5dp"
+                    android:textSize="14dp"
+                    android:visibility="gone"
+                    android:layout_weight="0.26"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/listitemtax"
+                    android:visibility="gone"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/listitemstock"
+                    android:visibility="gone"/>
+
+
+            </TableRow>
+        </TableLayout>
+
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,19 @@
+----------------------------------------------------------
+                Release Note based on version
+----------------------------------------------------------
+
+ version 1_0_2
+ --------------------
+ 1. split the sync process
+ 2. change the bluetooth connectivity
+ 3. fix the bluetooth print
+
+ version 1_0_3
+ --------------------
+ 1. fix the issues based on shared issue correction sheet
+
+ version 1_0_4
+ ---------------------
+ 1. scheme apply process based on bill type in sales
+ 2. add the price list sync in sales , sales return, order bill save
+ 
