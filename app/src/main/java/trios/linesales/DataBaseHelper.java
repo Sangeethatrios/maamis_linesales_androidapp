@@ -20,7 +20,7 @@ import android.util.Log;
 
 public class DataBaseHelper extends SQLiteOpenHelper
 {
-    private static int DbVersion = 3;
+    private static int DbVersion = 5;
     private static String DB_PATH;
     private static String DB_NAME = "dblinesales.db";
     private static SQLiteDatabase mDataBase;
@@ -230,6 +230,9 @@ public class DataBaseHelper extends SQLiteOpenHelper
         {
             addLocationforcustomer(db);
         }
+        if(oldVersion < 5){
+            addcompanytype(db);
+        }
     }
     private void addLocationforcustomer(SQLiteDatabase db) {
         String querytblsales = "ALTER TABLE " + Constants.TBLSALES +
@@ -248,5 +251,28 @@ public class DataBaseHelper extends SQLiteOpenHelper
         String qryorgpricetempsalesitemdetails="ALTER TABLE tbltempsalesitemdetails ADD COLUMN  orgprice TEXT DEFAULT null";
         db.execSQL(qryorgpricetempsalesitemdetails);
 
+    }
+    private void addcompanytype(SQLiteDatabase db) {
+        String querytblitem = "ALTER TABLE tblitemmaster ADD COLUMN erpitemcode TEXT;";
+        db.execSQL(querytblitem);
+
+        String querytblcompany = "alter table tblcompanymaster add column companytype integer DEFAULT NULL;";
+        db.execSQL(querytblcompany);
+
+        String querysalescategory = "CREATE TABLE def_sales_category (\n" +
+                "    sacid SERIAL PRIMARY KEY,\n" +
+                "    sac_name TEXT ,\n" +
+                "    sac_code INT \n" +
+                ");\n";
+        db.execSQL(querysalescategory);
+        String querycustomermaster = "ALTER TABLE  tblcustomer ADD COLUMN categorycode INT;";
+        db.execSQL(querycustomermaster);
+        String querycustomermastererp = "ALTER TABLE  tblcustomer ADD COLUMN erpitemcode TEXT;";
+        db.execSQL(querycustomermastererp);
+
+        String querygeneralmaster = "ALTER TABLE  tblgeneralsettings ADD COLUMN maxbillamount FLOAT;";
+        db.execSQL(querygeneralmaster);
+        String querygeneralmastererp = "ALTER TABLE  tblgeneralsettings ADD COLUMN maxbillannualamount FLOAT";
+        db.execSQL(querygeneralmastererp);
     }
 }

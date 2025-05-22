@@ -2052,7 +2052,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             dataBaseAdapter.syncstatemaster(jsonObj);
                             api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "statemaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
                         }
-
+                        jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"), "syncdefsalescategory.php",context);
+                        if (isSuccessful(jsonObj)) {
+                            dataBaseAdapter.syncdefsalescategory(jsonObj);
+                            api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "defsalescategory", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                        }
                     }
 
             } catch (Exception e) {

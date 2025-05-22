@@ -9151,6 +9151,43 @@ public class DataBaseAdapter
         }
     }
 
+    public void syncdefsalescategory (JSONObject object)
+    {
+        if(object!=null)
+        {
+            JSONArray json_category = null;
+
+            String deleteSql = "DELETE FROM 'def_sales_category'";
+            mDb.execSQL(deleteSql);
+            try {
+                String success = object.getString("success");
+                if(success.equals("1"))
+                {
+                    json_category = object.getJSONArray("Value");
+                    for(int i=0;i<json_category.length();i++)
+                    {
+                        try {
+
+                            JSONObject obj = (JSONObject) json_category.get(i);
+
+
+                            String sql = "INSERT INTO def_sales_category(sacid,sac_name,sac_code) VALUES('"+obj.getString("sacid")+"','" + obj.getString("sac_name") + "', " + " '"+obj.getString("sac_code")+"' )";
+                                mDb.execSQL(sql);
+
+
+                        } catch (Exception ex) {
+                            insertErrorLog(ex.toString(), this.getClass().getSimpleName() + " - syncdefsalescategory", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                        }
+                    }
+                }
+            } catch (JSONException ex) {
+                // TODO Auto-generated catch block
+                insertErrorLog(ex.toString(), this.getClass().getSimpleName() + " - syncdefsalescategory", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            }
+        }
+    }
+
+
     public void syncupivendermaster (JSONObject object)
     {
         if(object!=null)
@@ -9516,7 +9553,7 @@ public class DataBaseAdapter
 
                                     sql = "INSERT INTO 'tblcustomer' (autonum,customercode,refno, customername,customernametamil,address,areacode,emailid,mobileno,telephoneno," +
                                             "aadharno,gstin,status,makerid,createddate,updateddate,latitude,longitude,flag,schemeapplicable,uploaddocument,gstinverificationstatus," +
-                                            "customertypecode,business_type,whatsappno,mobilenoverificationstatus)" +
+                                            "customertypecode,business_type,whatsappno,mobilenoverificationstatus,categorycode,erpitemcode)" +
                                             " VALUES('" + gc +"','" + obj.getString("customercode")+"'," +
                                             "'" + obj.getString("refno")+"'," +
                                             "'" + obj.getString("customername").replaceAll("'","''")+"'," +
@@ -9531,7 +9568,7 @@ public class DataBaseAdapter
                                             "'" + obj.getString("schemeapplicable")+"','" + obj.getString("uploaddocument")+"'," +
                                             "'" + obj.getString("gstinverificationstatus")+"','" + obj.getString("customertypecode")+"'," +
                                             " '"+obj.getString("business_type")+"','"+obj.getString("whatsappno")+"'," +
-                                            "'"+obj.getString("mobilenoverificationstatus")+"')";
+                                            "'"+obj.getString("mobilenoverificationstatus")+"','"+obj.getString("categorycode")+"','"+obj.getString("erpitemcode")+"')";
                                     mDb.execSQL(sql);
                                 }
                                 else {
@@ -9554,9 +9591,12 @@ public class DataBaseAdapter
                                             "business_type='"+obj.getString("business_type")+"',  " +
                                             " gstinverificationstatus =  '" + obj.getString("gstinverificationstatus")+"', " +
                                             " mobilenoverificationstatus =  '" + obj.getString("mobilenoverificationstatus")+"', " +
-                                            " whatsappno =  '" + obj.getString("whatsappno")+"' " +
+                                            " whatsappno =  '" + obj.getString("whatsappno")+"', " +
+                                            "categorycode = '"+obj.getString("categorycode")+"',"+
+                                            "erpitemcode = '"+obj.getString("erpitemcode")+"'"+
                                             " WHERE customercode='" + obj.getString("customercode")+"' ";
                                     mDb.execSQL(sql1);
+
                                 }
                             }
                             else {
@@ -9580,9 +9620,11 @@ public class DataBaseAdapter
                                         " business_type='"+obj.getString("business_type")+"'  " +
                                         " gstinverificationstatus =  '" + obj.getString("gstinverificationstatus")+"', " +
                                         " mobilenoverificationstatus =  '" + obj.getString("mobilenoverificationstatus")+"', " +
-                                        " whatsappno =  '" + obj.getString("whatsappno")+"' " +
+                                        " whatsappno =  '" + obj.getString("whatsappno")+"', " +
+                                        "categorycode = '"+obj.getString("categorycode")+"',"+
+                                        "erpitemcode = '"+obj.getString("erpitemcode")+"'"+
                                         " WHERE customercode='" + obj.getString("customercode")+"' ";
-                                mDb.execSQL(sql1);
+                                         mDb.execSQL(sql1);
                             }
                         } catch (JSONException ex) {
                             if(cursor != null)
@@ -9669,7 +9711,8 @@ public class DataBaseAdapter
                                             "'" + obj.getString("website")+"','" + obj.getString("gstcertificateupload")+"'," +
                                             "'" + obj.getString("colourcode")+"','" + obj.getString("status")+"'," +
                                             "'" + obj.getString("makerid")+"','" + obj.getString("createddate")+"'," +
-                                            "'" + obj.getString("updateddate")+"','" + obj.getString("gststatecode") + "')";
+                                            "'" + obj.getString("updateddate")+"','" + obj.getString("gststatecode") + "'," +
+                                            "'" + obj.getString("companytype")+"')";
                                     mDb.execSQL(sql);
                                 } else {
                                     int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
@@ -9684,7 +9727,8 @@ public class DataBaseAdapter
                                             "gstcertificateupload='" + obj.getString("gstcertificateupload")+"'," +
                                             "colourcode='" + obj.getString("colourcode")+"',status='" + obj.getString("status")+"'," +
                                             "makerid='" + obj.getString("makerid")+"',createddate='" + obj.getString("createddate")+"'," +
-                                            "updateddate='" + obj.getString("updateddate")+"',gststatecode='" + obj.getString("gststatecode") + "'  " +
+                                            "updateddate='" + obj.getString("updateddate")+"',gststatecode='" + obj.getString("gststatecode") + "', " +
+                                            "companytype='"+ obj.getString("companytype") +"' " +
                                             " WHERE companycode=" + obj.getInt("companycode");
                                     mDb.execSQL(sql1);
                                 }
@@ -9705,7 +9749,8 @@ public class DataBaseAdapter
                                             "gstcertificateupload='" + obj.getString("gstcertificateupload")+"'," +
                                             "colourcode='" + obj.getString("colourcode")+"',status='" + obj.getString("status")+"'," +
                                             "makerid='" + obj.getString("makerid")+"',createddate='" + obj.getString("createddate")+"'," +
-                                            "updateddate='" + obj.getString("updateddate")+"',gststatecode=" + obj.getString("gststatecode") + "'  " +
+                                            "updateddate='" + obj.getString("updateddate")+"',gststatecode=" + obj.getString("gststatecode") + "' , " +
+                                            "companytype='"+ obj.getString("companytype") +"' " +
                                             " WHERE companycode=" + obj.getInt("companycode");
                                     mDb.execSQL(sql1);
                                 }
@@ -10036,7 +10081,7 @@ public class DataBaseAdapter
                                 String sql = "INSERT INTO 'tblgeneralsettings' (autonum,restrictmobileappdays,allowedithsn,allowedittax,enablebillwisediscount,enablegpstracking" +
                                         " ,enableallcustomersmobileapp,salesschedulemobileapp,billcopypopup,drilldownitem,wishmsg,drilldownorder,jurisdiction,printheader," +
                                         " showcashpaidpopup,freeitemcolor,item_disc_efrom,zro_price_item_disc,cash_item_disc,otp_time_validity," +
-                                        "otp_time_validity_backend,orderautoapproval) VALUES('" + gc +"'," +
+                                        "otp_time_validity_backend,orderautoapproval,maxbillannualamount,maxbillamount) VALUES('" + gc +"'," +
                                         "'" + obj.getString("restrictmobileappdays")+"','" + obj.getString("allowedithsn")+"'," +
                                         "'" + obj.getString("allowedittax")+"','" + obj.getString("enablebillwisediscount")+"'," +
                                         "'" + obj.getString("enablegpstracking")+"','" + obj.getString("enableallcustomersmobileapp")+"'," +
@@ -10051,7 +10096,7 @@ public class DataBaseAdapter
                                         "'"+obj.getString("cash_item_disc")+"' ," +
                                         "'"+obj.getString("otp_time_validity")+"'," +
                                         "'"+obj.getString("otp_time_validity_backend")+"',"+
-                                        "'"+obj.getString("orderautoapproval")+"') ";
+                                        "'"+obj.getString("orderautoapproval")+"','"+obj.getString("maxbillannualamount")+"','"+obj.getString("maxbillamount")+"' ) ";
                                 mDb.execSQL(sql);
                             }else{
                                 int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
@@ -10076,7 +10121,9 @@ public class DataBaseAdapter
                                         "cash_item_disc='"+ obj.getString("cash_item_disc") +"'," +
                                         "otp_time_validity='"+obj.getString("otp_time_validity")+"'," +
                                         "otp_time_validity_backend='"+obj.getString("otp_time_validity_backend")+"',"+
-                                        "orderautoapproval='"+obj.getString("orderautoapproval")+"'";
+                                        "orderautoapproval='"+obj.getString("orderautoapproval")+"', " +
+                                        "maxbillamount='"+obj.getString("maxbillamount")+"', " +
+                                        "maxbillannualamount='"+obj.getString("maxbillannualamount")+"' ";
                                 mDb.execSQL(sql);
                             }
 
@@ -10225,7 +10272,7 @@ public class DataBaseAdapter
                                             "'" + obj.getString("uppweightunitcode")+"','" + obj.getString("offset")+"'," +
                                             "'" + obj.getString("orderstatus")+"','" + obj.getString("maxorderqty")+"' ," +
                                             "'" + obj.getString("business_type")+"','" + obj.getString("minimumsalesqty")+"'," +
-                                            " '" + obj.getString("itemtype")+"')";
+                                            " '" + obj.getString("itemtype")+"','"+obj.getString("erpitemcode")+"')";
                                     mDb.execSQL(sql);
                                 } else {
                                     int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
@@ -10249,7 +10296,8 @@ public class DataBaseAdapter
                                             "orderstatus='" + obj.getString("orderstatus")+"' ,maxorderqty='" + obj.getString("maxorderqty")+"' ," +
                                             " business_type='" + obj.getString("business_type")+"'," +
                                             " minimumsalesqty='" + obj.getString("minimumsalesqty")+"', " +
-                                            " itemtype='"+ obj.getString("itemtype") +"'" +
+                                            " itemtype='"+ obj.getString("itemtype") +"'," +
+                                            "erpitemcode='"+obj.getString("erpitemcode")+"'"+
                                             " WHERE itemcode=" + obj.getString("itemcode");
                                     mDb.execSQL(sql1);
                                 }
@@ -10277,7 +10325,8 @@ public class DataBaseAdapter
                                         "orderstatus='" + obj.getString("orderstatus")+"' ,maxorderqty='" + obj.getString("maxorderqty")+"'," +
                                         " business_type='" + obj.getString("business_type")+"'," +
                                         " minimumsalesqty='" + obj.getString("minimumsalesqty")+"' , " +
-                                        " itemtype='"+ obj.getString("itemtype") +"'" +
+                                        " itemtype='"+ obj.getString("itemtype") +"'," +
+                                        "erpitemcode='"+obj.getString("erpitemcode")+"'"+
                                         " WHERE itemcode=" + obj.getString("itemcode");
                                 mDb.execSQL(sql1);
                             }

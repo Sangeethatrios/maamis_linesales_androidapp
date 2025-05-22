@@ -573,7 +573,11 @@ public class SyncActivity extends AppCompatActivity {
                         dataBaseAdapter.synccompanymaster(jsonObj);
                         api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "companymaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
                     }
-
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"), "syncdefsalescategory.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.syncdefsalescategory(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "defsalescategory", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
                     ////if(BuildConfig.DEBUG)
                         Log.w("Sync Activity : "," Sync All : UPI Vender Details");
                     jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"), "syncupivendermaster.php",context);
@@ -1703,7 +1707,11 @@ public class SyncActivity extends AppCompatActivity {
                         dataBaseAdapter.syncstatemaster(jsonObj);
                         api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "statemaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
                     }
-
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"), "syncdefsalescategory.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.syncdefsalescategory(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "defsalescategory", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
                     //if(BuildConfig.DEBUG)
                         Log.w("---> Sync Activity : "," Sync Customer Completed");
                 }

@@ -2,19 +2,23 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ncolinesales_billingapp.iml" filepath="$PROJECT_DIR$/ncolinesales_billingapp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ncolinesales_billingapp.app.unitTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.iml" filepath="$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.iml" filepath="$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.main.iml" filepath="$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library-extension-rx/ncolinesales_billingapp.library-extension-rx.unitTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library/ncolinesales_billingapp.library.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/maamis_linesales_androidapp.iml" filepath="$PROJECT_DIR$/.idea/modules/maamis_linesales_androidapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/maamis_linesales_androidapp.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/maamis_linesales_androidapp.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/maamis_linesales_androidapp.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/maamis_linesales_androidapp.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/maamis_linesales_androidapp.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/maamis_linesales_androidapp.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/printerSupport/maamis_linesales_androidapp.app.printerSupport.iml" filepath="$PROJECT_DIR$/.idea/modules/app/printerSupport/maamis_linesales_androidapp.app.printerSupport.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/printerSupport/maamis_linesales_androidapp.app.printerSupport.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/printerSupport/maamis_linesales_androidapp.app.printerSupport.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/printerSupport/maamis_linesales_androidapp.app.printerSupport.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/printerSupport/maamis_linesales_androidapp.app.printerSupport.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/printerSupport/maamis_linesales_androidapp.app.printerSupport.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/printerSupport/maamis_linesales_androidapp.app.printerSupport.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/maamis_linesales_androidapp.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/maamis_linesales_androidapp.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/maamis_linesales_androidapp.library.iml" filepath="$PROJECT_DIR$/.idea/modules/library/maamis_linesales_androidapp.library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-extension-rx/maamis_linesales_androidapp.library-extension-rx.iml" filepath="$PROJECT_DIR$/.idea/modules/library-extension-rx/maamis_linesales_androidapp.library-extension-rx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-extension-rx/maamis_linesales_androidapp.library-extension-rx.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library-extension-rx/maamis_linesales_androidapp.library-extension-rx.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-extension-rx/maamis_linesales_androidapp.library-extension-rx.main.iml" filepath="$PROJECT_DIR$/.idea/modules/library-extension-rx/maamis_linesales_androidapp.library-extension-rx.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-extension-rx/maamis_linesales_androidapp.library-extension-rx.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library-extension-rx/maamis_linesales_androidapp.library-extension-rx.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/maamis_linesales_androidapp.library.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library/maamis_linesales_androidapp.library.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/maamis_linesales_androidapp.library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/library/maamis_linesales_androidapp.library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/maamis_linesales_androidapp.library.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library/maamis_linesales_androidapp.library.unitTest.iml" />
     </modules>
   </component>
 </project>

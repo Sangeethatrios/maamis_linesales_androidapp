@@ -1746,6 +1746,11 @@ public class MenuActivity extends AppCompatActivity {
                         dataBaseAdapter.syncstatemaster(jsonObj);
                         api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "statemaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
                     }
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"), "syncdefsalescategory.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.syncdefsalescategory(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "defsalescategory", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
                     //Not Purchased
                     jsonObj = api.GetNotPurchasedDetails(preferenceMangr.pref_getString(Constants.KEY_DEVICEID), "syncnotpurchaseddetails.php",context);
                     if (isSuccessful(jsonObj)) {
