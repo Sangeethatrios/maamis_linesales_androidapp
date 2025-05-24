@@ -6320,13 +6320,13 @@ public class DataBaseAdapter
             String getschedulecount = (mschedule.moveToFirst()) ? mschedule.getString(0) : "0";
 
             if(getschedulecount.equals("0")){
-                String sql = "INSERT INTO  'tblsalesschedule' (autonum, refno,schedulecode, scheduledate,vancode,routecode,vehiclecode,employeecode, drivercode,helpername," +
-                        "tripadvance,startingkm,endingkm,createddate, updateddate,makerid,flag,lunch_start_time,lunch_end_time) VALUES " +
-                        "(0,'"+getmaxschedulecode+"','"+generateschedulecode+"',datetime('"+Gencode+"')," +
-                        " '"+preferenceMangr.pref_getString("getvancode")+"','"+ getroutecode +"','"+ getvehiclecode +"','"+ getemployeecode +"'," +
-                        " '"+getdrivercode+"','"+gethelpername+"','"+gettripadvance+"','"+getstartingkm+"',0," +
-                        " datetime('now', 'localtime'),datetime('now', 'localtime'),0,0,'','')";
-                mDb.execSQL(sql);
+//                String sql = "INSERT INTO  'tblsalesschedule' (autonum, refno,schedulecode, scheduledate,vancode,routecode,vehiclecode,employeecode, drivercode,helpername," +
+//                        "tripadvance,startingkm,endingkm,createddate, updateddate,makerid,flag,lunch_start_time,lunch_end_time) VALUES " +
+//                        "(0,'"+getmaxschedulecode+"','"+generateschedulecode+"',datetime('"+Gencode+"')," +
+//                        " '"+preferenceMangr.pref_getString("getvancode")+"','"+ getroutecode +"','"+ getvehiclecode +"','"+ getemployeecode +"'," +
+//                        " '"+getdrivercode+"','"+gethelpername+"','"+gettripadvance+"','"+getstartingkm+"',0," +
+//                        " datetime('now', 'localtime'),datetime('now', 'localtime'),0,0,'','')";
+//                mDb.execSQL(sql);
                 String ewaysql = "INSERT INTO 'tblscheduleeway' (schedulecode,scheduledate,ewayurl,createddate) Values " +
                         "('"+generateschedulecode+"',datetime('"+Gencode+"'),'"+getewayurl+"', datetime('now', 'localtime'))";
                 mDb.execSQL(ewaysql);
@@ -11016,12 +11016,12 @@ public class DataBaseAdapter
                                         vartripadvance="0";
                                     }
                                     sql = "INSERT INTO 'tblsalesschedule' (autonum, refno,schedulecode, scheduledate,vancode,routecode,vehiclecode,employeecode, drivercode,helpername," +
-                                            "tripadvance,startingkm,endingkm,createddate, updateddate,makerid,flag,lunch_start_time,lunch_end_time) VALUES('" + gc +"','" + obj.getString("refno")+"'," +
+                                            "tripadvance,startingkm,endingkm,createddate, updateddate,makerid,flag,lunch_start_time,lunch_end_time,scheduletodate,target,budget) VALUES('" + gc +"','" + obj.getString("refno")+"'," +
                                             "'" + obj.getString("schedulecode")+"','" + obj.getString("scheduledate")+"','" + obj.getString("vancode")+"'," +
                                             "'" + obj.getString("routecode")+"','" + obj.getString("vehiclecode")+"','" + obj.getString("employeecode")+"'," +
                                             "'" + obj.getString("drivercode")+"','" + obj.getString("helpername").replaceAll("'","''")+"','" + vartripadvance +"'," +
                                             "'" + obj.getString("startingkm")+"','" + obj.getString("endingkm")+"','" + obj.getString("createddate")+"'," +
-                                            "'" + obj.getString("updateddate")+"','" + obj.getString("makerid")+"',1,'" + obj.getString("lunch_start_time")+"','" + obj.getString("lunch_end_time")+"')";
+                                            "'" + obj.getString("updateddate")+"','" + obj.getString("makerid")+"',1,'" + obj.getString("lunch_start_time")+"','" + obj.getString("lunch_end_time")+"','"+obj.getString("scheduletodate")+"','"+obj.getString("target")+"','"+obj.getString("budget")+"')";
                                     mDb.execSQL(sql);
                                 }
 
@@ -11040,7 +11040,10 @@ public class DataBaseAdapter
                                         "tripadvance='" + vartripadvance +"',startingkm='" + obj.getString("startingkm")+"'," +
                                         "endingkm='" + obj.getString("endingkm")+"',createddate='" + obj.getString("createddate")+"'," +
                                         "updateddate='" + obj.getString("updateddate")+"',makerid='" + obj.getString("makerid")+"'," +
-                                        " lunch_start_time='" + obj.getString("lunch_start_time")+"',lunch_end_time='" + obj.getString("lunch_end_time")+"' " +
+                                        " lunch_start_time='" + obj.getString("lunch_start_time")+"',lunch_end_time='" + obj.getString("lunch_end_time")+"', " +
+                                        "budget='"+obj.getString("budget")+"',"+
+                                        "target = '"+obj.getString("target")+"',"+
+                                        "scheduletodate = '"+obj.getString("scheduletodate")+"'," +
                                         " WHERE schedulecode='" + obj.getString("schedulecode")+"' ";
                                 mDb.execSQL(sql1);
                             }
