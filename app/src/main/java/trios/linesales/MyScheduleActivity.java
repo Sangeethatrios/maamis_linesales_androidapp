@@ -65,7 +65,8 @@ public class MyScheduleActivity extends AppCompatActivity   {
     public Context context;
     TextView txtscheduledate,txtschedulevanname,txtschedulevehiclename,txtscheduleroutename,txtschedulesalesrepname,
             txtscheduletripadvance,txtscheduledrivername,txtschedulehelpername,txtschedulestartingkm,
-            txtscheduleendingkm,txtewayurl;
+            txtscheduleendingkm,txtewayurl,txtdatevalues,txttarget,txtbudget;
+    ProgressDialog loading;
 
     private int year, month, day;
     private Calendar calendar;
@@ -82,7 +83,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
     private ProgressDialog pDialog;
     public static final int progress_bar_type = 0;
     //Button declare
-    TextView btn_lunch_start_time,btn_lunch_end_time,txtschedulelunctime,btn_vieweway,txt_eway;
+    TextView btn_lunch_start_time,btn_lunch_end_time,txtschedulelunctime,btn_vieweway,txt_eway,btn_start;
     LinearLayout LLlunctime,LLEndingkm,LLView,LLpdf;
     String getschedulecode="";
     String lunch_start_time = "";
@@ -127,6 +128,9 @@ public class MyScheduleActivity extends AppCompatActivity   {
 
         //Declare all variables
         txtscheduledate = (TextView)findViewById(R.id.txtscheduledate);
+        txtdatevalues = (TextView)findViewById(R.id.datevalues);
+        txttarget = (TextView)findViewById(R.id.txttarget);
+        txtbudget = (TextView)findViewById(R.id.txtbudget);
         txtschedulevanname = (TextView)findViewById(R.id.txtschedulevanname);
         txtschedulevehiclename = (TextView)findViewById(R.id.txtschedulevehiclename);
         txtscheduleroutename = (TextView)findViewById(R.id.txtscheduleroutename);
@@ -140,6 +144,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
         goback = (ImageButton)findViewById(R.id.goback);
         logout = (ImageButton)findViewById(R.id.logout);
         btn_lunch_start_time = (TextView)findViewById(R.id.btn_launch_start_time);
+        btn_start = (TextView)findViewById(R.id.btn_start);
         btn_lunch_end_time = (TextView)findViewById(R.id.btn_launch_end_time);
         txtschedulelunctime = (TextView)findViewById(R.id.txtschedulelunctime);
         LLlunctime = (LinearLayout)findViewById(R.id.LLlunctime);
@@ -461,6 +466,14 @@ public class MyScheduleActivity extends AppCompatActivity   {
             }
         });
 
+        //click  for schedule start
+        btn_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startaction();
+            }
+        });
+
         //Click end time
         btn_lunch_end_time.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -712,6 +725,68 @@ public class MyScheduleActivity extends AppCompatActivity   {
             }
         }
         return success;
+    }
+
+    //schedule start function
+    public  void startaction(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Are you sure you want to start the schedule ?");
+        alertDialogBuilder.setPositiveButton("yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        DataBaseAdapter objdatabaseadapter = null;
+                        try {
+                            showLoader();
+                            //Order item details
+                            objdatabaseadapter = new DataBaseAdapter(context);
+                            objdatabaseadapter.open();
+                            String getresult="";
+                            if(!getschedulecode.equals("")) {
+                                getresult = objdatabaseadapter.InsertSchduleStarttime(getschedulecode);
+                                if (getresult.equals("success")) {
+                                    hideLoader();
+                                    Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.schedulestart), Toast.LENGTH_LONG);
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
+
+                                    networkstate = isNetworkAvailable();
+                                    if (networkstate == true) {
+                                        new AsyncScheduleDetails().execute();
+                                    }
+                                }
+                            }else{
+                                Toast toast = Toast.makeText(getApplicationContext(),"Don't have schedule details", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
+                                return;
+                            }
+                        } catch (Exception e) {
+                            hideLoader();
+                            Toast toast = Toast.makeText(getApplicationContext(),"Error in saving", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                            mDbErrHelper.open();
+                            String geterrror = e.toString();
+                            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                            mDbErrHelper.close();
+                        } finally {
+                            if(objdatabaseadapter!=null)
+                                objdatabaseadapter.close();
+                        }
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     //Start time action
@@ -1064,6 +1139,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
         }
     }
     //Get Schedule List
+    @SuppressLint("Range")
     public  void GetScheduleList(){
         LLscheduledetails.setVisibility(View.VISIBLE);
         LLNoSchedule.setVisibility(View.GONE);
@@ -1092,6 +1168,9 @@ public class MyScheduleActivity extends AppCompatActivity   {
                     txtscheduleroutename.setText(Cur.getString(3));
                     txtschedulesalesrepname.setText(Cur.getString(5));
                     txtscheduledrivername.setText(Cur.getString(6));
+                    txtdatevalues.setText(Cur.getString(Cur.getColumnIndex("datevalues")));
+                    txttarget.setText(Cur.getString(Cur.getColumnIndex("target")));
+                    txtbudget.setText(Cur.getString(Cur.getColumnIndex("budget")));
                     String gethelpername = Cur.getString(7);
                     if(gethelpername.equals("") || gethelpername.equals("null") || gethelpername.equals(null)){
                         gethelpername = "NIL";
@@ -1247,6 +1326,9 @@ public class MyScheduleActivity extends AppCompatActivity   {
                 txtscheduleroutename.setText(nillvalue);
                 txtschedulesalesrepname.setText(nillvalue);
                 txtscheduledrivername.setText(nillvalue);
+                txtdatevalues.setText(nillvalue);
+                txtbudget.setText(nillvalue);
+                txttarget.setText(nillvalue);
                 txtschedulehelpername.setText(nillvalue);
                 txtscheduletripadvance.setText(nillvalue);
                 txtschedulestartingkm.setText(nillvalue);
@@ -1444,6 +1526,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
             AsyncTask<String, JSONObject, ArrayList<ScheduleDatas>> {
         ArrayList<ScheduleDatas> List = null;
         JSONObject jsonObj = null;
+        @SuppressLint("Range")
         @Override
         protected  ArrayList<ScheduleDatas> doInBackground(String... params) {
             RestAPI api = new RestAPI();
@@ -1475,6 +1558,8 @@ public class MyScheduleActivity extends AppCompatActivity   {
                         obj.put("makerid", mCur2.getString(15));
                         obj.put("lunch_start_time", mCur2.getString(17));
                         obj.put("lunch_end_time", mCur2.getString(18));
+                        obj.put("schedulestartdate", mCur2.getString(mCur2.getColumnIndex("schedulestartdate")));
+                        obj.put("schedulestartflag",  mCur2.getString(mCur2.getColumnIndex("schedulestartflag")));
                         js_array2.put(obj);
                         mCur2.moveToNext();
                     }
@@ -2760,5 +2845,17 @@ public class MyScheduleActivity extends AppCompatActivity   {
             }
 
         }
+    }
+    public void showLoader(){
+        loading = ProgressDialog.show(context, "Loading", "Please wait...", true);
+        loading.setCancelable(false);
+        loading.setCanceledOnTouchOutside(false);
+
+    }
+    public void hideLoader(){
+        if(loading !=null) {
+           loading.dismiss();
+        }
+
     }
 }

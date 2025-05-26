@@ -274,5 +274,12 @@ public class DataBaseHelper extends SQLiteOpenHelper
         db.execSQL(querygeneralmaster);
         String querygeneralmastererp = "ALTER TABLE  tblgeneralsettings ADD COLUMN maxbillannualamount FLOAT";
         db.execSQL(querygeneralmastererp);
+
+        String salesscheduletodate = "ALTER TABLE  tblsalesschedule ADD COLUMN scheduletodate TIMESTAMP WITHOUT TIME ZONE";
+        db.execSQL(salesscheduletodate);
+        String salesscheduletarget = "ALTER TABLE  tblsalesschedule ADD COLUMN target FLOAT";
+        db.execSQL(salesscheduletarget);
+        String salesschedulebudget = "ALTER TABLE  tblsalesschedule ADD COLUMN budget FLOAT";
+        db.execSQL(salesschedulebudget);
     }
 }

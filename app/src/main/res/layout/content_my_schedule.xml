@@ -58,6 +58,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
+                    android:id="@+id/datevalues"
+                    android:text="26-05-2025 to 31-05-2025"
+                    android:padding="8dp"
+                    android:drawablePadding="15dp"
+                    android:drawableLeft="@drawable/ic_date_range"
+                    android:drawableTint="@color/black"
+                    android:gravity="left|center"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
                     android:id="@+id/txtschedulevanname"
                     android:text="Van A"
                     android:padding="8dp"
@@ -196,6 +209,7 @@
                     android:orientation="horizontal"
                     android:padding="8dp"
                     android:id="@+id/LLEndingkm"
+                    android:visibility="gone"
                     android:weightSum="1">
                     <TextView
                         android:layout_width="match_parent"
@@ -203,7 +217,6 @@
                         android:layout_weight="1"
                         android:drawableLeft="@drawable/ic_km"
                         android:drawablePadding="15dp"
-                        android:visibility="gone"
                         android:id="@+id/txtscheduleendingkm"
                         android:text="0 Km"
                         android:gravity="center|left"
@@ -231,6 +244,46 @@
                         android:textColor="@color/black"
                         android:textSize="16sp"/>
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/LLbudget"
+                    android:padding="8dp"
+                    android:weightSum="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableLeft="@drawable/budgeticon4"
+                        android:drawableTint="@color/black"
+                        android:drawablePadding="15dp"
+                        android:id="@+id/txtbudget"
+                        android:text="500"
+                        android:gravity="center|left"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/LLtarget"
+                    android:padding="8dp"
+                    android:weightSum="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableLeft="@drawable/targeticon2"
+                        android:drawablePadding="15dp"
+                        android:id="@+id/txttarget"
+                        android:text="600"
+                        android:gravity="center|left"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -250,7 +303,6 @@
                         android:textColor="@color/black"
                         android:textSize="16sp"/>
                 </LinearLayout>
-
 <!--                    <ListView-->
 <!--                        android:id="@+id/listView1"-->
 <!--                        android:layout_width="match_parent"-->
@@ -260,12 +312,53 @@
 
 <!--                    </ListView>-->
 
+
+                <LinearLayout
+                    android:id="@+id/LLstart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:weightSum="1">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@color/lunchgreen"
+                        android:gravity="center"
+                        android:weightSum="1">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/play"
+                            app:tint="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:padding="10dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp"
+                        android:drawablePadding="5dp"
+                        android:textAlignment="center"
+                        android:background="@color/lunchgreen"
+                        android:id="@+id/btn_start"
+                        android:text="Start"/>
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/LLlunch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
                     android:gravity="center"
+                    android:visibility="gone"
                     android:weightSum="1">
                     <TextView android:layout_width="0dp"
                         android:layout_weight="0.45"
