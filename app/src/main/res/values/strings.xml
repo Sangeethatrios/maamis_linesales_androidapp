@@ -56,7 +56,7 @@
     <string name="lunchstarted">Operation restricted because lunch time started...</string>
     <string name="lunchsavestartmsg">Your lunch time has been started...</string>
     <string name="lunchsaveendmsg">Your lunch time is over...</string>
-    <string name="schedulestart">Your schedule has been starte start...</string>
+    <string name="schedulestart">Your schedule has been started...</string>
 
     <string name="title_activity_review_cash_notpaid_details">ReviewCashNotpaidDetails</string>
     <string name="title_activity_sales_order">SalesOrderActivity</string>

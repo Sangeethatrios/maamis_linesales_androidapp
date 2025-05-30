@@ -2256,6 +2256,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     /*********SCHEDULE DETAILS*************/
+    @SuppressLint("Range")
     public void AsyncScheduleDetails(){
         ArrayList<ScheduleDatas> List = null;
         JSONObject jsonObj = null;
@@ -2289,6 +2290,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     obj.put("lunch_start_time", mCur2.getString(17));
                     obj.put("lunch_end_time", mCur2.getString(18));
                     preferenceMangr.pref_putString("getsalesschedulecode",mCur2.getString(2));
+                    obj.put("schedulestartdate", mCur2.getString(mCur2.getColumnIndex("schedulestartdate")));
+                    obj.put("schedulestartflag",  mCur2.getString(mCur2.getColumnIndex("schedulestartflag")));
                     js_array2.put(obj);
                     mCur2.moveToNext();
                 }

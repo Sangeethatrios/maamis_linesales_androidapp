@@ -482,8 +482,17 @@ public class SalesListActivity extends AppCompatActivity {
                         }
 
 
-                    }else{
+                    }
+                    else{
+                        String getactiveschedule = objdatabaseadapter1.GetActiveSchedule();
 
+if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) ){
+    Toast toast = Toast.makeText(getApplicationContext(),"Please start the current schedule", Toast.LENGTH_LONG);
+    toast.show();
+    Intent i = new Intent(SalesListActivity.this,MyScheduleActivity.class);
+    startActivity(i);
+    return;
+}
                         if(!preferenceMangr.pref_getString("getcashclosecount").equals("0") && !preferenceMangr.pref_getString("getcashclosecount").equals("null") &&
                                 !preferenceMangr.pref_getString("getcashclosecount").equals("") && !preferenceMangr.pref_getString("getcashclosecount").equals(null) ){
                             Toast toast = Toast.makeText(getApplicationContext(),"Cash Closed ", Toast.LENGTH_LONG);

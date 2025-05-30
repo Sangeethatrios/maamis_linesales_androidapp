@@ -17,7 +17,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@drawable/editbackground"
-            android:layout_margin="10dp">
+            android:layout_margin="10dp"
+             >
 
             <LinearLayout
                 android:id="@+id/LLDate"
@@ -26,7 +27,8 @@
                 android:orientation="horizontal"
                 android:padding="5dp"
                 android:background="@color/colorPrimaryDark"
-                android:weightSum="1">
+                android:weightSum="1"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -303,6 +305,24 @@
                         android:textColor="@color/black"
                         android:textSize="16sp"/>
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/LLstartdatetime"
+                    android:padding="8dp"
+                    android:visibility="gone">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="15dp"
+                        android:id="@+id/txtscheduledatetime"
+                        android:text="your schedule started at 10:00 AM"
+                        android:gravity="center|left"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </LinearLayout>
 <!--                    <ListView-->
 <!--                        android:id="@+id/listView1"-->
 <!--                        android:layout_width="match_parent"-->
@@ -490,7 +510,8 @@
                     android:background="@color/lunchgreen"
                     android:id="@+id/txtnewschedule"
                     android:text="  New Schedule"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:visibility="gone"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

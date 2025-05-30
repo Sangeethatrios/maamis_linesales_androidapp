@@ -65,7 +65,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
     public Context context;
     TextView txtscheduledate,txtschedulevanname,txtschedulevehiclename,txtscheduleroutename,txtschedulesalesrepname,
             txtscheduletripadvance,txtscheduledrivername,txtschedulehelpername,txtschedulestartingkm,
-            txtscheduleendingkm,txtewayurl,txtdatevalues,txttarget,txtbudget;
+            txtscheduleendingkm,txtewayurl,txtdatevalues,txttarget,txtbudget,txtscheduledatetime;
     ProgressDialog loading;
 
     private int year, month, day;
@@ -101,7 +101,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
     Dialog pindialog;
     Button btnSubmitpin;
     Pinview pinview;
-    LinearLayout LLNoSchedule,LLscheduledetails,LLlunch,LLeway;
+    LinearLayout LLNoSchedule,LLscheduledetails,LLlunch,LLeway,LLstart,LLstartdatetime;
     TextView txtnewschedule;
     String getschdeuleformatdate1="";
     String currentdate="";
@@ -129,7 +129,10 @@ public class MyScheduleActivity extends AppCompatActivity   {
         //Declare all variables
         txtscheduledate = (TextView)findViewById(R.id.txtscheduledate);
         txtdatevalues = (TextView)findViewById(R.id.datevalues);
+        LLstart = (LinearLayout)findViewById(R.id.LLstart);
+        LLstartdatetime = (LinearLayout)findViewById(R.id.LLstartdatetime);
         txttarget = (TextView)findViewById(R.id.txttarget);
+        txtscheduledatetime = (TextView)findViewById(R.id.txtscheduledatetime);
         txtbudget = (TextView)findViewById(R.id.txtbudget);
         txtschedulevanname = (TextView)findViewById(R.id.txtschedulevanname);
         txtschedulevehiclename = (TextView)findViewById(R.id.txtschedulevehiclename);
@@ -334,7 +337,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
 
                             if (CURDATE==SELDATE ) {
                                 //Toast.makeText(context, "twodays are same", Toast.LENGTH_SHORT).show();
-                                txtnewschedule.setVisibility(View.VISIBLE);
+                                //txtnewschedule.setVisibility(View.VISIBLE);
                                 LLlunch.setVisibility(View.VISIBLE);
                                 txtscheduledate.setText(vardate );
                                 //Call schedule List
@@ -743,24 +746,42 @@ public class MyScheduleActivity extends AppCompatActivity   {
                             objdatabaseadapter.open();
                             String getresult="";
                             if(!getschedulecode.equals("")) {
-                                getresult = objdatabaseadapter.InsertSchduleStarttime(getschedulecode);
-                                if (getresult.equals("success")) {
-                                    hideLoader();
-                                    Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.schedulestart), Toast.LENGTH_LONG);
-                                    toast.setGravity(Gravity.CENTER, 0, 0);
-                                    toast.show();
 
+                                String getschedulecodevalue = objdatabaseadapter.GetOrderScheduleCode();
+
+                                if(!getschedulecodevalue.equals("")&& !getschedulecodevalue.equals("null")
+                                        && !getschedulecodevalue.equals(null) && !getschedulecodevalue.equals("0")){
                                     networkstate = isNetworkAvailable();
                                     if (networkstate == true) {
-                                        new AsyncScheduleDetails().execute();
+                                        // new AsyncCheckPreviousDaySchedule().execute();
+                                        new AsyncSyncCheckVanStockVerification().execute();
+                                    }else{
+                                        Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
+                                        toast.setGravity(Gravity.CENTER, 0, 0);
+                                        toast.show();
+                                        return;
+                                    }
+                                }else {
+                                    networkstate = isNetworkAvailable();
+                                    if (networkstate == true) {
+                                        new AsyncSyncCheckDeliveryNote().execute();
+
+                                    }else{
+                                        Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
+                                        toast.setGravity(Gravity.CENTER, 0, 0);
+                                        toast.show();
+                                        return;
                                     }
                                 }
+
                             }else{
                                 Toast toast = Toast.makeText(getApplicationContext(),"Don't have schedule details", Toast.LENGTH_LONG);
                                 toast.setGravity(Gravity.CENTER, 0, 0);
                                 toast.show();
                                 return;
                             }
+
+                            hideLoader();
                         } catch (Exception e) {
                             hideLoader();
                             Toast toast = Toast.makeText(getApplicationContext(),"Error in saving", Toast.LENGTH_LONG);
@@ -788,6 +809,385 @@ public class MyScheduleActivity extends AppCompatActivity   {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+
+
+    protected  class AsyncSyncCheckVanStock  extends
+            AsyncTask<String, JSONObject, String>{
+        String List = "Success";
+        JSONObject jsonObj = null;
+        ProgressDialog loading;
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            RestAPI api = new RestAPI();
+            String result = "";
+            DataBaseAdapter dataBaseAdapter = null;
+            String deviceid = preferenceMangr.pref_getString("deviceid");
+            String getvancode = preferenceMangr.pref_getString("getvancode");
+            try {
+                dataBaseAdapter = new DataBaseAdapter(context);
+                dataBaseAdapter.open();
+                networkstate = isNetworkAvailable();
+                if (networkstate == true) {
+                    jsonObj = api.CheckVanStock(deviceid, "check_vanstock.php", preferenceMangr.pref_getString("getvancode"));
+                    if (isSuccessful(jsonObj)) {
+                        JSONArray json_category = jsonObj.getJSONArray("Value");
+                        JSONObject obj = (JSONObject) json_category.get(0);
+                        result = obj.getString("count");
+                        api.udfnSyncDetails(deviceid, "checkvanstock", preferenceMangr.pref_getString("getvancode"), getschedulecode);
+                    }
+                }
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                Log.d("AsyncSync", e.getMessage());
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            } finally {
+                dataBaseAdapter.close();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = ProgressDialog.show(context, "Loading", "Please wait...", true, true);
+            loading.setCancelable(false);
+            loading.setCanceledOnTouchOutside(false);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            try {
+                loading.dismiss();
+
+
+                DataBaseAdapter objdatabaseadapter = null;
+                try {
+                    objdatabaseadapter = new DataBaseAdapter(context);
+                    objdatabaseadapter.open();
+                    if(!result.equals("") && !result.equals("null") && !result.equals(null)){
+                        if(Integer.parseInt(result)<=0){
+                            Toast toast = Toast.makeText(getApplicationContext(), "Insufficient van stock..",Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            return;
+                        }else if(Integer.parseInt(result)==999999999){
+                            Toast toast = Toast.makeText(getApplicationContext(), "Van stock verification not completed for previous schedule",Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            return;
+                        } else{
+//                            String getschedulecode = objdatabaseadapter.insertSchedule(scheduledate.getText().toString(), getscheduleroutecode, getschedulevehiclecode,
+//                                    getsalesrepcode, getscheduledrivercode, txthelpername.getText().toString(),
+//                                    txttripaadvance.getText().toString(), txtstartingkm.getText().toString(),getewayurl);
+
+
+                            String getresult = objdatabaseadapter.InsertSchduleStarttime(getschedulecode);
+                            if (getresult.equals("success")) {
+                                Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.schedulestart), Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
+                            }
+                            GetScheduleList();
+                            ScheduleActivity.getsalesschedulecode = getschedulecode;
+                            preferenceMangr.pref_putString("getsalesschedulecode",getschedulecode);
+
+//                            Toast toast = Toast.makeText(getApplicationContext(), "Saved Successfully", Toast.LENGTH_LONG);
+//                            toast.setGravity(Gravity.CENTER, 0, 0);
+//                            toast.show();
+                            networkstate = isNetworkAvailable();
+                            if (networkstate == true) {
+                                new AsyncScheduleDetails().execute();
+                            }
+
+//                            if(preferenceMangr.pref_getString("getbusiness_type").equals("2")){
+//                                Intent i = new Intent(context, MenuActivity.class);
+//                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                startActivity(i);
+//                            }else {
+//                                Intent i = new Intent(context, ReviewCashNotpaidDetails.class);
+//                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                startActivity(i);
+//                            }
+
+                        }
+                    }
+
+                } catch (Exception e) {
+                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                    mDbErrHelper.open();
+                    String geterrror = e.toString();
+                    mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                    mDbErrHelper.close();
+                } finally {
+                    objdatabaseadapter.close();
+                }
+
+            }catch (Exception e) {
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            }
+        }
+    }
+
+    protected  class AsyncSyncCheckVanStockVerification extends
+            AsyncTask<String, JSONObject, String> {
+        String List = "Success";
+        JSONObject jsonObj = null;
+        ProgressDialog loading;
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            RestAPI api = new RestAPI();
+            String result = "";
+            DataBaseAdapter dataBaseAdapter = null;
+            String deviceid = preferenceMangr.pref_getString("deviceid");
+            String getvancode = preferenceMangr.pref_getString("getvancode");
+            try {
+                dataBaseAdapter = new DataBaseAdapter(context);
+                dataBaseAdapter.open();
+                networkstate = isNetworkAvailable();
+                if (networkstate == true) {
+                    //Get Van Master
+                    String getschedulecode = dataBaseAdapter.GetScheduleCode();
+                    if(!getschedulecode.equals("") && !getschedulecode.equals("null") && !getschedulecode.equals(null)) {
+                        jsonObj = api.VanStockVerification(deviceid, "check_vanstockverification.php", getschedulecode);
+                        if (isSuccessful(jsonObj)) {
+                            JSONArray json_category = jsonObj.getJSONArray("Value");
+                            JSONObject obj = (JSONObject) json_category.get(0);
+                            result = obj.getString("count");
+                            api.udfnSyncDetails(deviceid, "checkvanstockverification", preferenceMangr.pref_getString("getvancode"), getschedulecode);
+                        }
+                    }else{
+                        result = "1";
+                    }
+
+                }
+
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                Log.d("AsyncSync", e.getMessage());
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            } finally {
+                dataBaseAdapter.close();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = ProgressDialog.show(context, "Loading", "Please wait...", true, true);
+            loading.setCancelable(false);
+            loading.setCanceledOnTouchOutside(false);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            try {
+                loading.dismiss();
+
+
+                DataBaseAdapter objdatabaseadapter = null;
+                try {
+                    objdatabaseadapter = new DataBaseAdapter(context);
+                    objdatabaseadapter.open();
+                    if(!result.equals("") && !result.equals("null") && !result.equals(null)){
+                        if(Integer.parseInt(result)<=0){
+                            Toast toast = Toast.makeText(getApplicationContext(), "Van stock verification not completed for previous schedule",Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            return;
+                        }else{
+                            networkstate = isNetworkAvailable();
+                            if (networkstate == true) {
+                                new AsyncSyncCheckDeliveryNote().execute();
+                            }else{
+                                Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
+                                return;
+                            }
+                        }
+                    }else{
+                        Toast toast = Toast.makeText(getApplicationContext(), "Van stock verification not completed for previous schedule",Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                    mDbErrHelper.open();
+                    String geterrror = e.toString();
+                    mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                    mDbErrHelper.close();
+                } finally {
+                    objdatabaseadapter.close();
+                }
+
+            }catch (Exception e) {
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            }
+        }
+    }
+
+
+    protected  class AsyncSyncCheckDeliveryNote extends
+            AsyncTask<String, JSONObject, String> {
+        String List = "Success";
+        JSONObject jsonObj = null;
+        ProgressDialog loading;
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            RestAPI api = new RestAPI();
+            String result = "";
+            DataBaseAdapter dataBaseAdapter = null;
+            String deviceid = preferenceMangr.pref_getString("deviceid");
+            String getvancode = preferenceMangr.pref_getString("getvancode");
+            try {
+                dataBaseAdapter = new DataBaseAdapter(context);
+                dataBaseAdapter.open();
+                networkstate = isNetworkAvailable();
+                if (networkstate == true) {
+                    //Get schedulecode
+                    String getschedulecode = dataBaseAdapter.GetScheduleCode();
+                    if(!getschedulecode.equals("") && !getschedulecode.equals("null") && !getschedulecode.equals(null)) {
+                        jsonObj = api.DeliveryNote(deviceid, "check_deliverynote.php", getschedulecode);
+                        if (isSuccessful(jsonObj)) {
+                            JSONArray json_category = jsonObj.getJSONArray("Value");
+                            JSONObject obj = (JSONObject) json_category.get(0);
+                            result = obj.getString("count");
+                            api.udfnSyncDetails(deviceid, "check_deliverynote", preferenceMangr.pref_getString("getvancode"), getschedulecode);
+                        }
+                    }else{
+                        result = "1";
+                    }
+
+                }
+
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                Log.d("AsyncSync", e.getMessage());
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            } finally {
+                dataBaseAdapter.close();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = ProgressDialog.show(context, "Loading", "Please wait...", true, true);
+            loading.setCancelable(false);
+            loading.setCanceledOnTouchOutside(false);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            try {
+                loading.dismiss();
+
+
+                DataBaseAdapter objdatabaseadapter = null;
+                try {
+                    objdatabaseadapter = new DataBaseAdapter(context);
+                    objdatabaseadapter.open();
+                    if(!result.equals("") && !result.equals("null") && !result.equals(null)){
+                        if(Integer.parseInt(result)<=0){
+                            Toast toast = Toast.makeText(getApplicationContext(), "Delivery note not yet generated for this schedule ",Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            return;
+                        }else{
+//                            String getschedulecode = objdatabaseadapter.insertSchedule(scheduledate.getText().toString(), getscheduleroutecode, getschedulevehiclecode,
+//                                    getsalesrepcode, getscheduledrivercode, txthelpername.getText().toString(),
+//                                    txttripaadvance.getText().toString(), txtstartingkm.getText().toString(),getewayurl);
+                            String getresult = objdatabaseadapter.InsertSchduleStarttime(getschedulecode);
+                            if (getresult.equals("success")) {
+                                hideLoader();
+                                Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.schedulestart), Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
+
+                            }
+                            GetScheduleList();
+                            ScheduleActivity.getsalesschedulecode = getschedulecode;
+                            preferenceMangr.pref_putString("getsalesschedulecode",getschedulecode);
+
+//                            Toast toast = Toast.makeText(getApplicationContext(), "Saved Successfully", Toast.LENGTH_LONG);
+//                            toast.setGravity(Gravity.CENTER, 0, 0);
+//                            toast.show();
+                            networkstate = isNetworkAvailable();
+                            if (networkstate == true) {
+                                new AsyncScheduleDetails().execute();
+                            }
+
+//                            if(preferenceMangr.pref_getString("getbusiness_type").equals("2")){
+//                                Intent i = new Intent(context, MenuActivity.class);
+//                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                startActivity(i);
+//                            }else {
+//                                Intent i = new Intent(context, ReviewCashNotpaidDetails.class);
+//                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                startActivity(i);
+//                            }
+                        }
+                    }else{
+                        Toast toast = Toast.makeText(getApplicationContext(), "Delivery note not yet generated for this schedule",Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                    mDbErrHelper.open();
+                    String geterrror = e.toString();
+                    mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                    mDbErrHelper.close();
+                } finally {
+                    objdatabaseadapter.close();
+                }
+
+            }catch (Exception e) {
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            }
+        }
+    }
+
+
 
     //Start time action
     public  void starttime_action(){
@@ -1170,6 +1570,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
                     txtscheduledrivername.setText(Cur.getString(6));
                     txtdatevalues.setText(Cur.getString(Cur.getColumnIndex("datevalues")));
                     txttarget.setText(Cur.getString(Cur.getColumnIndex("target")));
+                    txtscheduledatetime.setText(Cur.getString(Cur.getColumnIndex("schedulestartdatetime")));
                     txtbudget.setText(Cur.getString(Cur.getColumnIndex("budget")));
                     String gethelpername = Cur.getString(7);
                     if(gethelpername.equals("") || gethelpername.equals("null") || gethelpername.equals(null)){
@@ -1179,9 +1580,9 @@ public class MyScheduleActivity extends AppCompatActivity   {
                     String gettripadvance = Cur.getString(8);
                     if(gettripadvance.equals("") || gettripadvance.equals("null") || gettripadvance.equals(null)){
                         gettripadvance = "NIL";
-                        txtscheduletripadvance.setText(gettripadvance);
+                        txtscheduletripadvance.setText("Advance : " + gettripadvance);
                     }else {
-                        txtscheduletripadvance.setText(df.format(Double.parseDouble(gettripadvance)));
+                        txtscheduletripadvance.setText("Advance : " + df.format(Double.parseDouble(gettripadvance)));
                     }
                     if(Cur.getString(4).split(" - ")[1].equals("null")){
                         txtschedulevehiclename.setText(Cur.getString(4).split(" - ")[0]);
@@ -1205,6 +1606,19 @@ public class MyScheduleActivity extends AppCompatActivity   {
                      lunch_start_time = Cur.getString(11);
                      lunch_end_time = Cur.getString(12);
 
+                    String getschedulestartflag = Cur.getString(Cur.getColumnIndex("schedulestartflag"));
+                    if(Utilities.isNullOrEmpty(getschedulestartflag)|| getschedulestartflag.equals("0"))
+                    {
+                        LLstart.setVisibility(View.VISIBLE);
+                        LLlunch.setVisibility(View.GONE);
+                        LLstartdatetime.setVisibility(View.GONE);
+
+                    }else {
+
+                        LLstart.setVisibility(View.GONE);
+                        LLstartdatetime.setVisibility(View.VISIBLE);
+                        LLlunch.setVisibility(View.VISIBLE);
+                    }
 
 //                     if(preferenceMangr.pref_getString("getbusiness_type").equals("2")){
 //                         LLeway.setVisibility(View.GONE);
@@ -1315,8 +1729,6 @@ public class MyScheduleActivity extends AppCompatActivity   {
                         LLlunctime.setVisibility(View.GONE);
                         txtschedulelunctime.setText("");
                     }
-
-
                 }
 
             }else{
@@ -1564,7 +1976,6 @@ public class MyScheduleActivity extends AppCompatActivity   {
                         mCur2.moveToNext();
                     }
                     js_obj.put("JSonObject", js_array2);
-
                     jsonObj =  api.ScheduleDetails(js_obj.toString(),context);
                     //Call Json parser functionality
                     JSONParser parser = new JSONParser();

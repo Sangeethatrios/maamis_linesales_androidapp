@@ -428,7 +428,7 @@ public class DataBaseAdapter
                     " tripadvance,(select routenametamil from tblroute where routecode=a.routecode) as routenametamil," +
                     " (select capacity from tblvehiclemaster where vehiclecode=a.vehiclecode) as capacity from " +
                     " tblsalesschedule as a where  vancode='"+ preferenceMangr.pref_getString("getvancode") +"'" +
-                    " and  scheduledate=datetime('"+Gencode+"') ";
+                    " and  (datetime('"+Gencode+"') BETWEEN scheduledate AND scheduletodate)  ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -2186,7 +2186,7 @@ public class DataBaseAdapter
             /*String dqlsql = "delete from tblsalesschedule where schedulecode='V340010'";
             mDb.execSQL(dqlsql);*/
 
-            String sql ="select schedulecode from tblsalesschedule where vancode='"+ preferenceMangr.pref_getString("getvancode") +"' " +
+            String sql ="select schedulecode from tblsalesschedule where vancode='"+ preferenceMangr.pref_getString("getvancode") +"'   AND COALESCE(schedulestartflag,0) = 1 " +
                     " order by scheduledate desc limit 1 ";
             Cursor mCur = mDb.rawQuery(sql, null);
 
@@ -2204,6 +2204,33 @@ public class DataBaseAdapter
         return getschedulecode;
     }
 
+    public String GetActiveSchedule()
+    {
+        String getschedulestartflag = "0";
+        try{
+
+            /*String dqlsql = "delete from tblsalesschedule where schedulecode='V340010'";
+            mDb.execSQL(dqlsql);*/
+            String Gencode= GenCreatedDate();
+            String sql ="select COALESCE(schedulestartflag,0) AS schedulestartflag from tblsalesschedule where vancode='"+ preferenceMangr.pref_getString("getvancode") +"' " +
+                    "AND  (datetime('"+Gencode+"') BETWEEN scheduledate AND scheduletodate)  order by scheduledate desc limit 1 ";
+            Cursor mCur = mDb.rawQuery(sql, null);
+
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+                getschedulestartflag = mCur.getString(0);
+            }else{
+                getschedulestartflag = "0";
+            }
+        }catch (Exception ex){
+            insertErrorLog(ex.toString(), this.getClass().getSimpleName() + "GetActiveSchedule", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+
+        return getschedulestartflag;
+    }
+
+
     //Get Schedule for cash report
     public String GetOrderScheduleCode()
     {
@@ -2211,7 +2238,7 @@ public class DataBaseAdapter
         try{
             String getdate = GenCreatedDate();
             String sql ="select schedulecode from tblsalesschedule where vancode='"+ preferenceMangr.pref_getString("getvancode") +"'" +
-                    " and datetime(scheduledate) != datetime('"+getdate+"') " +
+                    " and  NOT ((datetime('"+getdate+"') BETWEEN scheduledate AND scheduletodate)) AND scheduletodate IS NOT NULL AND scheduledate  IS NOT NULL " +
                     " order by scheduledate desc limit 1 ";
             Cursor mCur = mDb.rawQuery(sql, null);
 
@@ -2794,11 +2821,13 @@ public class DataBaseAdapter
                     " where vehiclecode=a.vehiclecode) as vechiclename," +
                     "(select employeenametamil from tblemployeemaster where employeecode=a.employeecode) employeename," +
                     "(select employeenametamil from tblemployeemaster where employeecode=a.drivercode) drivername,helpername," +
-                    "tripadvance,startingkm,endingkm,coalesce(lunch_start_time,'') as lunch_start_time ," +
+                    " COALESCE(tripadvance,0) AS tripadvance,startingkm,endingkm,coalesce(lunch_start_time,'') as lunch_start_time ," +
                     " coalesce(lunch_end_time,'') as lunch_end_time ," +
                     "(select ewayurl from tblscheduleeway where schedulecode=a.schedulecode) as ewayurl,(STRFTIME('%d-%m-%Y', scheduledate) || '  ' || 'to'|| '  ' ||" +
-                    "    COALESCE(STRFTIME('%d-%m-%Y', scheduletodate), '')) AS datevalues,COALESCE(budget,0) AS budget,COALESCE(target,0) AS target,COALESCE(schedulestartdate,'') AS schedulestartdate,COALESCE(schedulestartflag,0) AS schedulestartflag "+
-                    "from tblsalesschedule as a where scheduledate=datetime('"+getschedulecode+"') " +
+                    "    COALESCE(STRFTIME('%d-%m-%Y', scheduletodate), '')) AS datevalues,'Budget : '|| printf('%.2f', COALESCE(budget, 0)) AS budget,'Target : '|| printf('%.2f', COALESCE(target, 0)) AS target" +
+                    ",COALESCE(schedulestartdate,'') AS schedulestartdate,COALESCE(schedulestartflag,0) AS schedulestartflag," +
+                    " 'Your schedule started at ' || (STRFTIME('%d-%m-%Y', schedulestartdate)) AS  schedulestartdatetime "+
+                    "from tblsalesschedule as a where   (datetime('"+getschedulecode+"') BETWEEN scheduledate AND scheduletodate)    " +
                     " and vancode='"+ preferenceMangr.pref_getString("getvancode") +"' ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
@@ -7947,7 +7976,7 @@ public class DataBaseAdapter
             String transactionno="";
             try{
 
-                String sql = "update tblsalesschedule set schedulestartdate = '"+getdate+"' ,schedulestartflag = 1 where schedulecode='"+getschedulecode+"' ";
+                String sql = "update tblsalesschedule set schedulestartdate = '"+getdate+"' ,schedulestartflag = 1,flag=0 where schedulecode='"+getschedulecode+"' ";
                 mDb.execSQL(sql);
 
 
@@ -13905,8 +13934,8 @@ public class DataBaseAdapter
         String count = "";
         try{
 
-            String sql="select count(schedulecode) from tblsalesschedule where vancode='"+preferenceMangr.pref_getString("getvancode")+"' " +
-                    " and date(scheduledate)=date('"+date+"')";
+            String  sql="select count(schedulecode) from tblsalesschedule where vancode='"+preferenceMangr.pref_getString("getvancode")+"' " +
+                    " and (datetime('"+date+"') BETWEEN scheduledate AND scheduletodate) ";
             cursor = mDb.rawQuery(sql,null);
             if (cursor.getCount() > 0)
             {
@@ -15173,7 +15202,7 @@ public class DataBaseAdapter
     {
         String scheduleDate = "";
         try{
-            String sql ="select strftime('%d-%m-%Y',scheduledate) as scheduledate from tblsalesschedule where vancode='"+ preferenceMangr.pref_getString(Constants.KEY_GETVANCODE) +"' and " +
+            String sql ="select (strftime('%d-%m-%Y',scheduledate) || ' To ' || strftime('%d-%m-%Y',scheduletodate)) as scheduledate from tblsalesschedule where vancode='"+ preferenceMangr.pref_getString(Constants.KEY_GETVANCODE) +"' and " +
                     " schedulecode='" + schedulecode + "' ";
             Cursor mCur = mDb.rawQuery(sql, null);
 
