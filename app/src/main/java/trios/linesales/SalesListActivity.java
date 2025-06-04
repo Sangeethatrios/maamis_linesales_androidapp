@@ -389,11 +389,11 @@ public class SalesListActivity extends AppCompatActivity {
                                             popup_salesclose.setVisibility(View.GONE);
                                         }
                                     } else {
-                                        Intent i = new Intent(SalesListActivity.this, ScheduleActivity.class);
+                                        Intent i = new Intent(SalesListActivity.this,MyScheduleActivity.class);
                                         startActivity(i);
                                     }
                                 } else {
-                                    Intent i = new Intent(SalesListActivity.this, ScheduleActivity.class);
+                                    Intent i = new Intent(SalesListActivity.this,MyScheduleActivity.class);
                                     startActivity(i);
                                 }
                             }else {
@@ -415,7 +415,7 @@ public class SalesListActivity extends AppCompatActivity {
                                             !preferenceMangr.pref_getString("schedule_getcashclosecount").equals("") && !preferenceMangr.pref_getString("schedule_getcashclosecount").equals(null)) {
                             /*bottomlayout.setVisibility(View.GONE);
                             btnSaveSchedule.setVisibility(View.VISIBLE);*/
-                                        Intent i = new Intent(SalesListActivity.this, ScheduleActivity.class);
+                                        Intent i = new Intent(SalesListActivity.this,MyScheduleActivity.class);
                                         startActivity(i);
 
                                     } else {
@@ -452,7 +452,7 @@ public class SalesListActivity extends AppCompatActivity {
                                         salescashclose.show();
                                     }
                                 } else {
-                                    Intent i = new Intent(SalesListActivity.this, ScheduleActivity.class);
+                                    Intent i = new Intent(SalesListActivity.this,MyScheduleActivity.class);
                                     startActivity(i);
                                 }
                                 if (!preferenceMangr.pref_getString("schedule_getsalesclosecount").equals("0") && !preferenceMangr.pref_getString("schedule_getsalesclosecount").equals("null") &&

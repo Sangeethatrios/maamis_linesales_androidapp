@@ -292,7 +292,8 @@
                     android:orientation="horizontal"
                     android:id="@+id/LLlunctime"
                     android:padding="8dp"
-                    android:weightSum="1">
+                    android:weightSum="1"
+                    android:visibility="gone">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

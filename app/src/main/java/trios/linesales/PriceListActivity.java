@@ -11,7 +11,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,14 +37,16 @@ public class PriceListActivity extends AppCompatActivity {
     EditText txtsearchitem;
     boolean ispopensearch = false;
     ImageButton pricelistlogout,goback;
-    TextView pricedate,txtitemgroup,txtitemsubgroup;
+    TextView pricedate,txtitemgroup,txtitemsubgroup,selecttype,tt1;
     private int year, month, day;
     private Calendar calendar;
-    Dialog itemgroupdialog,itemsubgroupdialog;
-    ListView lv_GroupList,lv_SubGroupList;
-    String getitemgroupcode="0",getitemsubgroupcode="0";
+    Dialog itemgroupdialog,itemsubgroupdialog,customerdialog;
+    ListView lv_GroupList,lv_SubGroupList,lv_customerType;
+    String getitemgroupcode="0",getitemsubgroupcode="0",getitemtype = "1";
     String[] itemgroupcode,itemgroupname,itemgroupnametamil;
     String[] itemsubgroupcode,itemsubgroupname,itemsubgroupnametamil;
+    String[] customertypecode,customertypname ;
+
     LinearLayout searchLL;
     ImageButton imgsearchbtn;
     TextView pricesorting;
@@ -66,6 +67,7 @@ public class PriceListActivity extends AppCompatActivity {
         goback = (ImageButton)findViewById(R.id.goback);
         txtitemgroup = (TextView)findViewById(R.id.txtitemgroup);
         txtitemsubgroup = (TextView)findViewById(R.id.txtitemsubgroup);
+        selecttype = (TextView)findViewById(R.id.selecttype);
         searchLL = (LinearLayout)findViewById(R.id.searchLL);
         imgsearchbtn = (ImageButton)findViewById(R.id.imgsearchbtn);
         pricesorting = (TextView) findViewById(R.id.pricesorting);
@@ -180,6 +182,15 @@ public class PriceListActivity extends AppCompatActivity {
             }
         });
 
+        GetSalesType();
+        selecttype.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCustomerTypePopup();
+            }
+        });
+
+
         pricesorting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,22 +207,22 @@ public class PriceListActivity extends AppCompatActivity {
         txtitemsubgroup.setText("All Item Sub-Group");
 
 
-        selectitemstatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // your code here
-                int index = parentView.getSelectedItemPosition();
-                getitemsatus = arraitemstatus[index];
-                GetItem();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
-            }
-
-        });
+//        selectitemstatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+//                // your code here
+//                int index = parentView.getSelectedItemPosition();
+//                getitemsatus = arraitemstatus[index];
+//                GetItem();
+//
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parentView) {
+//                // your code here
+//            }
+//
+//        });
 
        /* DataBaseAdapter objdatabaseadapter = null;
         Cursor Cur=null;
@@ -250,6 +261,8 @@ public class PriceListActivity extends AppCompatActivity {
             if(Cur != null)
                 Cur.close();
         }*/
+
+        GetItem();
     }
     /***** drop down functionality**********/
 
@@ -355,6 +368,78 @@ public class PriceListActivity extends AppCompatActivity {
         }
     }
 
+
+
+    public  void  GetSalesType(){
+        DataBaseAdapter objdatabaseadapter = null;
+        Cursor Cur=null;
+        try{
+            objdatabaseadapter = new DataBaseAdapter(context);
+            objdatabaseadapter.open();
+            Cur = objdatabaseadapter.GetCustomerSalesTypeList();
+            if(Cur.getCount()>0) {
+                customertypecode = new String[Cur.getCount()];
+                customertypname = new String[Cur.getCount()];
+                for(int i=0;i<Cur.getCount();i++){
+                    customertypname[i] = Cur.getString(0);
+                    customertypecode[i] = Cur.getString(1);
+                    Cur.moveToNext();
+                }
+
+                if (customertypname.length >0) {
+                    selecttype.setText(customertypname[0]);
+                }
+            }else{
+                Toast toast = Toast.makeText(getApplicationContext(),"No sales type", Toast.LENGTH_LONG);
+                //toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                //Toast.makeText(getApplicationContext(),"No item sub group in this item group",Toast.LENGTH_SHORT).show();
+            }
+        }  catch (Exception e){
+            Log.i("GetItemSubGroup", e.toString());
+        }
+        finally {
+            // this gets called even if there is an exception somewhere above
+            if(objdatabaseadapter != null)
+                objdatabaseadapter.close();
+            if(Cur != null)
+                Cur.close();
+        }
+    }
+
+    public void showCustomerTypePopup(){
+        try{
+
+            if(customertypecode.length >0) {
+
+                customerdialog = new Dialog(context);
+                customerdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                customerdialog.setContentView(R.layout.itemsubgrouppopup);
+                lv_customerType = (ListView) customerdialog.findViewById(R.id.lv_SubGroupList);
+                tt1=(TextView) customerdialog.findViewById(R.id.tt1);
+                tt1.setText("Select Category");
+                ImageView close = (ImageView) customerdialog.findViewById(R.id.close);
+                close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        customerdialog.dismiss();
+                    }
+                });
+                clicksorting=false;
+                CustomerTypeAdapter adapter = new CustomerTypeAdapter(context);
+                lv_customerType.setAdapter(adapter);
+                customerdialog.show();
+            }else{
+                Toast toast = Toast.makeText(getApplicationContext(),"No sales type", Toast.LENGTH_LONG);
+                //toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                //Toast.makeText(getApplicationContext(),"No item sub group in this item group",Toast.LENGTH_SHORT).show();
+            }
+        }  catch (Exception e){
+            Log.i("GetItemSubGroup", e.toString());
+        }
+    }
+
     //Item master
     public  void GetItem(){
         DataBaseAdapter objdatabaseadapter = null;
@@ -363,7 +448,7 @@ public class PriceListActivity extends AppCompatActivity {
             objdatabaseadapter = new DataBaseAdapter(context);
             objdatabaseadapter.open();
             Cur = objdatabaseadapter.GetPriceItemDB(getitemgroupcode,getitemsubgroupcode,
-                    txtsearchitem.getText().toString(),getitemsatus);
+                    txtsearchitem.getText().toString(),getitemsatus,getitemtype);
             if(Cur.getCount()>0) {
                 priceDetails.clear();
                 for(int i=0;i<Cur.getCount();i++){
@@ -605,7 +690,102 @@ public class PriceListActivity extends AppCompatActivity {
         }
 
     }
+
     /************END BASE ADAPTER*************/
+
+    public class CustomerTypeAdapter extends BaseAdapter {
+
+        private Context context;
+        private LayoutInflater layoutInflater;
+
+        CustomerTypeAdapter(Context c) {
+            context = c;
+            layoutInflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public int getCount() {
+            return customertypecode.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return customertypecode[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+        @Override
+        public int getViewTypeCount() {
+            return getCount();
+        }
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+        @SuppressLint("InflateParams")
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+
+            ViewHolder mHolder;
+
+            if (convertView == null) {
+                convertView = layoutInflater.inflate(R.layout.itemsubgrouppopuplist, parent, false);
+                mHolder = new ViewHolder();
+                try {
+                    mHolder.listsubgroupname = (TextView) convertView.findViewById(R.id.listsubgroupname);
+                } catch (Exception e) {
+                    Log.i("Route", e.toString());
+                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                    mDbErrHelper.open();
+                    String geterrror = e.toString();
+                    mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                    mDbErrHelper.close();
+                }
+                convertView.setTag(mHolder);
+            } else {
+                mHolder = (ViewHolder) convertView.getTag();
+            }
+            try {
+                if (!Utilities.isNullOrEmpty(customertypname[position])) {
+                    mHolder.listsubgroupname.setText(String.valueOf(customertypname[position]));
+                }
+                //getitemtype = customertypecode[0];
+
+
+
+            } catch (Exception e) {
+                Log.i("Route value", e.toString());
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            }
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!Utilities.isNullOrEmpty(customertypname[position])) {
+                        selecttype.setText(String.valueOf(customertypname[position] ));
+                    }
+                    getitemtype = customertypecode[position];
+                    customerdialog.dismiss();
+                    GetItem();
+                }
+            });
+            return convertView;
+        }
+
+        private class ViewHolder {
+            private TextView listsubgroupname;
+
+        }
+
+    }
+
+
     public void goBack(View v) {
         LoginActivity.ismenuopen=true;
         Intent i = new Intent(context, MenuActivity.class);

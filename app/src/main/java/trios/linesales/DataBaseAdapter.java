@@ -1156,6 +1156,23 @@ public class DataBaseAdapter
         return mCur;
     }
 
+    public Cursor GetCustomerSalesTypeList()
+    {
+        Cursor mCur = null;
+        try{
+            String sql = " SELECT sac_name,sac_code FROM def_sales_category ORDER BY sac_code " ;
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+
+        return mCur;
+    }
+
     //Get Sales Return List
     public Cursor GetSalesReturnListDB(String getdate,String getcompanycode,String paymenttype,String paymentstatus)
     {
@@ -1801,7 +1818,7 @@ public class DataBaseAdapter
     }
     //Get item sub group
     public Cursor GetPriceItemDB(String getitemgroupcode,String getsubitemgroupcode,
-                                 String getitemname,String itemtype)
+                                 String getitemname,String itemtype,String getcustomertype)
     {
         Cursor mCur = null;
         try{
@@ -1818,38 +1835,41 @@ public class DataBaseAdapter
                 itemgroupcode = "c.itemgroupcode='"+getitemgroupcode+"'";
             }
 
-            String getitemtype="";
-            if(itemtype.equals("All Items")){
-                getitemtype = "1=1";
-            }else{
-                if(itemtype.equals("Parent")){
-                    itemtype = "parent";
-                }else{
-                    itemtype = "child";
-                }
-                getitemtype = "a.itemcategory='"+itemtype+"' ";
-            }
+
+            String getitemtype="1=1";
+            String CustomerSalesType = "customertype='"+getcustomertype+"'";
+
+//            if(itemtype.equals("All Items")){
+//                getitemtype = "1=1";
+//            }else{
+//                if(itemtype.equals("Parent")){
+//                    itemtype = "parent";
+//                }else{
+//                    itemtype = "child";
+//                }
+//                getitemtype = "a.itemcategory='"+itemtype+"' ";
+//            }
             String sql ="select a.itemcode,a.itemname,a.itemnametamil,a.unitcode," +
                     "a.companycode,CASE WHEN itemtype=2 then (SELECT freeitemcolor from tblgeneralsettings) else" +
                     " (select colourcode from tblcompanymaster where companycode=a.companycode) END as colourcode," +
                     "(select unitname from tblunitmaster where unitcode=a.unitcode) as unitname," +
                     "c.hsn, c.tax, " +
-                    " coalesce((select oldprice from tblitempricelisttransaction where itemcode=a.itemcode " +
+                    " coalesce((select oldprice from tblitempricelisttransaction where itemcode=a.itemcode  AND customertype=f.customertype " +
                     " order by autonum desc limit 1),0) as oldprice," +
                     " coalesce((select newprice from tblitempricelisttransaction" +
-                    " where itemcode=a.itemcode order by autonum desc limit 1),0) as newprice," +
+                    " where itemcode=a.itemcode AND customertype=f.customertype order by autonum desc limit 1),0) as newprice," +
                     " case when parentitemcode=0 then a.itemcode else parentitemcode " +
                     " end as parentcode,case when itemcategory='parent' then 1 else  2 end as itemorder ," +
                     " c.itemsubgroupname,d.brandname,a.itemcategory," +
                     " case when f.createddate  >= datetime('now','-1 day')   then 'pricechanged' else 'nochanges' end as pricetatus,  " +
-                    " coalesce((select oldorderprice from tblitempricelisttransaction where itemcode=a.itemcode " +
+                    " coalesce((select oldorderprice from tblitempricelisttransaction where itemcode=a.itemcode AND customertype=f.customertype " +
                     " order by autonum desc limit 1),0) as oldorderprice," +
                     " coalesce((select neworderprice from tblitempricelisttransaction" +
-                    " where itemcode=a.itemcode order by autonum desc limit 1),0) as neworderprice " +
+                    " where itemcode=a.itemcode AND customertype=f.customertype order by autonum desc limit 1),0) as neworderprice " +
                     " from tblitemmaster as a inner join tblitemsubgroupmaster as c on" +
                     " a.itemsubgroupcode=c.itemsubgroupcode  inner join tblbrandmaster as d on a.brandcode=d.brandcode inner join " +
-                    " tblitempricelisttransaction as f on f.itemcode=a.itemcode " +
-                    "where a.status='"+statusvar+"' and  "+itemgroupcode+" and "+itemsubgroupcode+" and "+getitemtype+" " +
+                    " tblitempricelisttransaction as f on f.itemcode=a.itemcode   " +
+                    "where  "+CustomerSalesType+" AND "+itemgroupcode+" AND  a.status='"+statusvar+"' and  "+itemgroupcode+" and "+itemsubgroupcode+" and "+getitemtype+
                     " and itemname like '%"+getitemname+"%' order by itemtype,c.itemgroupcode, c.itemsubgroupcode," +
                     " d.brandname,a.itemcategory desc";
             //parentcode,itemorder,a.itemname,
@@ -2826,7 +2846,7 @@ public class DataBaseAdapter
                     "(select ewayurl from tblscheduleeway where schedulecode=a.schedulecode) as ewayurl,(STRFTIME('%d-%m-%Y', scheduledate) || '  ' || 'to'|| '  ' ||" +
                     "    COALESCE(STRFTIME('%d-%m-%Y', scheduletodate), '')) AS datevalues,'Budget : '|| printf('%.2f', COALESCE(budget, 0)) AS budget,'Target : '|| printf('%.2f', COALESCE(target, 0)) AS target" +
                     ",COALESCE(schedulestartdate,'') AS schedulestartdate,COALESCE(schedulestartflag,0) AS schedulestartflag," +
-                    " 'Your schedule started at ' || (STRFTIME('%d-%m-%Y', schedulestartdate)) AS  schedulestartdatetime "+
+                    "   schedulestartdate  AS  schedulestartdatetime "+
                     "from tblsalesschedule as a where   (datetime('"+getschedulecode+"') BETWEEN scheduledate AND scheduletodate)    " +
                     " and vancode='"+ preferenceMangr.pref_getString("getvancode") +"' ";
             mCur = mDb.rawQuery(sql, null);
@@ -10593,18 +10613,21 @@ public class DataBaseAdapter
                                     "'" + obj.getString("neworderprice")+"','" + obj.getString("createddate")+"')";
                             mDb.execSQL(sql);*/
 
-                            String sql = "SELECT * FROM 'tblitempricelisttransaction' WHERE itemcode=" + obj.getString("itemcode");
+                            String sql = "SELECT * FROM 'tblitempricelisttransaction' WHERE itemcode=" + obj.getString("itemcode") + " AND customertype = '"+obj.getString("customertype")+"'";
                             cursor = mDb.rawQuery(sql, null);
                             if (!cursor.moveToFirst()) {
                                 int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
 
                                 sql = "INSERT INTO 'tblitempricelisttransaction'(autonum,itemcode,oldprice," +
-                                        " newprice,oldorderprice,neworderprice,createddate,wmsrate) VALUES('" + gc +"'," +
+                                        " newprice,oldorderprice,neworderprice,createddate,wmsrate,companytype,customertype,companycode) VALUES('" + gc +"'," +
                                         "'" + obj.getString("itemcode")+"'" +
                                         ",'" + obj.getString("oldprice")+"', '" + obj.getString("newprice")+"' " +
                                         ",'" + obj.getString("oldorderprice")+"', '" + obj.getString("neworderprice")+"'," +
-                                        "'" + obj.getString("createddate")+"','"+obj.getString("wmsrate")+"')";
+                                        "'" + obj.getString("createddate")+"','"+obj.getString("wmsrate")+"','"+obj.getString("companytype")+"','"+obj.getString("customertype")+"','"+obj.getString("companycode")+"' )";
                                 mDb.execSQL(sql);
+                                if( obj.getString("itemcode").equals( "631")) {
+                                    Log.e("sql data", sql);
+                                }
                             } else {
                                 int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
                                 String sql1 = "UPDATE 'tblitempricelisttransaction' SET autonum='" + gc +"'," +
@@ -10613,9 +10636,15 @@ public class DataBaseAdapter
                                         "oldorderprice='" + obj.getString("oldorderprice")+"'," +
                                         "neworderprice='" + obj.getString("neworderprice")+"'," +
                                         "createddate='" + obj.getString("createddate")+"',  " +
-                                        "wmsrate='" + obj.getString("wmsrate")+"'  " +
-                                        " WHERE itemcode=" + obj.getString("itemcode");
+                                        "wmsrate='" + obj.getString("wmsrate")+"'," +
+                                        "companytype='" + obj.getString("companytype")+"'," +
+                                        "customertype='" + obj.getString("customertype")+"'," +
+                                        "companycode='" + obj.getString("companycode")+"' " +
+                                        " WHERE itemcode=" + obj.getString("itemcode") + " AND  customertype = '"+obj.getString("customertype")+"'";
                                 mDb.execSQL(sql1);
+                                if( obj.getString("itemcode").equals( "631")) {
+                                    Log.e("sql data", sql1);
+                                }
                             }
 
                         } catch (JSONException ex) {

@@ -61,7 +61,25 @@
                 android:singleLine="true"
                 android:textSize="12dp"
                 android:background="@drawable/editbackground"
+                android:visibility="gone"
                 android:padding="7dp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/selecttype"
+                android:background="@drawable/editbackground"
+                android:hint="Sales Type"
+                android:textColorHint="@color/graycolor"
+                android:inputType="text"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0.30"
+                android:gravity="center|left"
+                android:padding="7dp"
+                android:textColor="@android:color/black"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/ic_keyboard_arrow_down"
+                android:textSize="12dp"/>
         </LinearLayout>
         <androidx.cardview.widget.CardView
             android:id="@+id/card_view"
@@ -90,7 +108,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.3"
+                android:layout_weight="0.5"
                 android:textSize="12sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="@color/white"
@@ -105,16 +123,16 @@
                 android:text="Van Price"
                 android:gravity="center"
                 android:drawableRight="@drawable/ic_arrow_upward_white"
-                android:id="@+id/pricesorting"/>
+                android:id="@+id/pricesorting"
+                android:visibility="gone"/>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.3"
+                android:layout_weight="0.5"
                 android:textSize="12sp"
                 android:textColor="@color/white"
                 android:text="Order Price"
                 android:gravity="center"
-                android:drawableRight="@drawable/ic_arrow_upward_white"
                 android:id="@+id/orderpricesorting"/>
             <ImageView
                 android:layout_width="0dp"

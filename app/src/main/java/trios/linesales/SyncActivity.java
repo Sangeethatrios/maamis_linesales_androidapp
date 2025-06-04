@@ -4686,6 +4686,8 @@ public class SyncActivity extends AppCompatActivity {
                     obj.put("makerid", mCur2.getString(15));
                     obj.put("lunch_start_time", mCur2.getString(17));
                     obj.put("lunch_end_time", mCur2.getString(18));
+                    obj.put("schedulestartdate", mCur2.getString(mCur2.getColumnIndex("schedulestartdate")));
+                    obj.put("schedulestartflag",  mCur2.getString(mCur2.getColumnIndex("schedulestartflag")));
                     js_array2.put(obj);
                     mCur2.moveToNext();
                 }

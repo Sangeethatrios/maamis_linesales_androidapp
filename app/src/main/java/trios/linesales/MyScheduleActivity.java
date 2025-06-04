@@ -338,7 +338,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
                             if (CURDATE==SELDATE ) {
                                 //Toast.makeText(context, "twodays are same", Toast.LENGTH_SHORT).show();
                                 //txtnewschedule.setVisibility(View.VISIBLE);
-                                LLlunch.setVisibility(View.VISIBLE);
+                               // LLlunch.setVisibility(View.VISIBLE);
                                 txtscheduledate.setText(vardate );
                                 //Call schedule List
                                 GetScheduleList();
@@ -782,6 +782,8 @@ public class MyScheduleActivity extends AppCompatActivity   {
                             }
 
                             hideLoader();
+
+
                         } catch (Exception e) {
                             hideLoader();
                             Toast toast = Toast.makeText(getApplicationContext(),"Error in saving", Toast.LENGTH_LONG);
@@ -1147,7 +1149,8 @@ public class MyScheduleActivity extends AppCompatActivity   {
 //                            toast.show();
                             networkstate = isNetworkAvailable();
                             if (networkstate == true) {
-                                new AsyncScheduleDetails().execute();
+                               // new AsyncScheduleDetails().execute();
+                                new AsyncStartScheduleDetails().execute();
                             }
 
 //                            if(preferenceMangr.pref_getString("getbusiness_type").equals("2")){
@@ -1228,7 +1231,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
                                             btn_lunch_start_time.setEnabled(false);
                                             btn_lunch_end_time.setEnabled(true);
 
-                                            LLlunctime.setVisibility(View.VISIBLE);
+                                            LLlunctime.setVisibility(View.GONE);
 
                                             String output[] = lunch_start_time.split(" ");
 
@@ -1349,7 +1352,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
                                 btn_lunch_start_time.setEnabled(false);
                                 btn_lunch_end_time.setEnabled(false);
 
-                                LLlunctime.setVisibility(View.VISIBLE);
+                                LLlunctime.setVisibility(View.GONE);
                                 String output[] = lunch_start_time.split(" ");
                                 String output1[] = lunch_end_time.split(" ");
 
@@ -1570,7 +1573,22 @@ public class MyScheduleActivity extends AppCompatActivity   {
                     txtscheduledrivername.setText(Cur.getString(6));
                     txtdatevalues.setText(Cur.getString(Cur.getColumnIndex("datevalues")));
                     txttarget.setText(Cur.getString(Cur.getColumnIndex("target")));
-                    txtscheduledatetime.setText(Cur.getString(Cur.getColumnIndex("schedulestartdatetime")));
+
+
+
+                    if(!Utilities.isNullOrEmpty(Cur.getString(Cur.getColumnIndex("schedulestartdatetime"))) ){
+                        SimpleDateFormat stringtodate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                        Date syncstartdate = stringtodate.parse(Cur.getString(Cur.getColumnIndex("schedulestartdatetime")));
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+                        String dateString = sdf.format(syncstartdate);
+
+                        txtscheduledatetime.setText("Schedule started at " + dateString);
+                    }
+                    else {
+                        txtscheduledatetime.setText("") ;
+                    }
+
                     txtbudget.setText(Cur.getString(Cur.getColumnIndex("budget")));
                     String gethelpername = Cur.getString(7);
                     if(gethelpername.equals("") || gethelpername.equals("null") || gethelpername.equals(null)){
@@ -1617,7 +1635,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
 
                         LLstart.setVisibility(View.GONE);
                         LLstartdatetime.setVisibility(View.VISIBLE);
-                        LLlunch.setVisibility(View.VISIBLE);
+                        //LLlunch.setVisibility(View.VISIBLE);
                     }
 
 //                     if(preferenceMangr.pref_getString("getbusiness_type").equals("2")){
@@ -1679,7 +1697,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
                         btn_lunch_start_time.setEnabled(false);
                         btn_lunch_end_time.setEnabled(false);
 
-                        LLlunctime.setVisibility(View.VISIBLE);
+                        LLlunctime.setVisibility(View.GONE);
                         String output[] = lunch_start_time.split(" ");
                         String output1[] = lunch_end_time.split(" ");
 
@@ -1708,7 +1726,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
                         btn_lunch_start_time.setEnabled(false);
                         btn_lunch_end_time.setEnabled(true);
 
-                        LLlunctime.setVisibility(View.VISIBLE);
+                        LLlunctime.setVisibility(View.GONE);
                         String output[] = lunch_start_time.split(" ");
 
                         String s = output[1].toString();
@@ -3268,5 +3286,634 @@ public class MyScheduleActivity extends AppCompatActivity   {
            loading.dismiss();
         }
 
+    }
+
+
+
+
+    protected  class AsyncStartScheduleDetails extends
+            AsyncTask<String, JSONObject, ArrayList<ScheduleDatas>> {
+        ArrayList<ScheduleDatas> List = null;
+        JSONObject jsonObj = null;
+        ProgressDialog loading;
+
+        @Override
+        protected  ArrayList<ScheduleDatas> doInBackground(String... params) {
+            RestAPI api = new RestAPI();
+            String result = "";
+            try {
+                JSONObject js_obj = new JSONObject();
+                try {
+                    DataBaseAdapter dbadapter = new DataBaseAdapter(context);
+                    dbadapter.open();
+                    Cursor mCur2 = dbadapter.GetScheduleDatasDB();
+                    JSONArray js_array2 = new JSONArray();
+                    for (int i = 0; i < mCur2.getCount(); i++) {
+                        JSONObject obj = new JSONObject();
+                        obj.put("autonum", mCur2.getString(0));
+                        obj.put("refno", mCur2.getString(1));
+                        obj.put("schedulecode", mCur2.getString(2));
+                        obj.put("scheduledate", mCur2.getString(3));
+                        obj.put("vancode", mCur2.getString(4));
+                        obj.put("routecode", mCur2.getString(5));
+                        obj.put("vehiclecode", mCur2.getString(6));
+                        obj.put("employeecode", mCur2.getString(7));
+                        obj.put("drivercode", mCur2.getString(8));
+                        obj.put("helpername", mCur2.getString(9));
+                        obj.put("tripadvance", mCur2.getString(10));
+                        obj.put("startingkm", mCur2.getString(11));
+                        obj.put("endingkm", mCur2.getString(12));
+                        obj.put("createddate", mCur2.getString(13));
+                        obj.put("updatedate", mCur2.getString(14));
+                        obj.put("makerid", mCur2.getString(15));
+                        obj.put("lunch_start_time", mCur2.getString(17));
+                        obj.put("lunch_end_time", mCur2.getString(18));
+                        obj.put("schedulestartdate", mCur2.getString(mCur2.getColumnIndex("schedulestartdate")));
+                        obj.put("schedulestartflag",  mCur2.getString(mCur2.getColumnIndex("schedulestartflag")));
+                        js_array2.put(obj);
+                        mCur2.moveToNext();
+                    }
+                    js_obj.put("JSonObject", js_array2);
+
+                    jsonObj =  api.ScheduleDetails(js_obj.toString(),context);
+                    //Call Json parser functionality
+                    JSONParser parser = new JSONParser();
+                    //parse the json object to boolean
+                    List = parser.parseScheduleDataList(jsonObj);
+
+                    String getscheduleroutecode = "0";
+                    dbadapter.open();
+                    Cursor getschedulelist = dbadapter.GetScheduleDB();
+                    if (getschedulelist.getCount() > 0) {
+                        for (int i = 0; i < getschedulelist.getCount(); i++) {
+                            getscheduleroutecode = getschedulelist.getString(1);
+                        }
+                    }
+                    // customer
+                    jsonObj = api.GetCustomerDetails(preferenceMangr.pref_getString("deviceid"), getscheduleroutecode, "synccustomer.php");
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.synccustomer(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "customer", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    // cashnotpaiddetails
+                    jsonObj = api.GetCashNotPaidDetails(preferenceMangr.pref_getString("deviceid"),preferenceMangr.pref_getString("getvancode"),getscheduleroutecode,"synccashnotpaiddetails.php");
+                    dbadapter.DeleteCashNotPaid();
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.synccashnotpaiddetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "cashnotpaiddetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+                    //Get General settings
+                    String getschedulestatus = dbadapter.GetScheduleStatusDB();
+                    if(getschedulestatus.equals("yes")){
+                        //Sales Schedule
+                        jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsalesschedulemobile.php",context);
+                        if (isSuccessful(jsonObj)) {
+                            dbadapter.syncsalesschedulemobile(jsonObj);
+                            api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"),"salesschedule",preferenceMangr.pref_getString("getvancode"),"");
+                        }
+                    }else{
+                        //Sales Schedule portal
+                        jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsalesschedule.php",context);
+                        if (isSuccessful(jsonObj)) {
+                            dbadapter.syncsalesschedule(jsonObj);
+                            api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"),"salesscheduleportal",preferenceMangr.pref_getString("getvancode"),"");
+                        }
+                    }
+
+
+                    /*****SYNCH ALL MASTER************/
+                    //company master
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"synccompanymaster.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.synccompanymaster(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "companymaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //if(BuildConfig.DEBUG)
+                    Log.w("Schedule Activity : "," Sync All : UPI Vender Details");
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"), "syncupivendermaster.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncupivendermaster(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "upivendermaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //if(BuildConfig.DEBUG)
+                    Log.w("Schedulee Activity : "," Sync All : Company Vender Master");
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"), "synccompanyvenderdetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.synccompanyvenderdetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "companyvendermaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //area master
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncareamaster.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncareamaster(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "areamaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //brand master
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncbrandmaster.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncbrandmaster(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "brandmaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //currency
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"synccurrency.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.synccurrency(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "currency", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //Receipt remarks
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncreceiptremarks.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncreceiptremarks(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "receiptremarks", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+                    //tax
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"synctax.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.synctax(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "tax", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+                    //Bill type
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncbilltype.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncbilltype(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "billtype", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+                    //city
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"synccitymaster.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.synccitymaster(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "citymaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //employee catergory
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncemployeecategory.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncemployeecategory(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "employeecategory", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //employee master
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncemployeemaster.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncemployeemaster(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "employeemaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    Cursor getschedulelist1 = dbadapter.GetScheduleDB();
+                    if(getschedulelist1.getCount() >0){
+                        for(int i=0;i<getschedulelist1.getCount();i++) {
+                            MenuActivity.getroutecode = getschedulelist1.getString(1);
+                            preferenceMangr.pref_putString("getroutecode",getschedulelist1.getString(1));
+                        }
+                    }
+
+                    //expenses head
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncexpenseshead.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncexpenseshead(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "expenseshead", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //financial year
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncfinancialyear.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncfinancialyear(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "financialyear", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //general settings
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncgeneralsettings.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncgeneralsettings(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "generalsettings", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //itemgroup master
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncitemgroupmaster.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncitemgroupmaster(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "itemgroupmaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //item master
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncitemmaster.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncitemmaster(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "itemmaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //itemn price list transaction
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncitempricelisttransaction.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncitempricelisttransaction(jsonObj);
+
+                        /*Calendar calendar = Calendar.getInstance();
+                        SimpleDateFormat mformat= new SimpleDateFormat("dd-MM-yyyy h:mm a");
+                        MenuActivity.pricelistlastsyncdate = mformat.format(calendar.getTime());*/
+                        //Toast.makeText(context,pricelistlastsyncdate,Toast.LENGTH_SHORT).show();
+
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "itempricelisttransaction", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+
+                    //item subgroup master
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncitemsubgroupmaster.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncitemsubgroupmaster(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "itemsubgroupmaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //route
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncroute.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncroute(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "route", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //route details
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncroutedetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncroutedetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "routedetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+                    //transport mode
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"synctransportmode.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.synctransportmode(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "transportmode", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //transport
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"synctransport.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.synctransport(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "transport", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //transportareamapping
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"synctransportcitymapping.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.synctransportareamapping(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "transportcitymapping", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //scheme
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncscheme.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncscheme(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "scheme", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //scheme item details
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncschemeitemdetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncschemeitemdetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "schemeitemdetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //scheme rate details
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncschemeratedetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncschemeratedetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "schemeratedetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //unit master
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncunitmaster.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncunitmaster(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "unitmaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //van stock
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncvanstock.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncvanstocktransaction(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "vanstock", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //vehicle master
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncvehiclemaster.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncvehiclemaster(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "vehiclemaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //voucher settings
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncvouchersettings.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncvouchersettings(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "vouchersettings", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //expenses
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncexpenses.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncexpensesmaster(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "expenses", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //cashclose
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"synccashclose.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.synccashclose(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "cashclose", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //cashclose
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsalesclose.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncsalesclose(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "salesclose", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //cashreport
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"synccashreport.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.synccashreport(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "cashreport", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //denomination
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncdenomination.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncdenomination(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "denomination", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //receipt
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncreceipt.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncreceipt(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "receipt", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //order details
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncorderdetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncorderdetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "orderdetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //Sales
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsales.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncsales(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "sales", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //Salesitemdetails
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsalesitemdetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncsalesitemdetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "salesitemdetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //Sales order
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsalesorder.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncsalesorder(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "salesorder", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+                    //Sales order itemdetails
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsalesorderitemdetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncsalesorderitemdetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "salesorderitemdetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //Salesreturn
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsalesreturn.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncsalesreturn(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "salesreturn", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+
+                    //Salesretrunitemdetails
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsalesreturnitemdetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncsalesreturnitemdetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "salesreturnitemdetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //nilstock
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncnilstock.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncnilstock(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "nilstock", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //maxrefno
+                    LoginActivity.getfinanceyrcode = dbadapter.GetFinancialYrCode();
+                    preferenceMangr.pref_putString("getfinanceyrcode",dbadapter.GetFinancialYrCode());
+                    jsonObj = api.GetMaxCode(preferenceMangr.pref_getString("deviceid"),preferenceMangr.pref_getString("getfinanceyrcode"),"syncmaxrefno.php");
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncmaxrefno(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "maxrefno", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"), "syncvanmaster.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncvanmaster(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "vanmaster", "0", "");
+                    }
+
+                    /*try{
+                     *//*Cursor cursor =dbadapter.getprinterdetails();
+                        if(cursor.getCount()>0){
+                            PrinterSettingsActivity.SelectedPrinterName=(cursor.getString(1));
+                            PrinterSettingsActivity.SelectedPrinterAddress=(cursor.getString(2));
+                        }*//*
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+                        PrinterSettingsActivity.SelectedPrinterName=(preferences.getString("SelectedPrinterName", ""));
+                        PrinterSettingsActivity.SelectedPrinterAddress=(preferences.getString("SelectedPrinterAddress", ""));
+                    }catch(Exception e){
+                        Log.d("Insert printer details ",e.toString());
+                        DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                        mDbErrHelper.open();
+                        String geterrror = e.toString();
+                        mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                        mDbErrHelper.close();
+                    }*/
+                    /*finally {
+                        dbadapter.close();
+                    }*/
+
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"), "syncstatemaster.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncstatemaster(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "statemaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"), "syncdefsalescategory.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncdefsalescategory(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "defsalescategory", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    //Not Purchased
+                    jsonObj = api.GetNotPurchasedDetails(preferenceMangr.pref_getString(Constants.KEY_DEVICEID),"syncnotpurchaseddetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncnotpurchaseddetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString(Constants.KEY_DEVICEID), "notpurchased", preferenceMangr.pref_getString(Constants.KEY_GETVANCODE), preferenceMangr.pref_getString(Constants.KEY_GET_SCHEDULE_SCHEDULECODE));
+                    }
+
+                    //Not purchased remarks
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString(Constants.KEY_DEVICEID),"syncnotpurchasedremarks.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dbadapter.syncNotPurchasedRemarks(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString(Constants.KEY_DEVICEID), "receiptremarks", preferenceMangr.pref_getString(Constants.KEY_GETVANCODE), preferenceMangr.pref_getString(Constants.KEY_GET_SCHEDULE_SCHEDULECODE));
+                    }
+                    dbadapter.close();
+                }
+                catch (Exception e)
+                {
+                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                    mDbErrHelper.open();
+                    String geterrror = e.toString();
+                    mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                    mDbErrHelper.close();
+                }
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                Log.d("AsyncScheduleDetails", e.getMessage());
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            }
+            return List;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = ProgressDialog.show(context, "Synching All Data", "Please wait...", true, true);
+            loading.setCancelable(false);
+            loading.setCanceledOnTouchOutside(false);
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<ScheduleDatas> result) {
+            try{
+                // TODO Auto-generated method stub
+                if (result.size() >= 1) {
+                    if(result.get(0).ScheduleCode.length>0){
+                        for(int j=0;j<result.get(0).ScheduleCode.length;j++){
+                            DataBaseAdapter dataBaseAdapter = new DataBaseAdapter(context);
+                            dataBaseAdapter.open();
+                            dataBaseAdapter.UpdateScheduleFlag(result.get(0).ScheduleCode[j]);
+                            dataBaseAdapter.close();
+                        }
+                    }
+
+                }
+
+                try {
+
+                    //Backupdb
+                    DataBaseAdapter mDbHelper1 = new DataBaseAdapter(context);
+                    mDbHelper1.open();
+                    String filepath = mDbHelper1.udfnBackupdb(context);
+                    mDbHelper1.close();
+
+                    DataBaseAdapter objdatabaseadapter = null;
+                    String getschedulecount = "0";
+                    String getschedulestatus = "";
+                    try {
+                        //Save Schdule Functionality
+                        objdatabaseadapter = new DataBaseAdapter(context);
+                        objdatabaseadapter.open();
+                        LoginActivity.getfinanceyrcode = objdatabaseadapter.GetFinancialYrCode();
+                        preferenceMangr.pref_putString("getfinanceyrcode",objdatabaseadapter.GetFinancialYrCode());
+                        Cursor getschedulelist = objdatabaseadapter.GetScheduleDB();
+                        if(getschedulelist.getCount() >0){
+                            for(int i=0;i<getschedulelist.getCount();i++){
+                                MenuActivity.getschedulecode = getschedulelist.getString(0);
+                                MenuActivity.getroutecode = getschedulelist.getString(1);
+                                MenuActivity.getroutename = getschedulelist.getString(4);
+                                MenuActivity.gettripadvance =  getschedulelist.getString(3);
+                                MenuActivity.getroutenametamil =  getschedulelist.getString(4);
+                                MenuActivity.getcapacity = getschedulelist.getString(5);
+
+                                preferenceMangr.pref_putString("getschedulecode",getschedulelist.getString(0));
+                                preferenceMangr.pref_putString("getroutecode",getschedulelist.getString(1));
+                                preferenceMangr.pref_putString("getroutename",getschedulelist.getString(4));
+                                preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
+                            }
+                            //Get cash close Count
+                            MenuActivity.getcashclosecount = objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));
+                            preferenceMangr.pref_putString("getcashclosecount",objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode")));
+
+                            ScheduleActivity.getcashclosecount =  objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));
+                            preferenceMangr.pref_putString("schedule_getcashclosecount",objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode")));
+                            //Get sales close Count
+                            MenuActivity.getdenominationcount = objdatabaseadapter.GetDenominationCount(preferenceMangr.pref_getString("getschedulecode"));
+
+                            MenuActivity.getsalesclosecount = objdatabaseadapter.GetSalesClose(preferenceMangr.pref_getString("getschedulecode"));
+                            preferenceMangr.pref_putString("getsalesclosecount",objdatabaseadapter.GetSalesClose(preferenceMangr.pref_getString("getschedulecode")));
+
+                            ScheduleActivity.getsalesclosecount =  objdatabaseadapter.GetSalesClose(preferenceMangr.pref_getString("getschedulecode"));
+                            preferenceMangr.pref_putString("schedule_getsalesclosecount",objdatabaseadapter.GetSalesClose(preferenceMangr.pref_getString("getschedulecode")));
+                            //GetWish messsgae
+                            MenuActivity.getwishmsg = objdatabaseadapter.GetWishmsg();
+                            preferenceMangr.pref_putString("getwishmsg",objdatabaseadapter.GetWishmsg());
+                        }
+                        Cursor Cur = objdatabaseadapter.GetVanNameForIMEIDB(preferenceMangr.pref_getString("deviceid"));
+                        if (Cur.getCount() > 0) {
+                            LoginActivity.getvancode = Cur.getString(0);
+                            LoginActivity.getbusiness_type = Cur.getString(4);
+                            LoginActivity.getorderprint = Cur.getString(5);
+                            LoginActivity.getvanname = Cur.getString(1);
+
+                            preferenceMangr.pref_putString("getvanname",Cur.getString(1));
+                            preferenceMangr.pref_putString("getvancode",Cur.getString(0));
+                            preferenceMangr.pref_putString("getbusiness_type",Cur.getString(4));
+                            preferenceMangr.pref_putString("getorderprint",Cur.getString(5));
+                        }
+                    } catch (Exception e) {
+                        DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                        mDbErrHelper.open();
+                        String geterrror = e.toString();
+                        mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                        mDbErrHelper.close();
+                    } finally {
+                        objdatabaseadapter.close();
+                    }
+               /* if(!MenuActivity. getsalesclosecount.equals("0") && !MenuActivity. getsalesclosecount.equals("null") &&
+                        !MenuActivity. getsalesclosecount.equals("") && !MenuActivity. getsalesclosecount.equals(null)){
+                    MenuActivity.OrderForm.setVisibility(View.VISIBLE);
+                }else{
+                    MenuActivity.OrderForm.setVisibility(View.GONE);
+                }*/
+
+                }catch (Exception e) {
+                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                    mDbErrHelper.open();
+                    String geterrror = e.toString();
+                    mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                    mDbErrHelper.close();
+                }
+            }catch (Exception e) {
+                // TODO Auto-generated catch block
+                Log.d("AsyncScheduleDetails", e.getMessage());
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            }
+            loading.dismiss();
+
+        }
     }
 }
