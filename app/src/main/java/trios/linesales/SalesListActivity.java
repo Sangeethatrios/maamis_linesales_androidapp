@@ -326,13 +326,17 @@ public class SalesListActivity extends AppCompatActivity {
                     objdatabaseadapter1.open();
 
                     String todayschedulecount = objdatabaseadapter1.gettodayschedulecount();
-                    if (todayschedulecount.equals("0")) {
+                    String getprevschedulecode = objdatabaseadapter1.GetPrevStartScheduleCode();
+                    String getprevcashclose = objdatabaseadapter1.GetCashClose(getprevschedulecode);
+                    String getprevsaleclose = objdatabaseadapter1.GetSalesClose(getprevschedulecode);
+
+                    if (todayschedulecount.equals("0") || getprevcashclose.equals("0") ||  getprevsaleclose.equals("0") ) {
                         try {
 
                             ScheduleActivity.getschedulecount = objdatabaseadapter1.GetScheduleCount();
                             preferenceMangr.pref_putString("schedule_getschedulecount",objdatabaseadapter1.GetScheduleCount());
-
                             String getschedulecode = objdatabaseadapter1.GetScheduleCode();
+
                             //Get Cash close Count
                             ScheduleActivity.getcashclosecount = objdatabaseadapter1.GetCashClose(getschedulecode);
                             preferenceMangr.pref_putString("schedule_getcashclosecount",objdatabaseadapter1.GetCashClose(getschedulecode));

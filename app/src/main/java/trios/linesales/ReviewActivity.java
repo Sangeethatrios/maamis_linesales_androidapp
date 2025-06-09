@@ -62,6 +62,7 @@ public class ReviewActivity extends AppCompatActivity {
     Button txtSalesprint,imgcamera;
     EditText txtremarks;
     public static boolean deviceFound;
+    public double totalbudgetutilize=0;
     ArrayList<SalesItemDetails> salesItemList;
     LinearLayout gstnLL;
     String getsalesdate="",getbilltypecode="",getsubtotalamount="",
@@ -328,7 +329,14 @@ public class ReviewActivity extends AppCompatActivity {
                                             salesItemList.get(i).getDiscount(), salesItemList.get(i).getSubtotal(), salesItemList.get(i).getFreeflag(),
                                             salesItemList.get(i).getTax(), SalesActivity.gstnnumber, getmaxrefno,
                                             (Double.parseDouble(salesItemList.get(i).getUnitweight()) * (Double.parseDouble(salesItemList.get(i).getItemqty()))),
-                                            i + 1, salesItemList.get(i).getratediscount(),salesItemList.get(i).getschemeapplicable(),salesItemList.get(i).getOrgprice());
+                                            i + 1, salesItemList.get(i).getratediscount(),salesItemList.get(i).getschemeapplicable(),salesItemList.get(i).getOrgprice(),salesItemList.get(i).getBudgetUtilize());
+
+                                    if(totalbudgetutilize == 0){
+                                        totalbudgetutilize=salesItemList.get(i).getBudgetUtilize() ;
+                                    }
+                                    else{
+                                        totalbudgetutilize=totalbudgetutilize + salesItemList.get(i).getBudgetUtilize() ;
+                                    }
                                 }
 
                                 String getbillcopystatus = "";
@@ -376,7 +384,7 @@ public class ReviewActivity extends AppCompatActivity {
                                         getdiscountamt, getgrandtotal, preferenceMangr.pref_getString("getfinanceyrcode"),
                                         txtremarks.getText().toString(), getbookingno, gettransactionno,
                                         getmaxrefno, getbillcopystatus, getcashpaidstatus,latLong,latitude,longtitude,
-                                        orderTransNo,orderFinancialyear,orderCompanyCode);
+                                        orderTransNo,orderFinancialyear,orderCompanyCode,totalbudgetutilize);
                                 //Get General settings
                                 if (!getsalestransactionno.equals("") && !getsalestransactionno.equals(null)
                                         && !getsalestransactionno.equals("null")) {
@@ -978,6 +986,7 @@ public class ReviewActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+    @SuppressLint("Range")
     public void setItemAdapter(){
         if(SalesActivity.staticreviewsalesitems.size()>0) {
             DataBaseAdapter dataBaseAdapter =null;
@@ -1007,7 +1016,8 @@ public class ReviewActivity extends AppCompatActivity {
                                 , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
                                 getcartdatas.getString(30), getcartdatas.getString(31), getcartdatas.getString(21),
                                 "", "", getcartdatas.getString(32),"","",
-                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),""));
+                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",
+                                getcartdatas.getDouble( getcartdatas.getColumnIndex("budget_utilize"))));
                         getcartdatas.moveToNext();
                     }
                     //Adapter
@@ -1326,7 +1336,7 @@ public class ReviewActivity extends AppCompatActivity {
                                                             , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
                                                             getcartdatas.getString(30), getcartdatas.getString(31) ,getcartdatas.getString(21),
                                                             "","",getcartdatas.getString(32),"","",getcartdatas.getString(34),
-                                                            getcartdatas.getString(35),getcartdatas.getString(36),""));
+                                                            getcartdatas.getString(35),getcartdatas.getString(36),"","",0));
                                                     getcartdatas.moveToNext();
                                                 }
                                             }

@@ -1828,6 +1828,9 @@ public class MenuActivity extends AppCompatActivity {
 
                     LoginActivity.getfinanceyrcode = objdatabaseadapter.GetFinancialYrCode();
                     preferenceMangr.pref_putString("getfinanceyrcode",objdatabaseadapter.GetFinancialYrCode());
+
+                    preferenceMangr.pref_putString("getmaxbillannualamount",objdatabaseadapter.GetMaxbillAnnualAmount());
+                    preferenceMangr.pref_putString("getmaxbillamount",objdatabaseadapter.GetMaxBillAmount());
                     Cursor getschedulelist = objdatabaseadapter.GetScheduleDB();
                     if(getschedulelist.getCount() >0){
                         for(int i=0;i<getschedulelist.getCount();i++){

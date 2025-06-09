@@ -1074,7 +1074,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
                 networkstate = isNetworkAvailable();
                 if (networkstate == true) {
                     //Get schedulecode
-                    String getschedulecode = dataBaseAdapter.GetScheduleCode();
+                    String getschedulecode = dataBaseAdapter.GetCurrentScheduleCode();
                     if(!getschedulecode.equals("") && !getschedulecode.equals("null") && !getschedulecode.equals(null)) {
                         jsonObj = api.DeliveryNote(deviceid, "check_deliverynote.php", getschedulecode);
                         if (isSuccessful(jsonObj)) {
@@ -3802,6 +3802,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
             loading.setCanceledOnTouchOutside(false);
         }
 
+        @SuppressLint("Range")
         @Override
         protected void onPostExecute(ArrayList<ScheduleDatas> result) {
             try{
@@ -3849,6 +3850,8 @@ public class MyScheduleActivity extends AppCompatActivity   {
                                 preferenceMangr.pref_putString("getroutecode",getschedulelist.getString(1));
                                 preferenceMangr.pref_putString("getroutename",getschedulelist.getString(4));
                                 preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
+                                preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
+
                             }
                             //Get cash close Count
                             MenuActivity.getcashclosecount = objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));

@@ -9,8 +9,8 @@ public class SalesItemDetails {
     String unitname;String noofdecimals; String oldprice; String newprice; String colourcode; String hsn; String tax;String itemqty;
     String subtotal;String routeallowpricedit;String discount;String freeflag;String purchaseitemcode;String freeitemcode;
     String dumyprice;String ratecount;String freecount;String applyitemscheme;String applyratescheme;String minsalesqty;
-    String upp;String itemtype;String ratediscount;String schemeapplicable;String orgprice;String itemsubgroupcode;
-
+    String upp;String itemtype;String ratediscount;String schemeapplicable;String orgprice;String itemsubgroupcode;String minprice;
+double budgetutilize=0;
     public SalesItemDetails(String itemcode, String companycode, String brandcode, String manualitemcode,
                             String itemname, String itemnametamil, String unitcode, String unitweightunitcode,
                             String unitweight, String uppunitcode, String uppweight, String itemcategory,
@@ -20,7 +20,7 @@ public class SalesItemDetails {
                             String itemqty,String subtotal,String routeallowpricedit,String discount,String freeflag,
                             String purchaseitemcode,String freeitemcode,String dumyprice,String ratecount,
                             String freecount,String minsalesqty,String upp,String itemtype,String ratediscount,String schemeapplicable,
-                            String orgprice,String itemsubgroupcode) {
+                            String orgprice,String itemsubgroupcode,String minprice,double budgetutilize) {
         this.itemcode = itemcode;
         this.companycode = companycode;
         this.brandcode = brandcode;
@@ -62,11 +62,18 @@ public class SalesItemDetails {
         this.schemeapplicable = schemeapplicable;
         this.orgprice=orgprice;
         this.itemsubgroupcode = itemsubgroupcode;
+        this.minprice = minprice;
+        this.budgetutilize=budgetutilize;
     }
 
     public String getItemcode() {
         return itemcode;
     }
+
+    public double getBudgetUtilize() {
+        return budgetutilize;
+    }
+
 
     public String getCompanycode() {
         return companycode;
@@ -150,6 +157,10 @@ public class SalesItemDetails {
 
     public String getColourcode() {
         return colourcode;
+    }
+
+    public String getminprice() {
+        return minprice;
     }
 
     public String getHsn() {

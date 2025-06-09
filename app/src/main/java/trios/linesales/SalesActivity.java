@@ -96,17 +96,18 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
     public  static TextView txtcustomername,txtareaname,totalcartitems,txtsalesdate;
     String[] AreaCode,AreaName,AreaNameTamil,NoOfKm,CityCode,CityName,CustomerCount;
     String[] SubGroupCode,SubGroupName,SubGroupNameTamil;
-    String[] CustomerCode,CustomerName,CustomerNameTamil,Address,CustomerAreaCode,MobileNo,
+    String[] CustomerCode,CustomerCategory,CustomerName,CustomerNameTamil,Address,CustomerAreaCode,MobileNo,
             TelephoneNo,GSTN,SchemeApplicable,customertypecode,CustomerCityName,CustomerAreaName,CustomerTotalOrder,
-            Customerbillcount, CusNotPurchasedCount;
+            Customerbillcount, CusNotPurchasedCount,DayWiseSalesamt,AnnualSalesamt,BillWiseBudget;
     String[] FreeItemName,FreeItemOp,FreeItemHandover,FreeItemDistributed,FreeItemBalance,
             FreeItemCode,FreeItemSNO;
     Dialog areadialog,customerdialog,freeitemdialog, routedialog,dialogNotPurchased,remarksDialog;
-    static public String  customercode="",gstnnumber="",
+    static public String  customercode="",customercategory="",gstnnumber="",daywisesalesamt="",annualsalesamt="",billwisebudget="",
             getschemeapplicable="",getstaticsubcode="",getstaticchilditemcode="",getstaticgetchildqty="",
             getlabelchildqty="",customercityname="",customerareaname="",customername="",customercityarea="",fromcustomer="",
             otptimevalidity="",otptimevaliditybackend="",getmobilenoverifycount="",orderbillno="",
             ordertransactionno="",orderfinancialyearcode="";
+    static public double budgetutilize=0,totalbudgetutilize=0,total = 0  ;
     public static ArrayList<SalesItemDetails> salesitems = new ArrayList<SalesItemDetails>();
     ArrayList<SalesItemDetails> freeitems = new ArrayList<SalesItemDetails>();
     static ArrayList<SalesItemDetails> staticreviewsalesitems = new ArrayList<SalesItemDetails>();
@@ -1169,6 +1170,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
+    @SuppressLint("Range")
     public  void GetCustomer(String areacode){
         DataBaseAdapter objdatabaseadapter = null;
         Cursor Cur=null;
@@ -1179,6 +1181,10 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
 
             if(Cur.getCount()>0) {
                 CustomerCode = new String[Cur.getCount()];
+                CustomerCategory = new String[Cur.getCount()];
+                DayWiseSalesamt = new String[Cur.getCount()];
+                AnnualSalesamt = new String[Cur.getCount()];
+                BillWiseBudget = new String[Cur.getCount()];
                 CustomerName = new String[Cur.getCount()];
                 CustomerNameTamil = new String[Cur.getCount()];
                 Address = new String[Cur.getCount()];
@@ -1209,6 +1215,10 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     CustomerTotalOrder[i]=Cur.getString(14);
                     Customerbillcount[i]=Cur.getString(15);
                     CusNotPurchasedCount[i]=Cur.getString(16);
+                    CustomerCategory[i]=Cur.getString(Cur.getColumnIndex("CustomerCategory"));
+                    DayWiseSalesamt[i]=Cur.getString(Cur.getColumnIndex("daywisesalesamt"));
+                    AnnualSalesamt[i]=Cur.getString(Cur.getColumnIndex("annualsalesamt"));
+                    BillWiseBudget[i]=Cur.getString(Cur.getColumnIndex("billwisebudget"));
                     Cur.moveToNext();
                 }
 
@@ -1355,6 +1365,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    @SuppressLint("Range")
     public  void GetItems(String itemsubgroupcode){
         DataBaseAdapter objdatabaseadapter = null;
         Cursor Cur=null;
@@ -1362,7 +1373,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             objdatabaseadapter = new DataBaseAdapter(context);
             objdatabaseadapter.open();
             lv_sales_items.setAdapter(null);
-            Cur = objdatabaseadapter.GetItemsDB(itemsubgroupcode,preferenceMangr.pref_getString("getroutecode"),LoginActivity.getareacode);
+            Cur = objdatabaseadapter.GetItemsDB(itemsubgroupcode,preferenceMangr.pref_getString("getroutecode"),LoginActivity.getareacode,customercategory);
             salesitems.clear();
             if(Cur.getCount()>0) {
                 for(int i=0;i<Cur.getCount();i++){
@@ -1377,7 +1388,9 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                             Cur.getString(23),"0","0",Cur.getString(24),
                             "","","0","",Cur.getString(20),
                             Cur.getString(29),Cur.getString(30),Cur.getString(32),Cur.getString(33),
-                            Cur.getString(34) ,"","",Cur.getString(20),""));
+                            Cur.getString(34) ,"","",Cur.getString(20),""
+                            ,Cur.getString(Cur.getColumnIndex("minprice")),0)
+                    );
                     Cur.moveToNext();
                 }
                 CalculateTotal();
@@ -1910,6 +1923,9 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                         objdatabaseadapter.open();
                                         String getresult = objdatabaseadapter.DeleteItemInCart(salesItemList.get(pos1).getItemcode());
                                         if (getresult.equals("Success")) {
+
+//                                            total = ;
+
                                             getcartdatas = objdatabaseadapter.GetSalesItemsCart();
                                             if(getcartdatas.getCount()>0){
                                                 totalcartitems.setText(String.valueOf(getcartdatas.getCount()));
@@ -1919,6 +1935,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                             }
                                             salesItemList.get(pos1).setItemqty("");
                                             salesItemList.get(pos1).setNewprice("");
+                                            salesItemList.get(pos1).getminprice();
+
                                         }
                                     } catch (Exception e) {
                                         DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -2309,30 +2327,19 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
 
             }
 
+
             //Item PRice text change Listner
             mHolder.listitemrate.addTextChangedListener(new TextWatcher() {
                 public void onTextChanged(CharSequence s, int start, int before,
                                           int count) {
+
 
                 }
                 public void beforeTextChanged(CharSequence s, int start, int count,
                                               int after) {
                 }
                 public void afterTextChanged(Editable s) {
-                    if (!(mHolder.listitemqty.getText().toString()).equals("") &&
-                            !(mHolder.listitemqty.getText().toString()).equals(" ")
-                            && !(mHolder.listitemqty.getText().toString()).equals("0")
-                            && !(mHolder.listitemqty.getText().toString()).equals("0.0")
-                            && !(mHolder.listitemqty.getText().toString()).equals(null)
-                            && !(mHolder.listitemrate.getText().toString()).equals("")
-                            && !(mHolder.listitemrate.getText().toString()).equals(0)
-                            && !(mHolder.listitemqty.getText().toString()).equals(".")
-                            && !(mHolder.listitemrate.getText().toString()).equals(".")) {
-                        final int pos1 = (Integer) mHolder.listitemrate.getTag();
-                        String getqtyval = salesItemList.get(pos1).getItemqty();
-                        // mHolder.listitemqty.setText(getqtyval);
-                        //  mHolder.listitemtotal.callOnClick();
-                    }/*else{
+                    /*else{
                         final int pos1 = (Integer) mHolder.listitemrate.getTag();
                         //mHolder.listitemtotal.setText("0.00");
                         //Set Discount background
@@ -2387,6 +2394,54 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                         // isparentopen = "";
 
 
+                        if(!Utilities.isNullOrEmpty(salesItemList.get(pos).getminprice())) {
+                            double itemminprice = Double.parseDouble(salesItemList.get(pos).getminprice());
+                            if(itemminprice > 0){
+                                double itemprice = Double.parseDouble(mHolder.listitemrate.getText().toString());
+                                if(itemprice >0 ){
+                                    if(itemprice < itemminprice){
+                                        Toast toast = Toast.makeText(getApplicationContext(),"The rate entered is less than the minimum sales price.", Toast.LENGTH_LONG);
+                                        toast.setGravity(Gravity.CENTER, 0, 0);
+                                        toast.show();
+                                        mHolder.listitemtotal.setEnabled(true);
+                                        //mHolder.listitemrate.setText(String.valueOf(itemminprice));
+                                        if(!Utilities.isNullOrEmpty(salesItemList.get(pos).getNewprice())){
+                                            mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getNewprice())));
+
+                                        }
+                                        else{
+                                            mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice())));
+                                        }
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                        double amount = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Integer.parseInt(mHolder.listitemqty.getText().toString());
+                        if(!isSalesValueReachLimit(amount)){
+                           Toast toast = Toast.makeText(getApplicationContext(),"The total bill amount for this customer has exceeded the daily limit.", Toast.LENGTH_LONG);
+                           toast.setGravity(Gravity.CENTER, 0, 0);
+                           toast.show();
+                           mHolder.listitemtotal.setEnabled(true);
+                           return;
+                       }
+                        double rowamountwithbudget = Double.parseDouble(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice()))) * Integer.parseInt(mHolder.listitemqty.getText().toString());
+                        double rowamountwithoutbudget = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Integer.parseInt(mHolder.listitemqty.getText().toString());
+                        if(rowamountwithbudget == rowamountwithoutbudget)
+                        {
+                            budgetutilize = 0;
+                        }
+                        else
+                        {
+                            budgetutilize = (rowamountwithbudget - rowamountwithoutbudget);
+                        }
+
+                        if(total == 0){
+                            total=budgetutilize;
+                        }
+                        else{
+                            total = total  + budgetutilize;
+                        }
 
 
 //||
@@ -2484,6 +2539,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                         if (getStockCur != null)
                                             getStockCur.close();
                                     }
+
+
                                 } else {
                                     Toast toast = Toast.makeText(getApplicationContext(),"Insufficient stock..", Toast.LENGTH_LONG);
                                     toast.setGravity(Gravity.CENTER, 0, 0);
@@ -2621,295 +2678,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                 }
                                 df = new DecimalFormat("0.'" + getnoofdigits + "'");
 
-//                                    /*********SCHEME DETAILS*************/
-//                                    if (getschemeapplicable.equals("yes")) {
-//                                        if(getSchemebusinesstype.equals("1") || getSchemebusinesstype.equals("3")){
-//                                            Log.w("getSchemebusinesstype",getSchemebusinesstype);
-//                                        //Get Scheme Rate based
-//                                        DataBaseAdapter objdatabaseadapter = null;
-//                                        Cursor getschemeCur = null;
-//                                        try {
-//                                            //Scheme Functionality
-//                                            //check the item have a free rate count and apply scheme status
-//                                            if(Double.parseDouble(salesItemList.get(position).getRatecount()) >0 && salesItemList.get(pos).getApplyratescheme().equals("yes")) {
-//                                                objdatabaseadapter = new DataBaseAdapter(context);
-//                                                objdatabaseadapter.open();
-//                                                getschemeCur = objdatabaseadapter.GetSchemeFORItemDB(salesItemList.get(pos).getItemcode(),
-//                                                        preferenceMangr.pref_getString("getroutecode"), mHolder.listitemqty.getText().toString());
-//                                                if (getschemeCur.getCount() > 0) {
-//                                                    //  for (int i = 0; i < getschemeCur.getCount(); i++) {
-//                                                    getminqty = getschemeCur.getDouble(0);
-//                                                    getdiscount = getschemeCur.getDouble(1);
-//                                                    // }
-//                                                }
-//                                                schemeratestatus="yes";
-//                                            }
-//                                        } catch (Exception e) {
-//                                            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-//                                            mDbErrHelper.open();
-//                                            String geterrror = e.toString();
-//                                            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-//                                            mDbErrHelper.close();
-//                                        } finally {
-//                                            if (objdatabaseadapter != null)
-//                                                objdatabaseadapter.close();
-//                                            if (getschemeCur != null)
-//                                                getschemeCur.close();
-//                                        }
 //
-//                                        //Get Item based Free Item
-//                                        //GetFreeItem(salesItemList.get(pos).getItemcode(),mHolder.listitemqty.getText().toString());
-//
-//                                        /********FREE ITEM******************/
-//
-//                                        String getitemcode = salesItemList.get(pos).getItemcode();
-//                                        String getqty = mHolder.listitemqty.getText().toString();
-//                                        //Get Free Item variable
-//                                        String getfreeitemname = "";
-//                                        //Get free and purchase item code
-//                                        String getpurchaseitemcode = "";
-//                                        String getpurchaseqty = "";
-//                                        String getfreeitemcode = "";
-//                                        String getfreeqty = "";
-//                                        String getfreeitemschemetype ="";
-//
-//                                        String getallownegativestock = "";
-//                                        double getfreestockitem = 0;
-//                                        String getitemcategory = "";
-//                                        String getparentcode = "";
-//                                        String getchilditemname = "";
-//                                        String getchildunitname = "";
-//
-//                                        //Get Item based Free Item
-//                                        DataBaseAdapter objdatabaseadapterfree = null;
-//                                        Cursor getitemschemeCur = null;
-//                                        Cursor getitemschemetype = null;
-//                                        Cursor getFreeStock = null;
-//                                        try {
-//                                            //Scheme Functionality
-//                                            objdatabaseadapterfree = new DataBaseAdapter(context);
-//                                            objdatabaseadapterfree.open();
-//                                            getitemschemeCur = objdatabaseadapterfree.GetSchemeFORFreeItemDB(getitemcode, preferenceMangr.pref_getString("getroutecode"));
-//                                            getitemschemetype = objdatabaseadapterfree.GetOrderSchemeType(getitemcode, preferenceMangr.pref_getString("getroutecode"));
-//                                            //get item scheme type
-//                                            if(getitemschemetype.getCount()>0){
-//                                                getfreeitemschemetype = getitemschemetype.getString(0);
-//
-//                                                 if(getfreeitemschemetype.equals("rate")){
-//                                                    freeitemstatus="freerate";
-//                                                    schemeitemdiscount = String.valueOf(getitemschemetype.getDouble(2));
-//                                                }
-//                                            }
-//                                            if (getitemschemeCur.getCount() > 0) {
-//                                                //freeitems.clear();
-//                                                // for (int i = 0; i < getitemschemeCur.getCount(); i++) {
-//                                                getpurchaseitemcode = getitemschemeCur.getString(0);
-//                                                getpurchaseqty = getitemschemeCur.getString(1);
-//                                                getfreeitemcode = getitemschemeCur.getString(2);
-//                                                getfreeqty = getitemschemeCur.getString(3);
-//
-//
-//                                                // }
-//                                                if (Double.parseDouble(getpurchaseqty) <=
-//                                                        Double.parseDouble(getqty)) {
-//                                                    try {
-//                                                        //Get Stock for parent item
-//                                                        String getmanualfreeitemname = objdatabaseadapterfree.GetFreeitemname(getfreeitemcode);
-//                                                        getfreeitemname = getmanualfreeitemname;
-//                                                        getFreeStock = objdatabaseadapterfree.GetPurchaseItems(getfreeitemcode, preferenceMangr.pref_getString("getroutecode"), LoginActivity.getareacode);
-//                                                        if (getFreeStock.getCount() > 0) {
-//                                                            for (int i = 0; i < getFreeStock.getCount(); i++) {
-//                                                                //getfreeitemstock = getFreeStock.getDouble(0);
-//                                                                getallownegativestock = getFreeStock.getString(14);
-//                                                                getfreestockitem = getFreeStock.getDouble(16);
-//                                                                getitemcategory = getFreeStock.getString(11);
-//                                                                getparentcode = getFreeStock.getString(12);
-//                                                                getchilditemname = getFreeStock.getString(5);
-//                                                                getchildunitname = getFreeStock.getString(17);
-//
-//                                                            }
-//                                                        }
-//
-//                                                        //Calculate Qty with total qty
-//                                                        Double getactualqty = Double.parseDouble(getqty);
-//                                                        int getfreeqtyval = (int) (getactualqty / Double.parseDouble(getpurchaseqty));
-//                                                        int getactualqtyvalue = (int) (getfreeqtyval * Double.parseDouble(getfreeqty));
-//                                                        String getcartqty = objdatabaseadapterfree.GetCartItemStock(getfreeitemcode);
-//                                                        if (getpurchaseitemcode.equals(getfreeitemcode)) {
-//                                                            if (Double.parseDouble(mHolder.labelstock.getText().toString()) < (Double.parseDouble(String.valueOf(getactualqtyvalue)) + Double.parseDouble(getqty))) {
-//                                                                Toast toast = Toast.makeText(getApplicationContext(), "Insufficient stock for " + getfreeitemname, Toast.LENGTH_LONG);
-//                                                                toast.setGravity(Gravity.CENTER, 0, 0);
-//                                                                toast.show();
-//                                                                mHolder.listitemtotal.setText("0.00");
-//                                                                mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
-//                                                                return;
-//                                                            }
-//                                                        }
-//
-//                                                        //check the item have a free item count and apply scheme status
-//                                                        if(Double.parseDouble(salesItemList.get(position).getFreecount()) > 0 && salesItemList.get(pos).getApplyitemscheme().equals("yes")) {
-//                                                            if (getfreestockitem >= Double.parseDouble(String.valueOf(getactualqtyvalue))) {
-//                                                                getFreeStock = null;
-//                                                                //Get Stock for parent item
-//                                                                getFreeStock = objdatabaseadapterfree.GetPurchaseItems(getfreeitemcode, preferenceMangr.pref_getString("getroutecode"), LoginActivity.getareacode);
-//
-//                                                                if (getFreeStock.getCount() > 0) {
-//                                                                    for (int i = 0; i < getFreeStock.getCount(); i++) {
-//                                                                        double getsubtotal = Double.parseDouble(getFreeStock.getString(20)) * getactualqtyvalue;
-//
-//                                                                        for (int j = 0; j < freeitems.size(); j++) {
-//                                                                            if (getpurchaseitemcode.equals(freeitems.get(j).getPurchaseitemcode()) &&
-//                                                                                    getfreeitemcode.equals(freeitems.get(j).getFreeitemcode())) {
-//                                                                                freeitems.remove(j);
-//                                                                            }
-//                                                                        }
-//                                                                        freeitems.add(new SalesItemDetails(getFreeStock.getString(0), getFreeStock.getString(1),
-//                                                                                getFreeStock.getString(2)
-//                                                                                , getFreeStock.getString(3), getFreeStock.getString(4),
-//                                                                                getFreeStock.getString(5), getFreeStock.getString(6),
-//                                                                                getFreeStock.getString(7)
-//                                                                                , getFreeStock.getString(8), getFreeStock.getString(9), getFreeStock.getString(10)
-//                                                                                , getFreeStock.getString(11), getFreeStock.getString(12)
-//                                                                                , getFreeStock.getString(13), getFreeStock.getString(14), getFreeStock.getString(15)
-//                                                                                , getFreeStock.getString(16), getFreeStock.getString(17)
-//                                                                                , getFreeStock.getString(18), getFreeStock.getString(19),
-//                                                                                getFreeStock.getString(20)
-//                                                                                , getFreeStock.getString(21), getFreeStock.getString(22)
-//                                                                                , getFreeStock.getString(23), String.valueOf(getactualqtyvalue), String.valueOf(getsubtotal),
-//                                                                                getFreeStock.getString(24), String.valueOf(getsubtotal),
-//                                                                                "freeitem", getpurchaseitemcode, getfreeitemcode, getFreeStock.getString(20), "", "",getFreeStock.getString(28),""));
-//
-//                                                                    }
-//                                                                }
-//                                                            } else {
-//                                                           /* Toast toast = Toast.makeText(getApplicationContext(),"Insufficient stock for " + getfreeitemname + " this free item", Toast.LENGTH_LONG);
-//                                                            toast.setGravity(Gravity.CENTER, 0, 0);
-//                                                            toast.show();
-//                                                            mHolder.listitemtotal.setText("0.00");
-//                                                            mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
-//                                                            mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice())));
-//                                                            return;*/
-//
-//                                                                //freeitems.clear();
-//                                                                if (getallownegativestock.equals("no")) {
-//                                                                    // if (Double.parseDouble(getqty) > getfreestockitem) {
-//                                                                    if (getitemcategory.equals("child")) {
-//                                                                        DataBaseAdapter objdatabaseadapter1 = null;
-//                                                                        Cursor getStockCur = null;
-//                                                                        try {
-//                                                                            //Get Stock for parent item
-//                                                                            objdatabaseadapter1 = new DataBaseAdapter(context);
-//                                                                            objdatabaseadapter1.open();
-//                                                                            getStockCur = objdatabaseadapter1.GetStockForItem(getparentcode);
-//                                                                            String getcartparentqty = objdatabaseadapter.GetCartItemStock(getparentcode);
-//                                                                            if (getStockCur.getCount() > 0) {
-//                                                                                for (int i = 0; i < getStockCur.getCount(); i++) {
-//                                                                                    getparentstock = getStockCur.getDouble(0);
-//
-//                                                                                }
-//                                                                                getparentstock = getparentstock - (Double.parseDouble(getcartparentqty));
-//                                                                            }
-//
-//                                                                            if (getparentstock > 0) {
-//
-//                                                                                //> Double.parseDouble(String.valueOf(getactualqtyvalue))
-//
-//                                                                                Toast toast = Toast.makeText(getApplicationContext(), "Insufficient stock for " + getfreeitemname + " this free item", Toast.LENGTH_LONG);
-//                                                                                toast.setGravity(Gravity.CENTER, 0, 0);
-//                                                                                toast.show();
-//                                                                                mHolder.listitemtotal.setText("0.00");
-//                                                                                mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
-//                                                                                mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice())));
-//                                                                                return;
-//                                                                                //Stock Conversion
-//                                                                                /*isfreestock = "yes";
-//                                                                                getstaticchildcode = getfreeitemcode;
-//                                                                                getstaticparentitemcode = getparentcode;
-//                                                                                getstaticchilditemname = getchilditemname;
-//                                                                                getstaticchildunitname = getchildunitname;
-//                                                                                isparentopen = "yes";
-//                                                                                mHolder.listitemname.setBackgroundColor(getResources().getColor(R.color.yellow));
-//                                                                                mHolder.listitemqty.setText("");
-//                                                                                mHolder.listitemtotal.setText("0.00");
-//                                                                                salesItemList.get(pos).setSubtotal("0.00");
-//                                                                                mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));*/
-//
-//                                                                            } else {
-//                                                                                Toast toast = Toast.makeText(getApplicationContext(), "Insufficient stock for " + getfreeitemname, Toast.LENGTH_LONG);
-//                                                                                toast.setGravity(Gravity.CENTER, 0, 0);
-//                                                                                toast.show();
-//                                                                                mHolder.listitemtotal.setText("0.00");
-//                                                                                mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
-//                                                                                mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice())));
-//
-//                                                                            }
-//                                                                        } catch (Exception e) {
-//                                                                            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-//                                                                            mDbErrHelper.open();
-//                                                                            String geterrror = e.toString();
-//                                                                            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-//                                                                            mDbErrHelper.close();
-//                                                                        } finally {
-//                                                                            if (objdatabaseadapter1 != null)
-//                                                                                objdatabaseadapter1.close();
-//                                                                            if (getStockCur != null)
-//                                                                                getStockCur.close();
-//                                                                        }
-//                                                                    } else {
-//                                                                        Toast toast = Toast.makeText(getApplicationContext(), "Insufficient stock for " + getfreeitemname + " this free item", Toast.LENGTH_LONG);
-//                                                                        toast.setGravity(Gravity.CENTER, 0, 0);
-//                                                                        toast.show();
-//                                                                        mHolder.listitemtotal.setText("0.00");
-//                                                                        mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
-//                                                                        mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice())));
-//
-//                                                                    }
-//                                                                    //}
-//                                                                }
-//                                                            }
-//                                                        }
-//
-//                                                        //scheme process end
-//                                                    } catch (Exception e) {
-//                                                        DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-//                                                        mDbErrHelper.open();
-//                                                        String geterrror = e.toString();
-//                                                        mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-//                                                        mDbErrHelper.close();
-//                                                    }
-//                                                } /*else {
-//                                                 *//*  for (int k = 0; k < freeitems.size(); k++) {
-//                                                        for (int l = 0; l < staticreviewsalesitems.size(); l++) {
-//                                                            if (freeitems.get(k).getPurchaseitemcode().equals(staticreviewsalesitems.get(l).getPurchaseitemcode()) &&
-//                                                                    freeitems.get(k).getFreeitemcode().equals(staticreviewsalesitems.get(l).getFreeitemcode())) {
-//                                                                if (staticreviewsalesitems.get(l).getFreeflag().equals("freeitem")) {
-//                                                                    staticreviewsalesitems.remove(l);
-//                                                                }
-//                                                            }
-//                                                        }
-//                                                    }*//*
-//                                                    //freeitems.clear();
-//                                                }*/
-//
-//                                            }
-//                                        } catch (Exception e) {
-//                                            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-//                                            mDbErrHelper.open();
-//                                            String geterrror = e.toString();
-//                                            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-//                                            mDbErrHelper.close();
-//                                        } finally {
-//                                            if (objdatabaseadapterfree != null)
-//                                                objdatabaseadapterfree.close();
-//                                            if (getitemschemeCur != null)
-//                                                getitemschemeCur.close();
-//                                            if (getFreeStock != null)
-//                                                getFreeStock.close();
-//                                        }
-//
-//                                    }
-//                                }
-//                                    /*********END SCHEME DETAILS*************/
 
                                 if (getschemeapplicable.equals("yes")) {
                                     if (getSchemebusinesstype.contains("1") || getSchemebusinesstype.contains("3")) {
@@ -3144,6 +2913,21 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                 if(Double.parseDouble(salesItemList.get(position).getFreecount()) > 0 && (!Utilities.isNullOrEmpty(salesItemList.get(pos).getApplyitemscheme()) && salesItemList.get(pos).getApplyitemscheme().equals("yes"))) {
                                                     itemschemeapplicable = "no";
                                                 }
+
+                                                double amountwithbudget = Double.parseDouble(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice()))) * Integer.parseInt(mHolder.listitemqty.getText().toString());
+
+                                                double amountwithoutbudget = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Integer.parseInt(mHolder.listitemqty.getText().toString());
+
+                                                if(amountwithbudget == amountwithoutbudget)
+                                                {
+                                                    budgetutilize = 0;
+                                                }
+                                                else
+                                                {
+                                                    budgetutilize = (amountwithbudget - amountwithoutbudget);
+                                                }
+
+
                                                 insertcart = dataBaseAdapter.insertSalesCart(String.valueOf(salesitems.get(i).getItemcode()), String.valueOf(salesitems.get(i).getCompanycode()),
                                                         String.valueOf(salesitems.get(i).getBrandcode()), String.valueOf(salesitems.get(i).getManualitemcode())
                                                         , String.valueOf(salesitems.get(i).getItemname()), String.valueOf(salesitems.get(i).getItemnametamil()),
@@ -3161,7 +2945,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                         , String.valueOf(salesitems.get(i).getRouteallowpricedit()), schemeitemdiscount, freeitemstatus,
                                                         String.valueOf(salesitems.get(i).getPurchaseitemcode()), String.valueOf(salesitems.get(i).getFreeitemcode()),
                                                         String.valueOf(salesitems.get(i).getMinsalesqty()),String.valueOf(salesitems.get(i).getDumyprice()),String.valueOf(salesitems.get(i).getratediscount())
-                                                        ,itemschemeapplicable,String.valueOf(salesitems.get(i).getOrgprice()));
+                                                        ,itemschemeapplicable,String.valueOf(salesitems.get(i).getOrgprice()),budgetutilize);
 
                                                 //txtareaname.setEnabled(false);
                                                 //txtcustomername.setEnabled(false);
@@ -3335,7 +3119,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                                 , getFreeStock.getString(23), String.valueOf(getactualqtyvalue), String.valueOf(getsubtotal),
                                                                                 getFreeStock.getString(24), String.valueOf(getsubtotal),
                                                                                 "freeitem", getpurchaseitemforcart, getfreeitemcode, getFreeStock.getString(20),
-                                                                                "", "",getFreeStock.getString(28),"","","",itemschemeapplicable,"",getFreeStock.getString(29)));
+                                                                                "", "",getFreeStock.getString(28),"","","",itemschemeapplicable,"",getFreeStock.getString(29),"",0));
 
 
                                                                     }
@@ -3505,7 +3289,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                 , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
                                                 getcartdatas.getString(30), getcartdatas.getString(31) ,getcartdatas.getString(21),
                                                 "","", getcartdatas.getString(32),"","",
-                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),""));
+                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",0));
                                         getcartdatas.moveToNext();
                                     }
                                 }
@@ -3582,7 +3366,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                 getcartdatas.getString(30), getcartdatas.getString(31),
                                                 getcartdatas.getString(21),"","" ,
                                                 getcartdatas.getString(32),"","",
-                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),""));
+                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",0));
                                         getcartdatas.moveToNext();
                                     }
                                 }
@@ -4052,6 +3836,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             final DecimalFormat dft = new DecimalFormat("0.00");
             double res1 = 0;
             double res2 = 0;
+
             for (int i = 0; i < salesitems.size(); i++) {
                 String saleseqty = salesitems.get(i).getItemqty();
                 String salessubtotal = salesitems.get(i).getSubtotal();
@@ -4071,6 +3856,9 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                 res1 = res1 + Double.parseDouble(getsalessubtotal);
                 res2 = res2 + Double.parseDouble(getsaleseqty);
             }
+
+
+
             billisttotalamount.setText(dft.format(res1));
         }catch (Exception e){
             DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -4079,6 +3867,58 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
             mDbErrHelper.close();
         }
+    }
+
+
+    public boolean isSalesValueReachLimit(double amount) {
+        try{
+            String maxbillamount = preferenceMangr.pref_getString("getmaxbillamount");
+            String maxbillannualamount = preferenceMangr.pref_getString("getmaxbillannualamount");
+            if(Utilities.isNullOrEmpty(maxbillamount) || Double.parseDouble(maxbillamount) <= 0 ||
+                    Utilities.isNullOrEmpty(maxbillannualamount) || Double.parseDouble(maxbillannualamount) <= 0){
+                return true;
+            }
+
+            final DecimalFormat dft = new DecimalFormat("0.00");
+            double res1 = 0;
+            double res2 = 0;
+
+            for (int i = 0; i < staticreviewsalesitems.size(); i++) {
+                String saleseqty = staticreviewsalesitems.get(i).getItemqty();
+                String salessubtotal = staticreviewsalesitems.get(i).getSubtotal();
+                String getsaleseqty;
+                if (saleseqty.equals("")) {
+                    getsaleseqty = "0";
+                } else {
+                    getsaleseqty = saleseqty;
+                }
+                String getsalessubtotal;
+                if (salessubtotal.equals("")) {
+                    getsalessubtotal = "0";
+                } else {
+                    getsalessubtotal = salessubtotal;
+                }
+
+                res1 = res1 + Double.parseDouble(getsalessubtotal);
+                res2 = res2 + Double.parseDouble(getsaleseqty);
+            }
+
+            if (amount + res1 + Double.parseDouble(annualsalesamt) <=  Double.parseDouble(maxbillannualamount)){
+                if (amount + res1 + Double.parseDouble(daywisesalesamt) <=  Double.parseDouble(maxbillamount)){
+                    return true;
+                }
+            }
+
+            return false;
+
+        }catch (Exception e){
+            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+            mDbErrHelper.open();
+            String geterrror = e.toString();
+            mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            mDbErrHelper.close();
+        }
+        return false;
     }
 
 
@@ -4385,7 +4225,10 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                     public void onClick(DialogInterface dialog, int id) {
                                         txtcustomername.setText("");
                                         customercode = "0";
-                                        gstnnumber = "";
+                                        customercategory = "0";
+                                        daywisesalesamt = "0";
+                                        annualsalesamt = "0";
+                                        gstnnumber = "";billwisebudget="0";
                                         getschemeapplicable = "";
                                         togglegstin.setBackgroundColor(getResources().getColor(R.color.graycolor));
                                         togglegstin.setText("GSTIN \n ");
@@ -4418,7 +4261,9 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     }else{
                         txtcustomername.setText("");
                         customercode = "0";
-                        gstnnumber = "";
+                        customercategory="0";
+                        annualsalesamt = "0";billwisebudget="0";
+                        daywisesalesamt = "0"; gstnnumber = "";
                         getschemeapplicable = "";
                         togglegstin.setBackgroundColor(getResources().getColor(R.color.graycolor));
                         togglegstin.setText("GSTIN \n ");
@@ -4574,6 +4419,10 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                 public void onClick(View v) {
                     txtcustomername.setText(String.valueOf(CustomerNameTamil[position]));
                     customercode = CustomerCode[position];
+                    customercategory = CustomerCategory[position];
+                    daywisesalesamt = DayWiseSalesamt[position];
+                    annualsalesamt = AnnualSalesamt[position];
+                    billwisebudget = BillWiseBudget[position];
                     gstnnumber = GSTN[position];
                     getschemeapplicable = SchemeApplicable[position];
                     customercityname = CustomerCityName[position];
@@ -5492,7 +5341,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                                     , getFreeStock.getString(23), String.valueOf(getactualqtyvalue), String.valueOf(getsubtotal),
                                                                                     getFreeStock.getString(24), "",
                                                                                     "freeitem", getpurchaseitemcode, getfreeitemcode,getFreeStock.getString(20),"","",
-                                                                                    "",getFreeStock.getString(27),"","","","",getFreeStock.getString(29)));
+                                                                                    "",getFreeStock.getString(27),"","","","",getFreeStock.getString(29),"",0));
 
                                                                             Log.d("------------Free item : ",freeitems.toString());
 
@@ -5681,7 +5530,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                 String.valueOf(tax), String.valueOf(itemqty), String.valueOf(getsubtotal)
                                                                 , String.valueOf(routeallowpricedit), String.valueOf(discount), "",
                                                                 String.valueOf(purchaseitemcode), String.valueOf(freeitemcode),"","","","",
-                                                                String.valueOf(orgprice));
+                                                                String.valueOf(orgprice),0);
                                                     }
                                                 }else{
                                                     try{
@@ -5713,7 +5562,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                         String.valueOf(newprice), String.valueOf(colourcode), String.valueOf(hsn),
                                                                         String.valueOf(tax), String.valueOf(itemqty), String.valueOf(getsubtotal)
                                                                         , String.valueOf(routeallowpricedit), String.valueOf(discount), "",
-                                                                        String.valueOf(purchaseitemcode), String.valueOf(freeitemcode),"","","","",String.valueOf(orgprice));
+                                                                        String.valueOf(purchaseitemcode), String.valueOf(freeitemcode),"","","","",String.valueOf(orgprice),0);
                                                             }
                                                         }
 
@@ -5763,7 +5612,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                             getcartdatas.getString(24), getcartdatas.getString(25), getcartdatas.getString(26)
                                                             , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
                                                             getcartdatas.getString(30), getcartdatas.getString(31) ,getcartdatas.getString(21),"","",getcartdatas.getString(32),"","",
-                                                            "","",getcartdatas.getString(36),""));
+                                                            "","",getcartdatas.getString(36),"","",0));
                                                     getcartdatas.moveToNext();
                                                 }
                                             }
@@ -5824,7 +5673,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                             , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
                                                             getcartdatas.getString(30), getcartdatas.getString(31),getcartdatas.getString(21),
                                                             "","",getcartdatas.getString(32),"","","",
-                                                            "",getcartdatas.getString(32),""));
+                                                            "",getcartdatas.getString(32),"","",0));
                                                     getcartdatas.moveToNext();
                                                 }
                                             }

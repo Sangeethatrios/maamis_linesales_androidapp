@@ -1152,6 +1152,8 @@ public class SyncActivity extends AppCompatActivity {
                             preferenceMangr.pref_putString("getroutecode",getschedulelist.getString(1));
                             preferenceMangr.pref_putString("getroutename",getschedulelist.getString(4));
                             preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
+                            preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
+
                         }
                         //Get cash close Count
                         MenuActivity.getcashclosecount = objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));
@@ -1551,6 +1553,8 @@ public class SyncActivity extends AppCompatActivity {
                             preferenceMangr.pref_putString("getroutecode",getschedulelist.getString(1));
                             preferenceMangr.pref_putString("getroutename",getschedulelist.getString(4));
                             preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
+                            preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
+
                         }
                         //Get cash close Count
                         MenuActivity.getcashclosecount = objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));
@@ -1766,6 +1770,8 @@ public class SyncActivity extends AppCompatActivity {
                             preferenceMangr.pref_putString("getroutecode",getschedulelist.getString(1));
                             preferenceMangr.pref_putString("getroutename",getschedulelist.getString(4));
                             preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
+                            preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
+
                         }
                         //Get cash close Count
                         MenuActivity.getcashclosecount = objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));
@@ -2105,6 +2111,9 @@ public class SyncActivity extends AppCompatActivity {
                             preferenceMangr.pref_putString("getroutecode",getschedulelist.getString(1));
                             preferenceMangr.pref_putString("getroutename",getschedulelist.getString(4));
                             preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
+                            preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
+
+
 
                         }
                         //Get cash close Count
@@ -2407,6 +2416,8 @@ public class SyncActivity extends AppCompatActivity {
                             preferenceMangr.pref_putString("getroutecode",getschedulelist.getString(1));
                             preferenceMangr.pref_putString("getroutename",getschedulelist.getString(4));
                             preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
+                            preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
+
                         }
                         //Get cash close Count
                         MenuActivity.getcashclosecount = objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));
@@ -2616,6 +2627,8 @@ public class SyncActivity extends AppCompatActivity {
                             preferenceMangr.pref_putString("getroutecode",getschedulelist.getString(1));
                             preferenceMangr.pref_putString("getroutename",getschedulelist.getString(4));
                             preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
+                            preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
+
                         }
                         //Get cash close Count
                         MenuActivity.getcashclosecount = objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));

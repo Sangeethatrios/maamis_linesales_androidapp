@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String TAG = "DBG";
     public static String getpin="";
     public static  String getformatdate = "",getcurrentdatetime = "",getareaname = "",
-            getareacode="",getvancode="",getvanname="",getfinanceyrcode="",getbusiness_type="",getorderprint="";
+            getareacode="",getvancode="",getvanname="",getfinanceyrcode="",getbusiness_type="",getorderprint="",getmaxbillamount="",getmaxbillannualamount="";
     //public static PrintData p;
     ImageView menusettings;
     Dialog dialog;
@@ -538,8 +538,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             objdatabaseadapter.open();
                             getschedulecount = objdatabaseadapter.GetScheduleCountDB();
                             getfinanceyrcode = objdatabaseadapter.GetFinancialYrCode();
+//                            getmaxbillannualamount = objdatabaseadapter.GetMaxbillAnnualAmount();
+//                            getmaxbillamount = objdatabaseadapter.GetMaxBillAmount();
 
                             preferenceMangr.pref_putString("getfinanceyrcode",objdatabaseadapter.GetFinancialYrCode());
+                            preferenceMangr.pref_putString("getmaxbillannualamount",objdatabaseadapter.GetMaxbillAnnualAmount());
+                            preferenceMangr.pref_putString("getmaxbillamount",objdatabaseadapter.GetMaxBillAmount());
                             //Get General settings
                             getschedulestatus = objdatabaseadapter.GetScheduleStatusDB();
 
@@ -2104,6 +2108,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     getfinanceyrcode = objdatabaseadapter.GetFinancialYrCode();
 
                     preferenceMangr.pref_putString("getfinanceyrcode",objdatabaseadapter.GetFinancialYrCode());
+                    preferenceMangr.pref_putString("getmaxbillannualamount",objdatabaseadapter.GetMaxbillAnnualAmount());
+                    preferenceMangr.pref_putString("getmaxbillamount",objdatabaseadapter.GetMaxBillAmount());
                     //Get General settings
                     getschedulestatus = objdatabaseadapter.GetScheduleStatusDB();
                     getGPSTrackingStatus = objdatabaseadapter.getGPSTrackingStatus();
