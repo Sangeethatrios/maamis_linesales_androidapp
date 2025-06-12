@@ -69,6 +69,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
     private Boolean isFabOpen = false;
     private Animation rotate_forward,rotate_backward;
     Context context;
+    public static Context mContext;
+
     boolean isopenpopup,isorderopenpopup,isorderitemsopenshowpopup=false;
     ViewGroup view_root;
     private int _xDelta;
@@ -167,7 +169,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_sales);
         try {
             context = this;
-
+            mContext=this;
+            totalbudgetutilize=0;
             //Declare All ListView,TextView,Edit Text ,Fab Buttons
             fabgroupitem = (FloatingActionButton) findViewById(R.id.fabgroupitem);
             lv_sales_items = (ListView) findViewById(R.id.lv_sales_items);
@@ -1918,6 +1921,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                     DataBaseAdapter objdatabaseadapter = null;
                                     Cursor getcartdatas = null;
                                     try {
+                                        removebudgetutilzeamount(salesItemList.get(pos1).getItemcode());
                                         //Order item details
                                         objdatabaseadapter = new DataBaseAdapter(context);
                                         objdatabaseadapter.open();
@@ -1963,6 +1967,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                         DataBaseAdapter objdatabaseadapter = null;
                                         Cursor getcartdatas = null;
                                         try {
+                                            removebudgetutilzeamount(salesItemList.get(pos1).getItemcode());
                                             //Order item details
                                             objdatabaseadapter = new DataBaseAdapter(context);
                                             objdatabaseadapter.open();
@@ -2356,6 +2361,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             //ONCHANGE QUANTITY EVENT
 
             mHolder.listitemtotal.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("Range")
                 @Override
                 public void onClick(View v) {
                     mHolder.listitemtotal.setEnabled(false);
@@ -2425,6 +2431,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                            mHolder.listitemtotal.setEnabled(true);
                            return;
                        }
+                        double remainingbudget=0;
                         double rowamountwithbudget = Double.parseDouble(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice()))) * Integer.parseInt(mHolder.listitemqty.getText().toString());
                         double rowamountwithoutbudget = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Integer.parseInt(mHolder.listitemqty.getText().toString());
                         if(rowamountwithbudget == rowamountwithoutbudget)
@@ -2435,15 +2442,24 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                         {
                             budgetutilize = (rowamountwithbudget - rowamountwithoutbudget);
                         }
-
-                        if(total == 0){
-                            total=budgetutilize;
+                        double temptotalbudgetutilize = 0;
+                        if(totalbudgetutilize == 0){
+                            temptotalbudgetutilize=budgetutilize;
                         }
                         else{
-                            total = total  + budgetutilize;
+                            temptotalbudgetutilize = totalbudgetutilize  + budgetutilize;
                         }
 
+                        remainingbudget = Double.parseDouble( preferenceMangr.pref_getString("getschedulebudget")) + (-1 * Double.parseDouble(billwisebudget)) ;
 
+                        if(remainingbudget < temptotalbudgetutilize){
+                            Toast toast = Toast.makeText(getApplicationContext(),"Budget limit reached. Price changes are not allowed.", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            mHolder.listitemtotal.setEnabled(true);
+                            return;
+                        }
+                        totalbudgetutilize=  temptotalbudgetutilize;
 //||
 //                                    !(Integer.parseInt(mHolder.listitemqty.getText().toString())>=
 //                                            Integer.parseInt(mHolder.listitemupp.getText().toString()))
@@ -3289,7 +3305,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                 , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
                                                 getcartdatas.getString(30), getcartdatas.getString(31) ,getcartdatas.getString(21),
                                                 "","", getcartdatas.getString(32),"","",
-                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",0));
+                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",getcartdatas.getDouble(getcartdatas.getColumnIndex("budget_utilize"))));
                                         getcartdatas.moveToNext();
                                     }
                                 }
@@ -3338,7 +3354,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                         DataBaseAdapter objdatabaseadapter = null;
                         Cursor getcartdatas = null;
                         try {
-                            //Order item details
+                          removebudgetutilzeamount(getitemcode);
                             objdatabaseadapter = new DataBaseAdapter(context);
                             objdatabaseadapter.open();
                             String getresult = objdatabaseadapter.DeleteItemInCart(getitemcode);
@@ -3366,7 +3382,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                 getcartdatas.getString(30), getcartdatas.getString(31),
                                                 getcartdatas.getString(21),"","" ,
                                                 getcartdatas.getString(32),"","",
-                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",0));
+                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",getcartdatas.getDouble(getcartdatas.getColumnIndex("budget_utilize"))));
                                         getcartdatas.moveToNext();
                                     }
                                 }
@@ -3802,6 +3818,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
         Cursor getcartdatas = null;
         String getresult ="";
         try {
+
+            removebudgetutilzeamount(getitemcode);
             //Order item details
             objdatabaseadapter = new DataBaseAdapter(context);
             objdatabaseadapter.open();
@@ -5649,6 +5667,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                     DataBaseAdapter objdatabaseadapter = null;
                                     Cursor getcartdatas = null;
                                     try {
+                                        removebudgetutilzeamount(getitemcode);
                                         objdatabaseadapter = new DataBaseAdapter(context);
                                         objdatabaseadapter.open();
                                         String getresult = objdatabaseadapter.DeleteItemInCart(getitemcode);
@@ -8707,5 +8726,24 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     }
-
+    public static void removebudgetutilzeamount(String getitemcode){
+        try{
+            double removeamount=0;
+            //Order item details
+            for (int i = 0; i < staticreviewsalesitems.size(); i++) {
+                if(staticreviewsalesitems.get(i).getItemcode().equals(getitemcode)){
+                    removeamount=staticreviewsalesitems.get(i).getBudgetUtilize();
+                    break;
+                }
+            }
+            totalbudgetutilize=totalbudgetutilize + (-1* removeamount);
+        }
+        catch(Exception e){
+            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(mContext);
+            mDbErrHelper.open();
+            String geterrror = e.toString();
+            mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), mContext.getClass().getSimpleName() + "- AsyncNotPurchaseDetails - POSTEXEC", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            mDbErrHelper.close();
+        }
+    }
 }

@@ -1782,7 +1782,7 @@ public class DataBaseAdapter
                     "(Select unitname  from tblunitmaster where unitcode=a.unitcode) as unitname," +
                     "coalesce((Select noofdecimals from tblunitmaster where unitcode=a.unitcode),0) as noofdecimals," +
                     "coalesce((select oldorderprice from tblitempricelisttransaction where itemcode=a.itemcode " +
-                    "order by autonum desc limit 1),0) as oldorderprice,coalesce((select neworderprice from tblitempricelisttransaction" +
+                    "order by autonum desc limit 1),0) as oldorderprice,coalesce((select newprice from tblitempricelisttransaction" +
                     " where itemcode=a.itemcode order by autonum desc limit 1),0) as neworderprice," +
                     "CASE WHEN itemtype=2 then (SELECT freeitemcolor from tblgeneralsettings) else coalesce((select colourcode " +
                     "from tblcompanymaster where companycode=a.companycode),'#000000') END as colourcode,coalesce(c.hsn,'') " +

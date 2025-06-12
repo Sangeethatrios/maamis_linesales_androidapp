@@ -1304,6 +1304,7 @@ public class ReviewActivity extends AppCompatActivity {
                                     DataBaseAdapter objdatabaseadapter = null;
                                     Cursor getcartdatas = null;
                                     try {
+                                        SalesActivity.removebudgetutilzeamount(getitemcode);
                                         //Order item details
                                         objdatabaseadapter = new DataBaseAdapter(context);
                                         objdatabaseadapter.open();
