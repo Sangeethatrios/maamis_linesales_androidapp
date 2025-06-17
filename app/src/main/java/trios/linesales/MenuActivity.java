@@ -557,6 +557,7 @@ public class MenuActivity extends AppCompatActivity {
                     preferenceMangr.pref_putString("getroutecode",getschedulelist.getString(1));
                     preferenceMangr.pref_putString("getroutename",getschedulelist.getString(4));
                     preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
+                    preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
                 }
                 //Get Cash close Count
                 getcashclosecount = objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));

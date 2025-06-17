@@ -35,6 +35,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -1392,7 +1393,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                             "","","0","",Cur.getString(20),
                             Cur.getString(29),Cur.getString(30),Cur.getString(32),Cur.getString(33),
                             Cur.getString(34) ,"","",Cur.getString(20),""
-                            ,Cur.getString(Cur.getColumnIndex("minprice")),0)
+                            ,Cur.getString(Cur.getColumnIndex("minprice")),0,"no")
                     );
                     Cur.moveToNext();
                 }
@@ -1885,6 +1886,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     mHolder.listitemtax = (TextView) convertView.findViewById(R.id.listitemtax);
                     mHolder.labelstock = (TextView)convertView.findViewById(R.id.labelstock);
                     mHolder.labelhsntax = (TextView)convertView.findViewById(R.id.labelhsntax);
+//                    mHolder.chk_schemeitem = (CheckBox) convertView.findViewById(R.id.chk_schemeitem);
                     mHolder.itemLL = (LinearLayout)convertView.findViewById(R.id.itemLL);
                     mHolder.stockvalueLL = (LinearLayout)convertView.findViewById(R.id.stockvalueLL);
                     mHolder.labelnilstock = (TextView)convertView.findViewById(R.id.labelnilstock);
@@ -1900,7 +1902,13 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                   int count) {
                             mHolder.listitemtotal.setEnabled(true);
                             mHolder.labelstock.setText(salesItemList.get(position).getStockqty());
-                            mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getDumyprice())));
+                            if(!Utilities.isNullOrEmpty(salesItemList.get(position).getNewprice()) && Double.parseDouble(salesItemList.get(position).getNewprice()) > 0){
+                                mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getNewprice())));
+
+                            }
+                            else{
+                                mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getDumyprice())));
+                            }
                             if (!(mHolder.listitemqty.getText().toString()).equals("") &&
                                     !(mHolder.listitemqty.getText().toString()).equals(" ")
                                     && !(mHolder.listitemqty.getText().toString()).equals("0")
@@ -2022,6 +2030,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     convertView.setTag(R.id.listitemtax, mHolder.listitemtax);
                     convertView.setTag(R.id.labelstock, mHolder.labelstock);
                     convertView.setTag(R.id.labelhsntax, mHolder.labelhsntax);
+//                    convertView.setTag(R.id.chk_schemeitem, mHolder.chk_schemeitem);
                     convertView.setTag(R.id.labelstockunit, mHolder.labelstockunit);
                     convertView.setTag(R.id.schemecount, mHolder.schemecount);
                     convertView.setTag(R.id.dummycount, mHolder.dummycount);
@@ -2047,6 +2056,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             mHolder.listitemtax.setTag(position);
             mHolder.labelstock.setTag(position);
             mHolder.labelhsntax.setTag(position);
+//            mHolder.chk_schemeitem.setTag(position);
             mHolder.labelstockunit.setTag(position);
             mHolder.schemecount.setTag(position);
             mHolder.dummycount.setTag(position);
@@ -2402,6 +2412,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
 
                         if(!Utilities.isNullOrEmpty(salesItemList.get(pos).getminprice())) {
                             double itemminprice = Double.parseDouble(salesItemList.get(pos).getminprice());
+
                             if(itemminprice > 0){
                                 double itemprice = Double.parseDouble(mHolder.listitemrate.getText().toString());
                                 if(itemprice >0 ){
@@ -2411,7 +2422,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                         toast.show();
                                         mHolder.listitemtotal.setEnabled(true);
                                         //mHolder.listitemrate.setText(String.valueOf(itemminprice));
-                                        if(!Utilities.isNullOrEmpty(salesItemList.get(pos).getNewprice())){
+                                        if(!Utilities.isNullOrEmpty(salesItemList.get(pos).getNewprice()) && Double.parseDouble(salesItemList.get(pos).getNewprice()) > 0 ){
                                             mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getNewprice())));
 
                                         }
@@ -2434,23 +2445,38 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                         double remainingbudget=0;
                         double rowamountwithbudget = Double.parseDouble(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice()))) * Integer.parseInt(mHolder.listitemqty.getText().toString());
                         double rowamountwithoutbudget = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Integer.parseInt(mHolder.listitemqty.getText().toString());
-                        if(rowamountwithbudget == rowamountwithoutbudget)
+//                        boolean schemeitem=mHolder.chk_schemeitem.isChecked();
+                                                boolean schemeitem=false;
+                        double temptotalbudgetutilize = 0,schedulebudget = 0;
+                        if(!Utilities.isNullOrEmpty(preferenceMangr.pref_getString("getschedulebudget")))
                         {
-                            budgetutilize = 0;
+                            schedulebudget= Double.parseDouble( preferenceMangr.pref_getString("getschedulebudget"));
                         }
-                        else
-                        {
-                            budgetutilize = (rowamountwithbudget - rowamountwithoutbudget);
-                        }
-                        double temptotalbudgetutilize = 0;
-                        if(totalbudgetutilize == 0){
-                            temptotalbudgetutilize=budgetutilize;
+                        remainingbudget = schedulebudget + (-1 * Double.parseDouble(billwisebudget)) ;
+//* scheme item rate is skipped for budget utilze. because already utlize amount calculated in scheme item checkbox state change event *
+                        if(!schemeitem) {
+                            if (rowamountwithbudget == rowamountwithoutbudget) {
+                                budgetutilize = 0;
+                            } else {
+                                budgetutilize = (rowamountwithbudget - rowamountwithoutbudget);
+                            }
+                            if (totalbudgetutilize == 0) {
+                                temptotalbudgetutilize = budgetutilize;
+                            } else {
+                                temptotalbudgetutilize = totalbudgetutilize + budgetutilize;
+                            }
                         }
                         else{
-                            temptotalbudgetutilize = totalbudgetutilize  + budgetutilize;
-                        }
+                            double schemeamount= Double.parseDouble(mHolder.listitemrate.getText().toString()) * Double.parseDouble(mHolder.listitemqty.getText().toString());
 
-                        remainingbudget = Double.parseDouble( preferenceMangr.pref_getString("getschedulebudget")) + (-1 * Double.parseDouble(billwisebudget)) ;
+                            if(totalbudgetutilize == 0){
+                                temptotalbudgetutilize=schemeamount;
+                            }
+                            else{
+                                temptotalbudgetutilize = totalbudgetutilize  + schemeamount;
+                            }
+
+                        }
 
                         if(remainingbudget < temptotalbudgetutilize){
                             Toast toast = Toast.makeText(getApplicationContext(),"Budget limit reached. Price changes are not allowed.", Toast.LENGTH_LONG);
@@ -2459,7 +2485,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                             mHolder.listitemtotal.setEnabled(true);
                             return;
                         }
-                        totalbudgetutilize=  temptotalbudgetutilize;
+                            totalbudgetutilize = temptotalbudgetutilize;
 //||
 //                                    !(Integer.parseInt(mHolder.listitemqty.getText().toString())>=
 //                                            Integer.parseInt(mHolder.listitemupp.getText().toString()))
@@ -2934,15 +2960,20 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
 
                                                 double amountwithoutbudget = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Integer.parseInt(mHolder.listitemqty.getText().toString());
 
-                                                if(amountwithbudget == amountwithoutbudget)
-                                                {
-                                                    budgetutilize = 0;
+                                                if(!schemeitem) {
+                                                    if(amountwithbudget == amountwithoutbudget)
+                                                    {
+                                                        budgetutilize = 0;
+                                                    }
+                                                    else
+                                                    {
+                                                        budgetutilize = (amountwithbudget - amountwithoutbudget);
+                                                    }
                                                 }
-                                                else
-                                                {
-                                                    budgetutilize = (amountwithbudget - amountwithoutbudget);
+                                                else{
+                                                    double schemeamount= Double.parseDouble(mHolder.listitemrate.getText().toString()) * Double.parseDouble(mHolder.listitemqty.getText().toString());
+                                                    budgetutilize = schemeamount;
                                                 }
-
 
                                                 insertcart = dataBaseAdapter.insertSalesCart(String.valueOf(salesitems.get(i).getItemcode()), String.valueOf(salesitems.get(i).getCompanycode()),
                                                         String.valueOf(salesitems.get(i).getBrandcode()), String.valueOf(salesitems.get(i).getManualitemcode())
@@ -2961,7 +2992,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                         , String.valueOf(salesitems.get(i).getRouteallowpricedit()), schemeitemdiscount, freeitemstatus,
                                                         String.valueOf(salesitems.get(i).getPurchaseitemcode()), String.valueOf(salesitems.get(i).getFreeitemcode()),
                                                         String.valueOf(salesitems.get(i).getMinsalesqty()),String.valueOf(salesitems.get(i).getDumyprice()),String.valueOf(salesitems.get(i).getratediscount())
-                                                        ,itemschemeapplicable,String.valueOf(salesitems.get(i).getOrgprice()),budgetutilize);
+                                                        ,itemschemeapplicable,String.valueOf(salesitems.get(i).getOrgprice()),budgetutilize,salesitems.get(i).getSchemeItem());
 
                                                 //txtareaname.setEnabled(false);
                                                 //txtcustomername.setEnabled(false);
@@ -3135,7 +3166,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                                 , getFreeStock.getString(23), String.valueOf(getactualqtyvalue), String.valueOf(getsubtotal),
                                                                                 getFreeStock.getString(24), String.valueOf(getsubtotal),
                                                                                 "freeitem", getpurchaseitemforcart, getfreeitemcode, getFreeStock.getString(20),
-                                                                                "", "",getFreeStock.getString(28),"","","",itemschemeapplicable,"",getFreeStock.getString(29),"",0));
+                                                                                "", "",getFreeStock.getString(28),"","","",itemschemeapplicable,"",getFreeStock.getString(29),"",0,"no"));
 
 
                                                                     }
@@ -3305,7 +3336,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                 , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
                                                 getcartdatas.getString(30), getcartdatas.getString(31) ,getcartdatas.getString(21),
                                                 "","", getcartdatas.getString(32),"","",
-                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",getcartdatas.getDouble(getcartdatas.getColumnIndex("budget_utilize"))));
+                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",getcartdatas.getDouble(getcartdatas.getColumnIndex("budget_utilize")),"no"));
                                         getcartdatas.moveToNext();
                                     }
                                 }
@@ -3382,7 +3413,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                 getcartdatas.getString(30), getcartdatas.getString(31),
                                                 getcartdatas.getString(21),"","" ,
                                                 getcartdatas.getString(32),"","",
-                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",getcartdatas.getDouble(getcartdatas.getColumnIndex("budget_utilize"))));
+                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",getcartdatas.getDouble(getcartdatas.getColumnIndex("budget_utilize")),"no"));
                                         getcartdatas.moveToNext();
                                     }
                                 }
@@ -3409,6 +3440,38 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     // }
                 }
             });
+
+
+
+
+//            mHolder.chk_schemeitem.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                @Override
+//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                    final int pos = (Integer) mHolder.listitemtotal.getTag();
+//                    salesItemList.get(pos).setSchemeitem("no");
+//
+//                    /// * budget utilize in scheme item rate *
+//                    if (isChecked) {
+//                        if(Utilities.isNullOrEmpty(mHolder.listitemqty.getText().toString()) || mHolder.listitemqty.getText().toString().equals("0")  ){
+//                              Toast toast = Toast.makeText(getApplicationContext(), "Please enter qty", Toast.LENGTH_LONG);
+//                              toast.setGravity(Gravity.CENTER, 0, 0);
+//                              toast.show();
+//                              mHolder.chk_schemeitem.setChecked(false);
+//                              return;
+//                        }
+//                        salesItemList.get(pos).setSchemeitem("yes");
+//                    }
+//                        if(!Utilities.isNullOrEmpty(mHolder.listitemcode.getText().toString())){
+//
+//                           String getresult= DeleteItemCart(mHolder.listitemcode.getText().toString());
+//                            if(getresult.equals("Success")) {
+//                                mHolder.listitemqty.setText("");
+//                                mHolder.listitemrate.setText(salesItemList.get(pos).getDumyprice());
+//                            }
+//                        }
+//                }
+//            });
+
 
 //            mHolder.listitemname.setOnClickListener(new View.OnClickListener() {
 //                @Override
@@ -3797,8 +3860,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             private TextView listitemtotal,listitemtax,labelstock,labelhsntax,labelstockunit,listdiscount,listitemupp;
             private LinearLayout itemLL,stockvalueLL;
             private  ImageView pricearrow;
-
-
+            private CheckBox chk_schemeitem;
         }
     }
     //    public class ViewHolder1 {
@@ -5359,7 +5421,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                                     , getFreeStock.getString(23), String.valueOf(getactualqtyvalue), String.valueOf(getsubtotal),
                                                                                     getFreeStock.getString(24), "",
                                                                                     "freeitem", getpurchaseitemcode, getfreeitemcode,getFreeStock.getString(20),"","",
-                                                                                    "",getFreeStock.getString(27),"","","","",getFreeStock.getString(29),"",0));
+                                                                                    "",getFreeStock.getString(27),"","","","",getFreeStock.getString(29),"",0,"no"));
 
                                                                             Log.d("------------Free item : ",freeitems.toString());
 
@@ -5548,7 +5610,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                 String.valueOf(tax), String.valueOf(itemqty), String.valueOf(getsubtotal)
                                                                 , String.valueOf(routeallowpricedit), String.valueOf(discount), "",
                                                                 String.valueOf(purchaseitemcode), String.valueOf(freeitemcode),"","","","",
-                                                                String.valueOf(orgprice),0);
+                                                                String.valueOf(orgprice),0,"no");
                                                     }
                                                 }else{
                                                     try{
@@ -5580,7 +5642,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                         String.valueOf(newprice), String.valueOf(colourcode), String.valueOf(hsn),
                                                                         String.valueOf(tax), String.valueOf(itemqty), String.valueOf(getsubtotal)
                                                                         , String.valueOf(routeallowpricedit), String.valueOf(discount), "",
-                                                                        String.valueOf(purchaseitemcode), String.valueOf(freeitemcode),"","","","",String.valueOf(orgprice),0);
+                                                                        String.valueOf(purchaseitemcode), String.valueOf(freeitemcode),"","","","",String.valueOf(orgprice),0,"no");
                                                             }
                                                         }
 
@@ -5630,7 +5692,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                             getcartdatas.getString(24), getcartdatas.getString(25), getcartdatas.getString(26)
                                                             , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
                                                             getcartdatas.getString(30), getcartdatas.getString(31) ,getcartdatas.getString(21),"","",getcartdatas.getString(32),"","",
-                                                            "","",getcartdatas.getString(36),"","",0));
+                                                            "","",getcartdatas.getString(36),"","",0,"no"));
                                                     getcartdatas.moveToNext();
                                                 }
                                             }
@@ -5692,7 +5754,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                             , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
                                                             getcartdatas.getString(30), getcartdatas.getString(31),getcartdatas.getString(21),
                                                             "","",getcartdatas.getString(32),"","","",
-                                                            "",getcartdatas.getString(32),"","",0));
+                                                            "",getcartdatas.getString(32),"","",0,"no"));
                                                     getcartdatas.moveToNext();
                                                 }
                                             }
@@ -8746,4 +8808,5 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             mDbErrHelper.close();
         }
     }
+
 }

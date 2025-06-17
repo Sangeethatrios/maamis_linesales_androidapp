@@ -2598,7 +2598,7 @@ public class SyncActivity extends AppCompatActivity {
             loading.setCancelable(false);
             loading.setCanceledOnTouchOutside(false);
         }
-        @SuppressLint("LongLogTag")
+        @SuppressLint({"LongLogTag", "Range"})
         @Override
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub

@@ -6621,7 +6621,7 @@ public class DataBaseAdapter
                                   String itemqty, String subtotal,
                                   String routeallowpricedit, String discount, String freeflag,
                                   String purchaseitemcode, String freeitemcode,String minstockqty,
-                                  String actualprice,String ratediscount,String itemschemeapplicable,String orgprice,double budgetutilize)
+                                  String actualprice,String ratediscount,String itemschemeapplicable,String orgprice,double budgetutilize,String schemeitem)
     {
         try{
             String GenDate= GenCreatedDate();
@@ -6630,7 +6630,10 @@ public class DataBaseAdapter
             Cursor mCur = mDb.rawQuery(sql1, null);
             mCur.moveToFirst();
             String getmaxcartcode = (mCur.moveToFirst()) ? mCur.getString(0) : "0";
-
+Integer varschemeitem = 0;
+if(schemeitem.equals("yes")){
+    varschemeitem=1;
+}
 
             String sql2 = "select coalesce(count(*),0) as count,coalesce(cartcode,0) as cartcode,coalesce(freeflag,'') as freeflag from tblsalescartdatas " +
                     " where itemcode = '"+itemcode+"' and (ifnull(freeflag,'')='' or (freeflag='freerate')) ";
@@ -6652,7 +6655,7 @@ public class DataBaseAdapter
                         " '" + itemqty + "','" + subtotal + "','" + routeallowpricedit + "'," +
                         " '" + discount + "','" + freeflag + "','" + purchaseitemcode + "'," +
                         " '" + freeitemcode + "', '" + minstockqty + "','"+ actualprice +"','"+ratediscount+"'," +
-                        " '" + itemschemeapplicable + "','" + orgprice + "','"+budgetutilize+"'  )";
+                        " '" + itemschemeapplicable + "','" + orgprice + "','"+budgetutilize+"','"+varschemeitem+"'  )";
                 mDb.execSQL(sqlcart);
             }else if(Integer.parseInt(getcount) > 0){
                 if(getfreeflag.equals("")){
@@ -6669,7 +6672,7 @@ public class DataBaseAdapter
                             " discount='" + discount + "',freeflag='" + freeflag + "',purchaseitemcode='" + purchaseitemcode + "'," +
                             " freeitemcode='" + freeitemcode + "',minimumsalesqty='" + minstockqty + "'" +
                             ",actualamount='"+actualprice+"',ratediscount='"+ ratediscount +"'  " +
-                            " , schemeapplicable =  '" + itemschemeapplicable + "',orgprice='" + orgprice + "' , budgetutilize='"+budgetutilize+"' " +
+                            " , schemeapplicable =  '" + itemschemeapplicable + "',orgprice='" + orgprice + "' , budgetutilize='"+budgetutilize+"',schemeitem='"+varschemeitem+"' " +
                             " where  cartcode='"+getcartcode+"'" +
                             " and itemcode='"+itemcode+"' and  freeflag='' ";
                     mDb.execSQL(sqlcart);
@@ -6687,7 +6690,7 @@ public class DataBaseAdapter
                             " discount='" + discount + "',freeflag='" + freeflag + "',purchaseitemcode='" + purchaseitemcode + "'," +
                             " freeitemcode='" + freeitemcode + "',minimumsalesqty='" + minstockqty + "'," +
                             "actualamount='"+ actualprice +"',ratediscount='"+ ratediscount +"'," +
-                            " schemeapplicable =  '" + itemschemeapplicable + "' ,orgprice='" + orgprice + "' , budgetutilize='"+budgetutilize+"' " +
+                            " schemeapplicable =  '" + itemschemeapplicable + "' ,orgprice='" + orgprice + "' , budgetutilize='"+budgetutilize+"',schemeitem='"+varschemeitem+"' " +
                             "  where  cartcode='"+getcartcode+"'" +
                             " and itemcode='"+itemcode+"' and  freeflag='freerate' ";
                     mDb.execSQL(sqlcart);
@@ -7262,11 +7265,14 @@ public class DataBaseAdapter
     public void  InsertTempSalesItemDetails(String itemcode,String companycode,String qty,String price,
                                             String discount,String amount,String freeitemstatus,String tax,
                                             String gstin,String getrefno,double getweight,int autonum,
-                                            String ratediscount,String schemeapplicable,String orgprice,double budgetutilize) {
+                                            String ratediscount,String schemeapplicable,String orgprice,double budgetutilize,String schemeitem) {
         try{
             mDb = mDbHelper.getReadableDatabase();
             double cgst,sgst,igst,cgstamt,sgstamt,igstamt;
-
+            Integer varschemeitem = 0;
+            if(schemeitem.equals("yes")){
+                varschemeitem=1;
+            }
             double vartaxamount=((Double.parseDouble(price)/(1+Double.parseDouble(tax)/100))*(Double.parseDouble(tax)/100))*Double.parseDouble(qty);
             if (!gstin.equals(""))
             {
@@ -7321,11 +7327,11 @@ public class DataBaseAdapter
 
 
             String sql="INSERT INTO tbltempsalesitemdetails(autonum,refno,companycode,itemcode,qty,price,discount," +
-                    "amount,cgst,sgst,igst,cgstamt,sgstamt,igstamt,freeitemstatus,weight,ratediscount,schemeapplicable,orgprice,budget_utilize) " +
+                    "amount,cgst,sgst,igst,cgstamt,sgstamt,igstamt,freeitemstatus,weight,ratediscount,schemeapplicable,orgprice,budget_utilize,schemeitem) " +
                     "values ('"+autonum+"','"+ getrefno +"','"+ companycode +"','"+ itemcode +"','"+ Double.parseDouble(qty) +"','"+ Double.parseDouble(price) +"'," +
                     "'"+ discount +"','"+ amount +"','"+ dft.format(cgst) +"','"+ dft.format(sgst) +"','"+ dft.format(igst)+"'," +
                     "'"+ dft.format(cgstamt) +"','"+ dft.format(sgstamt) +"','"+ dft.format(igstamt) +"'," +
-                    "'"+ freeitemstatus +"','"+getweight+"','"+ratediscount+"','"+schemeapplicable+"','"+orgprice+"','"+budgetutilize+"')";
+                    "'"+ freeitemstatus +"','"+getweight+"','"+ratediscount+"','"+schemeapplicable+"','"+orgprice+"','"+budgetutilize+"','"+varschemeitem+"')";
             mDb.execSQL(sql);
         }catch (Exception ex){
             insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
@@ -7526,9 +7532,9 @@ public class DataBaseAdapter
             mDb.execSQL(sqlcustomeramount);
 
             String sqlitem="INSERT INTO tblsalesitemdetails(autonum,transactionno,bookingno,financialyearcode,companycode,itemcode,qty,price,discount,amount,cgst,sgst,igst," +
-                    "cgstamt,sgstamt,igstamt,freeitemstatus,makerid,createddate,vancode,flag,weight,ratediscount,schemeapplicable,orgprice,budget_utilize )" +
+                    "cgstamt,sgstamt,igstamt,freeitemstatus,makerid,createddate,vancode,flag,weight,ratediscount,schemeapplicable,orgprice,budget_utilize,schemeitem )" +
                     "SELECT (select coalesce(max(autonum),0)+1 from tblsalesitemdetails)+autonum,'"+ Transactionno +"','"+ bookingno +"','"+ financialyearcode +"',companycode,itemcode,qty,price,discount,amount,cgst,sgst,igst,cgstamt,sgstamt,igstamt," +
-                    "freeitemstatus,'1',datetime('now', 'localtime'),'"+vancode+"',1,weight,ratediscount,schemeapplicable,orgprice,budget_utilize from tbltempsalesitemdetails as  a where refno='"+ getrefno +"'";
+                    "freeitemstatus,'1',datetime('now', 'localtime'),'"+vancode+"',1,weight,ratediscount,schemeapplicable,orgprice,budget_utilize,schemeitem from tbltempsalesitemdetails as  a where refno='"+ getrefno +"'";
             mDb.execSQL(sqlitem);
 
             String sqlstock="INSERT INTO tblstocktransaction(transactionno,transactiondate,vancode,itemcode,inward,outward,type,refno,createddate,flag,companycode,op,financialyearcode,autonum)" +

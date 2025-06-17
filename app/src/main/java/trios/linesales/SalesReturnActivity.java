@@ -989,7 +989,7 @@ public class SalesReturnActivity extends AppCompatActivity implements View.OnCli
                             Cur.getString(20),Cur.getString(21),Cur.getString(22),
                             Cur.getString(23),"","",Cur.getString(24),
                             "","","","",Cur.getString(20),"",
-                            "",Cur.getString(29),"","","","","","","",0));
+                            "",Cur.getString(29),"","","","","","","",0,"no"));
                     Cur.moveToNext();
                 }
                 SalesItemAdapter adapter = new SalesItemAdapter(context,salesitems);
@@ -1647,7 +1647,7 @@ public class SalesReturnActivity extends AppCompatActivity implements View.OnCli
                                               ,salesitems.get(i).getRouteallowpricedit(),salesitems.get(i).getDiscount(),"",
                                               salesitems.get(i).getPurchaseitemcode(),salesitems.get(i).getFreeitemcode(),
                                               salesitems.get(i).getNewprice(),"","",
-                                              salesitems.get(i).getMinsalesqty(),"","","","",salesitems.get(i).getOrgprice(),salesitems.get(i).getItemsubgroupcode(),"",0));
+                                              salesitems.get(i).getMinsalesqty(),"","","","",salesitems.get(i).getOrgprice(),salesitems.get(i).getItemsubgroupcode(),"",0,"no"));
 
                                   }
                               }

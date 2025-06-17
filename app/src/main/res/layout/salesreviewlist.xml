@@ -16,23 +16,74 @@
             android:stretchColumns="*"
             >
             <TableRow>
-                <TextView android:id="@+id/listitemname"
-                    android:text="100 kg Jeeni"
-                    android:layout_marginTop="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:textColor="@android:color/black"
-                    android:padding="5dp"
-                    android:textSize="12dp"
-                    android:layout_weight="0.43"
-                    />
-                <ImageView android:id="@+id/pricearrow"
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="0.04"
-                    android:src="@drawable/ic_arrow_upward_black_24dp"
-                    />
+                <TableLayout android:layout_weight="0.15">
+                    <TableRow>
+                        <TextView android:id="@+id/listitemname"
+                            android:text="100 kg Jeeni"
+                            android:layout_marginTop="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:textColor="@android:color/black"
+                            android:padding="5dp"
+                            android:textSize="12dp"
+                            android:layout_weight="0.39"
+                            />
+                        <TextView
+                            android:id="@+id/dummycount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.05" />
+                        <TextView
+                            android:id="@+id/schemecount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.05"
+                            android:text="R"
+                            android:visibility="gone"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:background="@drawable/circle_small"/>
+                        <ImageView android:id="@+id/pricearrow"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="0.04"
+                            android:src="@drawable/ic_arrow_upward_black_24dp"
+                            />
+                    </TableRow>
+                    <TableRow>
+                        <TextView
+                            android:id="@+id/labeldummyscheme"
+                            android:text="Scheme item"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:textColor="@color/lightbiscuit"
+                            android:background="@color/lightbiscuit"
+                            android:visibility="gone"
+                            android:textSize="10dp"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginLeft="5dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/labelscheme"
+                            android:text="Scheme item"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:textColor="@color/black"
+                            android:background="@color/lightblue"
+                            android:visibility="gone"
+                            android:textSize="10dp"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginLeft="5dp"
+                            />
+                    </TableRow>
+                </TableLayout>
+
+
+
                 <TableLayout android:layout_weight="0.43">
                     <TableRow>
 

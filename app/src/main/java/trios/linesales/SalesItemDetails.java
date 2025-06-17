@@ -10,6 +10,7 @@ public class SalesItemDetails {
     String subtotal;String routeallowpricedit;String discount;String freeflag;String purchaseitemcode;String freeitemcode;
     String dumyprice;String ratecount;String freecount;String applyitemscheme;String applyratescheme;String minsalesqty;
     String upp;String itemtype;String ratediscount;String schemeapplicable;String orgprice;String itemsubgroupcode;String minprice;
+    String schemeitem  ;
 double budgetutilize=0;
     public SalesItemDetails(String itemcode, String companycode, String brandcode, String manualitemcode,
                             String itemname, String itemnametamil, String unitcode, String unitweightunitcode,
@@ -20,7 +21,7 @@ double budgetutilize=0;
                             String itemqty,String subtotal,String routeallowpricedit,String discount,String freeflag,
                             String purchaseitemcode,String freeitemcode,String dumyprice,String ratecount,
                             String freecount,String minsalesqty,String upp,String itemtype,String ratediscount,String schemeapplicable,
-                            String orgprice,String itemsubgroupcode,String minprice,double budgetutilize) {
+                            String orgprice,String itemsubgroupcode,String minprice,double budgetutilize,String schemeitem) {
         this.itemcode = itemcode;
         this.companycode = companycode;
         this.brandcode = brandcode;
@@ -64,6 +65,7 @@ double budgetutilize=0;
         this.itemsubgroupcode = itemsubgroupcode;
         this.minprice = minprice;
         this.budgetutilize=budgetutilize;
+        this.schemeitem=schemeitem;
     }
 
     public String getItemcode() {
@@ -74,6 +76,13 @@ double budgetutilize=0;
         return budgetutilize;
     }
 
+    public String getSchemeItem() {
+        return schemeitem;
+    }
+
+    public void setSchemeitem(String schemeitem) {
+        this.schemeitem = schemeitem;
+    }
 
     public String getCompanycode() {
         return companycode;
