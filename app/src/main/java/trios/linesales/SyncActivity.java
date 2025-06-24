@@ -3175,6 +3175,7 @@ public class SyncActivity extends AppCompatActivity {
 
     }
     /***************** SALES DETAILS *********************************/
+    @SuppressLint("Range")
     public void  AsyncSalesDetails(){
         ArrayList<SalesSyncDatas> List = null;
         JSONObject jsonObj = null;
@@ -3305,6 +3306,7 @@ public class SyncActivity extends AppCompatActivity {
                         orderTransNo = mCursales.getString(43);
                     obj.put("ordertransactionno", orderTransNo);
 
+                    obj.put("budget_utilize", mCursales.getString(mCursales.getColumnIndex("total_budget_utilize")));
                     js_array2.put(obj);
                     mCursales.moveToNext();
                 }
@@ -3340,6 +3342,8 @@ public class SyncActivity extends AppCompatActivity {
                         schemeapplicable = mCursalesitems.getString(24);
                     obj.put("schemeapplicable", schemeapplicable);
                     obj.put("orgprice", mCursalesitems.getString(25));
+                    obj.put("budget_utilize", mCursalesitems.getString(mCursalesitems.getColumnIndex("budget_utilize")));
+
                     js_array3.put(obj);
                     mCursalesitems.moveToNext();
                 }

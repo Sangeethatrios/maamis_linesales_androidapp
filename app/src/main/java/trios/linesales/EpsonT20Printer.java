@@ -6327,4 +6327,264 @@ public class EpsonT20Printer implements ReceiveListener {
         return string.toString();
     }
 
+
+    public boolean GetCutomerPriceListPrint(String gettransactiono,String getfinancialyearcode,Activity objActivity, boolean printDC) {
+
+        if (mPrinter == null) {
+            initializePrinter(objActivity.getApplicationContext());
+        }
+
+        if (mPrinter == null)
+            return false;
+
+        PrinterStatusInfo status = mPrinter.getStatus();
+
+        boolean billPrinted = false;
+        try{
+
+            DataBaseAdapter mDbHelper = new DataBaseAdapter(mContext);
+            mDbHelper.open();
+            Cursor mCur = mDbHelper.GetDCSalesPrint(gettransactiono,getfinancialyearcode);
+            Cursor mCurDetails = mDbHelper.GetSalesPaymentVoucherDetailsPrint(gettransactiono,getfinancialyearcode);
+
+            if (mCur.getCount() > 0) {
+
+                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                mPrinter.addTextFont(Printer.FONT_A);
+
+                // for (int i=0;i<mCur.getCount();i++ )
+                //{
+                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                mPrinter.addTextFont(Printer.FONT_A);
+                mPrinter.addText(mCur.getString(10)+" Delivery Chalan " +"\n");
+
+
+                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                mPrinter.addTextFont(Printer.FONT_A);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                String line_space6 = "--------------------------------\n";
+                mPrinter.addText(line_space6);
+
+                mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                mPrinter.addTextFont(Printer.FONT_B);
+                mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                mPrinter.addText("Bk.No. : " + mCur.getString(20)+"\n");
+
+                mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                mPrinter.addTextFont(Printer.FONT_B);
+                mPrinter.addText("Invoice No. : " + mCur.getString(12)+"\n");
+
+                mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                mPrinter.addTextFont(Printer.FONT_B);
+                mPrinter.addText("Invoice Date : " + mCur.getString(16) +"  "+mCur.getString(22)+" \n");
+
+
+
+                mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                mPrinter.addTextFont(Printer.FONT_A);
+                mPrinter.addText("Mr/Ms : " + mCur.getString(11) +"\n");
+
+                String cityNameWithPincode = "";
+                if(!Utilities.isNullOrEmpty(mCur.getString(23)))
+                    cityNameWithPincode = mCur.getString(23).trim();
+
+                if(!Utilities.isNullOrEmpty(cityNameWithPincode)) {
+                    mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                    mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                    mPrinter.addTextFont(Printer.FONT_C);
+                    mPrinter.addText(cityNameWithPincode.trim() + "\n");
+                }
+
+                if(!mCur.getString(14).equals("")) {
+                    mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                    mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                    mPrinter.addTextFont(Printer.FONT_A);
+                    mPrinter.addText("GSTIN : " + mCur.getString(14) + "\n");
+                }
+
+                mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+
+                mPrinter.addTextFont(Printer.FONT_A);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+                String line_space1 = "--------------------------------";
+                mPrinter.addText(line_space1);
+
+                mPrinter.addTextFont(Printer.FONT_C);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                mPrinter.addText("Particulars              Qty        Unit" + "\n");
+
+                mPrinter.addTextFont(Printer.FONT_A);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                String line_space12 = "--------------------------------";
+                mPrinter.addText(line_space12);
+
+
+                Cursor mCur1 = mDbHelper.GetDCSalesItemPrint(gettransactiono,getfinancialyearcode,mCur.getString(17));
+
+                for (int j = 0; j < mCur1.getCount(); j++)
+                {
+                    String Product = (mCur1.getString(0));
+
+                    mPrinter.addTextFont(Printer.FONT_A);
+                    mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                    mPrinter.addText( Product+  "\n");
+
+
+                    mPrinter.addTextFont(Printer.FONT_A);
+                    String SalesDetails = "";
+                    StringBuffer SalesBuffer = new StringBuffer(100);
+                    SalesBuffer.append(SalesDetails);
+
+
+                    SalesBuffer.append(Util.nameLeftValueRightJustify("",
+                            mCur1.getString(1),
+                            mCur1.getString(4),
+                            32));
+                    SalesDetails = SalesBuffer.toString();
+                    mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                    mPrinter.addText(SalesDetails+"\n");
+
+                    mCur1.moveToNext();
+                }
+
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+                String line_space3 = "--------------------------------\n";
+                mPrinter.addText(line_space3);
+
+
+                Cursor mCur4 = mDbHelper.GetSalesschedulePrint(gettransactiono,getfinancialyearcode,"0");
+                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+                mPrinter.addTextFont(Printer.FONT_C);
+                // mPrinter.addText( mCur4.getString(0) +"/" +mCur4.getString(1) +"/"+ mCur4.getString(2)+"/"+ GenCreatedDate() +"\n");
+                mPrinter.addText(  " "+mCur1.getCount()+"  "+mCur4.getString(1) +"/"+ GenCreatedDate() +"\n");
+
+
+                mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+
+                mPrinter.addTextFont(Printer.FONT_A);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+                String line_space11 = "--------------------------------";
+                mPrinter.addText(line_space11);
+
+
+                mPrinter.addTextFont(Printer.FONT_C);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                mPrinter.addText("Concern         Bill No.            Amount" + "\n");
+
+
+
+                mPrinter.addTextFont(Printer.FONT_A);
+                double net1=0;
+                for(int j=0;j<mCurDetails.getCount();j++) {
+                    String SalesDetails = "";
+                    StringBuffer SalesBuffer = new StringBuffer(100);
+                    SalesBuffer.append(SalesDetails);
+
+
+                    SalesBuffer.append(Util.nameLeftValueRightJustifybottomsalesv2(mCurDetails.getString(3), mCurDetails.getString(0),
+                            String.format("%.2f", mCurDetails.getFloat(2)),
+                            32));
+                    SalesDetails = SalesBuffer.toString();
+                    mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                    mPrinter.addText(SalesDetails + "\n");
+                    net1 = net1+mCurDetails.getFloat(2);
+                    mCurDetails.moveToNext();
+                }
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+                String line_space19 = "--------------------------------\n";
+                mPrinter.addText(line_space19);
+
+                String nettotal1 = dft.format(net1);
+                mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+                mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                mPrinter.addTextFont(Printer.FONT_A);
+                mPrinter.addText(" Nett Amount " + " : "+ Util.rightJustify( dft.format(Math.round(net1)),11) + "\n");
+
+
+                mPrinter.addTextFont(Printer.FONT_C);
+                mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                String line_space13 = "-----------------------------------------\n";
+                mPrinter.addText(line_space13);
+
+                mPrinter.addText("\n\n\n");
+
+                mCur.moveToNext();
+                //}
+
+                if (printDC)
+                    return true;
+                try {
+
+                    if(!connectPrinter()) {
+                        mPrinter.clearCommandBuffer();
+                        return false;
+                    }
+
+                    //PrinterStatusInfo status = mPrinter.getStatus();
+                    status = mPrinter.getStatus();
+
+                    Log.d("STATUS", Integer.toString(status.getConnection()));
+                    Log.d("ONLINE", Integer.toString(status.getOnline()));
+
+                    if ((status.getConnection() == 1) && (status.getOnline() == 1)) {
+                        try {
+                            mPrinter.sendData(Printer.PARAM_DEFAULT);
+                            billPrinted = true;
+                        } catch (Exception e) {
+                            Log.d("bbb", e.getLocalizedMessage());
+                            Log.d("PRINT", "failed to send data");
+                            mPrinter.clearCommandBuffer();
+                            try {
+                                mPrinter.disconnect();
+                            } catch (Exception ex) {
+                                // Do nothing
+                            }
+                        }
+                    }
+
+                }catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+            }else{
+                Log.d("nodata","nodata");
+                //Toast.makeText(mContext,"No data Available",Toast.LENGTH_SHORT).show();
+                objActivity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Log.d("thread","thread");
+                        Toast.makeText(mContext, "No data Available", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+
+        } catch (Epos2Exception e) {
+            e.printStackTrace();
+            Log.d("PrintData : printDC",e.getLocalizedMessage());
+        }
+
+        return billPrinted;
+    }
+
 }

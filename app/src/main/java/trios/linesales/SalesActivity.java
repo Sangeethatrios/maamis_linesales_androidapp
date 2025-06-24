@@ -1818,6 +1818,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
     public class SalesItemAdapter extends BaseAdapter {
 
         private Context context;
+        boolean isthisitemincart = false, skipAddTextChange = false;
         private LayoutInflater layoutInflater;
         ArrayList<SalesItemDetails> salesItemList;
         String isparentopen="";
@@ -1901,6 +1902,10 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                         public void onTextChanged(CharSequence s, int start, int before,
                                                   int count) {
                             mHolder.listitemtotal.setEnabled(true);
+                            if (skipAddTextChange) {
+                                skipAddTextChange = false;
+                                return;
+                            }
                             mHolder.labelstock.setText(salesItemList.get(position).getStockqty());
                             if(!Utilities.isNullOrEmpty(salesItemList.get(position).getNewprice()) && Double.parseDouble(salesItemList.get(position).getNewprice()) > 0){
                                 mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getNewprice())));
@@ -1935,6 +1940,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                         objdatabaseadapter.open();
                                         String getresult = objdatabaseadapter.DeleteItemInCart(salesItemList.get(pos1).getItemcode());
                                         if (getresult.equals("Success")) {
+                                            staticreviewsalesitems.removeIf(item -> item.getItemcode().equals(salesItemList.get(pos1).getItemcode()));
 
 //                                            total = ;
 
@@ -1947,7 +1953,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                             }
                                             salesItemList.get(pos1).setItemqty("");
                                             salesItemList.get(pos1).setNewprice("");
-                                            salesItemList.get(pos1).getminprice();
+                                            //salesItemList.get(pos1).getminprice();
 
                                         }
                                     } catch (Exception e) {
@@ -1981,6 +1987,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                             objdatabaseadapter.open();
                                             String getresult = objdatabaseadapter.DeleteItemInCart(salesItemList.get(pos1).getItemcode());
                                             if (getresult.equals("Success")) {
+                                                staticreviewsalesitems.removeIf(item -> item.getItemcode().equals(salesItemList.get(pos1).getItemcode()));
                                                 getcartdatas = objdatabaseadapter.GetSalesItemsCart();
                                                 if(getcartdatas.getCount()>0){
                                                     totalcartitems.setText(String.valueOf(getcartdatas.getCount()));
@@ -2321,8 +2328,11 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     objdatabaseadapter.open();
                     getItemCur = objdatabaseadapter.GetCartItemQtyAndPrice(salesItemList.get(position).getItemcode());
                     if (getItemCur.getCount() > 0) {
+                        isthisitemincart = true;
+                        skipAddTextChange = true;
                         mHolder.listitemrate.setText(String.valueOf(getItemCur.getString(1)));
                         mHolder.listitemqty.setText(String.valueOf(getItemCur.getString(0)));
+
                         mHolder.listitemtotal.callOnClick();
                     }
 
@@ -2434,8 +2444,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                 }
                             }
                         }
-                        double amount = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Integer.parseInt(mHolder.listitemqty.getText().toString());
-                        if(!isSalesValueReachLimit(amount)){
+                        double amount = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Double.parseDouble(mHolder.listitemqty.getText().toString());
+                        if(!isSalesValueReachLimit(amount,mHolder.listitemcode.getText().toString(),isthisitemincart)){
                            Toast toast = Toast.makeText(getApplicationContext(),"The total bill amount for this customer has exceeded the daily limit.", Toast.LENGTH_LONG);
                            toast.setGravity(Gravity.CENTER, 0, 0);
                            toast.show();
@@ -2443,8 +2453,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                            return;
                        }
                         double remainingbudget=0;
-                        double rowamountwithbudget = Double.parseDouble(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice()))) * Integer.parseInt(mHolder.listitemqty.getText().toString());
-                        double rowamountwithoutbudget = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Integer.parseInt(mHolder.listitemqty.getText().toString());
+                        double rowamountwithbudget = Double.parseDouble(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice()))) * Double.parseDouble(mHolder.listitemqty.getText().toString());
+                        double rowamountwithoutbudget = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Double.parseDouble(mHolder.listitemqty.getText().toString());
 //                        boolean schemeitem=mHolder.chk_schemeitem.isChecked();
                                                 boolean schemeitem=false;
                         double temptotalbudgetutilize = 0,schedulebudget = 0;
@@ -2496,11 +2506,11 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
 //                                           ) {
 //
 //                            }
-                        if( (!(Integer.parseInt(mHolder.listitemqty.getText().toString())>=
+                        if( (!(Double.parseDouble(mHolder.listitemqty.getText().toString())>=
                                 Integer.parseInt(mHolder.listitemupp.getText().toString()))
-                                && (Integer.parseInt(mHolder.labelstock.getText().toString())
-                                <Integer.parseInt(mHolder.listitemqty.getText().toString()))) ||
-                                (!(Integer.parseInt(mHolder.listitemqty.getText().toString())>=
+                                && (Double.parseDouble(mHolder.labelstock.getText().toString())
+                                <Double.parseDouble(mHolder.listitemqty.getText().toString()))) ||
+                                (!(Double.parseDouble(mHolder.listitemqty.getText().toString())>=
                                         Integer.parseInt(mHolder.listitemupp.getText().toString()))
                                         && (mHolder.labelnilstock.getText().toString()).equals("Nil Stk")) ) {
                             if(salesItemList.get(pos).getItemcategory().equals("child")){
@@ -2832,7 +2842,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                     mHolder.listdiscount.setText("");
                                 }
                                 addedqty = true;
-                                mHolder.labelstock.setText(String.valueOf(Integer.parseInt(salesItemList.get(pos).getStockqty()) - Integer.parseInt(salesItemList.get(pos).getItemqty())));
+                                mHolder.labelstock.setText(String.valueOf(Double.parseDouble(salesItemList.get(pos).getStockqty()) - Double.parseDouble(salesItemList.get(pos).getItemqty())));
                                 CalculateTotal();
                             } else {
                                 Toast toast = Toast.makeText(getApplicationContext(),"Please enter valid quantity", Toast.LENGTH_LONG);
@@ -2956,9 +2966,9 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                     itemschemeapplicable = "no";
                                                 }
 
-                                                double amountwithbudget = Double.parseDouble(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice()))) * Integer.parseInt(mHolder.listitemqty.getText().toString());
+                                                double amountwithbudget = Double.parseDouble(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice()))) * Double.parseDouble(mHolder.listitemqty.getText().toString());
 
-                                                double amountwithoutbudget = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Integer.parseInt(mHolder.listitemqty.getText().toString());
+                                                double amountwithoutbudget = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Double.parseDouble(mHolder.listitemqty.getText().toString());
 
                                                 if(!schemeitem) {
                                                     if(amountwithbudget == amountwithoutbudget)
@@ -3133,77 +3143,87 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                 return;
                                                             }
                                                         }
-                                                        //check the item have a free item count and apply scheme status
-                                                        if(Double.parseDouble(salesItemList.get(position).getFreecount()) > 0 && salesItemList.get(pos).getApplyitemscheme().equals("yes")) {
-                                                            itemschemeapplicable = "no";
-                                                            if (getfreestockitem >= Double.parseDouble(String.valueOf(getactualqtyvalue))) {
-                                                                getFreeStock = null;
-                                                                //Get Stock for parent item
-                                                                getFreeStock = objdatabaseadapterfree.GetPurchaseItems(getfreeitemcode, preferenceMangr.pref_getString("getroutecode"), LoginActivity.getareacode);
 
-                                                                if (getFreeStock.getCount() > 0) {
-                                                                    for (int i = 0; i < getFreeStock.getCount(); i++) {
-                                                                        double getsubtotal = Double.parseDouble(getFreeStock.getString(20)) * getactualqtyvalue;
-                                                                        itemschemeapplicable = "yes";
-                                                                        for (int j = 0; j < freeitems.size(); j++) {
-                                                                            if (getpurchaseitemcode.equals(freeitems.get(j).getPurchaseitemcode()) &&
-                                                                                    getfreeitemcode.equals(freeitems.get(j).getFreeitemcode())) {
-                                                                                freeitems.remove(j);
-                                                                            }
-                                                                        }
-                                                                        freeitems.add(new SalesItemDetails(getFreeStock.getString(0), getFreeStock.getString(1),
-                                                                                getFreeStock.getString(2)
-                                                                                , getFreeStock.getString(3), getFreeStock.getString(4),
-                                                                                getFreeStock.getString(5), getFreeStock.getString(6),
-                                                                                getFreeStock.getString(7)
-                                                                                , getFreeStock.getString(8), getFreeStock.getString(9), getFreeStock.getString(10)
-                                                                                , getFreeStock.getString(11), getFreeStock.getString(12)
-                                                                                , getFreeStock.getString(13), getFreeStock.getString(14), getFreeStock.getString(15)
-                                                                                , getFreeStock.getString(16), getFreeStock.getString(17)
-                                                                                , getFreeStock.getString(18), getFreeStock.getString(19),
-                                                                                getFreeStock.getString(20)
-                                                                                , getFreeStock.getString(21), getFreeStock.getString(22)
-                                                                                , getFreeStock.getString(23), String.valueOf(getactualqtyvalue), String.valueOf(getsubtotal),
-                                                                                getFreeStock.getString(24), String.valueOf(getsubtotal),
-                                                                                "freeitem", getpurchaseitemforcart, getfreeitemcode, getFreeStock.getString(20),
-                                                                                "", "",getFreeStock.getString(28),"","","",itemschemeapplicable,"",getFreeStock.getString(29),"",0,"no"));
+                                                        //** if the purchase item having a free item in scheme then check the purchase item qty equal to scheme free-item purchase qty
+                                                        // eg : purchase item qty is 3kg , free-item purchase qty 3 kg comes from scheme table
+                                                        // then 1 free item add in cart (1 is also comes from scheme table)  // **
+                                                        getFreeStock = objdatabaseadapterfree.GetFreeItemCount(getfreeitemcode);
+
+                                                        double isaddfreeqty =   Double.parseDouble(getpurchaseitemweight) % Double.parseDouble(getpurchaseqty);
 
 
-                                                                    }
-                                                                }
-                                                            } else {
+                                                        if(isaddfreeqty==0) {
+                                                            //check the item have a free item count and apply scheme status
+                                                            if (Double.parseDouble(salesItemList.get(position).getFreecount()) > 0 && salesItemList.get(pos).getApplyitemscheme().equals("yes")) {
+                                                                itemschemeapplicable = "no";
+                                                                if (getfreestockitem >= Double.parseDouble(String.valueOf(getactualqtyvalue))) {
+                                                                    getFreeStock = null;
+                                                                    //Get Stock for parent item
+                                                                    getFreeStock = objdatabaseadapterfree.GetPurchaseItems(getfreeitemcode, preferenceMangr.pref_getString("getroutecode"), LoginActivity.getareacode);
 
-                                                                if (getallownegativestock.equals("no")) {
-                                                                    // if (Double.parseDouble(getqty) > getfreestockitem) {
-                                                                    if (getitemcategory.equals("child")) {
-                                                                        DataBaseAdapter objdatabaseadapter1 = null;
-                                                                        Cursor getStockCur = null;
-                                                                        try {
-                                                                            //Get Stock for parent item
-                                                                            objdatabaseadapter1 = new DataBaseAdapter(context);
-                                                                            objdatabaseadapter1.open();
-                                                                            getStockCur = objdatabaseadapter1.GetStockForItem(getparentcode);
-                                                                            String getcartparentqty = objdatabaseadapter.GetCartItemStock(getparentcode);
-                                                                            if (getStockCur.getCount() > 0) {
-                                                                                for (int i = 0; i < getStockCur.getCount(); i++) {
-                                                                                    getparentstock = getStockCur.getDouble(0);
-
+                                                                    if (getFreeStock.getCount() > 0) {
+                                                                        for (int i = 0; i < getFreeStock.getCount(); i++) {
+                                                                            double getsubtotal = Double.parseDouble(getFreeStock.getString(20)) * getactualqtyvalue;
+                                                                            itemschemeapplicable = "yes";
+                                                                            for (int j = 0; j < freeitems.size(); j++) {
+                                                                                if (getpurchaseitemcode.equals(freeitems.get(j).getPurchaseitemcode()) &&
+                                                                                        getfreeitemcode.equals(freeitems.get(j).getFreeitemcode())) {
+                                                                                    freeitems.remove(j);
                                                                                 }
-                                                                                getparentstock = getparentstock - (Double.parseDouble(getcartparentqty));
                                                                             }
+                                                                            freeitems.add(new SalesItemDetails(getFreeStock.getString(0), getFreeStock.getString(1),
+                                                                                    getFreeStock.getString(2)
+                                                                                    , getFreeStock.getString(3), getFreeStock.getString(4),
+                                                                                    getFreeStock.getString(5), getFreeStock.getString(6),
+                                                                                    getFreeStock.getString(7)
+                                                                                    , getFreeStock.getString(8), getFreeStock.getString(9), getFreeStock.getString(10)
+                                                                                    , getFreeStock.getString(11), getFreeStock.getString(12)
+                                                                                    , getFreeStock.getString(13), getFreeStock.getString(14), getFreeStock.getString(15)
+                                                                                    , getFreeStock.getString(16), getFreeStock.getString(17)
+                                                                                    , getFreeStock.getString(18), getFreeStock.getString(19),
+                                                                                    getFreeStock.getString(20)
+                                                                                    , getFreeStock.getString(21), getFreeStock.getString(22)
+                                                                                    , getFreeStock.getString(23), String.valueOf(getactualqtyvalue), String.valueOf(getsubtotal),
+                                                                                    getFreeStock.getString(24), String.valueOf(getsubtotal),
+                                                                                    "freeitem", getpurchaseitemforcart, getfreeitemcode, getFreeStock.getString(20),
+                                                                                    "", "", getFreeStock.getString(28), "", "", "", itemschemeapplicable, "", getFreeStock.getString(29), "", 0, "no"));
 
-                                                                            if (getparentstock > 0) {
 
-                                                                                //> Double.parseDouble(String.valueOf(getactualqtyvalue))
+                                                                        }
+                                                                    }
+                                                                } else {
 
-                                                                                Toast toast = Toast.makeText(getApplicationContext(), "Insufficient stock for " + getfreeitemname + " this free item", Toast.LENGTH_LONG);
-                                                                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                                                                toast.show();
-                                                                                mHolder.listitemtotal.setText("0.00");
-                                                                                mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
-                                                                                mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice())));
-                                                                                return;
-                                                                                //Stock Conversion
+                                                                    if (getallownegativestock.equals("no")) {
+                                                                        // if (Double.parseDouble(getqty) > getfreestockitem) {
+                                                                        if (getitemcategory.equals("child")) {
+                                                                            DataBaseAdapter objdatabaseadapter1 = null;
+                                                                            Cursor getStockCur = null;
+                                                                            try {
+                                                                                //Get Stock for parent item
+                                                                                objdatabaseadapter1 = new DataBaseAdapter(context);
+                                                                                objdatabaseadapter1.open();
+                                                                                getStockCur = objdatabaseadapter1.GetStockForItem(getparentcode);
+                                                                                String getcartparentqty = objdatabaseadapter.GetCartItemStock(getparentcode);
+                                                                                if (getStockCur.getCount() > 0) {
+                                                                                    for (int i = 0; i < getStockCur.getCount(); i++) {
+                                                                                        getparentstock = getStockCur.getDouble(0);
+
+                                                                                    }
+                                                                                    getparentstock = getparentstock - (Double.parseDouble(getcartparentqty));
+                                                                                }
+
+                                                                                if (getparentstock > 0) {
+
+                                                                                    //> Double.parseDouble(String.valueOf(getactualqtyvalue))
+
+                                                                                    Toast toast = Toast.makeText(getApplicationContext(), "Insufficient stock for " + getfreeitemname + " this free item", Toast.LENGTH_LONG);
+                                                                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                                                                    toast.show();
+                                                                                    mHolder.listitemtotal.setText("0.00");
+                                                                                    mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+                                                                                    mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice())));
+                                                                                    return;
+                                                                                    //Stock Conversion
                                                                                 /*isfreestock = "yes";
                                                                                 getstaticchildcode = getfreeitemcode;
                                                                                 getstaticparentitemcode = getparentcode;
@@ -3216,41 +3236,41 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                                 salesItemList.get(pos).setSubtotal("0.00");
                                                                                 mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));*/
 
-                                                                            } else {
-                                                                                Toast toast = Toast.makeText(getApplicationContext(), "Insufficient stock for " + getfreeitemname, Toast.LENGTH_LONG);
-                                                                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                                                                toast.show();
-                                                                                mHolder.listitemtotal.setText("0.00");
-                                                                                mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
-                                                                                mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice())));
+                                                                                } else {
+                                                                                    Toast toast = Toast.makeText(getApplicationContext(), "Insufficient stock for " + getfreeitemname, Toast.LENGTH_LONG);
+                                                                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                                                                    toast.show();
+                                                                                    mHolder.listitemtotal.setText("0.00");
+                                                                                    mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+                                                                                    mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice())));
 
+                                                                                }
+                                                                            } catch (Exception e) {
+                                                                                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                                                                                mDbErrHelper.open();
+                                                                                String geterrror = e.toString();
+                                                                                mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                                                                                mDbErrHelper.close();
+                                                                            } finally {
+                                                                                if (objdatabaseadapter1 != null)
+                                                                                    objdatabaseadapter1.close();
+                                                                                if (getStockCur != null)
+                                                                                    getStockCur.close();
                                                                             }
-                                                                        } catch (Exception e) {
-                                                                            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-                                                                            mDbErrHelper.open();
-                                                                            String geterrror = e.toString();
-                                                                            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-                                                                            mDbErrHelper.close();
-                                                                        } finally {
-                                                                            if (objdatabaseadapter1 != null)
-                                                                                objdatabaseadapter1.close();
-                                                                            if (getStockCur != null)
-                                                                                getStockCur.close();
+                                                                        } else {
+                                                                            Toast toast = Toast.makeText(getApplicationContext(), "Insufficient stock for " + getfreeitemname + " this free item", Toast.LENGTH_LONG);
+                                                                            toast.setGravity(Gravity.CENTER, 0, 0);
+                                                                            toast.show();
+                                                                            mHolder.listitemtotal.setText("0.00");
+                                                                            mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+                                                                            mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice())));
+                                                                            //return;
                                                                         }
-                                                                    } else {
-                                                                        Toast toast = Toast.makeText(getApplicationContext(), "Insufficient stock for " + getfreeitemname + " this free item", Toast.LENGTH_LONG);
-                                                                        toast.setGravity(Gravity.CENTER, 0, 0);
-                                                                        toast.show();
-                                                                        mHolder.listitemtotal.setText("0.00");
-                                                                        mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
-                                                                        mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice())));
-                                                                        //return;
+                                                                        //}
                                                                     }
-                                                                    //}
                                                                 }
                                                             }
                                                         }
-
                                                         //scheme process end
                                                     } catch (Exception e) {
                                                         DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -3452,13 +3472,13 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
 //
 //                    /// * budget utilize in scheme item rate *
 //                    if (isChecked) {
-//                        if(Utilities.isNullOrEmpty(mHolder.listitemqty.getText().toString()) || mHolder.listitemqty.getText().toString().equals("0")  ){
-//                              Toast toast = Toast.makeText(getApplicationContext(), "Please enter qty", Toast.LENGTH_LONG);
-//                              toast.setGravity(Gravity.CENTER, 0, 0);
-//                              toast.show();
-//                              mHolder.chk_schemeitem.setChecked(false);
-//                              return;
-//                        }
+////                        if(Utilities.isNullOrEmpty(mHolder.listitemqty.getText().toString()) || mHolder.listitemqty.getText().toString().equals("0")  ){
+////                              Toast toast = Toast.makeText(getApplicationContext(), "Please enter qty", Toast.LENGTH_LONG);
+////                              toast.setGravity(Gravity.CENTER, 0, 0);
+////                              toast.show();
+////                              mHolder.chk_schemeitem.setChecked(false);
+////                              return;
+////                        }
 //                        salesItemList.get(pos).setSchemeitem("yes");
 //                    }
 //                        if(!Utilities.isNullOrEmpty(mHolder.listitemcode.getText().toString())){
@@ -3950,8 +3970,15 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    public boolean isSalesValueReachLimit(double amount) {
+    public boolean isSalesValueReachLimit(double amount,String itemcode,boolean isthisitemincart) {
         try{
+
+            DataBaseAdapter objdatabaseadapter=new DataBaseAdapter(context);
+            objdatabaseadapter.open();
+            Cursor getItemCur = objdatabaseadapter.GetCartItemQtyAndPrice(itemcode);
+            if (getItemCur.getCount() > 0) {
+                return true;
+            }
             String maxbillamount = preferenceMangr.pref_getString("getmaxbillamount");
             String maxbillannualamount = preferenceMangr.pref_getString("getmaxbillannualamount");
             if(Utilities.isNullOrEmpty(maxbillamount) || Double.parseDouble(maxbillamount) <= 0 ||
@@ -3982,6 +4009,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                 res1 = res1 + Double.parseDouble(getsalessubtotal);
                 res2 = res2 + Double.parseDouble(getsaleseqty);
             }
+
 
             if (amount + res1 + Double.parseDouble(annualsalesamt) <=  Double.parseDouble(maxbillannualamount)){
                 if (amount + res1 + Double.parseDouble(daywisesalesamt) <=  Double.parseDouble(maxbillamount)){
@@ -5528,10 +5556,10 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                     itemrate = dft.format(getnewrate);
                                                     newprice = dft.format(getnewrate);
                                                     Double getres = getnewrate * Double.parseDouble(varQty);
-                                                    listitemtotal = dft.format(getres);
-
-                                                    discount = "";
+                                                    listitemtotal = dft.format(getres);discount = "";
                                                 }
+
+
                                                 else {
                                                     discount ="";
                                                 }

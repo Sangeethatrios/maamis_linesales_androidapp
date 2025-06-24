@@ -131,7 +131,7 @@
                 android:layout_weight="0.5"
                 android:textSize="12sp"
                 android:textColor="@color/white"
-                android:text="Order Price"
+                android:text="Price"
                 android:gravity="center"
                 android:id="@+id/orderpricesorting"/>
             <ImageView

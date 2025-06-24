@@ -330,7 +330,7 @@ public class SalesListActivity extends AppCompatActivity {
                     String getprevcashclose = objdatabaseadapter1.GetCashClose(getprevschedulecode);
                     String getprevsaleclose = objdatabaseadapter1.GetSalesClose(getprevschedulecode);
 
-                    if (todayschedulecount.equals("0") || getprevcashclose.equals("0") ||  getprevsaleclose.equals("0") ) {
+                    if (todayschedulecount.equals("0") || (!getprevschedulecode.equals("0") && (getprevcashclose.equals("0") ||  getprevsaleclose.equals("0"))) ) {
                         try {
 
                             ScheduleActivity.getschedulecount = objdatabaseadapter1.GetScheduleCount();

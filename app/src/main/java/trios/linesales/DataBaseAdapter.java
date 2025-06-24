@@ -470,7 +470,7 @@ public class DataBaseAdapter
                     " tripadvance,(select routenametamil from tblroute where routecode=a.routecode) as routenametamil," +
                     " (select capacity from tblvehiclemaster where vehiclecode=a.vehiclecode) as capacity,COALESCE(budget,0) AS budget from " +
                     " tblsalesschedule as a where  vancode='"+ preferenceMangr.pref_getString("getvancode") +"'" +
-                    " and  (datetime('"+Gencode+"') BETWEEN scheduledate AND scheduletodate)  ";
+                    " and  (datetime('"+Gencode+"') BETWEEN scheduledate AND scheduletodate) ORDER BY scheduledate DESC ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -2941,7 +2941,7 @@ public class DataBaseAdapter
                     ",COALESCE(schedulestartdate,'') AS schedulestartdate,COALESCE(schedulestartflag,0) AS schedulestartflag," +
                     "   schedulestartdate  AS  schedulestartdatetime "+
                     "from tblsalesschedule as a where   (datetime('"+getschedulecode+"') BETWEEN scheduledate AND scheduletodate)    " +
-                    " and vancode='"+ preferenceMangr.pref_getString("getvancode") +"' ";
+                    " and vancode='"+ preferenceMangr.pref_getString("getvancode") +"' ORDER BY scheduledate DESC ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -5867,7 +5867,24 @@ public class DataBaseAdapter
 
         return mCur;
     }
+    //Get free itemcount
+    public Cursor GetFreeItemCount(String itemcode)
+    {
+        Cursor mCur = null;
+        try{
+            getdate = GenCreatedDate();
+            String sql ="  ";
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
 
+        return mCur;
+    }
 
 
     //Get Purchase Items
@@ -6905,14 +6922,23 @@ if(schemeitem.equals("yes")){
             // end
             String sqlpurchaseitemcode="SELECT  group_concat(purchaseitemcode,',') as purchaseitemcode " +
                     "from (select purchaseitemcode  from tblsalescartdatas  where " +
-                    "freeitemcode = '" + freeitemcode + "' and freeflag='freeitem'" +
-                    " union all select '"+curitemcode+"' as purchaseitemcode) as dev ";
+                    "freeitemcode = '" + freeitemcode + "' and freeflag='freeitem' ) ";
             mCur3 = mDb.rawQuery(sqlpurchaseitemcode, null);
             String purchasearr=null;
             if(mCur3!=null){
                 mCur.moveToFirst();
                 String purchaseitemvalue=(mCur3.moveToFirst()) ? mCur3.getString(0) : curitemcode;
-                purchasearr= purchaseitemvalue.replace(",", "', '") ;
+                if(!Utilities.isNullOrEmpty(purchaseitemvalue) ) {
+                    if( purchaseitemvalue.contains(",")){
+                         purchasearr = purchaseitemvalue.replace(",", "', '");
+                    }
+                    else{
+                        purchasearr = purchaseitemvalue;
+                    }
+                }
+                else{
+                    purchasearr = curitemcode;
+                }
             }
             else{
                 purchasearr = curitemcode;
@@ -6952,7 +6978,7 @@ if(schemeitem.equals("yes")){
                         " '" + itemqty + "','" + itemsubtotal + "','" + routeallowpricedit + "'," +
                         " '" + itemdiscountAmount + "','" + freeflag + "','" + purchaseitemcode + "'," +
                         " '" + freeitemcode + "', '" + minimumsalesqty + "','" + newprice +"','" + ratediscount +"'" +
-                        ",'" + getschemeapplicable + "','" + orgprice + "'  )";
+                        ",'" + getschemeapplicable + "','" + orgprice + "',0,0  )";
                 mDb.execSQL(sqlcart);
             }else if(Integer.parseInt(getfreecount) > 0){
 //                String sqlcart = "UPDATE   'tblsalescartdatas' SET " +
@@ -7270,7 +7296,7 @@ if(schemeitem.equals("yes")){
             mDb = mDbHelper.getReadableDatabase();
             double cgst,sgst,igst,cgstamt,sgstamt,igstamt;
             Integer varschemeitem = 0;
-            if(schemeitem.equals("yes")){
+            if(schemeitem.equals("1")){
                 varschemeitem=1;
             }
             double vartaxamount=((Double.parseDouble(price)/(1+Double.parseDouble(tax)/100))*(Double.parseDouble(tax)/100))*Double.parseDouble(qty);
@@ -7460,7 +7486,8 @@ if(schemeitem.equals("yes")){
                     "billtypecode,gstin," +
                     "schedulecode,subtotal,discount,grandtotal,flag,makerid,createddate,financialyearcode,remarks,syncstatus," +
                     "billcopystatus,cashpaidstatus,salestime,beforeroundoff,lunchflag,ratediscount,schemeapplicable,latlong,ordertransactionno,total_budget_utilize)" +
-                    " select (select coalesce(max(autonum),0)+1 from tblsales),companycode,'"+ vancode +"','"+ Transactionno +"', case when (select Count(*) from tblsales where  companycode=a.companycode  and billtypecode = "+billtypecode+" )=0 " +
+                    " select (select coalesce(max(autonum),0)+1 from tblsales),companycode,'"+ vancode +"','"+ Transactionno +"', " +
+                    " case when (select Count(*) from tblsales where  companycode=a.companycode  and billtypecode = "+billtypecode+" )=0 " +
                     " then case when (select coalesce(max(refno),0)+1 from tblmaxcode where code=222 " +
                     " and companycode=a.companycode and billtypecode = "+billtypecode+" )=1 then " +
                     "(select prefix || printf('%0'||noofdigit||'d', startingno)||suffix FROM tblvouchersettings " +
@@ -9940,7 +9967,7 @@ if(schemeitem.equals("yes")){
                                             "gstcertificateupload='" + obj.getString("gstcertificateupload")+"'," +
                                             "colourcode='" + obj.getString("colourcode")+"',status='" + obj.getString("status")+"'," +
                                             "makerid='" + obj.getString("makerid")+"',createddate='" + obj.getString("createddate")+"'," +
-                                            "updateddate='" + obj.getString("updateddate")+"',gststatecode=" + obj.getString("gststatecode") + "' , " +
+                                            "updateddate='" + obj.getString("updateddate")+"',gststatecode='" + obj.getString("gststatecode") + "'," +
                                             "companytype='"+ obj.getString("companytype") +"' " +
                                             " WHERE companycode=" + obj.getInt("companycode");
                                     mDb.execSQL(sql1);
@@ -12360,7 +12387,7 @@ if(schemeitem.equals("yes")){
                                 String sql = "INSERT INTO 'tblsales' (autonum,companycode,vancode,transactionno,billno,refno,prefix,suffix,billdate,customercode,billtypecode,gstin," +
                                         "schedulecode,subtotal,discount,totaltaxamount,grandtotal,billcopystatus,cashpaidstatus,flag,makerid,createddate,updateddate,bitmapimage," +
                                         "financialyearcode,remarks,bookingno,syncstatus,imgflag,salestime,beforeroundoff,lunchflag,einvoiceurl,irn_no,ack_no,ackdate" +
-                                        ",einvoice_status,einvoiceresponse,einvoiceqrcodeurl,ratediscount,schemeapplicable) VALUES('" + gc + "','" + obj.getString("companycode") + "'," +
+                                        ",einvoice_status,einvoiceresponse,einvoiceqrcodeurl,ratediscount,schemeapplicable,total_budget_utilize) VALUES('" + gc + "','" + obj.getString("companycode") + "'," +
                                         "'" + obj.getString("vancode") + "','" + obj.getString("transactionno") + "'," +
                                         "'" + obj.getString("billno") + "','" + obj.getString("refno") + "'," +
                                         "'" + obj.getString("prefix") + "','" + obj.getString("suffix") + "'," +
@@ -12374,7 +12401,7 @@ if(schemeitem.equals("yes")){
                                         "'" + obj.getString("lunchflag") + "','" + obj.getString("einvoiceurl") + "','" + obj.getString("irn_no") + "'" +
                                         ",'" + obj.getString("ack_no") + "','" + obj.getString("ackdate") + "'," + obj.getInt("einvoice_status") + "," +
                                         "'" + obj.getString("einvoiceresponse") + "','" + obj.getString("einvoiceqrcodeurl") + "'," +
-                                        "'" + obj.getString("ratediscount") + "','" +obj.getString("schemeapplicable")+ "')";
+                                        "'" + obj.getString("ratediscount") + "','" +obj.getString("schemeapplicable")+ "','"+obj.getString("total_budget_utilize")+"'  )";
 
                                 mDb.execSQL(sql);
 
@@ -12393,7 +12420,7 @@ if(schemeitem.equals("yes")){
                                         " irn_no='"+obj.getString("irn_no")+"', ack_no='"+obj.getString("ack_no")+"',ackdate='"+obj.getString("ackdate")+"'" +
                                         ", einvoice_status='"+obj.getInt("einvoice_status")+"',einvoiceresponse='"+obj.getString("einvoiceresponse")+"'" +
                                         ",einvoiceqrcodeurl='"+obj.getString("einvoiceqrcodeurl")+"',ratediscount='"+ obj.getString("ratediscount")+"'," +
-                                        "schemeapplicable='" +obj.getString("schemeapplicable")+ "'" +
+                                        "schemeapplicable='" +obj.getString("schemeapplicable")+ "',total_budget_utilize = '"+obj.getString("total_budget_utilize")+"' " +
                                         " where transactionno='"+obj.getString("transactionno")+"' and" +
                                         " financialyearcode ='"+obj.getString("financialyearcode")+"' and companycode='"+obj.getString("companycode")+"' ";
                                 mDb.execSQL(exequery);
@@ -12548,7 +12575,8 @@ if(schemeitem.equals("yes")){
                                         "'" + obj.getString("sgstamt") + "','" + obj.getString("igstamt") + "','" + obj.getString("freeitemstatus") + "'," +
                                         "'" + obj.getString("makerid") + "','" + obj.getString("createddate") + "','" + obj.getString("updateddate") + "'" +
                                         ",'" + obj.getString("bookingno") + "','" + obj.getString("financialyearcode") + "','"+obj.getString("vancode")+"'" +
-                                        ",2,'" + obj.getString("ratediscount") + "','" +obj.getString("schemeapplicable")+ "','"+obj.getString("orgprice")+"')";
+                                        ",2,'" + obj.getString("ratediscount") + "','" +obj.getString("schemeapplicable")+ "','"+obj.getString("orgprice")+"'" +
+                                        ",'"+obj.getString("schemeitem")+"','"+obj.getString("budget_utilize")+"' )";
                                 mDb.execSQL(sql);
 
 
@@ -12986,18 +13014,20 @@ if(schemeitem.equals("yes")){
                     {
                         try {
                             JSONObject obj = (JSONObject) json_category.get(i);
+                            Log.w("DatabaseAdapter","obj : " + obj.toString());
+
 
                             String sql = "SELECT * FROM 'tblmaxcode1' WHERE code="+obj.getInt("code");
                             /*if(!((mDb.rawQuery(sql, null)).moveToFirst()))
                             {*/
 
                             sql = "INSERT INTO 'tblmaxcode' VALUES("+obj.getInt("code")+"," +
-                                    " '" + obj.getString("process")+"'," + obj.getInt("refno")+"," +
-                                    "" + obj.getInt("bookingno")+"," +
-                                    "" + obj.getInt("transactionno")+"," +
-                                    " " + obj.getInt("companycode")+"," +
-                                    " " + obj.getInt("billtypecode")+"," +
-                                    " '" + obj.getString("transactiondate")+"')";
+                                    "'" + obj.getString("process")+"'," + obj.getInt("refno")+"," +
+                                    obj.getInt("bookingno")+"," +
+                                    obj.getInt("transactionno")+"," +
+                                    obj.getInt("companycode")+"," +
+                                    obj.getInt("billtypecode")+"," +
+                                    "'" + obj.optString("transactiondate")+"')";
                             mDb.execSQL(sql);
                             //}
                             /*else{
@@ -13009,14 +13039,15 @@ if(schemeitem.equals("yes")){
                             }*/
 
 
-                        } catch (JSONException ex) {
-
+                        } catch (Exception ex) {
+                            Log.w("DatabaseAdapter ","Exception in syncmaxrefno : " + ex.getLocalizedMessage());
                             insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
                         }
                     }
                 }
-            } catch (JSONException ex) {
+            } catch (Exception ex) {
                 // TODO Auto-generated catch block
+                Log.w("DatabaseAdapter ","Exception in syncmaxrefno : " + ex.getLocalizedMessage());
                 insertErrorLog(ex.toString(), this.getClass().getSimpleName() + " - syncmaxrefno", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
             }
         }

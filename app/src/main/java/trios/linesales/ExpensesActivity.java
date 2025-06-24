@@ -362,6 +362,8 @@ public class ExpensesActivity extends AppCompatActivity {
                                             /*bottomlayout.setVisibility(View.GONE);
                                             btnSaveSchedule.setVisibility(View.VISIBLE);*/
 
+                                            Intent i = new Intent(ExpensesActivity.this, MyScheduleActivity.class);
+                                            startActivity(i);
                                         } else {
                                             salescashclose = new Dialog(context);
                                             salescashclose.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -390,11 +392,11 @@ public class ExpensesActivity extends AppCompatActivity {
                                             popup_salesclose.setVisibility(View.GONE);
                                         }
                                     } else {
-                                        Intent i = new Intent(ExpensesActivity.this, ScheduleActivity.class);
+                                        Intent i = new Intent(ExpensesActivity.this, MyScheduleActivity.class);
                                         startActivity(i);
                                     }
                                 } else {
-                                    Intent i = new Intent(ExpensesActivity.this, ScheduleActivity.class);
+                                    Intent i = new Intent(ExpensesActivity.this, MyScheduleActivity.class);
                                     startActivity(i);
                                 }
                             }else {
@@ -416,7 +418,7 @@ public class ExpensesActivity extends AppCompatActivity {
                                             !preferenceMangr.pref_getString("schedule_getcashclosecount").equals("") && !preferenceMangr.pref_getString("schedule_getcashclosecount").equals(null)) {
                             /*bottomlayout.setVisibility(View.GONE);
                             btnSaveSchedule.setVisibility(View.VISIBLE);*/
-                                        Intent i = new Intent(ExpensesActivity.this, ScheduleActivity.class);
+                                        Intent i = new Intent(ExpensesActivity.this, MyScheduleActivity.class);
                                         startActivity(i);
 
                                     } else {
@@ -453,7 +455,7 @@ public class ExpensesActivity extends AppCompatActivity {
                                         salescashclose.show();
                                     }
                                 } else {
-                                    Intent i = new Intent(ExpensesActivity.this, ScheduleActivity.class);
+                                    Intent i = new Intent(ExpensesActivity.this, MyScheduleActivity.class);
                                     startActivity(i);
                                 }
                                 if (!preferenceMangr.pref_getString("schedule_getsalesclosecount").equals("0") && !preferenceMangr.pref_getString("schedule_getsalesclosecount").equals("null") &&

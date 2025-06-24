@@ -1156,8 +1156,8 @@ public class ReviewActivity extends AppCompatActivity {
                     mHolder.listitemtax = (TextView) convertView.findViewById(R.id.listitemtax);
                     // mHolder.labelstock = (TextView)convertView.findViewById(R.id.labelstock);
                     mHolder.labelhsntax = (TextView)convertView.findViewById(R.id.labelhsntax);
-                    mHolder.labelscheme = (TextView)convertView.findViewById(R.id.labelscheme);
-                    mHolder.labeldummyscheme = (TextView)convertView.findViewById(R.id.labeldummyscheme);
+//                    mHolder.labelscheme = (TextView)convertView.findViewById(R.id.labelscheme);
+//                    mHolder.labeldummyscheme = (TextView)convertView.findViewById(R.id.labeldummyscheme);
                     mHolder.itemLL = (LinearLayout)convertView.findViewById(R.id.itemLL);
                     mHolder.stockvalueLL = (LinearLayout)convertView.findViewById(R.id.stockvalueLL);
                     mHolder.labelnilstock = (TextView)convertView.findViewById(R.id.labelnilstock);
@@ -1174,12 +1174,12 @@ public class ReviewActivity extends AppCompatActivity {
                     convertView.setTag(R.id.listitemrate, mHolder.listitemrate);
                     convertView.setTag(R.id.listitemtotal, mHolder.listitemtotal);
                     convertView.setTag(R.id.listitemtax, mHolder.listitemtax);
-                    convertView.setTag(R.id.labelscheme, mHolder.labelscheme);
+//                    convertView.setTag(R.id.labelscheme, mHolder.labelscheme);
                     // convertView.setTag(R.id.labelstock, mHolder.labelstock);
                     convertView.setTag(R.id.labelhsntax, mHolder.labelhsntax);
                     convertView.setTag(R.id.labelstockunit, mHolder.labelstockunit);
-                    convertView.setTag(R.id.labelscheme, mHolder.labelscheme);
-                    convertView.setTag(R.id.labeldummyscheme, mHolder.labeldummyscheme);
+//                    convertView.setTag(R.id.labelscheme, mHolder.labelscheme);
+//                    convertView.setTag(R.id.labeldummyscheme, mHolder.labeldummyscheme);
                 } catch (Exception e) {
                     Log.i("Route", e.toString());
                     DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -1201,8 +1201,8 @@ public class ReviewActivity extends AppCompatActivity {
             mHolder.listitemtax.setTag(position);
             mHolder.labelstockunit.setTag(position);
             mHolder.labelhsntax.setTag(position);
-            mHolder.labelscheme.setTag(position);
-            mHolder.labeldummyscheme.setTag(position);
+//            mHolder.labelscheme.setTag(position);
+  //          mHolder.labeldummyscheme.setTag(position);
             try {
 
                 String getdecimalvalue  = salesItemList.get(position).getNoofdecimals();
@@ -1252,14 +1252,14 @@ public class ReviewActivity extends AppCompatActivity {
                 }
 
 
-                if(!Utilities.isNullOrEmpty(salesItemList.get(position).getSchemeItem()) && salesItemList.get(position).getSchemeItem().equals("1")){
-                    mHolder.labelscheme.setVisibility(View.VISIBLE);
-                    mHolder.labeldummyscheme.setVisibility(View.GONE);
-                }
-                else{
-                    mHolder.labelscheme.setVisibility(View.GONE);
-                    mHolder.labeldummyscheme.setVisibility(View.VISIBLE);
-                }
+//                if(!Utilities.isNullOrEmpty(salesItemList.get(position).getSchemeItem()) && salesItemList.get(position).getSchemeItem().equals("1")){
+//                    mHolder.labelscheme.setVisibility(View.VISIBLE);
+//                    mHolder.labeldummyscheme.setVisibility(View.GONE);
+//                }
+//                else{
+//                    mHolder.labelscheme.setVisibility(View.GONE);
+//                    mHolder.labeldummyscheme.setVisibility(View.VISIBLE);
+//                }
                 mHolder.labelhsntax.setText(salesItemList.get(position).getHsn() +" @ "+salesItemList.get(position).getTax() +"%");
                 if(getnoofdigits!="") {
                     mHolder.listitemqty.setText(df.format(Double.parseDouble(salesItemList.get(position).getItemqty())));
@@ -1493,6 +1493,7 @@ public class ReviewActivity extends AppCompatActivity {
         ArrayList<SalesSyncDatas> List = null;
         JSONObject jsonObj = null;
         String from="";
+        @SuppressLint("Range")
         @Override
         protected  ArrayList<SalesSyncDatas> doInBackground(String... params) {
             RestAPI api = new RestAPI();
@@ -1639,6 +1640,8 @@ public class ReviewActivity extends AppCompatActivity {
                             orderTransNo = mCursales.getString(43);
                         obj.put("ordertransactionno", orderTransNo);
 
+                        obj.put("budget_utilize", mCursales.getString(mCursales.getColumnIndex("total_budget_utilize")));
+
                         js_array2.put(obj);
                         mCursales.moveToNext();
                     }
@@ -1679,6 +1682,8 @@ public class ReviewActivity extends AppCompatActivity {
                             schemeapplicable = mCursalesitems.getString(24);
                         obj.put("schemeapplicable", schemeapplicable);
                         obj.put("orgprice", mCursalesitems.getString(25));
+                        obj.put("budget_utilize", mCursalesitems.getString(mCursalesitems.getColumnIndex("budget_utilize")));
+
                         js_array3.put(obj);
                         mCursalesitems.moveToNext();
                     }
