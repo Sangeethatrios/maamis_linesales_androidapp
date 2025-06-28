@@ -1239,12 +1239,12 @@ public class CashReportActivity extends AppCompatActivity {
                 getadvancecash = "0";
             }
             Double totalcash = Double.parseDouble(getsalescashamt) +
-                     Double.parseDouble(getreceiptcashamt) + Double.parseDouble(getadvancecash);
+                     Double.parseDouble(getreceiptcashamt) - (Double.parseDouble(getsalesreturnamt));
             totalcash = Double.valueOf(Math.round(totalcash));
-            Double totalexp = Double.parseDouble(getexpenseamt);
+            Double totalexp = Double.parseDouble(getadvancecash) - Double.parseDouble(getexpenseamt);
             // + Double.parseDouble(getsalesreturnamt)
             totalexp = Double.valueOf(Math.round(totalexp));
-            Double cashinhand = totalcash - totalexp;
+            Double cashinhand = totalcash + totalexp;
 
             txtsalescash.setText( "\u20B9 " + dft.format(Double.parseDouble(getsalescashamt)));
             txtreceiptcash.setText("\u20B9 " + dft.format(Double.parseDouble(getreceiptcashamt)));

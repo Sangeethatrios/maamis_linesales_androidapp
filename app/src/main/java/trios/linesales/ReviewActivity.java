@@ -1158,6 +1158,8 @@ public class ReviewActivity extends AppCompatActivity {
                     mHolder.labelhsntax = (TextView)convertView.findViewById(R.id.labelhsntax);
 //                    mHolder.labelscheme = (TextView)convertView.findViewById(R.id.labelscheme);
 //                    mHolder.labeldummyscheme = (TextView)convertView.findViewById(R.id.labeldummyscheme);
+                    mHolder.schemecount = (TextView)convertView.findViewById(R.id.schemecount);
+                    mHolder.dummycount = (TextView)convertView.findViewById(R.id.dummycount);
                     mHolder.itemLL = (LinearLayout)convertView.findViewById(R.id.itemLL);
                     mHolder.stockvalueLL = (LinearLayout)convertView.findViewById(R.id.stockvalueLL);
                     mHolder.labelnilstock = (TextView)convertView.findViewById(R.id.labelnilstock);
@@ -1180,6 +1182,9 @@ public class ReviewActivity extends AppCompatActivity {
                     convertView.setTag(R.id.labelstockunit, mHolder.labelstockunit);
 //                    convertView.setTag(R.id.labelscheme, mHolder.labelscheme);
 //                    convertView.setTag(R.id.labeldummyscheme, mHolder.labeldummyscheme);
+
+                    convertView.setTag(R.id.schemecount, mHolder.schemecount);
+                    convertView.setTag(R.id.dummycount, mHolder.dummycount);
                 } catch (Exception e) {
                     Log.i("Route", e.toString());
                     DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -1203,6 +1208,9 @@ public class ReviewActivity extends AppCompatActivity {
             mHolder.labelhsntax.setTag(position);
 //            mHolder.labelscheme.setTag(position);
   //          mHolder.labeldummyscheme.setTag(position);
+
+            mHolder.dummycount.setTag(position);
+            mHolder.schemecount.setTag(position);
             try {
 
                 String getdecimalvalue  = salesItemList.get(position).getNoofdecimals();
@@ -1287,10 +1295,15 @@ public class ReviewActivity extends AppCompatActivity {
                     mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightblue));
                     mHolder.listdiscount.setText("");
                     mHolder.dummydeleteitem.setVisibility(View.VISIBLE);
+                    mHolder.schemecount.setText("F");
+                    mHolder.dummycount.setVisibility(View.GONE);
+                    mHolder.schemecount.setVisibility(View.VISIBLE);
                 }else{
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
                     mHolder.deleteitem.setVisibility(View.VISIBLE);
                     mHolder.dummydeleteitem.setVisibility(View.GONE);
+                    mHolder.dummycount.setVisibility(View.VISIBLE);
+                    mHolder.schemecount.setVisibility(View.GONE);
                 }
 
 
@@ -1426,7 +1439,7 @@ public class ReviewActivity extends AppCompatActivity {
         private class ViewHolder1 {
             private TextView listitemname,dummydeleteitem;
             private TextView listitemcode,labelnilstock,listitemqty,listitemrate;
-            private TextView listitemtotal,listitemtax,labelhsntax,labelstockunit,listdiscount,labelscheme,labeldummyscheme;
+            private TextView listitemtotal,listitemtax,labelhsntax,labelstockunit,listdiscount,labelscheme,labeldummyscheme,schemecount,dummycount;
             private LinearLayout itemLL,stockvalueLL;
             private  ImageView pricearrow,deleteitem;
         }

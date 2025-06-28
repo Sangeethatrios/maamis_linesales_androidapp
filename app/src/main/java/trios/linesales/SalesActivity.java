@@ -101,7 +101,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
     String[] SubGroupCode,SubGroupName,SubGroupNameTamil;
     String[] CustomerCode,CustomerCategory,CustomerName,CustomerNameTamil,Address,CustomerAreaCode,MobileNo,
             TelephoneNo,GSTN,SchemeApplicable,customertypecode,CustomerCityName,CustomerAreaName,CustomerTotalOrder,
-            Customerbillcount, CusNotPurchasedCount,DayWiseSalesamt,AnnualSalesamt,BillWiseBudget;
+            Customerbillcount, CusNotPurchasedCount,DayWiseSalesamt,AnnualSalesamt,BillWiseBudget,cusLatitude,cusLongitude;
+
     String[] FreeItemName,FreeItemOp,FreeItemHandover,FreeItemDistributed,FreeItemBalance,
             FreeItemCode,FreeItemSNO;
     Dialog areadialog,customerdialog,freeitemdialog, routedialog,dialogNotPurchased,remarksDialog;
@@ -109,7 +110,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             getschemeapplicable="",getstaticsubcode="",getstaticchilditemcode="",getstaticgetchildqty="",
             getlabelchildqty="",customercityname="",customerareaname="",customername="",customercityarea="",fromcustomer="",
             otptimevalidity="",otptimevaliditybackend="",getmobilenoverifycount="",orderbillno="",
-            ordertransactionno="",orderfinancialyearcode="";
+            ordertransactionno="",orderfinancialyearcode="" ;
     static public double budgetutilize=0,totalbudgetutilize=0,total = 0  ;
     public static ArrayList<SalesItemDetails> salesitems = new ArrayList<SalesItemDetails>();
     ArrayList<SalesItemDetails> freeitems = new ArrayList<SalesItemDetails>();
@@ -1203,6 +1204,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                 CustomerTotalOrder = new String[Cur.getCount()];
                 Customerbillcount = new String[Cur.getCount()];
                 CusNotPurchasedCount = new String[Cur.getCount()];
+                cusLatitude= new String[Cur.getCount()];
+                cusLongitude= new String[Cur.getCount()];
                 for(int i=0;i<Cur.getCount();i++){
                     CustomerCode[i] = Cur.getString(0);
                     CustomerName[i] = Cur.getString(1);
@@ -1223,6 +1226,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     DayWiseSalesamt[i]=Cur.getString(Cur.getColumnIndex("daywisesalesamt"));
                     AnnualSalesamt[i]=Cur.getString(Cur.getColumnIndex("annualsalesamt"));
                     BillWiseBudget[i]=Cur.getString(Cur.getColumnIndex("billwisebudget"));
+                    cusLatitude[i]=Cur.getString(Cur.getColumnIndex("latitude"));
+                    cusLongitude[i]=Cur.getString(Cur.getColumnIndex("longitude"));
                     Cur.moveToNext();
                 }
 
@@ -2282,7 +2287,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                             }
                             if (Double.parseDouble(salesItemList.get(position).getFreecount()) > 0) {
                                 mHolder.schemecount.setVisibility(View.VISIBLE);
-                                mHolder.schemecount.setText("F");
+                                mHolder.schemecount.setText("S");
                                 mHolder.dummycount.setVisibility(View.GONE);
                                 //set the scheme apply status for each items in list
                                 salesItemList.get(position).setApplyitemscheme("yes");
@@ -3134,12 +3139,12 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                         int getfreeqtyval = (int) ( Double.parseDouble(getpurchaseitemweight) / Double.parseDouble(getpurchaseqty));
                                                         int getactualqtyvalue = (int) (getfreeqtyval * Double.parseDouble(getfreeqty));
                                                         if (getpurchaseitemcode.equals(getfreeitemcode)) {
-                                                            if (Double.parseDouble(mHolder.labelstock.getText().toString()) < (Double.parseDouble(String.valueOf(getactualqtyvalue)) + Double.parseDouble(getqty))) {
+                                                            if (Double.parseDouble(mHolder.labelstock.getText().toString())
+                                                                    < (Double.parseDouble(String.valueOf(getactualqtyvalue)) + Double.parseDouble(getqty))) {
                                                                 Toast toast = Toast.makeText(getApplicationContext(), "Insufficient stock for " + getfreeitemname, Toast.LENGTH_LONG);
                                                                 toast.setGravity(Gravity.CENTER, 0, 0);
                                                                 toast.show();
-                                                                mHolder.listitemtotal.setText("0.00");
-                                                                mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+                                                                mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.darkblue));
                                                                 return;
                                                             }
                                                         }
@@ -3147,12 +3152,11 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                         //** if the purchase item having a free item in scheme then check the purchase item qty equal to scheme free-item purchase qty
                                                         // eg : purchase item qty is 3kg , free-item purchase qty 3 kg comes from scheme table
                                                         // then 1 free item add in cart (1 is also comes from scheme table)  // **
-                                                        getFreeStock = objdatabaseadapterfree.GetFreeItemCount(getfreeitemcode);
 
                                                         double isaddfreeqty =   Double.parseDouble(getpurchaseitemweight) % Double.parseDouble(getpurchaseqty);
 
-
-                                                        if(isaddfreeqty==0) {
+//
+//                                                        if(isaddfreeqty==0) {
                                                             //check the item have a free item count and apply scheme status
                                                             if (Double.parseDouble(salesItemList.get(position).getFreecount()) > 0 && salesItemList.get(pos).getApplyitemscheme().equals("yes")) {
                                                                 itemschemeapplicable = "no";
@@ -3220,7 +3224,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                                     toast.setGravity(Gravity.CENTER, 0, 0);
                                                                                     toast.show();
                                                                                     mHolder.listitemtotal.setText("0.00");
-                                                                                    mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+                                                                                    mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.darkblue));
                                                                                     mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice())));
                                                                                     return;
                                                                                     //Stock Conversion
@@ -3261,8 +3265,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                             Toast toast = Toast.makeText(getApplicationContext(), "Insufficient stock for " + getfreeitemname + " this free item", Toast.LENGTH_LONG);
                                                                             toast.setGravity(Gravity.CENTER, 0, 0);
                                                                             toast.show();
-                                                                            mHolder.listitemtotal.setText("0.00");
-                                                                            mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+                                                                            mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.darkblue));
                                                                             mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice())));
                                                                             //return;
                                                                         }
@@ -3270,7 +3273,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                     }
                                                                 }
                                                             }
-                                                        }
+                                                     //   }
                                                         //scheme process end
                                                     } catch (Exception e) {
                                                         DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -4525,6 +4528,29 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    DataBaseAdapter objdatabaseadaptergeofencing = new DataBaseAdapter(context);
+                    objdatabaseadaptergeofencing.open();
+                    String getgeofencing = objdatabaseadaptergeofencing.GetGeofencing();
+                    String getgeofensingmeter = objdatabaseadaptergeofencing.GetGeofensingmeter();
+                    if(!Utilities.isNullOrEmpty(getgeofencing) && getgeofencing.equals("yes")) {
+                        if (cusLatitude != null && cusLatitude.length > 0 && cusLongitude != null && cusLongitude.length > 0) {
+                            if (!Utilities.isNullOrEmpty(cusLatitude[position]) && !Utilities.isNullOrEmpty(cusLongitude[position])) {
+                                if (!Utilities.isNullOrEmpty(getgeofensingmeter) && Integer.parseInt(getgeofensingmeter) != 0) {
+                                    if (!Utilities.checkCustomerLocationForBilling(context, cusLatitude[position], cusLongitude[position],Integer.parseInt(getgeofensingmeter))) {
+                                        Toast.makeText(context, "You are not in the billing range", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                }
+                            } else {
+                                Log.e("Distance", "Customer has not valid location : latlong : " + cusLatitude[position] + "," + cusLongitude[position]);
+                            }
+                        }
+                        else{
+                            Toast.makeText(context, "location not update for this customer", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
                     txtcustomername.setText(String.valueOf(CustomerNameTamil[position]));
                     customercode = CustomerCode[position];
                     customercategory = CustomerCategory[position];
@@ -8836,5 +8862,6 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             mDbErrHelper.close();
         }
     }
+
 
 }

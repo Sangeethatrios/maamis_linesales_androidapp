@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -596,5 +597,55 @@ public class Utilities {
     public static boolean isPrinterSelectedInApp(Context context) {
         PreferenceMangr preferenceMangr = new PreferenceMangr(context);
         return !Utilities.isNullOrEmpty(preferenceMangr.pref_getString("SelectedPrinterAddress"));
+    }
+
+    public static boolean checkCustomerLocationForBilling(Context context, String cusLat, String cusLong,Integer getgeofensingmeter) {
+        try {
+
+            double curLat = 0.0;
+            double curLong = 0.0;
+            GPSTracker gpsTracker = new GPSTracker(context);
+            if(gpsTracker.canGetLocation()){
+                curLat= gpsTracker.getLatitude();
+                curLong = gpsTracker.getLongitude();
+            }
+
+            if(Integer.parseInt(cusLat) == 0 ||  Integer.parseInt(cusLong) == 0){
+                SalesActivity.txtcustomername.setText("");
+                SalesActivity.customercode="0";
+                Toast.makeText(context, "location not update for this customer", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            Log.e("Distance", "curLatLong : "
+                    + String.valueOf(curLat) + "," + String.valueOf(curLong) + " cusLatLong : " + cusLat + "," + cusLong);
+            if (curLat <=0 || curLong <=0 || Double.parseDouble(cusLat) <=0 || Double.parseDouble(cusLong) <=0) {
+                Log.e("Distance", "Invalid latLong details : curLatLong : "
+                        + String.valueOf(curLat) + "," + String.valueOf(curLong) + " cusLatLong : " + cusLat + "," + cusLong);
+                return true;
+            }
+            Location startPoint=new Location("locationA");
+            startPoint.setLatitude(curLat);
+            startPoint.setLongitude(curLong);
+
+            Location endPoint=new Location("locationA");
+            endPoint.setLatitude(Double.parseDouble(cusLat));
+            endPoint.setLongitude(Double.parseDouble(cusLong));
+
+            Double distance = Double.valueOf(startPoint.distanceTo(endPoint));
+            Log.e("Distance", String.format("%.2f", distance / 1000) + "km : " + distance + " meters");
+            return distance <= getgeofensingmeter;
+            /*float[] resdistance = new float[2];
+            Location.distanceBetween(9.583685, 77.954328, 9.608583553923694, 77.95626976967606, resdistance);
+            String locRes = "";
+            for (int i=0; i<resdistance.length; i++) {
+                locRes = locRes + " , " + resdistance[i];
+            }
+            Log.e("Distance 1 ", locRes);*/
+
+        } catch (Exception e) {
+            Log.e("","Exception in checkCustomerLocationForBilling : " + e.getLocalizedMessage());
+        }
+        return true;
     }
 }

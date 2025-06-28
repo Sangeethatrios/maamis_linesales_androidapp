@@ -26,6 +26,23 @@
                     android:textSize="12dp"
                     android:layout_weight="0.46"
                     />
+                <TextView
+                    android:id="@+id/dummycount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.05" />
+                <TextView
+                    android:id="@+id/schemecount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.05"
+                    android:text="F"
+                    android:visibility="gone"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:background="@drawable/circle_small"/>
                 <TableLayout android:layout_weight="0.43">
                     <TableRow>
 

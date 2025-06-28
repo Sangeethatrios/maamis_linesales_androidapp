@@ -46,6 +46,14 @@ public class GPSTracker extends Service implements LocationListener {
     protected LocationManager locationManager;
 
     private String provider_info;
+    boolean canGetLocation = false;
+
+    /**
+     * @return
+     */
+    public boolean canGetLocation() {
+        return this.canGetLocation;
+    }
 
     public GPSTracker(Context context) {
         this.mContext = context;
@@ -118,6 +126,7 @@ public class GPSTracker extends Service implements LocationListener {
                 // First get location from Network Provider
                 if (isNetworkEnabled) {
                     this.isGPSTrackingEnabled = true;
+                    this.canGetLocation = true;
                     //check the network permission
                     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions((Activity) mContext, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);

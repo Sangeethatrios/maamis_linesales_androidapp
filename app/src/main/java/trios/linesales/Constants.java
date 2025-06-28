@@ -77,7 +77,7 @@ public class Constants {
     public static final String LATLONG_NULL_VALUE = "null,null";
     public static final String LATLONG_ZERO_VALUE = "0.0,0.0";
 
-
+    public static final int BILLABLE_LOCATION_RANGE = 100;
 
     //table name constants
     public static final String TBLSALES="tblsales";

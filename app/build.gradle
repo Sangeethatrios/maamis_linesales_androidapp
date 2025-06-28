@@ -90,7 +90,7 @@ dependencies {
     //Date Range Picker
     //implementation 'com.leavjenn.smoothdaterangepicker:library:0.2.0'
     //Masked Text Box pin view
-    implementation 'com.github.GoodieBag:Pinview:v1.3'
+    implementation 'com.github.GoodieBag:Pinview:v1.5'
 
     //Bluetooth printer
     /*implementation files('libs/ePOS2.jar')

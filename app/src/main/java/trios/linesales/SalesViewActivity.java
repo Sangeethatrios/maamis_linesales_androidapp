@@ -955,6 +955,8 @@ public class SalesViewActivity extends AppCompatActivity {
                     mHolder.listitemqty = (TextView) convertView.findViewById(R.id.listitemqty);
                     mHolder.listitemrate = (TextView) convertView.findViewById(R.id.listitemrate);
                     mHolder.listitemtotal = (TextView) convertView.findViewById(R.id.listitemtotal);
+                    mHolder.schemecount = (TextView) convertView.findViewById(R.id.schemecount);
+                    mHolder.dummycount = (TextView) convertView.findViewById(R.id.dummycount);
                     mHolder.labelhsntax = (TextView)convertView.findViewById(R.id.labelhsntax);
                     mHolder.itemLL = (LinearLayout)convertView.findViewById(R.id.itemLL);
                     mHolder.stockvalueLL = (LinearLayout)convertView.findViewById(R.id.stockvalueLL);
@@ -968,6 +970,8 @@ public class SalesViewActivity extends AppCompatActivity {
                     convertView.setTag(R.id.listitemqty, mHolder.listitemqty);
                     convertView.setTag(R.id.listitemrate, mHolder.listitemrate);
                     convertView.setTag(R.id.listitemtotal, mHolder.listitemtotal);
+                    convertView.setTag(R.id.dummycount, mHolder.dummycount);
+                    convertView.setTag(R.id.schemecount, mHolder.schemecount);
                     convertView.setTag(R.id.labelhsntax, mHolder.labelhsntax);
                     convertView.setTag(R.id.labelstockunit, mHolder.labelstockunit);
                 } catch (Exception e) {
@@ -987,6 +991,8 @@ public class SalesViewActivity extends AppCompatActivity {
             mHolder.listitemqty.setTag(position);
             mHolder.listitemrate.setTag(position);
             mHolder.listitemtotal.setTag(position);
+            mHolder.dummycount.setTag(position);
+            mHolder.schemecount.setTag(position);
             mHolder.labelstockunit.setTag(position);
             mHolder.labelhsntax.setTag(position);
             try {
@@ -1051,8 +1057,14 @@ public class SalesViewActivity extends AppCompatActivity {
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightblue));
                     mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightblue));
                     mHolder.listdiscount.setText("");
+
+                    mHolder.dummycount.setVisibility(View.GONE);
+                    mHolder.schemecount.setVisibility(View.VISIBLE);
                 }else{
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
+
+                    mHolder.dummycount.setVisibility(View.VISIBLE);
+                    mHolder.schemecount.setVisibility(View.GONE);
                 }
 
             } catch (Exception e) {
@@ -1065,7 +1077,7 @@ public class SalesViewActivity extends AppCompatActivity {
         private class ViewHolder1 {
             private TextView listitemname,labelnilstock;
             private TextView listitemcode,listitemqty,listitemrate;
-            private TextView listitemtotal,labelhsntax,labelstockunit,listdiscount;
+            private TextView listitemtotal,labelhsntax,labelstockunit,listdiscount,dummycount,schemecount;
             private LinearLayout itemLL,stockvalueLL;
         }
 

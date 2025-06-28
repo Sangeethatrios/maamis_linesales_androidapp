@@ -3,6 +3,7 @@ package trios.linesales;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,6 +37,8 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.epson.epos2.printer.Printer;
+import com.epson.epos2.printer.PrinterStatusInfo;
 import com.goodiebag.pinview.Pinview;
 
 import org.json.JSONArray;
@@ -48,6 +51,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import com.epson.epos2.printer.ReceiveListener;
 
 public class CustomerActivity extends AppCompatActivity {
 
@@ -108,6 +112,9 @@ public class CustomerActivity extends AppCompatActivity {
     String[] arrmobilestatus;
     public static String getscheduleroutecode;
     GPSTracker gpsTracker;
+
+    BluetoothAdapter mBluetoothAdapter = null;
+    ReceiveListener receiveListener = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,8 +132,21 @@ public class CustomerActivity extends AppCompatActivity {
 
         try {
             preferenceMangr = new PreferenceMangr(context);
+            receiveListener = new ReceiveListener() {
+                @Override
+                public void onPtrReceive(Printer printer, int i, PrinterStatusInfo printerStatusInfo, String s) {
+
+                }
+            };
         }catch (Exception e){
             Log.d("Preference Manager : ",e.toString());
+        }
+
+        try {
+            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            // String cuscode=SalesActivity.customercode;
+        }catch (Exception e){
+            Log.d("Bluetooth Adapter : ",e.toString());
         }
 
         //Set current route
@@ -262,6 +282,13 @@ public class CustomerActivity extends AppCompatActivity {
                 openItem.setWidth(130);
                 openItem.setIcon(R.drawable.ic_mode_edit);
                 menu.addMenuItem(openItem);
+
+                SwipeMenuItem printItem = new SwipeMenuItem(
+                        getApplicationContext());
+                //  openItem.setBackground(ContextCompat.getDrawable(context,R.drawable.noborder));
+                printItem.setWidth(130);
+                printItem.setIcon(R.drawable.ic_print_black);
+                menu.addMenuItem(printItem);
             }
         };
         listView.setMenuCreator(creator);
@@ -301,8 +328,37 @@ public class CustomerActivity extends AppCompatActivity {
                         GetCustomerUpdatePopup();
                         break;
 
+                    case 1:
+
+                        if (mBluetoothAdapter != null) {
+
+                            if (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_ON) {
+                                if (!preferenceMangr.pref_getString("SelectedPrinterAddress").equals("")) {
+
+                                    ArrayList<CustomerDetails> currentListDatareview1 = getdata;
+                                    String listcustomercode = currentListDatareview1.get(position).getCustomercode();
+                                    ShowPrintPopUp(listcustomercode);
+                                } else {
+                                    Toast toast = Toast.makeText(getApplicationContext(), "Please select bluetooth printer in app settings", Toast.LENGTH_LONG);
+                                    //toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
+
+                                }
+                            } else {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Please turn on the bluetooth", Toast.LENGTH_LONG);
+                                //toast.setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
+
+                            }
+                        } else {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Bluetooth is not available.", Toast.LENGTH_LONG);
+                            //toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+
+                        }
+                        break;
+
                 }
-                // false : close the menu; true : not close the menu
                 return false;
             }
         });
@@ -2774,6 +2830,96 @@ public class CustomerActivity extends AppCompatActivity {
         }
         return success;
     }
+
+public void ShowPrintPopUp (String listcustomercode){
+    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    builder.setTitle("Confirmation");
+    builder.setMessage("Are you sure you want to print the price list ?")
+            .setCancelable(false)
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    new AsyncPrintPriceListDetails().execute(listcustomercode);
+                }
+            })
+            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    btnUpdateCustomerLocation.setEnabled(true);
+                    dialog.cancel();
+                }
+            });
+    AlertDialog alert = builder.create();
+    alert.show();
+}
+    protected class AsyncPrintPriceListDetails extends
+            AsyncTask<String, JSONObject, Boolean> {
+        Boolean billPrinted = false, deviceFound =false;
+        String Getbilltypecode = null;
+        JSONObject jsonObj = null;
+        String Customercode;
+        String financialyearcode;
+        ProgressDialog SalesPrintloading;
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            Customercode = params[0];
+            try {
+                //printData = new PrintData(context);
+                EpsonT20Printer epsonT20Printer = new EpsonT20Printer(CustomerActivity.this, CustomerActivity.this, receiveListener);
+                deviceFound = epsonT20Printer.findBT();
+                Log.d("deviceFound",String.valueOf(deviceFound));
+                if (!deviceFound) {
+                    /*Toast toast = Toast.makeText(getApplicationContext(), "Please connect to the Bluetooth Printer!", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);*/
+                    //printpopup.dismiss();
+                    Log.d("Device found",String.valueOf(deviceFound));
+                    billPrinted = deviceFound;
+                    //toast.show();
+                } else {
+                    Log.d("Begin Print",String.valueOf(deviceFound));
+                    billPrinted = (boolean) epsonT20Printer.GetCustomerPriceListPrint(Customercode,CustomerActivity.this);
+                    //printpopup.dismiss();
+                }
+                Log.d("After print",String.valueOf(billPrinted));
+            }
+            catch (Exception e){
+                billPrinted = true;
+                Log.d("aaaa", e.getLocalizedMessage());
+                DataBaseAdapter mDbErrHelper2 = new DataBaseAdapter(context);
+                mDbErrHelper2.open();
+                mDbErrHelper2.insertErrorLog(e.toString(), this.getClass().getSimpleName()+
+                        " - AsyncPrintSalesDetails", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper2.close();
+            }
+            return billPrinted;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            SalesPrintloading = ProgressDialog.show(CustomerActivity.this, "Connecting to printer", "Please wait", true);
+            SalesPrintloading.setCancelable(false);
+            SalesPrintloading.setCanceledOnTouchOutside(false);
+        }
+        @Override
+        protected void onPostExecute(Boolean billPrinted) {
+            // TODO Auto-generated method stub
+            try {
+                //Thread.sleep(2000);
+                SalesPrintloading.dismiss();
+
+
+            }catch (Exception e) {
+                // TODO Auto-generated catch block
+                Log.d("AsyncScheduleDetails", e.getLocalizedMessage());
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName()+
+                        " - call DC print", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            }
+        }
+    }
+
 
 
 }

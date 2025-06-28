@@ -77,12 +77,12 @@ public class PermissionManager {
     private void addPermissionsByReqType(int reqCode, ArrayList<String> permissions){
         switch (reqCode) {
             case Constants.DEFAULT_PERMISSION:
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+//                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
                     defaultPermissionGroup.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-                }
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+//                }
+//                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
                     defaultPermissionGroup.add(Manifest.permission.ACCESS_FINE_LOCATION);
-                }
+//                }
                 checkAndAddPermissionInList(permissions, defaultPermissionGroup);
                 break;
 

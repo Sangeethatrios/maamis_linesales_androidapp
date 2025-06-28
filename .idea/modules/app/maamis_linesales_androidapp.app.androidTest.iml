@@ -58,7 +58,7 @@
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.transition:transition:1.5.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.viewpager2:viewpager2:1.0.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.multidex:multidex:2.0.1@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.github.GoodieBag:Pinview:v1.3@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.github.GoodieBag:Pinview:v1.5@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.github.imjeevandeshmukh:GlideToast:1.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: io.reactivex.rxjava2:rxandroid:2.0.2@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.google.android.gms:play-services-location:11.0.0@aar" level="project" />
