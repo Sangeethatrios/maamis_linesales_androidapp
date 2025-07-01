@@ -287,7 +287,7 @@ public class DataBaseAdapter
                     " from (select count(*) as count1,0 as count2 from tblcompanymaster,tblbilltype  " +
                     " where companycode in (select companycode from tblitemmaster ) union all " +
                     "select 0 , count(*) from tblvouchersettings " +
-                    "where financialyearcode='"+ preferenceMangr.pref_getString("getfinanceyrcode") +"' and type='sales' and vancode='"+ preferenceMangr.pref_getString("getvancode")+"')" +
+                    "where financialyearcode='"+ preferenceMangr.pref_getString("getfinanceyrcode") +"' and type='sales' and vancode='"+ preferenceMangr.pref_getString("getvancode")+"' AND companycode IN (select companycode from tblcompanymaster where companytype=2))" +
                     " as derv) as de where count1<>count2;";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
@@ -382,7 +382,7 @@ public class DataBaseAdapter
                     " from (select count(*) as count1,0 as count2 from tblcompanymaster union all " +
                     "select 0 , count(*) from tblvouchersettings " +
                     "where financialyearcode='"+ preferenceMangr.pref_getString("getfinanceyrcode") +"' and" +
-                    "  type='receipt' and vancode='"+ preferenceMangr.pref_getString("getvancode") +"')" +
+                    "  type='receipt' and vancode='"+ preferenceMangr.pref_getString("getvancode") +"' AND companycode IN (select companycode from tblcompanymaster where companytype=2))" +
                     " as derv) as de where count1<>count2;";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
@@ -5074,7 +5074,7 @@ public class DataBaseAdapter
                         " (select count(*) from tblsalesorder where status = '1' and flag<>3 and flag<>6 and customercode=a.customercode) as orderCount " +
                         ""+billqry+",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt ," +
                         "(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') ) AS daywisesalesamt," +
-                        "(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' ) AS billwisebudget, " +
+                        "(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' AND    flag<>3 ) AS billwisebudget, " +
                         " COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude" +
                         " from tblcustomer" +
                         " as a inner join tblareamaster as b on a.areacode=b.areacode inner join tblcitymaster as c " +
@@ -5092,7 +5092,7 @@ public class DataBaseAdapter
                 sql = "select * from (select customercode,customername,customernametamil,address,a.areacode,emailid,mobileno,telephoneno," +
                         " aadharno,gstin,schemeapplicable,coalesce(customertypecode,'1'),areanametamil,citynametamil," +
                         " (select count(*) from tblsalesorder where status = '1' and flag<>3 and flag<>6 and customercode=a.customercode) as orderCount" +
-                        ""+ billqry + ",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt,(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') ) AS daywisesalesamt,(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' ) AS billwisebudget, COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude from tblcustomer " +
+                        ""+ billqry + ",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt,(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') ) AS daywisesalesamt,(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3  ) AS billwisebudget, COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude from tblcustomer " +
                         " as a inner join tblareamaster as b on a.areacode=b.areacode inner join tblcitymaster as c on b.citycode=c.citycode" +
                         " where a.areacode = '" + areacode + "' and a.status='" + statusvar + "' and (business_type='1' or business_type='3') " +
                         " order by customernametamil" +
@@ -5113,7 +5113,7 @@ public class DataBaseAdapter
                 sql = "select * from (select customercode,customername,customernametamil,address,a.areacode,emailid,mobileno,telephoneno," +
                         " aadharno,gstin,schemeapplicable,coalesce(customertypecode,'1'),areanametamil,citynametamil," +
                         " (select count(*) from tblsalesorder where status = '1' and flag<>3 and flag<>6 and customercode=a.customercode) as orderCount " +
-                        ""+billqry+",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt,(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') ) AS daywisesalesamt,(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' ) AS billwisebudget, COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude  from" +
+                        ""+billqry+",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt,(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') ) AS daywisesalesamt,(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3 ) AS billwisebudget, COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude  from" +
                         " tblcustomer as a inner join tblareamaster as b on a.areacode=b.areacode inner " +
                         " join tblcitymaster as c on b.citycode=c.citycode where a.areacode = '" + areacode + "' and" +
                         " a.status='" + statusvar + "' and " + varBusinessType +
@@ -5462,7 +5462,7 @@ public class DataBaseAdapter
                     " and (a.itemcode in (select itemcode from tblstocktransaction where  flag!=3) " +
                     " or parentcode in (select itemcode from tblstocktransaction where  flag!=3)) and " +
                     " a.companycode in (select companycode from tblcompanymaster where status='"+statusvar+"' ) ) as dec " +
-                    " where (itemcategory='child'  and (parentstockqty>0 or stockqty>0) ) or (itemcategory= 'parent' and stockqty>0 )   " +
+                    " where ((itemcategory='child'  and (parentstockqty>0 or stockqty>0) ) or (itemcategory= 'parent' and stockqty>0 ) ) AND   newprice <> 0  " +
                     " order by   itemtype,itemcategory desc,uppweight desc";
 
             //brandname
@@ -6133,7 +6133,8 @@ public class DataBaseAdapter
                     " where companycode in (select companycode from tblitemmaster ) union all " +
                     "select 0 , count(*) from tblvouchersettings " +
                     "where financialyearcode='"+preferenceMangr.pref_getString("getfinanceyrcode")+"' and " +
-                    " type='salesreturn' and vancode='"+preferenceMangr.pref_getString("getvancode")+"')" +
+                    " type='salesreturn' and vancode='"+preferenceMangr.pref_getString("getvancode")+"' AND " +
+                    "companycode IN (select companycode from tblcompanymaster where companytype=2))" +
                     " as derv) as de where count1<>count2;";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
@@ -8963,7 +8964,7 @@ if(schemeitem.equals("yes")){
                 getcompany="d.companycode='"+getcompanycode+"'";
             }
 
-            sql="SELECT a.itemcode,COALESCE(itemnametamil,itemname) || CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN 'Free Item' ELSE '' END as itemname,COALESCE(sum(qty),0) " +
+            sql="SELECT a.itemcode,COALESCE(itemnametamil,itemname) || CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN ' (Free Item)' ELSE '' END as itemname,COALESCE(sum(qty),0) " +
                     " as quantity,u.unitname,cast(sum(COALESCE(amount,0)) as decimal(32,2)) " +
                     "as totalamt, case when parentitemcode=0 then i.itemcode else i.parentitemcode " +
                     "  end as parentcode,case when itemcategory='parent' then 1 else  2 end as itemorder, " +
@@ -13485,7 +13486,7 @@ if(schemeitem.equals("yes")){
         Cursor mCur=null;
         try{
 
-            String sql ="select (b.itemnametamil || CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN 'Free Item' ELSE '' END) AS itemnametamil ,a.qty ,a.amount,a.price,c.unitname as unit," +
+            String sql ="select (b.itemnametamil || CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN ' (Free Item)' ELSE '' END) AS itemnametamil ,a.qty ,a.amount,a.price,c.unitname as unit," +
                     "d.hsn,a.cgst+a.sgst+a.igst as tax,printf('%.2f',coalesce((amount-cgstamt-sgstamt-igstamt),0))" +
                     " as taxableamount,printf('%.2f',coalesce((cgstamt+sgstamt+igstamt),0)) as taxvalue," +
                     " printf('%.2f',(printf('%.2f',coalesce((amount-cgstamt-sgstamt-igstamt),0))/a.qty)) as unittaxableamount " +
@@ -13556,7 +13557,7 @@ if(schemeitem.equals("yes")){
         Cursor mCur=null;
         try{
 
-            String sql ="select b.itemnametamil,a.qty ,a.amount,a.price,c.unitname as unit," +
+            String sql ="select b.itemnametamil || CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN ' (Free Item)' ELSE '' END as itemnametamil,a.qty ,a.amount,a.price,c.unitname as unit," +
                     "d.hsn,a.cgst+a.sgst+a.igst as tax from tblsalesitemdetails as a inner join tblitemmaster " +
                     "as b on a.itemcode=b.itemcode  inner join tblunitmaster as c on b.unitcode=c.unitcode  " +
                     " inner join tblitemsubgroupmaster as d on  d.itemsubgroupcode=b.itemsubgroupcode " +
