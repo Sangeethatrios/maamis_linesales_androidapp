@@ -49,10 +49,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="25-04-2019"
+                android:text="25-04-2019 to 30-04-2025"
                 android:layout_marginRight="@dimen/toolbarsmallmarright"
                 android:textColor="@android:color/white"
-                android:drawableLeft="@drawable/ic_date_range"
                 android:drawablePadding="@dimen/toolbardrawablepad"
                 android:drawableTint="@color/white"
                 android:textSize="@dimen/toolbarsmalltxtsize"

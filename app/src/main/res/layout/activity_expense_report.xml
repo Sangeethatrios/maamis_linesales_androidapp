@@ -56,7 +56,6 @@
                 android:text="25-04-2019"
                 android:layout_marginRight="@dimen/toolbarsmallmarright"
                 android:textColor="@android:color/white"
-                android:drawableLeft="@drawable/ic_date_range"
                 android:drawablePadding="@dimen/toolbardrawablepad"
                 android:drawableTint="@color/white"
                 android:textSize="@dimen/toolbarsmalltxtsize"

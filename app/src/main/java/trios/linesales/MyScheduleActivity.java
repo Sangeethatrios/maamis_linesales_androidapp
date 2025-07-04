@@ -1574,6 +1574,7 @@ public class MyScheduleActivity extends AppCompatActivity   {
                     txtdatevalues.setText(Cur.getString(Cur.getColumnIndex("datevalues")));
                     txttarget.setText(Cur.getString(Cur.getColumnIndex("target")));
 
+                    preferenceMangr.pref_putString("schedule_datevalue", Cur.getString(Cur.getColumnIndex("datevalues")));
 
 
                     if(!Utilities.isNullOrEmpty(Cur.getString(Cur.getColumnIndex("schedulestartdatetime"))) ){

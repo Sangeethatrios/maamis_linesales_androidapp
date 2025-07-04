@@ -1722,8 +1722,10 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
             }
 
             //Allow price Edit
-            if(salesItemList.get(position).getAllowpriceedit().equals("yes") &&
-                    salesItemList.get(position).getRouteallowpricedit().equals("yes")){
+            if(!Utilities.isNullOrEmpty(salesItemList.get(position).getAllowpriceedit()) &&
+                    !Utilities.isNullOrEmpty(salesItemList.get(position).getRouteallowpricedit())
+                    && (salesItemList.get(position).getAllowpriceedit().equals("yes") &&
+                    salesItemList.get(position).getRouteallowpricedit().equals("yes"))){
                 mHolder.listitemrate.setBackgroundResource(R.drawable.editbackground);
                 mHolder.listitemrate.setEnabled(true);
             }else{

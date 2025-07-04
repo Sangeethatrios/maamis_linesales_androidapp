@@ -766,15 +766,15 @@ public class EpsonT20Printer implements ReceiveListener {
 
                     double getgrandtotal= mDbHelper.GetSalesTotalforbill(gettransactiono,getfinancialyearcode,mCur.getString(17));
                     String grandtotal=dft.format(getgrandtotal);
-                    if(!discount.equals("") && !discount.equals("0") && !discount.equals("0.00")) {
-
-                        mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
-                        mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
-                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                        mPrinter.addTextFont(Printer.FONT_A);
-                        int valuediscunt = (int)discunt;
-                        mPrinter.addText(" Scheme " + " : " + Util.rightJustify(dft.format(discunt), 11) + "\n");
-                    }
+//                    if(!discount.equals("") && !discount.equals("0") && !discount.equals("0.00")) {
+//
+//                        mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+//                        mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+//                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+//                        mPrinter.addTextFont(Printer.FONT_A);
+//                        int valuediscunt = (int)discunt;
+//                        mPrinter.addText(" Scheme " + " : " + Util.rightJustify(dft.format(discunt), 11) + "\n");
+//                    }
 
                     mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
                     mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);

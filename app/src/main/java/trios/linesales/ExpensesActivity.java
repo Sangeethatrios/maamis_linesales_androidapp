@@ -158,44 +158,44 @@ public class ExpensesActivity extends AppCompatActivity {
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
        //Set Curent date
-        getexpenselistdate = preferenceMangr.pref_getString("getformatdate");
-        expenseslistdate.setText(preferenceMangr.pref_getString("getcurrentdatetime"));
+        getexpenselistdate = preferenceMangr.pref_getString("schedule_datevalue");
+        expenseslistdate.setText(preferenceMangr.pref_getString("schedule_datevalue"));
 
-        expenseslistdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String vardate = "";
-                        String getmonth="";
-                        String getdate="";
-                        monthOfYear = monthOfYear + 1;
-                        if (dayOfMonth < 10) {
-                            vardate = "0" + dayOfMonth;
-                            getdate = "0" + dayOfMonth;
-                        } else {
-                            vardate = String.valueOf(dayOfMonth);
-                            getdate = String.valueOf(dayOfMonth);
-                        }
-                        if (monthOfYear < 10) {
-                            vardate = vardate + "-" + "0" + monthOfYear;
-                            getmonth = "0" + monthOfYear;;
-                        } else {
-                            vardate = vardate +"-" + monthOfYear;
-                            getmonth = String.valueOf(monthOfYear);;
-                        }
-                        vardate = vardate + "-" + year;
-                        getexpenselistdate = year+ "-"+getmonth+"-"+getdate;
-                        expenseslistdate.setText(vardate );
-                        GetExpensesList();
-
-                    }
-                };
-                DatePickerDialog dpDialog = new DatePickerDialog(context, listener, year, month, day);
-                dpDialog.show();
-            }
-        });
+//        expenseslistdate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+//                    @Override
+//                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//                        String vardate = "";
+//                        String getmonth="";
+//                        String getdate="";
+//                        monthOfYear = monthOfYear + 1;
+//                        if (dayOfMonth < 10) {
+//                            vardate = "0" + dayOfMonth;
+//                            getdate = "0" + dayOfMonth;
+//                        } else {
+//                            vardate = String.valueOf(dayOfMonth);
+//                            getdate = String.valueOf(dayOfMonth);
+//                        }
+//                        if (monthOfYear < 10) {
+//                            vardate = vardate + "-" + "0" + monthOfYear;
+//                            getmonth = "0" + monthOfYear;;
+//                        } else {
+//                            vardate = vardate +"-" + monthOfYear;
+//                            getmonth = String.valueOf(monthOfYear);;
+//                        }
+//                        vardate = vardate + "-" + year;
+//                        getexpenselistdate = year+ "-"+getmonth+"-"+getdate;
+//                        expenseslistdate.setText(vardate );
+//                        GetExpensesList();
+//
+//                    }
+//                };
+//                DatePickerDialog dpDialog = new DatePickerDialog(context, listener, year, month, day);
+//                dpDialog.show();
+//            }
+//        });
 
         //Swipe menu editior functionality
         SwipeMenuCreator creator = new SwipeMenuCreator() {
