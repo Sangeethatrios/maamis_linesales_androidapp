@@ -103,4 +103,13 @@ public class Constants {
     public static final int STORAGE_PERMISSION_ANDROID_14 = 1003;
     public static final int BLUETOOTH_PERMISSION_ANDROID_12_AND_ABOVE = 1004;
 
+    public static final String SYNC_TYPE_SYNCALL = "syncall";
+    public static final String SYNC_TYPE_ITEM = "item";
+    public static final String SYNC_TYPE_CUSTOMER = "customer";
+    public static final String SYNC_TYPE_SCHEDULEVANSTOCK = "schedulevanstock";
+    public static final String SYNC_TYPE_TRANSACTION = "transaction";
+    public static final String SYNC_TYPE_SALESCASH = "salescash";
+    public static final String SYNC_TYPE_SCHEME = "scheme";
+
+
 }

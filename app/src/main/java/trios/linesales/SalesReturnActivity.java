@@ -76,10 +76,10 @@ public class SalesReturnActivity extends AppCompatActivity implements View.OnCli
     public  static TextView txtcustomername,txtareaname,totalcartitems,txtsalesdate;
     String[] AreaCode,AreaName,AreaNameTamil,NoOfKm,CityCode,CityName,CustomerCount;
     String[] SubGroupCode,SubGroupName,SubGroupNameTamil;
-    String[] CustomerCode,CustomerName,CustomerNameTamil,Address,CustomerAreaCode,MobileNo,TelephoneNo,GSTN,SchemeApplicable,customertypecode
+    String[] CustomerCode,CustomerCategory,CustomerName,CustomerNameTamil,Address,CustomerAreaCode,MobileNo,TelephoneNo,GSTN,SchemeApplicable,customertypecode
             ,Customerbillcount;
     Dialog areadialog,customerdialog,routedialog;
-    static public String  customercode="",gstnnumber="",
+    static public String  customercode="",customercategory = "",gstnnumber="",
             getschemeapplicable="",getstaticsubcode="" ;
     ArrayList<SalesItemDetails> salesitems = new ArrayList<SalesItemDetails>();
     ArrayList<SalesItemDetails> freeitems = new ArrayList<SalesItemDetails>();
@@ -562,6 +562,7 @@ public class SalesReturnActivity extends AppCompatActivity implements View.OnCli
                     LoginActivity.getareacode = String.valueOf(AreaCode[position]);
                     txtcustomername.setText("");
                     customercode = "0";
+                    customercategory = "0";
                     gstnnumber = "";
                     getschemeapplicable = "";
                     togglegstin.setBackgroundColor(getResources().getColor(R.color.graycolor));
@@ -624,6 +625,7 @@ public class SalesReturnActivity extends AppCompatActivity implements View.OnCli
             Cur = objdatabaseadapter.GetCustomerDB(areacode,Constants.CUSTOMER_CATEGORY_BOTH);
             if(Cur.getCount()>0) {
                 CustomerCode = new String[Cur.getCount()];
+                CustomerCategory = new String[Cur.getCount()];
                 CustomerName = new String[Cur.getCount()];
                 CustomerNameTamil = new String[Cur.getCount()];
                 Address = new String[Cur.getCount()];
@@ -646,6 +648,7 @@ public class SalesReturnActivity extends AppCompatActivity implements View.OnCli
                     SchemeApplicable[i] = Cur.getString(10);
                     customertypecode[i] = Cur.getString(11);
                     Customerbillcount[i]=Cur.getString(15);
+                    CustomerCategory[i]=Cur.getString(Cur.getColumnIndex("CustomerCategory"));
                     Cur.moveToNext();
                 }
 
@@ -781,6 +784,7 @@ public class SalesReturnActivity extends AppCompatActivity implements View.OnCli
                 public void onClick(View v) {
                     txtcustomername.setText(String.valueOf(CustomerNameTamil[position]));
                     customercode = CustomerCode[position];
+                    customercategory = CustomerCategory[position];
                     gstnnumber = GSTN[position];
                     getschemeapplicable = SchemeApplicable[position];
                     if(gstnnumber.equals("")||gstnnumber.equals(null)||gstnnumber.equals("0")){
@@ -975,7 +979,7 @@ public class SalesReturnActivity extends AppCompatActivity implements View.OnCli
             objdatabaseadapter = new DataBaseAdapter(context);
             objdatabaseadapter.open();
             lv_sales_items.setAdapter(null);
-            Cur = objdatabaseadapter.GetItemsDBSalesReturn(itemsubgroupcode,preferenceMangr.pref_getString("getroutecode"),LoginActivity.getareacode);
+            Cur = objdatabaseadapter.GetItemsDBSalesReturn(itemsubgroupcode,preferenceMangr.pref_getString("getroutecode"),LoginActivity.getareacode,customercategory);
             salesitems.clear();
             if(Cur.getCount()>0) {
                 for(int i=0;i<Cur.getCount();i++){

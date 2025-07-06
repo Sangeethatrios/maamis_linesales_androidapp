@@ -181,7 +181,7 @@ public class ReturnReviewActivity extends AppCompatActivity {
             //Get Booking No.
             objdatabaseadapter1 = new DataBaseAdapter(context);
             objdatabaseadapter1.open();
-            getbookingno = objdatabaseadapter1.GetBookingNoSalesReturn();
+            getbookingno = objdatabaseadapter1.GetBookingNoSalesReturn(preferenceMangr.pref_getString("schedule_datevalue"));
             gettransactionno = objdatabaseadapter1.GetTransactionNoSalesReturn();
             txtbookingno.setText("BK.No. : "+getbookingno);
 

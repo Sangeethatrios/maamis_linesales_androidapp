@@ -526,9 +526,13 @@ public class DataBaseAdapter
         return mCur;
     }
     //Get Booking No
-    public String GetBookingNo()
+    public String GetBookingNo(String getdate)
     {
         Cursor mCur = null;
+
+        String[] dateParts = getdate.split(" to ");
+        String fromDate = convertToSQLiteFormat(dateParts[0]);
+        String toDate = convertToSQLiteFormat(dateParts[1]);
         try{
             String Gencode= GenCreatedDate();
          /*   String sql ="select  case when (select Count(*) from tblsales)=0 then case when " +
@@ -541,7 +545,7 @@ public class DataBaseAdapter
                     " and datetime(billdate)= datetime('"+Gencode+"'); ";*/
             String sql ="select   coalesce(max(bookingno),0)+1  " +
                     "  as bookingno from tblsales as  a where financialyearcode='"+ preferenceMangr.pref_getString("getfinanceyrcode") +"'" +
-                    " and datetime(billdate)= datetime('"+Gencode+"'); ";
+                    " and date(billdate) BETWEEN  date('"+fromDate+"') AND date('"+toDate+"'); ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -555,9 +559,13 @@ public class DataBaseAdapter
     }
 
     //Get Booking No
-    public String GetSalesOrderBookingNo()
+    public String GetSalesOrderBookingNo(String getdate)
     {
         Cursor mCur = null;
+
+        String[] dateParts = getdate.split(" to ");
+        String fromDate = convertToSQLiteFormat(dateParts[0]);
+        String toDate = convertToSQLiteFormat(dateParts[1]);
         try{
             String Gencode= GenCreatedDate();
           /*  String sql ="select  case when (select Count(*) from tblsalesorder)=0 then case when " +
@@ -570,7 +578,7 @@ public class DataBaseAdapter
                     " and datetime(billdate)= datetime('"+Gencode+"'); ";*/
             String sql ="select   coalesce(max(bookingno),0)+1  " +
                     "  as bookingno from tblsalesorder as  a where financialyearcode='"+preferenceMangr.pref_getString("getfinanceyrcode") +"'" +
-                    " and datetime(billdate)= datetime('"+Gencode+"'); ";
+                    " and datetime(billdate) BETWEEN  date('"+fromDate+"') AND date('"+toDate+"'); ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -1775,7 +1783,7 @@ public class DataBaseAdapter
         return mCur;
     }
     //Get Items Sales Return
-    public Cursor GetSalesOrderItemDB(String itemsubgroupcode,String getroutecode,String getareacode)
+    public Cursor GetSalesOrderItemDB(String itemsubgroupcode,String getroutecode,String getareacode,String getcustomercategory)
     {
         Cursor mCur = null;
         try{
@@ -1824,9 +1832,9 @@ public class DataBaseAdapter
                     "a.allowpriceedit,a.allownegativestock,a.allowdiscount, '0' as stockqty," +
                     "(Select unitname  from tblunitmaster where unitcode=a.unitcode) as unitname," +
                     "coalesce((Select noofdecimals from tblunitmaster where unitcode=a.unitcode),0) as noofdecimals," +
-                    "coalesce((select oldorderprice from tblitempricelisttransaction where itemcode=a.itemcode " +
+                    "coalesce((select oldorderprice from tblitempricelisttransaction where itemcode=a.itemcode AND customertype = " + getcustomercategory + " " +
                     "order by autonum desc limit 1),0) as oldorderprice,coalesce((select newprice from tblitempricelisttransaction" +
-                    " where itemcode=a.itemcode order by autonum desc limit 1),0) as neworderprice," +
+                    " where itemcode=a.itemcode AND customertype = " + getcustomercategory + " order by autonum desc limit 1),0) as neworderprice," +
                     "CASE WHEN itemtype=2 then (SELECT freeitemcolor from tblgeneralsettings) else coalesce((select colourcode " +
                     "from tblcompanymaster where companycode=a.companycode),'#000000') END as colourcode,coalesce(c.hsn,'') " +
                     "as hsn,coalesce(c.tax,'') as tax,(select allowpriceedit from tblroutedetails where routecode='"+getroutecode+"' and areacode='"+getareacode+"')" +
@@ -6191,7 +6199,7 @@ public class DataBaseAdapter
         return mCur;
     }
     //Get Items Sales Return
-    public Cursor GetItemsDBSalesReturn(String itemsubgroupcode,String getroutecode,String getareacode)
+    public Cursor GetItemsDBSalesReturn(String itemsubgroupcode,String getroutecode,String getareacode,String getcustomercategory)
     {
         Cursor mCur = null;
         try{
@@ -6201,9 +6209,9 @@ public class DataBaseAdapter
                     "a.allowpriceedit,a.allownegativestock,a.allowdiscount, (sum(b.op)+sum(b.inward)-sum(b.outward)) as stockqty," +
                     "(Select unitname  from tblunitmaster where unitcode=a.unitcode) as unitname," +
                     "coalesce((Select noofdecimals from tblunitmaster where unitcode=a.unitcode),0) as noofdecimals," +
-                    "coalesce((select oldprice from tblitempricelisttransaction where itemcode=a.itemcode " +
+                    "coalesce((select oldprice from tblitempricelisttransaction where itemcode=a.itemcode  AND customertype = " + getcustomercategory + " " +
                     "order by autonum desc limit 1),0) as oldprice,coalesce((select newprice from tblitempricelisttransaction" +
-                    " where itemcode=a.itemcode order by autonum desc limit 1),0) as newprice,CASE WHEN itemtype=2 then" +
+                    " where itemcode=a.itemcode AND customertype = " + getcustomercategory + " order by autonum desc limit 1),0) as newprice,CASE WHEN itemtype=2 then" +
                     " (SELECT freeitemcolor from tblgeneralsettings) else coalesce((select colourcode " +
                     "from tblcompanymaster where companycode=a.companycode),'#000000') END as colourcode,coalesce(c.hsn,'') " +
                     "as hsn,coalesce(c.tax,'') as tax,(select allowpriceedit from tblroutedetails where routecode='"+getroutecode+"' and areacode='"+getareacode+"')" +
@@ -6255,9 +6263,12 @@ public class DataBaseAdapter
     }
 
     //Get Booking No Sales Return
-    public String GetBookingNoSalesReturn()
+    public String GetBookingNoSalesReturn(String getdate)
     {
         Cursor mCur = null;
+        String[] dateParts = getdate.split(" to ");
+        String fromDate = convertToSQLiteFormat(dateParts[0]);
+        String toDate = convertToSQLiteFormat(dateParts[1]);
         try{
             String Gencode= GenCreatedDate();
             /*String sql ="select  case when (select Count(*) from tblsalesreturn)=0 then case when " +
@@ -6272,7 +6283,7 @@ public class DataBaseAdapter
                     " and datetime(billdate)= datetime('"+Gencode+"') ; ";*/
             String sql ="select   coalesce(max(bookingno),0)+1  " +
                     "  as bookingno from tblsalesreturn as  a where financialyearcode='"+preferenceMangr.pref_getString("getfinanceyrcode") +"'" +
-                    " and datetime(billdate)= datetime('"+Gencode+"'); ";
+                    " and datetime(billdate)  BETWEEN  date('"+fromDate+"') AND date('"+toDate+"'); ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -12665,9 +12676,8 @@ if(schemeitem.equals("yes")){
                                         "'" + obj.getString("makerid") + "','" + obj.getString("createddate") + "','" + obj.getString("updateddate") + "'" +
                                         ",'" + obj.getString("bookingno") + "','" + obj.getString("financialyearcode") + "','"+obj.getString("vancode")+"'" +
                                         ",2,'" + obj.getString("ratediscount") + "','" +obj.getString("schemeapplicable")+ "','"+obj.getString("orgprice")+"'" +
-                                        ",'"+obj.getString("schemeitem")+"','"+obj.getString("budget_utilize")+"' )";
+                                        ",'"+obj.getString("schemeitem")+"','"+obj.getString("budget_utilize")+"','"+obj.getString("schemedisc")+"' )";
                                 mDb.execSQL(sql);
-
 
                             } catch (JSONException ex) {
                                 insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));

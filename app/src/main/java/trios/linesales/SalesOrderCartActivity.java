@@ -239,7 +239,7 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
             //Get Booking No.
             objdatabaseadapter = new DataBaseAdapter(context);
             objdatabaseadapter.open();
-            getbookingno = objdatabaseadapter.GetSalesOrderBookingNo();
+            getbookingno = objdatabaseadapter.GetSalesOrderBookingNo(preferenceMangr.pref_getString("schedule_datevalue"));
             getsalessordervoucherno = objdatabaseadapter.GetSalesOrderVoucherNo(getbookingno, preferenceMangr.pref_getString("getfinanceyrcode") ,getbilltypecode);
             gettransactionno = objdatabaseadapter.GetSalesOrderTransactionNo();
             txtbookingno.setText("Order.No. : "+getsalessordervoucherno);

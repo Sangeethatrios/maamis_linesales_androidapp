@@ -275,7 +275,7 @@ public class ReviewActivity extends AppCompatActivity {
                 //Get Booking No.
                 objdatabaseadapter = new DataBaseAdapter(context);
                 objdatabaseadapter.open();
-                getbookingno = objdatabaseadapter.GetBookingNo();
+                getbookingno = objdatabaseadapter.GetBookingNo(preferenceMangr.pref_getString("schedule_datevalue"));
                 gettransactionno = objdatabaseadapter.GetTransactionNo();
                 txtbookingno.setText("BK.No. : "+getbookingno);
 
@@ -1696,7 +1696,7 @@ public class ReviewActivity extends AppCompatActivity {
                         obj.put("schemeapplicable", schemeapplicable);
                         obj.put("orgprice", mCursalesitems.getString(25));
                         obj.put("budget_utilize", mCursalesitems.getString(mCursalesitems.getColumnIndex("budget_utilize")));
-
+                        obj.put("schemedisc", mCursalesitems.getString(mCursalesitems.getColumnIndex("schemedisc")));
                         js_array3.put(obj);
                         mCursalesitems.moveToNext();
                     }

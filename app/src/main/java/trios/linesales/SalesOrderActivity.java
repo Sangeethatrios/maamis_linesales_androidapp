@@ -91,10 +91,10 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
     String[] AreaCode,AreaName,AreaNameTamil,NoOfKm,CityCode,CityName,CustomerCount;
 
     String[] SubGroupCode,SubGroupName,SubGroupNameTamil;
-    String[] CustomerCode,CustomerName,CustomerNameTamil,Address,CustomerAreaCode,MobileNo,
+    String[] CustomerCode,CustomerCategory,CustomerName,CustomerNameTamil,Address,CustomerAreaCode,MobileNo,
             TelephoneNo,GSTN,SchemeApplicable,customertypecode,CustomerCityName,CustomerAreaName,CustomerTotalOrder,Customerbillcount;
     Dialog areadialog,customerdialog,routedialog;
-    static public String  customercode="",gstnnumber="",
+    static public String  customercode="",customercategory = "",gstnnumber="",
             getschemeapplicable="",getstaticsubcode="",getstaticchilditemcode="",getstaticgetchildqty="";
     public static ArrayList<SalesOrderItemDetails> salesitems = new ArrayList<SalesOrderItemDetails>();
     ArrayList<SalesOrderItemDetails> freeitems = new ArrayList<SalesOrderItemDetails>();
@@ -931,6 +931,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
             Cur = objdatabaseadapter.GetCustomerDB(areacode,Constants.CUSTOMER_CATEGORY_ORDER);
             if(Cur.getCount()>0) {
                 CustomerCode = new String[Cur.getCount()];
+                CustomerCategory = new String[Cur.getCount()];
                 CustomerName = new String[Cur.getCount()];
                 CustomerNameTamil = new String[Cur.getCount()];
                 Address = new String[Cur.getCount()];
@@ -959,6 +960,8 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                     CustomerCityName[i] = Cur.getString(13);
                     CustomerTotalOrder[i]=Cur.getString(14);
                     Customerbillcount[i]=Cur.getString(15);
+                    CustomerCategory[i]=Cur.getString(Cur.getColumnIndex("CustomerCategory"));
+
                     Cur.moveToNext();
                 }
 
@@ -1109,7 +1112,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
             objdatabaseadapter = new DataBaseAdapter(context);
             objdatabaseadapter.open();
             lv_sales_items.setAdapter(null);
-            Cur = objdatabaseadapter.GetSalesOrderItemDB(itemsubgroupcode,preferenceMangr.pref_getString("getroutecode"),LoginActivity.getareacode);
+            Cur = objdatabaseadapter.GetSalesOrderItemDB(itemsubgroupcode,preferenceMangr.pref_getString("getroutecode"),LoginActivity.getareacode,customercategory);
             salesitems.clear();
             if(Cur.getCount()>0) {
                 for(int i=0;i<Cur.getCount();i++){
@@ -2836,6 +2839,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                                     public void onClick(DialogInterface dialog, int id) {
                                         txtcustomername.setText("");
                                         customercode = "0";
+                                        customercategory = "0";
                                         gstnnumber = "";
                                         getschemeapplicable = "";
                                         togglegstin.setBackgroundColor(getResources().getColor(R.color.graycolor));
@@ -2866,6 +2870,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                     }else{
                         txtcustomername.setText("");
                         customercode = "0";
+                        customercategory = "0";
                         gstnnumber = "";
                         getschemeapplicable = "";
                         togglegstin.setBackgroundColor(getResources().getColor(R.color.graycolor));
@@ -3007,6 +3012,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                 public void onClick(View v) {
                     txtcustomername.setText(String.valueOf(CustomerNameTamil[position]));
                     customercode = CustomerCode[position];
+                    customercategory = CustomerCategory[position];
                     gstnnumber = GSTN[position];
                     getschemeapplicable = SchemeApplicable[position];
                     customercityname = CustomerCityName[position];

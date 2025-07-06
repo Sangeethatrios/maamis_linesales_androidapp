@@ -122,6 +122,8 @@ public class SyncActivity extends AppCompatActivity {
             public void onClick(View view) {
                 networkstate = isNetworkAvailable();
                 if (networkstate == true) {
+
+                    new AsyncServer().execute("");
                     new AsyncSyncItemandPriceDetails().execute();
                 }else{
                     Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
@@ -3343,6 +3345,7 @@ public class SyncActivity extends AppCompatActivity {
                     obj.put("schemeapplicable", schemeapplicable);
                     obj.put("orgprice", mCursalesitems.getString(25));
                     obj.put("budget_utilize", mCursalesitems.getString(mCursalesitems.getColumnIndex("budget_utilize")));
+                    obj.put("schemedisc", mCursalesitems.getString(mCursalesitems.getColumnIndex("schemedisc")));
 
                     js_array3.put(obj);
                     mCursalesitems.moveToNext();

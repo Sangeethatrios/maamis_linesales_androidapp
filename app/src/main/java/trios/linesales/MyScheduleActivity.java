@@ -744,30 +744,62 @@ public class MyScheduleActivity extends AppCompatActivity   {
                             //Order item details
                             objdatabaseadapter = new DataBaseAdapter(context);
                             objdatabaseadapter.open();
-                            String getresult="";
                             if(!getschedulecode.equals("")) {
 
                                 String getschedulecodevalue = objdatabaseadapter.GetOrderScheduleCode();
 
                                 if(!getschedulecodevalue.equals("")&& !getschedulecodevalue.equals("null")
                                         && !getschedulecodevalue.equals(null) && !getschedulecodevalue.equals("0")){
-                                    networkstate = isNetworkAvailable();
-                                    if (networkstate == true) {
-                                        // new AsyncCheckPreviousDaySchedule().execute();
-                                        new AsyncSyncCheckVanStockVerification().execute();
-                                    }else{
-                                        Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
-                                        toast.setGravity(Gravity.CENTER, 0, 0);
-                                        toast.show();
-                                        return;
-                                    }
-                                }else {
-                                    networkstate = isNetworkAvailable();
-                                    if (networkstate == true) {
-                                        new AsyncSyncCheckDeliveryNote().execute();
 
-                                    }else{
-                                        Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
+                                    if(preferenceMangr.pref_getString("getbusiness_type").equals("2")) {
+                                        String getresult = objdatabaseadapter.InsertSchduleStarttime(getschedulecode);
+                                        if (getresult.equals("success")) {
+                                            hideLoader();
+                                            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.schedulestart), Toast.LENGTH_LONG);
+                                            toast.setGravity(Gravity.CENTER, 0, 0);
+                                            toast.show();
+
+                                        }
+                                        GetScheduleList();
+                                        ScheduleActivity.getsalesschedulecode = getschedulecode;
+                                        preferenceMangr.pref_putString("getsalesschedulecode",getschedulecode);
+
+                                        networkstate = isNetworkAvailable();
+                                        if (networkstate == true) {
+                                            // new AsyncScheduleDetails().execute();
+                                            new AsyncStartScheduleDetails().execute();
+                                        }
+                                    }
+                                    else{
+                                        networkstate = isNetworkAvailable();
+                                        if (networkstate == true) {
+                                            // new AsyncCheckPreviousDaySchedule().execute();
+                                            new AsyncSyncCheckVanStockVerification().execute();
+                                        }else{
+                                            Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
+                                            toast.setGravity(Gravity.CENTER, 0, 0);
+                                            toast.show();
+                                            return;
+                                        }
+                                    }
+
+
+                                }else {
+
+                                    if(!preferenceMangr.pref_getString("getbusiness_type").equals("2")) {
+                                        networkstate = isNetworkAvailable();
+                                        if (networkstate == true) {
+                                            new AsyncSyncCheckDeliveryNote().execute();
+
+                                        } else {
+                                            Toast toast = Toast.makeText(getApplicationContext(), "Please check internet connection", Toast.LENGTH_LONG);
+                                            toast.setGravity(Gravity.CENTER, 0, 0);
+                                            toast.show();
+                                            return;
+                                        }
+                                    }
+                                    else{
+                                        Toast toast = Toast.makeText(getApplicationContext(),"Schedule not yet created for this device", Toast.LENGTH_LONG);
                                         toast.setGravity(Gravity.CENTER, 0, 0);
                                         toast.show();
                                         return;
