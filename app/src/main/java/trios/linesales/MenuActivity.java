@@ -558,6 +558,8 @@ public class MenuActivity extends AppCompatActivity {
                     preferenceMangr.pref_putString("getroutename",getschedulelist.getString(4));
                     preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
                     preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
+
+                    preferenceMangr.pref_putString("schedule_datevalue", getschedulelist.getString(getschedulelist.getColumnIndex("datevalues")));
                 }
                 //Get Cash close Count
                 getcashclosecount = objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));
@@ -2210,6 +2212,7 @@ public class MenuActivity extends AppCompatActivity {
                     obj.put("customertypecode", mCur2.getString(22));
                     obj.put("whatsappno", mCur2.getString(24));
                     obj.put("mobilenoverificationstatus", mCur2.getString(25));
+                    obj.put("categorycode", mCur2.getString(mCur2.getColumnIndex("categorycode")));
 
                     js_array2.put(obj);
                     mCur2.moveToNext();
@@ -2504,6 +2507,7 @@ public class MenuActivity extends AppCompatActivity {
                     obj.put("customertypecode", mCur2.getString(22));
                     obj.put("whatsappno", mCur2.getString(24));
                     obj.put("mobilenoverificationstatus", mCur2.getString(25));
+                    obj.put("categorycode", mCur2.getString(mCur2.getColumnIndex("categorycode")));
                     js_array4.put(obj);
                     mCur2.moveToNext();
                 }
@@ -3584,6 +3588,7 @@ public class MenuActivity extends AppCompatActivity {
                     obj.put("customertypecode", mCur2.getString(22));
                     obj.put("whatsappno", mCur2.getString(24));
                     obj.put("mobilenoverificationstatus", mCur2.getString(25));
+                    obj.put("categorycode", mCur2.getString(mCur2.getColumnIndex("categorycode")));
 
                     js_array4.put(obj);
                     mCur2.moveToNext();

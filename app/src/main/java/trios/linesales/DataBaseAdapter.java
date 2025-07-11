@@ -511,7 +511,10 @@ public class DataBaseAdapter
             String Gencode= GenCreatedDate();
             String sql ="select schedulecode,routecode,(select routename from tblroute where routecode=a.routecode) as routename," +
                     " tripadvance,(select routenametamil from tblroute where routecode=a.routecode) as routenametamil," +
-                    " (select capacity from tblvehiclemaster where vehiclecode=a.vehiclecode) as capacity,COALESCE(budget,0) AS budget from " +
+                    " (select capacity from tblvehiclemaster where vehiclecode=a.vehiclecode) as capacity,COALESCE(budget,0) AS budget ," +
+                    "(STRFTIME('%d-%m-%Y', scheduledate) || '  ' || 'to'|| '  ' || " +
+                    " COALESCE(STRFTIME('%d-%m-%Y', scheduletodate), '')) AS datevalues " +
+                    "from " +
                     " tblsalesschedule as a where  vancode='"+ preferenceMangr.pref_getString("getvancode") +"'" +
                     " and  (datetime('"+Gencode+"') BETWEEN scheduledate AND scheduletodate) ORDER BY scheduledate DESC ";
             mCur = mDb.rawQuery(sql, null);
@@ -526,7 +529,7 @@ public class DataBaseAdapter
         return mCur;
     }
     //Get Booking No
-    public String GetBookingNo(String getdate)
+    public String GetBookingNo(String getdate,String schedulecode)
     {
         Cursor mCur = null;
 
@@ -545,7 +548,7 @@ public class DataBaseAdapter
                     " and datetime(billdate)= datetime('"+Gencode+"'); ";*/
             String sql ="select   coalesce(max(bookingno),0)+1  " +
                     "  as bookingno from tblsales as  a where financialyearcode='"+ preferenceMangr.pref_getString("getfinanceyrcode") +"'" +
-                    " and date(billdate) BETWEEN  date('"+fromDate+"') AND date('"+toDate+"'); ";
+                    " and date(billdate) BETWEEN  date('"+fromDate+"') AND date('"+toDate+"') and schedulecode = '"+schedulecode+"'; ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -559,7 +562,7 @@ public class DataBaseAdapter
     }
 
     //Get Booking No
-    public String GetSalesOrderBookingNo(String getdate)
+    public String GetSalesOrderBookingNo(String getdate,String schedulecode)
     {
         Cursor mCur = null;
 
@@ -578,7 +581,7 @@ public class DataBaseAdapter
                     " and datetime(billdate)= datetime('"+Gencode+"'); ";*/
             String sql ="select   coalesce(max(bookingno),0)+1  " +
                     "  as bookingno from tblsalesorder as  a where financialyearcode='"+preferenceMangr.pref_getString("getfinanceyrcode") +"'" +
-                    " and datetime(billdate) BETWEEN  date('"+fromDate+"') AND date('"+toDate+"'); ";
+                    " and date(billdate) BETWEEN  date('"+fromDate+"') AND date('"+toDate+"') and schedulecode = '"+schedulecode+"' ; ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -1013,7 +1016,7 @@ public class DataBaseAdapter
             }
             String sql ="select distinct a.areacode,areaname,areanametamil,noofkm,a.citycode,c.citynametamil," +
                     " (select coalesce(count(*),0) as count from tblcustomer as b where areacode=a.areacode " +
-                    " and "+getbusinesstype+") as customercount " +
+                    " and "+getbusinesstype+" and status='Active') as customercount " +
                     "from tblareamaster as a inner join tblroutedetails as b on a.areacode=b.areacode  " +
                     "inner join tblcitymaster as c on c.citycode=a.citycode where routecode='"+routecode+"' " +
                     "and a.status='"+statusvar+"' and c.status='"+statusvar+"' order by cast(b.areaserialno as integer) asc ";
@@ -1095,7 +1098,7 @@ public class DataBaseAdapter
                     " '0' as citycode,'' as citynametamil,'0' as customercount,'0' as areaserialno  " +
                     " union all " +
                     " select * from(select distinct a.areacode,areaname,areanametamil,noofkm,a.citycode,c.citynametamil," +
-                    " (select coalesce(count(*),0) as count from tblcustomer where areacode=a.areacode and "+getbusinesstype+") as customercount," +
+                    " (select coalesce(count(*),0) as count from tblcustomer where areacode=a.areacode and "+getbusinesstype+" and status='Active') as customercount," +
                     " cast(areaserialno as integer) as areaserialno  " +
                     "from tblareamaster as a inner join tblroutedetails as b on a.areacode=b.areacode  " +
                     "inner join tblcitymaster as c on c.citycode=a.citycode where routecode='"+routecode+"' " +
@@ -1119,7 +1122,7 @@ public class DataBaseAdapter
             String sql ="select '0' as areacode,'All Areas' as areaname,'All Areas' as areanametamil," +
                     " '0' as noofkm,'0' as citycode,'' as citynametamil,'' as customercount union all" +
                     " select distinct a.areacode,areaname,areanametamil,noofkm,a.citycode,c.citynametamil," +
-                    " (select coalesce(count(*),0) as count from tblcustomer where areacode=a.areacode) as customercount " +
+                    " (select coalesce(count(*),0) as count from tblcustomer where areacode=a.areacode and status='Active' ) as customercount " +
                     "from tblareamaster as a inner join tblroutedetails as b on a.areacode=b.areacode  " +
                     "inner join tblcitymaster as c on c.citycode=a.citycode where routecode='"+routecode+"' " +
                     "and a.status='"+statusvar+"' and c.status='"+statusvar+"' ";
@@ -1156,7 +1159,7 @@ public class DataBaseAdapter
                     "and a.status='"+statusvar+"' and c.status='"+statusvar+"' order by areanametamil ";*/
 
             String sql ="select distinct a.areacode,areaname,areanametamil,noofkm,a.citycode,c.cityname," +
-                    " (select coalesce(count(*),0) as count from tblcustomer where areacode=a.areacode and  "+getbusinesstype+") as customercount " +
+                    " (select coalesce(count(*),0) as count from tblcustomer where areacode=a.areacode and  "+getbusinesstype+" and status='Active' ) as customercount " +
                     " from tblareamaster as a " +
                     " inner join tblroutedetails as b on a.areacode=b.areacode  " +
                     " inner join tblcitymaster as c on c.citycode=a.citycode " +
@@ -1196,7 +1199,6 @@ public class DataBaseAdapter
         }catch (Exception ex){
             insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
         }
-
         return mCur;
     }
     //Get item group
@@ -1636,7 +1638,7 @@ public class DataBaseAdapter
                     "where type='receipt'  and vancode='"+ vancode +"' and companycode='"+ companycode +"' and " +
                     " financialyearcode='"+ financialyearcode +"')" +
                     " end  ,'"+ companycode +"','"+ vancode +"','"+ customercode +"','"+ schedulecode +"'," +
-                    " '"+ receiptremarkscode +"','"+ receiptmode +"','"+ chequerefno +"'," +
+                    " 1,'"+ receiptmode +"','"+ chequerefno +"'," +
                     "'"+ amount +"','1',datetime('now', 'localtime'),'"+ financialyearcode +"','1'," +
                     "'"+ note +"',0,'"+getcurtime+"','"+chequebankname+"','"+chequedate+"','"+ upitransactionID + "'," +
                     " '"+ venderid +"', 'Receipt')";
@@ -2691,7 +2693,7 @@ public class DataBaseAdapter
     {
         Cursor mCur = null;
         try{
-            String sql ="  SELECT billno,substr((SELECT customernametamil FROM tblcustomer WHERE customercode = a.customercode),1,50) as customertamil,\n" +
+            String sql ="  SELECT billno,substr((SELECT customernametamil FROM tblcustomer WHERE customercode = a.customercode),1,50) as customertamil, " +
                     " grandtotal,cashpaidstatus,CASE WHEN cashpaidstatus = 'yes' then grandtotal ELSE CASE WHEN " +
                     "cashpaidstatus = 'upi' THEN (SELECT amount FROM tblreceipt WHERE voucherno= a.billno AND" +
                     " financialyearcode = a.financialyearcode and type = 'Sales' AND receiptmode='Cash') ELSE 0 END " +
@@ -5081,8 +5083,8 @@ public class DataBaseAdapter
                         " aadharno,gstin,schemeapplicable,coalesce(customertypecode,'1'),areanametamil,citynametamil," +
                         " (select count(*) from tblsalesorder where status = '1' and flag<>3 and flag<>6 and customercode=a.customercode) as orderCount " +
                         ""+billqry+",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt ," +
-                        "(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 ) AS daywisesalesamt," +
-                        "(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' AND    flag<>3 ) AS billwisebudget, " +
+                        "(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 AND    flag<>6 ) AS daywisesalesamt," +
+                        "(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' AND    flag<>3 AND    flag<>6) AS billwisebudget, " +
                         " COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude" +
                         " from tblcustomer" +
                         " as a inner join tblareamaster as b on a.areacode=b.areacode inner join tblcitymaster as c " +
@@ -5100,7 +5102,7 @@ public class DataBaseAdapter
                 sql = "select * from (select customercode,customername,customernametamil,address,a.areacode,emailid,mobileno,telephoneno," +
                         " aadharno,gstin,schemeapplicable,coalesce(customertypecode,'1'),areanametamil,citynametamil," +
                         " (select count(*) from tblsalesorder where status = '1' and flag<>3 and flag<>6 and customercode=a.customercode) as orderCount" +
-                        ""+ billqry + ",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt,(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 ) AS daywisesalesamt,(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3  ) AS billwisebudget, COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude from tblcustomer " +
+                        ""+ billqry + ",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt,(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 AND    flag<>6) AS daywisesalesamt,(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3  AND    flag<>6) AS billwisebudget, COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude from tblcustomer " +
                         " as a inner join tblareamaster as b on a.areacode=b.areacode inner join tblcitymaster as c on b.citycode=c.citycode" +
                         " where a.areacode = '" + areacode + "' and a.status='" + statusvar + "' and (business_type='1' or business_type='3') " +
                         " order by customernametamil" +
@@ -5121,7 +5123,7 @@ public class DataBaseAdapter
                 sql = "select * from (select customercode,customername,customernametamil,address,a.areacode,emailid,mobileno,telephoneno," +
                         " aadharno,gstin,schemeapplicable,coalesce(customertypecode,'1'),areanametamil,citynametamil," +
                         " (select count(*) from tblsalesorder where status = '1' and flag<>3 and flag<>6 and customercode=a.customercode) as orderCount " +
-                        ""+billqry+",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt,(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 ) AS daywisesalesamt,(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3 ) AS billwisebudget, COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude  from" +
+                        ""+billqry+",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt,(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 AND    flag<>6 ) AS daywisesalesamt,(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3 AND    flag<>6) AS billwisebudget, COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude  from" +
                         " tblcustomer as a inner join tblareamaster as b on a.areacode=b.areacode inner " +
                         " join tblcitymaster as c on b.citycode=c.citycode where a.areacode = '" + areacode + "' and" +
                         " a.status='" + statusvar + "' and " + varBusinessType +
@@ -5991,7 +5993,7 @@ public class DataBaseAdapter
         return gettripadvance;
     }
     //Get Expense List
-    public Cursor GetExpenseListDB(String getdate)
+    public Cursor GetExpenseListDB(String getdate,String schedulecode)
     {
         Cursor mCur = null;
         String[] dateParts = getdate.split(" to ");
@@ -6005,7 +6007,7 @@ public class DataBaseAdapter
                     "schedulecode " +
                     "FROM tblexpenses AS a " +
                     "WHERE DATE(transactiondate) BETWEEN '" + fromDate + "' AND '" + toDate + "' " +
-                    "AND (flag = 1 OR flag = 2)";
+                    "AND (flag = 1 OR flag = 2) and schedulecode = '"+schedulecode+"' ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -6263,7 +6265,7 @@ public class DataBaseAdapter
     }
 
     //Get Booking No Sales Return
-    public String GetBookingNoSalesReturn(String getdate)
+    public String GetBookingNoSalesReturn(String getdate,String schedulecode)
     {
         Cursor mCur = null;
         String[] dateParts = getdate.split(" to ");
@@ -6283,7 +6285,7 @@ public class DataBaseAdapter
                     " and datetime(billdate)= datetime('"+Gencode+"') ; ";*/
             String sql ="select   coalesce(max(bookingno),0)+1  " +
                     "  as bookingno from tblsalesreturn as  a where financialyearcode='"+preferenceMangr.pref_getString("getfinanceyrcode") +"'" +
-                    " and datetime(billdate)  BETWEEN  date('"+fromDate+"') AND date('"+toDate+"'); ";
+                    " and date(billdate)  BETWEEN  date('"+fromDate+"') AND date('"+toDate+"') and schedulecode = '"+schedulecode+"'; ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -8682,14 +8684,14 @@ if(schemeitem.equals("yes")){
                     "address,areacode,emailid,mobileno,telephoneno,aadharno,gstin," +
                     " status,makerid,createddate,updateddate,latitude,longitude,flag,schemeapplicable," +
                     "uploaddocument,refno,business_type,customertypecode,whatsappno," +
-                    "mobilenoverificationstatus) " +
+                    "mobilenoverificationstatus,categorycode) " +
                     " select coalesce(max(autonum),0)+1 ,'" + generatecustomercode + "',('" + getcustomername.replaceAll("'","''") + "')," +
                     "('" + getcustomernametamil.replaceAll("'","''") + "'),'" + getaddress + "'," +
                     " '"+getareacode+"','"+getemailid+"','" + getmobileno + "','" +gettelephoneno+ "'" +
                     " ,'"+getaadharno+"','"+getgstin+"','Active',0,datetime('now', 'localtime')," +
-                    "datetime('now', 'localtime'),'" + latitude + "','" + longtitude + "',1,'no','','"+getmaxcustomercode+"','"+getbusinesstype+"'," +
+                    "datetime('now', 'localtime'),'" + latitude + "','" + longtitude + "',1,'no','','"+getmaxcustomercode+"',3," +
                     "'"+getcustomertypecode+"','"+getwhatsappno+"'," +
-                    "'"+mobilenoverificationstatus+"' from tblcustomer";
+                    "'"+mobilenoverificationstatus+"',3 from tblcustomer";
             mDb.execSQL(sql);
         }catch (Exception ex){
             insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
@@ -8788,14 +8790,12 @@ if(schemeitem.equals("yes")){
 
             String sql="";
             getdate = GenCreatedDate();
-            sql = " select b.companycode,f.companyname, f.companynametamil, f.shortname, f.street, f.area, f.mobileno, " +
-                    " f.gstin, f.city, f.telephone, f.panno, f.pincode  " +
+            sql = " select b.companycode  " +
                     " from " +
                     " tblstocktransaction as a inner join tblitemmaster as b on " +
-                    " a.itemcode=b.itemcode inner join tblunitmaster as c on b.unitcode=c.unitcode " +
-                    " inner join tblitemsubgroupmaster as d on  d.itemsubgroupcode=b.itemsubgroupcode " +
-                    " inner join tblbrandmaster as e on b.brandcode=e.brandcode  inner join tblcompanymaster as f on f.companycode=b.companycode " +
-                    " where "+getcompanycode+" and  "+getitemtype+" and "+getitemsubgroupcode+" and a.flag!=3  "  +
+                    " a.itemcode=b.itemcode  " +
+                    " inner join tblcompanymaster as f on f.companycode=b.companycode " +
+                    " where "+getcompanycode+" and a.flag!=3  "  +
                     " group by b.companycode order by b.companycode desc ";
             //parentcode,itemorder,b.itemname
 
@@ -8844,36 +8844,121 @@ if(schemeitem.equals("yes")){
 
             String sql="";
             getdate = GenCreatedDate();
-            sql = " select  * from  (select b.itemnametamil,c.unitname,coalesce((select Sum(op)+Sum(inward)-sum(outward)" +
-                    " from tblstocktransaction where itemcode=a.itemcode " +
-                    " and datetime(transactiondate)<datetime('" + getdate + "') and flag!=3),0) as op," +
-                    " coalesce((select Sum(inward) from tblstocktransaction where itemcode=a.itemcode " +
-                    " and datetime(transactiondate)=datetime('" + getdate + "')  and flag!=3 ),0) as inward, " +
-                    " coalesce((select Sum(outward) from tblstocktransaction where itemcode=a.itemcode " +
-                    " and datetime(transactiondate)=datetime('" + getdate + "') and type!='sales' and  type!='salescancel'  and flag!=3  ),0) as outward," +
-                    " coalesce((select sum(op)+sum(inward)-sum(outward) from tblstocktransaction" +
-                    " where itemcode=a.itemcode " +
-                    " and datetime(transactiondate)<=datetime('" + getdate + "')  and flag!=3 ),0) as closing,c.noofdecimals," +
-                    " case when parentitemcode=0 then b.itemcode else b.parentitemcode " +
-                    " end as parentcode,case when itemcategory='parent' then 1 else  2 end as itemorder," +
-                    " d.itemsubgroupname,e.brandname," +
-                    " CASE WHEN itemtype=2 then (SELECT freeitemcolor from tblgeneralsettings) else " +
-                    "coalesce((Select colourcode from tblcompanymaster where companycode=b.companycode),'#000000') END as colourcode," +
-                    " coalesce((select Sum(outward) from tblstocktransaction where itemcode=a.itemcode " +
-                    " and datetime(transactiondate)=datetime('" + getdate + "') and (type='sales' or type='salescancel') and flag!=3 ),0) as sales " +
-                    " from " +
-                    " tblstocktransaction as a inner join tblitemmaster as b on " +
-                    " a.itemcode=b.itemcode inner join tblunitmaster as c on b.unitcode=c.unitcode " +
-                    " inner join tblitemsubgroupmaster as d on  d.itemsubgroupcode=b.itemsubgroupcode " +
-                    " inner join tblbrandmaster as e on b.brandcode=e.brandcode " +
-                    " where "+getcompanycode+" and "+getitemtype+" and "+getitemsubgroupcode+" and a.flag!=3  "  +
-                    " group by b.itemname,c.unitname" +
-                    " order by b.itemtype,d.itemgroupcode,d.itemsubgroupcode,e.brandname,b.itemcategory desc,itemnametamil ) as dev where dev.op!=0 " +
-                    " or dev.inward!=0 or dev.outward!=0 or dev.sales!=0";
+            sql =  "WITH schedule_range AS (" +
+                    "  SELECT " +
+                    "    DATE(scheduledate) AS start_date,  " +
+                    "    DATE(scheduletodate) AS end_date  " +
+                    "  FROM tblsalesschedule  " +
+                    "  WHERE DATE('" + getdate + "') BETWEEN DATE(scheduledate) AND DATE(scheduletodate)  " +
+                    "  LIMIT 1  " +
+                    ")  " +
+                    "SELECT *  " +
+                    "FROM (  " +
+                    "  SELECT   " +
+                    "    b.itemnametamil,  " +
+                    "    c.unitname,  " +
+                    "    coalesce((  " +
+                    "      SELECT  " +
+                    "  SUM(opening) AS opening  " +
+                    "FROM (  " +
+                    "  SELECT  " +
+                    "    SUM(op) + SUM(inward) - SUM(outward) AS opening  " +
+                    "  FROM tblstocktransaction, schedule_range  " +
+                    "  WHERE  " +
+                    "    itemcode = a.itemcode  " +
+                    "    AND DATE(transactiondate) < DATE(schedule_range.start_date)  " +
+                    "    AND flag != 3 AND flag != 6 " +
+                    "  " +
+                    "  UNION ALL  " +
+                    "  SELECT  " +
+                    "    SUM(op) + SUM(inward) AS opening  " +
+                    "  FROM tblstocktransaction, schedule_range  " +
+                    "  WHERE  " +
+                    "    DATE('" + getdate + "') != DATE(schedule_range.start_date)  " +
+                    "    AND itemcode = a.itemcode  " +
+                    "    AND DATE(transactiondate) BETWEEN DATE(schedule_range.start_date) AND DATE('" + getdate + "', '-1 day')  " +
+                    "    AND flag != 3 AND flag != 6  " +
+                    ") AS combined  " +
+                    "    ), 0) AS op,  " +
+                    "    coalesce((  " +
+                    "      SELECT SUM(inward)  " +
+                    "      FROM tblstocktransaction  " +
+                    "      WHERE itemcode = a.itemcode  " +
+                    "        AND DATE(transactiondate) = DATE('" + getdate + "')  " +
+                    "        AND flag != 3  " +
+                    "    ), 0) AS inward,  " +
+                    "    coalesce((  " +
+                    "      SELECT SUM(outward)  " +
+                    "      FROM tblstocktransaction, schedule_range  " +
+                    "      WHERE itemcode = a.itemcode  " +
+                    "        AND DATE(transactiondate) BETWEEN schedule_range.start_date AND DATE('" + getdate + "')  " +
+                    "        AND type NOT IN ('sales', 'salescancel')  " +
+                    "        AND flag != 3 AND flag != 6 " +
+                    "    ), 0) AS outward,  " +
+                    "    coalesce((  " +
+                    "      SELECT SUM(op) + SUM(inward) - SUM(outward)  " +
+                    "      FROM tblstocktransaction  " +
+                    "      WHERE itemcode = a.itemcode  " +
+                    "        AND DATE(transactiondate) <= DATE('" + getdate + "')  " +
+                    "        AND flag != 3 AND flag != 6  " +
+                    "    ), 0) AS closing,  " +
+                    "    c.noofdecimals," +
+                    "    CASE   " +
+                    "      WHEN parentitemcode = 0 THEN b.itemcode   " +
+                    "      ELSE b.parentitemcode   " +
+                    "    END AS parentcode,  " +
+                    "    CASE   " +
+                    "      WHEN itemcategory = 'parent' THEN 1   " +
+                    "      ELSE 2   " +
+                    "    END AS itemorder,  " +
+                    "  " +
+                    "    d.itemsubgroupname,  " +
+                    "    e.brandname,  " +
+                    "    CASE   " +
+                    "      WHEN itemtype = 2 THEN (  " +
+                    "        SELECT freeitemcolor FROM tblgeneralsettings  " +
+                    "      )  " +
+                    "      ELSE coalesce((  " +
+                    "        SELECT colourcode   " +
+                    "        FROM tblcompanymaster   " +
+                    "        WHERE companycode = b.companycode  " +
+                    "      ), '#000000')  " +
+                    "    END AS colourcode,  " +
+                    "    coalesce((  " +
+                    "      SELECT SUM(outward)  " +
+                    "      FROM tblstocktransaction, schedule_range  " +
+                    "      WHERE itemcode = a.itemcode  " +
+                    "        AND DATE(transactiondate) BETWEEN schedule_range.start_date AND DATE('" + getdate + "')  " +
+                    "        AND type IN ('sales', 'salescancel')  " +
+                    "        AND flag != 3 AND flag != 6 " +
+                    "    ), 0) AS sales, b.itemcode  " +
+                    "  FROM tblstocktransaction AS a  " +
+                    "  INNER JOIN tblitemmaster AS b ON a.itemcode = b.itemcode  " +
+                    "  INNER JOIN tblunitmaster AS c ON b.unitcode = c.unitcode  " +
+                    "  INNER JOIN tblitemsubgroupmaster AS d ON d.itemsubgroupcode = b.itemsubgroupcode  " +
+                    "  INNER JOIN tblbrandmaster AS e ON b.brandcode = e.brandcode  " +
+                    "  " +
+                    "  WHERE "+getcompanycode+" and "+getitemtype+" and "+getitemsubgroupcode+" AND  a.flag NOT IN (3, 6)  " +
+                    "  " +
+                    "  GROUP BY b.itemcode   " +
+                    "  ORDER BY   " +
+                    "    b.itemtype,  " +
+                    "    d.itemgroupcode,  " +
+                    "    d.itemsubgroupcode,  " +
+                    "    e.brandname,  " +
+                    "    b.itemcategory DESC,  " +
+                    "    b.itemnametamil,  " +
+                    "    b.itemcode  " +
+                    ") AS dev  " +
+                    "  " +
+                    "WHERE dev.op != 0   " +
+                    "   OR dev.inward != 0   " +
+                    "   OR dev.outward != 0   " +
+                    "   OR dev.sales != 0;";
             //parentcode,itemorder,b.itemname
 
             mCur = mDb.rawQuery(sql, null);
-            if (mCur.getCount() > 0)
+            if (mCur != null && mCur.getCount() > 0)
             {
                 mCur.moveToFirst();
             }
@@ -9911,6 +9996,10 @@ if(schemeitem.equals("yes")){
                                             "annualsalesamt = '"+obj.getString("annualamount")+"' "+
                                             " WHERE customercode='" + obj.getString("customercode")+"' ";
                                     mDb.execSQL(sql1);
+                                    if(obj.getString("mobileno").equals("9025097211"))
+                                    {
+                                        Log.e( "synccustomer: ",sql1 );
+                                    }
 
                                 }
                             }
@@ -9932,7 +10021,7 @@ if(schemeitem.equals("yes")){
                                         "uploaddocument='" + obj.getString("uploaddocument")+"' ," +
                                         " gstinverificationstatus =  '" + obj.getString("gstinverificationstatus")+"'," +
                                         " customertypecode='"+obj.getString("customertypecode")+"', " +
-                                        " business_type='"+obj.getString("business_type")+"'  " +
+                                        " business_type='"+obj.getString("business_type")+"',  " +
                                         " gstinverificationstatus =  '" + obj.getString("gstinverificationstatus")+"', " +
                                         " mobilenoverificationstatus =  '" + obj.getString("mobilenoverificationstatus")+"', " +
                                         " whatsappno =  '" + obj.getString("whatsappno")+"', " +
@@ -9940,6 +10029,10 @@ if(schemeitem.equals("yes")){
                                         "erpitemcode = '"+obj.getString("erpitemcode")+"'," +
                                         "annualsalesamt = '"+obj.getString("annualamount")+"' "+
                                         " WHERE customercode='" + obj.getString("customercode")+"' ";
+                                if(obj.getString("mobileno").equals("9025097211"))
+                                {
+                                    Log.e( "synccustomer: ",sql1 );
+                                }
                                          mDb.execSQL(sql1);
                             }
                         } catch (JSONException ex) {
@@ -13201,9 +13294,9 @@ if(schemeitem.equals("yes")){
     {
         Cursor mCur=null;
         try{
-            String sql ="select vancode,(select vanname from tblvanmaster where vancode=a.vancode) as vanname,\n" +
-                    "employeecode,(select employeenametamil from tblemployeemaster where employeecode=a.employeecode) as employeename,\n" +
-                    "drivercode, (select employeenametamil from tblemployeemaster where employeecode=a.drivercode) as drivername,helpername\n" +
+            String sql ="select vancode,(select vanname from tblvanmaster where vancode=a.vancode) as vanname, " +
+                    "employeecode,(select employeenametamil from tblemployeemaster where employeecode=a.employeecode) as employeename, " +
+                    "drivercode, (select employeenametamil from tblemployeemaster where employeecode=a.drivercode) as drivername,helpername " +
                     " from tblsalesschedule as a where schedulecode='"+getschedulecode+"'  ; ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
@@ -13218,7 +13311,7 @@ if(schemeitem.equals("yes")){
     }
 
     //Get Sales bills for print
-    public Cursor GetSalesPrint(String gettransactionno,String getfinancialyrcode)
+    public Cursor GetSalesPrint(String gettransactionno,String getfinancialyrcode,String companyCode)
     {
         Cursor mCur=null;
         try{
@@ -13237,7 +13330,7 @@ if(schemeitem.equals("yes")){
                     " inner join tblareamaster as f on f.areacode = d.areacode "+
                     " inner join tblcitymaster as g on g.citycode = f.citycode "+
                     " inner join tblstatemaster as h on h.gststatecode = g.statecode "+
-                    "where a.transactionno='"+gettransactionno+"' and a.financialyearcode='"+getfinancialyrcode+"' ; ";
+                    "where a.transactionno='"+gettransactionno+"' and a.financialyearcode='"+getfinancialyrcode+"' and a.companycode='"+companyCode+"' ; ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -14721,7 +14814,7 @@ if(schemeitem.equals("yes")){
     {
         String getsalesperson = "0";
         try{
-            String sql ="SELECT (select employeename from tblemployeemaster where employeecode=a.employeecode) as salespersonname  from tblsalesschedule as a\n" +
+            String sql ="SELECT (select employeename from tblemployeemaster where employeecode=a.employeecode) as salespersonname  from tblsalesschedule as a " +
                     "where schedulecode = '"+getschedulecode+"' ";
             Cursor mCur = mDb.rawQuery(sql, null);
 
@@ -14844,6 +14937,7 @@ if(schemeitem.equals("yes")){
             String Gencode= GenCreatedDate();
             mDb = mDbHelper.getReadableDatabase();
             String getcurtime = GetDateTime();
+
 
 
             String sqlc = "select  count(*) from tblreceipt " ;
@@ -15503,26 +15597,28 @@ if(schemeitem.equals("yes")){
         return scheduleDate;
     }
 
-    public Cursor GetCompanyDetailsForPrint() {
+    public Cursor GetCompanyDetailsForPrint(String companycode) {
         Cursor mCur =null;
         try{
+            String vancode = preferenceMangr.pref_getString("getvancode");
 
             String sql = " SELECT b.companycode,f.companyname, f.companynametamil, f.shortname, f.street, f.area, " +
                     " f.gstin, f.city, f.telephone,  f.mobileno,f.panno, f.pincode," +
                     " (select statename from tblstatemaster as aa where aa.gststatecode=f.gststatecode ) as compstatename," +
                     " f.gststatecode as compgststatecode, g.vanname,f.fssaino " +
-                    " FROM tblstocktransaction as a " +
-                    " inner join tblitemmaster as b on a.itemcode=b.itemcode " +
+                    " FROM tblitemmaster as b " +
                     " inner join tblunitmaster as c on b.unitcode=c.unitcode " +
                     " inner join tblitemsubgroupmaster as d on  d.itemsubgroupcode=b.itemsubgroupcode " +
                     " inner join tblbrandmaster as e on b.brandcode=e.brandcode " +
                     " inner join tblcompanymaster as f on f.companycode=b.companycode " +
-                    " inner join tblvanmaster as g on a.vancode=g.vancode " +
-                    " WHERE a.flag!=3  "  +
+                    " inner join tblvanmaster as g on g.vancode='" +  vancode + "' " +
+                    " WHERE  b.companycode='" + companycode + "' " +
                     " GROUP BY b.companycode " +
-                    " ORDER BY b.companycode desc ";
+                    " ORDER BY b.companycode desc ;";
 
             mCur = mDb.rawQuery(sql, null);
+
+            Log.e(  "getAllCompanyCodeForCustomer: ",sql);
             if (mCur.getCount() > 0)
             {
                 mCur.moveToFirst();
@@ -15556,6 +15652,9 @@ if(schemeitem.equals("yes")){
                     " AND a.status='Active' " +
                     " ORDER BY itemtype,c.itemgroupcode, c.itemsubgroupcode, d.brandname,a.itemcategory desc";
 
+
+            Log.e(  "getAllCompanyCodeForCustomer: ",sql);
+
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0) {
                 mCur.moveToFirst();
@@ -15564,6 +15663,46 @@ if(schemeitem.equals("yes")){
             insertErrorLog(ex.toString(), this.getClass().getSimpleName(), "Exception in GetCsutomerTypeWiseItemDetailsForPrint : " + String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
         }
 
+        return mCur;
+    }
+
+    public Cursor getAllCompanyCodeForBill(String transactionno, String financialyearcode) {
+        Cursor mCur=null;
+        Cursor mCur2=null;
+        try{
+            String getscheduledate="";
+            String sql ="SELECT distinct companycode from tblsales where transactionno='" + transactionno + "' " +
+                    "and financialyearcode='" + financialyearcode + "' order by companycode asc;";
+
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog(ex.toString(), this.getClass().getSimpleName() + " - getexcessfreeitemqty", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+        return mCur;
+    }
+
+    public Cursor getAllCompanyCodeForCustomer( String customerCode) {
+        Cursor mCur=null;
+        Cursor mCur2=null;
+        try{
+            String sql ="SELECT DISTINCT   (companycode) FROM tblcustomer AS a  inner join  " +
+                    " tblitempricelisttransaction as f on  a.categorycode=f.customertype WHERE customercode = '"+customerCode+"' order by companycode asc;";
+
+            mCur = mDb.rawQuery(sql, null);
+
+            Log.e(  "getAllCompanyCodeForCustomer: ",sql);
+
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog(ex.toString(), this.getClass().getSimpleName() + " - getexcessfreeitemqty", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
         return mCur;
     }
 

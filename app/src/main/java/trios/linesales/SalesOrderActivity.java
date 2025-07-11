@@ -3325,6 +3325,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                         obj.put("customertypecode", mCur2.getString(22));
                         obj.put("whatsappno", mCur2.getString(24));
                         obj.put("mobilenoverificationstatus", mCur2.getString(25));
+                        obj.put("categorycode", mCur2.getString(mCur2.getColumnIndex("categorycode")));
                         js_array2.put(obj);
                         mCur2.moveToNext();
                     }

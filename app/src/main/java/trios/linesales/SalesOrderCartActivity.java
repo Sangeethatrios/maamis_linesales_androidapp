@@ -239,7 +239,7 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
             //Get Booking No.
             objdatabaseadapter = new DataBaseAdapter(context);
             objdatabaseadapter.open();
-            getbookingno = objdatabaseadapter.GetSalesOrderBookingNo(preferenceMangr.pref_getString("schedule_datevalue"));
+            getbookingno = objdatabaseadapter.GetSalesOrderBookingNo(preferenceMangr.pref_getString("schedule_datevalue"),preferenceMangr.pref_getString("getsalesschedulecode"));
             getsalessordervoucherno = objdatabaseadapter.GetSalesOrderVoucherNo(getbookingno, preferenceMangr.pref_getString("getfinanceyrcode") ,getbilltypecode);
             gettransactionno = objdatabaseadapter.GetSalesOrderTransactionNo();
             txtbookingno.setText("Order.No. : "+getsalessordervoucherno);
@@ -1037,6 +1037,7 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
                         obj.put("customertypecode", mCur2.getString(22));
                         obj.put("whatsappno", mCur2.getString(24));
                         obj.put("mobilenoverificationstatus", mCur2.getString(25));
+                        obj.put("categorycode", mCur2.getString(mCur2.getColumnIndex("categorycode")));
                         js_array4.put(obj);
                         mCur2.moveToNext();
                     }

@@ -1104,14 +1104,14 @@ public class ReceiptActivity extends AppCompatActivity {
                             return;
                         }
 
-                        if(remarks.equals("") || remarks.equals(null)
-                                || remarks.equals("") ||  remarks.equals(null)){
-                            Toast toast = Toast.makeText(getApplicationContext(),"Please select remarks", Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
-                           // Toast.makeText(getApplicationContext(),"Please select remarks",Toast.LENGTH_SHORT).show();
-                            return;
-                        }
+//                        if(remarks.equals("") || remarks.equals(null)
+//                                || remarks.equals("") ||  remarks.equals(null)){
+//                            Toast toast = Toast.makeText(getApplicationContext(),"Please select remarks", Toast.LENGTH_LONG);
+//                            toast.setGravity(Gravity.CENTER, 0, 0);
+//                            toast.show();
+//                           // Toast.makeText(getApplicationContext(),"Please select remarks",Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
 
                         if(amount.equals("") || amount.equals(null)
                                 || amount.equals("null") || amount.equals(".") ){
@@ -1168,13 +1168,25 @@ public class ReceiptActivity extends AppCompatActivity {
                                 return;
                             }
                         }
+                        String recAmt = String.valueOf(amount);
+                        String[] totalAmt = (recAmt.replace(".","_").split("_"));
+                        double gettotalamount= Double.parseDouble(recAmt);
+                        if (totalAmt.length > 0 && totalAmt.length == 2){
+                            double billDecValu = Double.parseDouble(totalAmt[1]);
+                            if (billDecValu >= 50) {
+                                gettotalamount = Math.ceil(gettotalamount);
+                            } else {
+                                gettotalamount = Math.round(gettotalamount);
+                            }
+                        } else
+                            gettotalamount = Math.round(gettotalamount);
 
                         //Save receipt details
                         objdatabaseadapter = new DataBaseAdapter(context);
                         objdatabaseadapter.open();
                         getreceipttransano=objdatabaseadapter.insertReceipt(receiptdate,companycode,vancode,
                                 customercode,schedulecode,receiptremarkscode,receiptmode,
-                                chequerefno,amount,financialyearcode,note,chequebankname,
+                                chequerefno,String.valueOf(gettotalamount),financialyearcode,note,chequebankname,
                                 chequedate,venderid,upitransactionID);
                         if(!getreceipttransano.equals("") && !getreceipttransano.equals("null")
                             && !getreceipttransano.equals(null) && !getreceipttransano.equals("0")){
@@ -4106,9 +4118,22 @@ public class ReceiptActivity extends AppCompatActivity {
                                         preferenceMangr.pref_getString("getvancode"),"UPI",txtupiamount.getText().toString(),
                                         finalGetfinanicialyear, getpaymentvenderID,txtupitransactionID.getText().toString(),finalGetsalestransactionno);
 
+                                String recAmt = String.valueOf(txtcashamount.getText().toString());
+                                String[] totalAmt = (recAmt.replace(".","_").split("_"));
+                               double gettotalamount= Double.parseDouble(recAmt);
+                                if (totalAmt.length > 0 && totalAmt.length == 2){
+                                    double billDecValu = Double.parseDouble(totalAmt[1]);
+                                    if (billDecValu >= 50) {
+                                        gettotalamount = Math.ceil(gettotalamount);
+                                    } else {
+                                        gettotalamount = Math.round(gettotalamount);
+                                    }
+                                } else
+                                    gettotalamount = Math.round(gettotalamount);
+
                                 if (!txtcashamount.getText().toString().equals("0")) {
                                     getresult = finalObjdatabaseadapter.insertSalesReceipt(finalGetCompanycode,
-                                            preferenceMangr.pref_getString("getvancode"),"Cash",txtcashamount.getText().toString(),
+                                            preferenceMangr.pref_getString("getvancode"),"Cash",String.valueOf(gettotalamount) ,
                                             finalGetfinanicialyear, "0","",finalGetsalestransactionno);
                                 }
                                 if (getresult.equals("success")) {

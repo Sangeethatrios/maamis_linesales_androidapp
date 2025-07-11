@@ -117,7 +117,7 @@ public class EpsonT20Printer implements ReceiveListener {
             try {
                 mPrinter.disconnect();
                 if (mReceiveListener != null)
-                    mReceiveListener.onPtrReceive(null, 0, null, null);
+                    mReceiveListener.onPtrReceive(null, 0, null, "Success");
                 break;
             } catch (final Exception e) {
                 if (e instanceof Epos2Exception) {
@@ -131,7 +131,7 @@ public class EpsonT20Printer implements ReceiveListener {
                         mActivity.runOnUiThread(new Runnable() {
                             public synchronized void run() {
                                 if (mReceiveListener != null)
-                                    mReceiveListener.onPtrReceive(null, 0, null, null);
+                                    mReceiveListener.onPtrReceive(null, 0, null, "Failure");
                             }
                         });
                         break;
@@ -140,7 +140,7 @@ public class EpsonT20Printer implements ReceiveListener {
                     mActivity.runOnUiThread(new Runnable() {
                         public synchronized void run() {
                             if (mReceiveListener != null)
-                                mReceiveListener.onPtrReceive(null, 0, null, null);
+                                mReceiveListener.onPtrReceive(null, 0, null, "Failure");
                         }
                     });
                     break;
@@ -150,7 +150,6 @@ public class EpsonT20Printer implements ReceiveListener {
 
         mPrinter.clearCommandBuffer();
     }
-
     private static final String[] getalphabet = {
             "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
     };
@@ -401,7 +400,7 @@ public class EpsonT20Printer implements ReceiveListener {
     //SAles Print
     @SuppressLint("LongLogTag")
     @SuppressWarnings("rawtypes")
-    public boolean GetSalesBillPrint(String gettransactiono,String getfinancialyearcode,Activity objActivity, boolean printDC) {
+    public boolean GetSalesBillPrint(String gettransactiono,String getfinancialyearcode,Activity objActivity, boolean printDC, String companyCode, String printNetAmount) {
 
         if (mPrinter == null) {
             initializePrinter(objActivity.getApplicationContext());
@@ -420,7 +419,7 @@ public class EpsonT20Printer implements ReceiveListener {
 
             DataBaseAdapter mDbHelper = new DataBaseAdapter(mContext);
             mDbHelper.open();
-            Cursor mCur = mDbHelper.GetSalesPrint(gettransactiono,getfinancialyearcode);
+            Cursor mCur = mDbHelper.GetSalesPrint(gettransactiono,getfinancialyearcode,companyCode);
             Cursor mCurDetails = mDbHelper.GetSalesPaymentVoucherDetailsPrint(gettransactiono,getfinancialyearcode);
 
             jurisdiction = mDbHelper.getjurisdiction();
@@ -900,63 +899,64 @@ public class EpsonT20Printer implements ReceiveListener {
                     // mPrinter.addText(emptylines2);
                     mCur.moveToNext();
                 }
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
-                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
-                mPrinter.addTextFont(Printer.FONT_B);
-                mPrinter.addText("Subject to "+jurisdiction+" Jurisdiction" +"\n");
+                if(printNetAmount.equalsIgnoreCase("yes")){
+                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                    mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+                    mPrinter.addTextFont(Printer.FONT_B);
+                    mPrinter.addText("Subject to "+jurisdiction+" Jurisdiction" +"\n");
 
 
-                Cursor mCur4 = mDbHelper.GetSalesschedulePrint(gettransactiono,getfinancialyearcode,"0");
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
-                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
-                mPrinter.addTextFont(Printer.FONT_C);
-                // mPrinter.addText( mCur4.getString(0) +"/" +mCur4.getString(1) +"/"+ mCur4.getString(2)+"/"+ GenCreatedDate() +"\n");
-                mPrinter.addText( mCur4.getString(1) +"/"+ GenCreatedDate() +"\n");
+                    Cursor mCur4 = mDbHelper.GetSalesschedulePrint(gettransactiono,getfinancialyearcode,"0");
+                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                    mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+                    mPrinter.addTextFont(Printer.FONT_C);
+                    // mPrinter.addText( mCur4.getString(0) +"/" +mCur4.getString(1) +"/"+ mCur4.getString(2)+"/"+ GenCreatedDate() +"\n");
+                    mPrinter.addText( mCur4.getString(1) +"/"+ GenCreatedDate() +"\n");
 
 
-                mPrinter.addTextAlign(Printer.ALIGN_LEFT);
-
-                mPrinter.addTextFont(Printer.FONT_A);
-                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
-                String line_space11 = "--------------------------------";
-                mPrinter.addText(line_space11);
-
-                mPrinter.addTextFont(Printer.FONT_C);
-                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                mPrinter.addText("Concern         Bill No.            Amount" + "\n");
-                double net1=0;
-
-                for(int j=0;j<mCurDetails.getCount();j++) {
-                    mPrinter.addTextFont(Printer.FONT_A);
-                    String SalesDetails = "";
-                    StringBuffer SalesBuffer = new StringBuffer(100);
-                    SalesBuffer.append(SalesDetails);
-
-
-                    SalesBuffer.append(Util.nameLeftValueRightJustifybottomsalesv2(mCurDetails.getString(3), mCurDetails.getString(0),
-                            String.format("%.2f", mCurDetails.getFloat(2)),
-                            32));
-                    SalesDetails = SalesBuffer.toString();
                     mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+
+                    mPrinter.addTextFont(Printer.FONT_A);
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+                    String line_space11 = "--------------------------------";
+                    mPrinter.addText(line_space11);
+
+                    mPrinter.addTextFont(Printer.FONT_C);
                     mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                    mPrinter.addText(SalesDetails + "\n");
-                    net1 = net1+mCurDetails.getFloat(2);
-                    mCurDetails.moveToNext();
-                }
+                    mPrinter.addText("Concern         Bill No.            Amount" + "\n");
+                    double net1=0;
 
-                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
-                String line_space19 = "--------------------------------\n";
-                mPrinter.addText(line_space19);
+                    for(int j=0;j<mCurDetails.getCount();j++) {
+                        mPrinter.addTextFont(Printer.FONT_A);
+                        String SalesDetails = "";
+                        StringBuffer SalesBuffer = new StringBuffer(100);
+                        SalesBuffer.append(SalesDetails);
 
-                String nettotal1 = dft.format(net1);
-                int valuenet1 = (int)net1;
-                mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
-                mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
-                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                mPrinter.addTextFont(Printer.FONT_A);
-                mPrinter.addText(" Net Amount " + " : "+ Util.rightJustify( dft.format(Math.round(net1)),11) + "\n");
+
+                        SalesBuffer.append(Util.nameLeftValueRightJustifybottomsalesv2(mCurDetails.getString(3), mCurDetails.getString(0),
+                                String.format("%.2f", mCurDetails.getFloat(2)),
+                                32));
+                        SalesDetails = SalesBuffer.toString();
+                        mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                        mPrinter.addText(SalesDetails + "\n");
+                        net1 = net1+mCurDetails.getFloat(2);
+                        mCurDetails.moveToNext();
+                    }
+
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+                    String line_space19 = "--------------------------------\n";
+                    mPrinter.addText(line_space19);
+
+                    String nettotal1 = dft.format(net1);
+                    int valuenet1 = (int)net1;
+                    mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+                    mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                    mPrinter.addTextFont(Printer.FONT_A);
+                    mPrinter.addText(" Net Amount " + " : "+ Util.rightJustify( dft.format(Math.round(net1)),11) + "\n");
 
 
 
@@ -973,25 +973,27 @@ public class EpsonT20Printer implements ReceiveListener {
                     mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
                     mPrinter.addText(SalesDetails+"\n");*/
 
-                mPrinter.addTextFont(Printer.FONT_C);
-                mPrinter.addTextAlign(Printer.ALIGN_LEFT);
-                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                String line_spacee = "------------------------------------------\n";
-                mPrinter.addText(line_spacee);
+                    mPrinter.addTextFont(Printer.FONT_C);
+                    mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                    String line_spacee = "------------------------------------------\n";
+                    mPrinter.addText(line_spacee);
 
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n";
-                mPrinter.addText(poweredby);
+                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                    String poweredby ="Powered by www.shivasoftwares.com\n";
+                    mPrinter.addText(poweredby);
 
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String line_spacee1 = "------------------------------------------\n";
-                mPrinter.addText(line_spacee1);
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                mPrinter.addTextFont(Printer.FONT_B);
-                String thankmsg = "         "+preferenceMangr.pref_getString("getwishmsg")+"      \n\n\n";
-                // String thankmsg = "    நன்றி      \n\n\n\n";
-                mPrinter.addText(thankmsg);
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                    String line_spacee1 = "------------------------------------------\n";
+                    mPrinter.addText(line_spacee1);
+                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                    mPrinter.addTextFont(Printer.FONT_B);
+                    String thankmsg = "         "+preferenceMangr.pref_getString("getwishmsg")+"      \n\n\n";
+                    // String thankmsg = "    நன்றி      \n\n\n\n";
+                    mPrinter.addText(thankmsg);
+                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                }
+
 
                 String emptylines1 = "\n";
                 mPrinter.addText(emptylines1);
@@ -6327,7 +6329,7 @@ public class EpsonT20Printer implements ReceiveListener {
         return string.toString();
     }
 
-    public boolean GetCustomerPriceListPrint(String customerCode ,Activity objActivity) {
+    public boolean GetCustomerPriceListPrint(String customerCode,String companycode ,Activity objActivity) {
 
         if (mPrinter == null) {
             initializePrinter(objActivity.getApplicationContext());
@@ -6363,7 +6365,7 @@ public class EpsonT20Printer implements ReceiveListener {
 
             mPrinter.addText(" Price List \n");
 
-            Cursor mCurCompany = objcustomerAdaptor.GetCompanyDetailsForPrint();
+            Cursor mCurCompany = objcustomerAdaptor.GetCompanyDetailsForPrint(companycode);
             if (mCurCompany != null && mCurCompany.getCount() > 0) {
 
                 for (int j = 0; j < mCurCompany.getCount(); j++) {
@@ -6386,7 +6388,7 @@ public class EpsonT20Printer implements ReceiveListener {
                     mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
                     mPrinter.addTextFont(Printer.FONT_B);
 
-                    String companyCityStateDetails = mCurCompany.getString(8) +" - " + mCurCompany.getString(11);
+                    String companyCityStateDetails = mCurCompany.getString(7) +" - " + mCurCompany.getString(11);
 
                     // show statename and gst state code
                     String company_stateNameWithGSTStatecode = "";
@@ -6479,8 +6481,7 @@ public class EpsonT20Printer implements ReceiveListener {
                             SalesBuffer.append(SalesDetails);
 
 
-                            SalesBuffer.append(Util.nameLeftValueRightJustifysalesitem1(mCur.getString(6),"",
-                                    "","",String.format("%.2f",mCur.getFloat(10)),
+                            SalesBuffer.append(Util.nameLeftValueRightJustifycustomeritem(mCur.getString(6),String.format("%.2f",mCur.getFloat(10)),
                                     32));
                             SalesDetails = SalesBuffer.toString();
                             mPrinter.addTextAlign(Printer.ALIGN_LEFT);
@@ -6490,6 +6491,7 @@ public class EpsonT20Printer implements ReceiveListener {
                             mCur.moveToNext();
                         }
                     }
+                    mCurCompany.moveToNext();
                 }
 
                 mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);

@@ -105,7 +105,7 @@ public class SyncActivity extends AppCompatActivity {
 
                 networkstate = isNetworkAvailable();
                 if (networkstate == true) {
-                    new AsyncServer().execute();
+                    new AsyncServer().execute(Constants.SYNC_TYPE_SYNCALL);
                 }else{
                     Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
                     //toast.setGravity(Gravity.CENTER, 0, 0);
@@ -123,8 +123,8 @@ public class SyncActivity extends AppCompatActivity {
                 networkstate = isNetworkAvailable();
                 if (networkstate == true) {
 
-                    new AsyncServer().execute("");
-                    new AsyncSyncItemandPriceDetails().execute();
+                    new AsyncServer().execute(Constants.SYNC_TYPE_ITEM);
+
                 }else{
                     Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
                     //toast.setGravity(Gravity.CENTER, 0, 0);
@@ -139,7 +139,8 @@ public class SyncActivity extends AppCompatActivity {
             public void onClick(View view) {
                 networkstate = isNetworkAvailable();
                 if (networkstate == true) {
-                    new AsyncSyncCustomerDetails().execute();
+
+                    new AsyncServer().execute(Constants.SYNC_TYPE_CUSTOMER);
                 }else{
                     Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
                     //toast.setGravity(Gravity.CENTER, 0, 0);
@@ -156,7 +157,8 @@ public class SyncActivity extends AppCompatActivity {
             public void onClick(View view) {
                 networkstate = isNetworkAvailable();
                 if (networkstate == true) {
-                    new AsyncSyncScheduleandVanstockDetails().execute();
+
+                    new AsyncServer().execute(Constants.SYNC_TYPE_SCHEDULEVANSTOCK);
                 }else{
                     Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
                     //toast.setGravity(Gravity.CENTER, 0, 0);
@@ -172,7 +174,8 @@ public class SyncActivity extends AppCompatActivity {
                 networkstate = isNetworkAvailable();
                 //networkstate = true;
                 if (networkstate == true) {
-                    new AsyncSyncTransactionDetails().execute();
+
+                    new AsyncServer().execute(Constants.SYNC_TYPE_TRANSACTION);
                 }else{
                     Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
                     //toast.setGravity(Gravity.CENTER, 0, 0);
@@ -188,7 +191,8 @@ public class SyncActivity extends AppCompatActivity {
                 networkstate = isNetworkAvailable();
                 //networkstate = true;
                 if (networkstate == true) {
-                    new AsyncSchemeDetails().execute();
+
+                    new AsyncServer().execute(Constants.SYNC_TYPE_SCHEME);
                 }else{
                     Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
                     //toast.setGravity(Gravity.CENTER, 0, 0);
@@ -203,7 +207,7 @@ public class SyncActivity extends AppCompatActivity {
             public void onClick(View view) {
                 networkstate = isNetworkAvailable();
                 if (networkstate == true) {
-                    new AsyncSyncSalesCashCloseDetails().execute();
+                    new AsyncServer().execute(Constants.SYNC_TYPE_SALESCASH);
                 }else{
                     Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
                     //toast.setGravity(Gravity.CENTER, 0, 0);
@@ -255,9 +259,10 @@ public class SyncActivity extends AppCompatActivity {
         JSONObject jsonObj = null;
         ProgressDialog loading;
         int code;
+        String syncType = "";
         @Override
         protected String doInBackground(String... params) {
-
+            syncType=params[0];
             String result = "";
             try {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -296,7 +301,7 @@ public class SyncActivity extends AppCompatActivity {
                 loading.dismiss();
                 if(result.equals("success"))
                 {
-                    new AsyncCheckIMEI().execute();
+                    new AsyncCheckIMEI().execute(syncType);
                 }
                 else
                 {
@@ -317,10 +322,11 @@ public class SyncActivity extends AppCompatActivity {
             AsyncTask<String, JSONObject,String> {
         JSONObject jsonObj = null;
         ProgressDialog loading;
+        String synctype="";
         int code;
         @Override
         protected String doInBackground(String... params) {
-
+            synctype=params[0];
             String result = "";
             try {
                 RestAPI api = new RestAPI();
@@ -360,7 +366,30 @@ public class SyncActivity extends AppCompatActivity {
                 loading.dismiss();
                 if(result.equals("1"))
                 {
-                    new AsyncSyncAllDetails().execute();
+                    switch (synctype){
+                        case Constants.SYNC_TYPE_SYNCALL:
+                            new AsyncSyncAllDetails().execute();
+                            break;
+                        case Constants.SYNC_TYPE_ITEM:
+                            new AsyncSyncItemandPriceDetails().execute();
+                            break;
+                        case Constants.SYNC_TYPE_CUSTOMER:
+                            new AsyncSyncCustomerDetails().execute();
+                            break;
+                        case Constants.SYNC_TYPE_SCHEDULEVANSTOCK:
+                            new AsyncSyncScheduleandVanstockDetails().execute();
+                            break;
+                        case Constants.SYNC_TYPE_TRANSACTION:
+                            new AsyncSyncTransactionDetails().execute();
+                            break;
+                        case Constants.SYNC_TYPE_SALESCASH:
+                            new AsyncSyncSalesCashCloseDetails().execute();
+                            break;
+                        case Constants.SYNC_TYPE_SCHEME:
+                            new AsyncSchemeDetails().execute();
+                            break;
+
+                    }
                 }
                 else if(result.equals(""))
                 {
@@ -1156,6 +1185,9 @@ public class SyncActivity extends AppCompatActivity {
                             preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
                             preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
 
+                            preferenceMangr.pref_putString("getmaxbillannualamount",objdatabaseadapter.GetMaxbillAnnualAmount());
+                            preferenceMangr.pref_putString("getmaxbillamount",objdatabaseadapter.GetMaxBillAmount());
+                            preferenceMangr.pref_putString("schedule_datevalue", getschedulelist.getString(getschedulelist.getColumnIndex("datevalues")));
                         }
                         //Get cash close Count
                         MenuActivity.getcashclosecount = objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));
@@ -1557,6 +1589,9 @@ public class SyncActivity extends AppCompatActivity {
                             preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
                             preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
 
+                            preferenceMangr.pref_putString("getmaxbillannualamount",objdatabaseadapter.GetMaxbillAnnualAmount());
+                            preferenceMangr.pref_putString("getmaxbillamount",objdatabaseadapter.GetMaxBillAmount());
+                            preferenceMangr.pref_putString("schedule_datevalue", getschedulelist.getString(getschedulelist.getColumnIndex("datevalues")));
                         }
                         //Get cash close Count
                         MenuActivity.getcashclosecount = objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));
@@ -1774,6 +1809,9 @@ public class SyncActivity extends AppCompatActivity {
                             preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
                             preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
 
+                            preferenceMangr.pref_putString("getmaxbillannualamount",objdatabaseadapter.GetMaxbillAnnualAmount());
+                            preferenceMangr.pref_putString("getmaxbillamount",objdatabaseadapter.GetMaxBillAmount());
+                            preferenceMangr.pref_putString("schedule_datevalue", getschedulelist.getString(getschedulelist.getColumnIndex("datevalues")));
                         }
                         //Get cash close Count
                         MenuActivity.getcashclosecount = objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));
@@ -2116,6 +2154,9 @@ public class SyncActivity extends AppCompatActivity {
                             preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
 
 
+                            preferenceMangr.pref_putString("getmaxbillannualamount",objdatabaseadapter.GetMaxbillAnnualAmount());
+                            preferenceMangr.pref_putString("getmaxbillamount",objdatabaseadapter.GetMaxBillAmount());
+                            preferenceMangr.pref_putString("schedule_datevalue", getschedulelist.getString(getschedulelist.getColumnIndex("datevalues")));
 
                         }
                         //Get cash close Count
@@ -2420,6 +2461,9 @@ public class SyncActivity extends AppCompatActivity {
                             preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
                             preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
 
+                            preferenceMangr.pref_putString("getmaxbillannualamount",objdatabaseadapter.GetMaxbillAnnualAmount());
+                            preferenceMangr.pref_putString("getmaxbillamount",objdatabaseadapter.GetMaxBillAmount());
+                            preferenceMangr.pref_putString("schedule_datevalue", getschedulelist.getString(getschedulelist.getColumnIndex("datevalues")));
                         }
                         //Get cash close Count
                         MenuActivity.getcashclosecount = objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));
@@ -2631,6 +2675,9 @@ public class SyncActivity extends AppCompatActivity {
                             preferenceMangr.pref_putString("getcapacity",getschedulelist.getString(5));
                             preferenceMangr.pref_putString("getschedulebudget",getschedulelist.getString(getschedulelist.getColumnIndex("budget")));
 
+                            preferenceMangr.pref_putString("getmaxbillannualamount",objdatabaseadapter.GetMaxbillAnnualAmount());
+                            preferenceMangr.pref_putString("getmaxbillamount",objdatabaseadapter.GetMaxBillAmount());
+                            preferenceMangr.pref_putString("schedule_datevalue", getschedulelist.getString(getschedulelist.getColumnIndex("datevalues")));
                         }
                         //Get cash close Count
                         MenuActivity.getcashclosecount = objdatabaseadapter.GetCashClose(preferenceMangr.pref_getString("getschedulecode"));
@@ -2907,6 +2954,7 @@ public class SyncActivity extends AppCompatActivity {
                     obj.put("customertypecode", mCur2.getString(22));
                     obj.put("whatsappno", mCur2.getString(24));
                     obj.put("mobilenoverificationstatus", mCur2.getString(25));
+                    obj.put("categorycode", mCur2.getString(mCur2.getColumnIndex("categorycode")));
 
                     js_array2.put(obj);
                     mCur2.moveToNext();
@@ -3226,6 +3274,7 @@ public class SyncActivity extends AppCompatActivity {
                     obj.put("customertypecode", mCur2.getString(22));
                     obj.put("whatsappno", mCur2.getString(24));
                     obj.put("mobilenoverificationstatus", mCur2.getString(25));
+                    obj.put("categorycode", mCur2.getString(mCur2.getColumnIndex("categorycode")));
                     js_array4.put(obj);
                     mCur2.moveToNext();
                 }
@@ -4387,6 +4436,7 @@ public class SyncActivity extends AppCompatActivity {
                     obj.put("customertypecode", mCur2.getString(22));
                     obj.put("whatsappno", mCur2.getString(24));
                     obj.put("mobilenoverificationstatus", mCur2.getString(25));
+                    obj.put("categorycode", mCur2.getString(mCur2.getColumnIndex("categorycode")));
 
                     js_array4.put(obj);
                     mCur2.moveToNext();

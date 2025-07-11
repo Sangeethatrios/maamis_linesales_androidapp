@@ -29,7 +29,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Next Day Requirement "
+                android:text="Next Schedule Requirement "
                 android:layout_marginLeft="@dimen/toolbarmarleft"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"

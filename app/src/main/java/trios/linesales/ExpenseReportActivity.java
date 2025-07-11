@@ -172,7 +172,7 @@ public class ExpenseReportActivity extends AppCompatActivity {
             expenseslist.clear();
             objdatabaseadapter = new DataBaseAdapter(context);
             objdatabaseadapter.open();
-            Cur = objdatabaseadapter.GetExpenseListDB(getexpenselistdate);
+            Cur = objdatabaseadapter.GetExpenseListDB(getexpenselistdate,preferenceMangr.pref_getString("getsalesschedulecode"));
             String gettripadvance = objdatabaseadapter.GetScheduleTripAdavanceDB(getexpenselistdate);
             if(gettripadvance.equals("")){
                 gettripadvance = "0";

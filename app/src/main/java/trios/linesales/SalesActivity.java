@@ -1907,6 +1907,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                         public void onTextChanged(CharSequence s, int start, int before,
                                                   int count) {
                             mHolder.listitemtotal.setEnabled(true);
+//                           *** when the item is already exist in cart and its price was edited then tha cart data delete skiped
                             if (skipAddTextChange) {
                                 skipAddTextChange = false;
                                 return;
@@ -2458,6 +2459,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                            return;
                        }
                         double remainingbudget=0;
+
                         double rowamountwithbudget = Double.parseDouble(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice()))) * Double.parseDouble(mHolder.listitemqty.getText().toString());
                         double rowamountwithoutbudget = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Double.parseDouble(mHolder.listitemqty.getText().toString());
 //                        boolean schemeitem=mHolder.chk_schemeitem.isChecked();
@@ -2512,11 +2514,11 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
 //
 //                            }
                         if( (!(Double.parseDouble(mHolder.listitemqty.getText().toString())>=
-                                Integer.parseInt(mHolder.listitemupp.getText().toString()))
+                                Double.parseDouble(mHolder.listitemupp.getText().toString()))
                                 && (Double.parseDouble(mHolder.labelstock.getText().toString())
                                 <Double.parseDouble(mHolder.listitemqty.getText().toString()))) ||
                                 (!(Double.parseDouble(mHolder.listitemqty.getText().toString())>=
-                                        Integer.parseInt(mHolder.listitemupp.getText().toString()))
+                                        Double.parseDouble(mHolder.listitemupp.getText().toString()))
                                         && (mHolder.labelnilstock.getText().toString()).equals("Nil Stk")) ) {
                             if(salesItemList.get(pos).getItemcategory().equals("child")){
                                 gblitemcount=gblitemcount+1;
@@ -2970,10 +2972,12 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                 if(Double.parseDouble(salesItemList.get(position).getFreecount()) > 0 && (!Utilities.isNullOrEmpty(salesItemList.get(pos).getApplyitemscheme()) && salesItemList.get(pos).getApplyitemscheme().equals("yes"))) {
                                                     itemschemeapplicable = "no";
                                                 }
+                                                double amountwithbudget =0 ,amountwithoutbudget=0;
+                                                if (freeitemstatus!="freerate") {
+                                                     amountwithbudget = Double.parseDouble(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice()))) * Double.parseDouble(mHolder.listitemqty.getText().toString());
 
-                                                double amountwithbudget = Double.parseDouble(dft.format(Double.parseDouble(salesItemList.get(pos).getDumyprice()))) * Double.parseDouble(mHolder.listitemqty.getText().toString());
-
-                                                double amountwithoutbudget = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Double.parseDouble(mHolder.listitemqty.getText().toString());
+                                                     amountwithoutbudget = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Double.parseDouble(mHolder.listitemqty.getText().toString());
+                                                }
 
                                                 if(!schemeitem) {
                                                     if(amountwithbudget == amountwithoutbudget)
@@ -6637,6 +6641,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                         obj.put("customertypecode", mCur2.getString(22));
                         obj.put("whatsappno", mCur2.getString(24));
                         obj.put("mobilenoverificationstatus", mCur2.getString(25));
+                        obj.put("categorycode", mCur2.getString(mCur2.getColumnIndex("categorycode")));
                         js_array2.put(obj);
                         mCur2.moveToNext();
                     }

@@ -2026,7 +2026,7 @@ public class PrintData {
             }
             DataBaseAdapter mDbHelper = new DataBaseAdapter(mContext);
             mDbHelper.open();
-            Cursor mCur = mDbHelper.GetSalesPrint(gettransactiono,getfinancialyearcode);
+            Cursor mCur = mDbHelper.GetSalesPrint(gettransactiono,getfinancialyearcode,"");
             Cursor mCurDetails = mDbHelper.GetSalesPaymentVoucherDetailsPrint(gettransactiono,getfinancialyearcode);
 
             jurisdiction = mDbHelper.getjurisdiction();

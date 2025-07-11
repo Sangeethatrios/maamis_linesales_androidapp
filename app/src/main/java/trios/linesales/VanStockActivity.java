@@ -68,6 +68,10 @@ public class VanStockActivity extends AppCompatActivity {
     public static PreferenceMangr preferenceMangr=null;
     ReceiveListener receiveListener = null;
 
+    ProgressDialog loaderPrint;
+
+    public static ArrayList<String> companyCodeList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -201,7 +205,19 @@ public class VanStockActivity extends AppCompatActivity {
                                         if (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_ON) {
                                             if(!preferenceMangr.pref_getString("SelectedPrinterAddress").equals("")) {
                                                 disablePrintButtons();
-                                                new AsyncPrintVanStockDetails().execute();
+                                                companyCodeList = new ArrayList<>();
+                                                DataBaseAdapter mDbHelper = new DataBaseAdapter(VanStockActivity.this);
+                                                mDbHelper.open();
+                                                Cursor mCur = mDbHelper.getAllCompanyCodeForCustomer(VanStockActivity.getlistcompanycode);
+                                                if (mCur != null && mCur.getCount() >0) {
+                                                    for (int i=0; i<mCur.getCount(); i++) {
+                                                        companyCodeList.add(i, mCur.getString(0));
+                                                        mCur.moveToNext();
+                                                    }
+                                                }
+
+                                                showPrintLoader();
+                                                printBill();
                                                 printpopup.dismiss();
                                             }else{
                                                 Toast toast = Toast.makeText(getApplicationContext(), "Please select the bluetooth printer in app", Toast.LENGTH_LONG);
@@ -717,15 +733,15 @@ public class VanStockActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            loading = ProgressDialog.show(context, "Connecting to printer", "Please wait", true);
-            loading.setCancelable(false);
-            loading.setCanceledOnTouchOutside(false);
+//            loading = ProgressDialog.show(context, "Connecting to printer", "Please wait", true);
+//            loading.setCancelable(false);
+//            loading.setCanceledOnTouchOutside(false);
         }
         @Override
         protected void onPostExecute(Boolean billPrinted) {
             // TODO Auto-generated method stub
             try {
-                loading.dismiss();
+//                loading.dismiss();
                 Log.d("billPrinted 1q",String.valueOf(billPrinted));
                 if (!billPrinted) {
                     Toast toast = Toast.makeText(getApplicationContext(), "Unable to connect Bluetooth Printer. Please check the printer is turn or or not!", Toast.LENGTH_LONG);
@@ -753,5 +769,100 @@ public class VanStockActivity extends AppCompatActivity {
 
     public void disablePrintButtons() {
         print.setEnabled(false);
+    }
+
+
+    public void printBill() {
+        try {
+
+            if (companyCodeList == null || companyCodeList.size() <=0) {
+                hidePrintLoader();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+
+                return;
+            }
+
+            String companycode = companyCodeList.get(0);
+
+            new AsyncPrintVanStockDetails().execute();
+
+        } catch (Exception e) {
+            Log.e("", "Exception in printBill : " + e.getLocalizedMessage());
+            hidePrintLoader();
+//            Toast toast1 = Toast.makeText(getApplicationContext(), "Unable to connect to Bluetooth Printer!", Toast.LENGTH_LONG);
+//            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R)
+//                toast1.setGravity(Gravity.CENTER, 0, 0);
+//            toast1.show();
+            //  Toast.makeText(context, "Unable to connect to Bluetooth Printer!", Toast.LENGTH_SHORT).show();
+            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+            mDbErrHelper.open();
+            String geterrror = e.toString();
+            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName()
+                    + " - Unable to connect bluetooth", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            mDbErrHelper.close();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                }
+            });
+
+        }
+    }
+
+    public void showPrintLoader(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loaderPrint = ProgressDialog.show(context, "Connecting to printer", "Please wait", true);
+                loaderPrint.setCancelable(false);
+                loaderPrint.setCanceledOnTouchOutside(false);
+            }
+        });
+    }
+
+    public void hidePrintLoader(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loaderPrint.dismiss();
+            }
+        });
+    }
+    public void checkAndPrintBill() {
+        try {
+            if (companyCodeList == null && companyCodeList.size() <= 0) {
+                hidePrintLoader();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+                return;
+            }
+            Log.e("", "companyCodeList : firstIndex : " + companyCodeList.get(0));
+            Log.e("", "companyCodeList : length : " + companyCodeList.size());
+
+            companyCodeList.remove(0);
+
+            if (companyCodeList != null && companyCodeList.size() > 0) {
+                Log.e("", "companyCodeList : firstIndex : " + companyCodeList.get(0));
+                Log.e("", "companyCodeList : length : " + companyCodeList.size());
+            }
+            printBill();
+        } catch (Exception e) {
+            hidePrintLoader();
+            Log.e("", "Exception in enablePrintButtons : " + e.getLocalizedMessage());
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                }
+            });
+        }
     }
 }

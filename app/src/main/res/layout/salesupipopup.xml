@@ -359,7 +359,7 @@
                     android:gravity="center|left"
                     android:padding="10dp"
                     android:textColor="@color/black"
-                    android:maxLength="200"
+                    android:maxLength="50"
                     android:textSize="14sp"/>
 
             </LinearLayout>

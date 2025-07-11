@@ -94,7 +94,7 @@ public class VanStockBaseAdapter extends BaseAdapter {
                 getnoofdigits = "000";
             }
 
-            df = new DecimalFormat("0.'"+getnoofdigits+"'");
+            df = new DecimalFormat("0."+getnoofdigits);
             if(getnoofdigits.equals("")) {
                 mHolder.listinward.setText(currentListData.getInward());
             }else{

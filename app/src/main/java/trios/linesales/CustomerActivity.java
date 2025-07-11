@@ -79,6 +79,7 @@ public class CustomerActivity extends AppCompatActivity {
     String[] routecode,routename,routenametamil,routeday;
     String[] AreaCode,AreaName,AreaNameTamil,NoOfKm,CityCode,CityName,CustomerCount;
     public static final String GSTINFORMAT_REGEX = "[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[Z]{1}[0-9a-zA-Z]{1}";
+//    public static final String GSTINFORMAT_REGEX = "^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$";
     public static final String GSTN_CODEPOINT_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     String listcustomercode=""; String listcustomername=""; String listcustomernametamil="";
     String listaddress=""; String listareacode=""; String listmobileno=""; String listtelephoneno="";
@@ -111,8 +112,14 @@ public class CustomerActivity extends AppCompatActivity {
     Spinner selectmobilestatus;
     String[] arrmobilestatus;
     public static String getscheduleroutecode;
+
+    public static String printcustomercode="";
+
     GPSTracker gpsTracker;
 
+    ProgressDialog loaderPrint;
+
+    public static ArrayList<String> companyCodeList = new ArrayList<>();
     BluetoothAdapter mBluetoothAdapter = null;
     ReceiveListener receiveListener = null;
     @Override
@@ -135,7 +142,7 @@ public class CustomerActivity extends AppCompatActivity {
             receiveListener = new ReceiveListener() {
                 @Override
                 public void onPtrReceive(Printer printer, int i, PrinterStatusInfo printerStatusInfo, String s) {
-
+                    checkAndPrintBill();
                 }
             };
         }catch (Exception e){
@@ -733,14 +740,14 @@ public class CustomerActivity extends AppCompatActivity {
                     return;
                 }
 
-                if ( getsalestype.equals("") || getsalestype.equals("null") || getsalestype.equals(null) ||
-                        getsalestypecode.equals("") || getsalestypecode.equals("null") || getsalestypecode.equals(null)) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Please select sales type", Toast.LENGTH_LONG);
-                    //toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
-                    //Toast.makeText(getApplicationContext(), "Please enter Mobile No. or GSTIN", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                if ( getsalestype.equals("") || getsalestype.equals("null") || getsalestype.equals(null) ||
+//                        getsalestypecode.equals("") || getsalestypecode.equals("null") || getsalestypecode.equals(null)) {
+//                    Toast toast = Toast.makeText(getApplicationContext(), "Please select sales type", Toast.LENGTH_LONG);
+//                    //toast.setGravity(Gravity.CENTER, 0, 0);
+//                    toast.show();
+//                    //Toast.makeText(getApplicationContext(), "Please enter Mobile No. or GSTIN", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
 
 
                 btnSaveCustomer.setEnabled(false);
@@ -2030,6 +2037,7 @@ public class CustomerActivity extends AppCompatActivity {
                         obj.put("customertypecode", mCur2.getString(22));
                         obj.put("whatsappno", mCur2.getString(24));
                         obj.put("mobilenoverificationstatus", mCur2.getString(25));
+                        obj.put("categorycode", mCur2.getString(mCur2.getColumnIndex("categorycode")));
 
                         js_array2.put(obj);
                         mCur2.moveToNext();
@@ -2838,12 +2846,26 @@ public void ShowPrintPopUp (String listcustomercode){
             .setCancelable(false)
             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    new AsyncPrintPriceListDetails().execute(listcustomercode);
+
+                    companyCodeList = new ArrayList<>();
+                    DataBaseAdapter mDbHelper = new DataBaseAdapter(CustomerActivity.this);
+                    mDbHelper.open();
+                    Cursor mCur = mDbHelper.getAllCompanyCodeForCustomer(listcustomercode);
+                    printcustomercode = listcustomercode;
+                    if (mCur != null && mCur.getCount() >0) {
+                        for (int i=0; i<mCur.getCount(); i++) {
+                            companyCodeList.add(i, mCur.getString(0));
+                            mCur.moveToNext();
+                        }
+                    }
+
+                    showPrintLoader();
+                    printBill();
+
                 }
             })
             .setNegativeButton("No", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    btnUpdateCustomerLocation.setEnabled(true);
                     dialog.cancel();
                 }
             });
@@ -2855,13 +2877,14 @@ public void ShowPrintPopUp (String listcustomercode){
         Boolean billPrinted = false, deviceFound =false;
         String Getbilltypecode = null;
         JSONObject jsonObj = null;
-        String Customercode;
+        String Customercode,Companycode="";
         String financialyearcode;
         ProgressDialog SalesPrintloading;
 
         @Override
         protected Boolean doInBackground(String... params) {
             Customercode = params[0];
+            Companycode = params[1];
             try {
                 //printData = new PrintData(context);
                 EpsonT20Printer epsonT20Printer = new EpsonT20Printer(CustomerActivity.this, CustomerActivity.this, receiveListener);
@@ -2876,7 +2899,7 @@ public void ShowPrintPopUp (String listcustomercode){
                     //toast.show();
                 } else {
                     Log.d("Begin Print",String.valueOf(deviceFound));
-                    billPrinted = (boolean) epsonT20Printer.GetCustomerPriceListPrint(Customercode,CustomerActivity.this);
+                    billPrinted = (boolean) epsonT20Printer.GetCustomerPriceListPrint(Customercode,Companycode,CustomerActivity.this);
                     //printpopup.dismiss();
                 }
                 Log.d("After print",String.valueOf(billPrinted));
@@ -2895,16 +2918,16 @@ public void ShowPrintPopUp (String listcustomercode){
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            SalesPrintloading = ProgressDialog.show(CustomerActivity.this, "Connecting to printer", "Please wait", true);
-            SalesPrintloading.setCancelable(false);
-            SalesPrintloading.setCanceledOnTouchOutside(false);
+//            SalesPrintloading = ProgressDialog.show(CustomerActivity.this, "Connecting to printer", "Please wait", true);
+//            SalesPrintloading.setCancelable(false);
+//            SalesPrintloading.setCanceledOnTouchOutside(false);
         }
         @Override
         protected void onPostExecute(Boolean billPrinted) {
             // TODO Auto-generated method stub
             try {
                 //Thread.sleep(2000);
-                SalesPrintloading.dismiss();
+                //SalesPrintloading.dismiss();
 
 
             }catch (Exception e) {
@@ -2920,6 +2943,98 @@ public void ShowPrintPopUp (String listcustomercode){
         }
     }
 
+    public void printBill() {
+        try {
 
+            if (companyCodeList == null || companyCodeList.size() <=0) {
+                hidePrintLoader();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+
+                return;
+            }
+
+            String companycode = companyCodeList.get(0);
+
+            new AsyncPrintPriceListDetails().execute(printcustomercode,companycode);
+
+        } catch (Exception e) {
+            Log.e("", "Exception in printBill : " + e.getLocalizedMessage());
+            hidePrintLoader();
+//            Toast toast1 = Toast.makeText(getApplicationContext(), "Unable to connect to Bluetooth Printer!", Toast.LENGTH_LONG);
+//            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R)
+//                toast1.setGravity(Gravity.CENTER, 0, 0);
+//            toast1.show();
+            //  Toast.makeText(context, "Unable to connect to Bluetooth Printer!", Toast.LENGTH_SHORT).show();
+            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+            mDbErrHelper.open();
+            String geterrror = e.toString();
+            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName()
+                    + " - Unable to connect bluetooth", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            mDbErrHelper.close();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                }
+            });
+
+        }
+    }
+
+    public void showPrintLoader(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loaderPrint = ProgressDialog.show(context, "Connecting to printer", "Please wait", true);
+                loaderPrint.setCancelable(false);
+                loaderPrint.setCanceledOnTouchOutside(false);
+            }
+        });
+    }
+
+    public void hidePrintLoader(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loaderPrint.dismiss();
+            }
+        });
+    }
+    public void checkAndPrintBill() {
+        try {
+            if (companyCodeList == null && companyCodeList.size() <= 0) {
+                hidePrintLoader();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+                return;
+            }
+            Log.e("", "companyCodeList : firstIndex : " + companyCodeList.get(0));
+            Log.e("", "companyCodeList : length : " + companyCodeList.size());
+
+            companyCodeList.remove(0);
+
+            if (companyCodeList != null && companyCodeList.size() > 0) {
+                Log.e("", "companyCodeList : firstIndex : " + companyCodeList.get(0));
+                Log.e("", "companyCodeList : length : " + companyCodeList.size());
+            }
+            printBill();
+        } catch (Exception e) {
+            hidePrintLoader();
+            Log.e("", "Exception in enablePrintButtons : " + e.getLocalizedMessage());
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                }
+            });
+        }
+    }
 
 }

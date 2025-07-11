@@ -123,8 +123,7 @@
                 android:text="Van Price"
                 android:gravity="center"
                 android:drawableRight="@drawable/ic_arrow_upward_white"
-                android:id="@+id/pricesorting"
-                android:visibility="gone"/>
+                android:id="@+id/pricesorting" />
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -139,7 +138,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:tint="@color/white"
-                android:visibility="gone"
                 android:id="@+id/pricesorting1"/>
         </LinearLayout>
         </androidx.cardview.widget.CardView>

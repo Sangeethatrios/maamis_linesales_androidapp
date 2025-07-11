@@ -85,8 +85,8 @@ public class SalesItemWiseBaseAdapter extends BaseAdapter {
             SalesItemWiseReportDetails currentListData = getItem(position);
             mHolder.listsno.setText(currentListData.getSno());
             mHolder.listitemname.setText(currentListData.getItemname());
-            double val = Double.parseDouble(currentListData.getQty());
-            int getqty = (int) val;
+            double getqty = Double.parseDouble(currentListData.getQty());
+//            int getqty = (int) val;
             mHolder.listqty.setText(String.valueOf(getqty));
             mHolder.listuom.setText(currentListData.getUom());
             mHolder.listamount.setText(currentListData.getAmount());

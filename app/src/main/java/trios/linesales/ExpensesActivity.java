@@ -655,7 +655,20 @@ public class ExpensesActivity extends AppCompatActivity {
                     objdatabaseadapter = new DataBaseAdapter(context);
                     objdatabaseadapter.open();
                     String getresult="";
-                    getresult=objdatabaseadapter.InsertExpensesDetails(getexpenseheadcode,txtamount.getText().toString(),
+                    String recAmt = String.valueOf(txtamount.getText().toString());
+                    String[] totalAmt = (recAmt.replace(".","_").split("_"));
+                    double gettotalamount= Double.parseDouble(recAmt);
+                    if (totalAmt.length > 0 && totalAmt.length == 2){
+                        double billDecValu = Double.parseDouble(totalAmt[1]);
+                        if (billDecValu >= 50) {
+                            gettotalamount = Math.ceil(gettotalamount);
+                        } else {
+                            gettotalamount = Math.round(gettotalamount);
+                        }
+                    } else
+                        gettotalamount = Math.round(gettotalamount);
+
+                    getresult=objdatabaseadapter.InsertExpensesDetails(getexpenseheadcode,String.valueOf(gettotalamount),
                             txtremarks.getText().toString());
                     if(getresult.equals("success")){
                         Toast toast = Toast.makeText(getApplicationContext(),"Saved Successfully ", Toast.LENGTH_LONG);
@@ -723,7 +736,7 @@ public class ExpensesActivity extends AppCompatActivity {
             expenseslist.clear();
             objdatabaseadapter = new DataBaseAdapter(context);
             objdatabaseadapter.open();
-            Cur = objdatabaseadapter.GetExpenseListDB(getexpenselistdate);
+            Cur = objdatabaseadapter.GetExpenseListDB(getexpenselistdate,preferenceMangr.pref_getString("getsalesschedulecode"));
             String gettripadvance = objdatabaseadapter.GetScheduleTripAdavanceDB(getexpenselistdate);
             if(gettripadvance.equals("")){
                 gettripadvance = "0";

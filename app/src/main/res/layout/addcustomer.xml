@@ -448,7 +448,10 @@
                     android:textColor="@color/black"
                     android:drawableRight="@drawable/ic_keyboard_arrow_down"
                     android:textSize="14sp"
-                    android:importantForAutofill="no"/>
+                    android:importantForAutofill="no"
+                    android:visibility="gone"
+                    />
+
 
             </LinearLayout>
             <LinearLayout

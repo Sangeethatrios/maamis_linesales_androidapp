@@ -1013,8 +1013,8 @@ public class SalesViewActivity extends AppCompatActivity {
                     getnoofdigits = "000";
                 }
 
-                df = new DecimalFormat("0.'"+getnoofdigits+"'");
 
+                df = new DecimalFormat("0."+getnoofdigits);
 
                 mHolder.listitemname.setText(String.valueOf(salesItemList.get(position).getItemname()));
 
@@ -1605,7 +1605,7 @@ public class SalesViewActivity extends AppCompatActivity {
                     if(txtshowdcchallan.equals("yes")){
                         printDC = true;
                     }
-                    billPrinted = (boolean) epsonT20Printer.GetSalesBillPrint(finalGetsalestransano, financialyearcode,SalesViewActivity.this, printDC);
+                    billPrinted = (boolean) epsonT20Printer.GetSalesBillPrint(finalGetsalestransano, financialyearcode,SalesViewActivity.this, printDC,"","");
                     //printpopup.dismiss();
                 }
                 Log.d("billPrinted",String.valueOf(billPrinted));

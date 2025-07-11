@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Order Bill-wise "
+                android:text="Order-wise"
                 android:layout_marginLeft="@dimen/toolbarmarleft"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"

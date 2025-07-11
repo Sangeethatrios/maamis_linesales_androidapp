@@ -505,6 +505,16 @@ public class Util
 
 		return rightJustify(param1,2)+ " "+ leftJustify(param2,4) +rightJustify(param3,6)+ " " +rightJustify(param4,7) +rightJustify(param5,10);
 	}
+	public static String nameLeftValueRightJustifycustomeritem(String param1, String param2,
+															 int cpl) {
+		if(param1 == null)
+			param1 = "";
+		if(param2 == null)
+			param2 = "";
+
+
+		return leftJustify(param1,15) + " " +rightJustify(param2,16);
+	}
 	public static String nameLeftValueRightJustifycash(String param1, String param2,String param3,
 															int cpl) {
 		if(param1 == null)

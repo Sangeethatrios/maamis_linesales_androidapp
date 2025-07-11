@@ -102,7 +102,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Next Day Requirement"
+                        android:text="Next Schedule Requirement"
                         android:padding="10dp"
                         android:id="@+id/OrderForm"
                         android:gravity="center|left"
@@ -467,7 +467,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Order Bill-wise"
+                            android:text="Order-wise"
                             android:padding="10dp"
                             android:id="@+id/salesorderbillwise"
                             android:gravity="center|left"

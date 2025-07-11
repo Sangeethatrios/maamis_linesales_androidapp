@@ -224,7 +224,8 @@
                         android:textColor="@color/black"
                         android:drawablePadding="10dp"
                         android:drawableRight="@drawable/ic_keyboard_arrow_down"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp"
+                         android:visibility="gone"/>
                 </RelativeLayout>
 
             </LinearLayout>
@@ -437,7 +438,7 @@
                             android:padding="10dp"
                             android:cursorVisible="false"
                             android:textColor="@color/black"
-                            android:maxLength="200"
+                            android:maxLength="50"
                             android:textSize="14sp"/>
                     </RelativeLayout>
 

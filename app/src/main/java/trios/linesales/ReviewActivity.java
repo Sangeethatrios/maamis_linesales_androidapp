@@ -55,6 +55,7 @@ public class ReviewActivity extends AppCompatActivity {
     Context context;
     TextView addmore;
     ImageView reviewlistgoback;
+    public static ArrayList<String> companyCodeList = new ArrayList<>();
     public  TextView paymenttypeinvoice,txtcustomername,txtareacity,
             txtcarttotalamt,txtreviewweight,reviewitems,
             txtdiscountamt,txtsubtotalamt,cartgstnnumber,txtbookingno,txtreviewdate,hidedummy;
@@ -84,7 +85,7 @@ public class ReviewActivity extends AppCompatActivity {
     GPSTracker gpsTracker;
     String orderTransNo="",orderFinancialyear="",orderCompanyCode="";
     ReceiveListener receiveListener = null;
-
+    ProgressDialog loaderPrint;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,7 +128,9 @@ public class ReviewActivity extends AppCompatActivity {
                 receiveListener = new ReceiveListener() {
                     @Override
                     public void onPtrReceive(Printer printer, int i, PrinterStatusInfo printerStatusInfo, String s) {
-
+                        Log.e("", "Printer status : " + s);
+                        if (s.equalsIgnoreCase("Success"))
+                            checkAndPrintBill();
                     }
                 };
             }catch (Exception e){
@@ -275,7 +278,7 @@ public class ReviewActivity extends AppCompatActivity {
                 //Get Booking No.
                 objdatabaseadapter = new DataBaseAdapter(context);
                 objdatabaseadapter.open();
-                getbookingno = objdatabaseadapter.GetBookingNo(preferenceMangr.pref_getString("schedule_datevalue"));
+                getbookingno = objdatabaseadapter.GetBookingNo(preferenceMangr.pref_getString("schedule_datevalue"),preferenceMangr.pref_getString("getsalesschedulecode"));
                 gettransactionno = objdatabaseadapter.GetTransactionNo();
                 txtbookingno.setText("BK.No. : "+getbookingno);
 
@@ -318,7 +321,15 @@ public class ReviewActivity extends AppCompatActivity {
                         } else {
                             SalesActivity.gstnnumber = SalesActivity.gstnnumber;
                         }
+//                        double amount = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Double.parseDouble(mHolder.listitemqty.getText().toString());
+                        if(!isSalesValueReachLimit()){
+                            Toast toast = Toast.makeText(getApplicationContext(),"The total bill amount for this customer has exceeded the daily limit.", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show(); 
+                            return;
+                        }
                         if (SalesActivity.staticreviewsalesitems.size() > 0) {
+
                             if (salesItemList.size() > 0) {
                                 txtSalesprint.setEnabled(false);
                                 String getmaxrefno = objdatabaseadapter.GetMaxRefnoSalesItems();
@@ -408,6 +419,19 @@ public class ReviewActivity extends AppCompatActivity {
                                             preferenceMangr.pref_getString("getschedulecode"), getsalestransactionno, getbookingno, preferenceMangr.pref_getString("getfinanceyrcode"),
                                             SalesActivity.customercode);
 
+                                    companyCodeList = new ArrayList<>();
+                                    DataBaseAdapter mDbHelper = new DataBaseAdapter(ReviewActivity.this);
+                                    mDbHelper.open();
+                                    Cursor mCur = mDbHelper.getAllCompanyCodeForBill(getsalestransactionno,preferenceMangr.pref_getString("getfinanceyrcode"));
+
+                                    if (mCur != null && mCur.getCount() >0) {
+                                        for (int i=0; i<mCur.getCount(); i++) {
+                                            companyCodeList.add(i, mCur.getString(0));
+                                            //companyCodeList.add(companyCodeList.size(), "einvoice_qr_" + mCur.getString(0));
+                                            mCur.moveToNext();
+                                        }
+                                    }
+                                    companyCodeList.add(companyCodeList.size(), "dc");
 
                                     try {
                                         printpopup = new Dialog(context);
@@ -529,7 +553,12 @@ public class ReviewActivity extends AppCompatActivity {
 
                                                             if (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_ON) {
                                                                 if (!preferenceMangr.pref_getString("SelectedPrinterAddress").equals("")) {
-                                                                    new AsyncPrintSalesDetails().execute(getsalestransactionno, preferenceMangr.pref_getString("getfinanceyrcode"), getbilltypecode);
+//                                                                    new AsyncPrintSalesDetails().execute(getsalestransactionno, preferenceMangr.pref_getString("getfinanceyrcode"), getbilltypecode);
+
+
+                                                                    disablePrintButtons();
+                                                                    showPrintLoader();
+                                                                    printBill();
                                                                     printpopup.dismiss();
                                                                 } else {
                                                                     Toast toast = Toast.makeText(getApplicationContext(), "Please select bluetooth printer in app settings", Toast.LENGTH_LONG);
@@ -1229,7 +1258,7 @@ public class ReviewActivity extends AppCompatActivity {
                     getnoofdigits = "000";
                 }
 
-                df = new DecimalFormat("0.'"+getnoofdigits+"'");
+                df = new DecimalFormat("0."+getnoofdigits);
 
                 mHolder.dummydeleteitem.setVisibility(View.GONE);
                 if (!(salesItemList.get(position).getItemnametamil().equals(""))
@@ -1564,6 +1593,7 @@ public class ReviewActivity extends AppCompatActivity {
                         obj.put("customertypecode", mCur2.getString(22));
                         obj.put("whatsappno", mCur2.getString(24));
                         obj.put("mobilenoverificationstatus", mCur2.getString(25));
+                        obj.put("categorycode", mCur2.getString(mCur2.getColumnIndex("categorycode")));
 
                         js_array4.put(obj);
                         mCur2.moveToNext();
@@ -1994,33 +2024,32 @@ public class ReviewActivity extends AppCompatActivity {
             finalGetsalestransano = params[0];
             financialyearcode = params[1];
             Getbilltypecode = params[2];
+            String companycode = params[3];
+            String printNetAmount = params[4];
+            String printEinvoiceQR = params[5];
             try {
-                //printData = new PrintData(context);
                 EpsonT20Printer epsonT20Printer = new EpsonT20Printer(ReviewActivity.this, ReviewActivity.this, receiveListener);
+//                printData = new PrintData(context);
                 deviceFound = epsonT20Printer.findBT();
-                Log.d("deviceFound",String.valueOf(deviceFound));
                 if (!deviceFound) {
                     /*Toast toast = Toast.makeText(getApplicationContext(), "Please connect to the Bluetooth Printer!", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);*/
                     //printpopup.dismiss();
-                    Log.d("Device found",String.valueOf(deviceFound));
                     billPrinted = deviceFound;
                     //toast.show();
                 } else {
-                    Log.d("Begin Print",String.valueOf(deviceFound));
-                    billPrinted = (boolean) epsonT20Printer.GetSalesBillPrint(finalGetsalestransano, financialyearcode,ReviewActivity.this, true);
+                    billPrinted = (boolean) epsonT20Printer.GetSalesBillPrint(finalGetsalestransano, financialyearcode,ReviewActivity.this, false, companycode, printNetAmount);
                     //printpopup.dismiss();
                 }
-                Log.d("After print",String.valueOf(billPrinted));
             }
             catch (Exception e){
                 /*Toast toast = Toast.makeText(getApplicationContext(), "Please connect to the Bluetooth Printer!", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();*/
                 //printpopup.dismiss();
-                printData = null;
+//                printData = null;
+                hidePrintLoader();
                 billPrinted = true;
-                Log.d("aaaa", e.getLocalizedMessage());
                 DataBaseAdapter mDbErrHelper2 = new DataBaseAdapter(context);
                 mDbErrHelper2.open();
                 mDbErrHelper2.insertErrorLog(e.toString(), this.getClass().getSimpleName()+
@@ -2032,27 +2061,48 @@ public class ReviewActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            SalesPrintloading = ProgressDialog.show(ReviewActivity.this, "Connecting to printer", "Please wait", true);
-            SalesPrintloading.setCancelable(false);
-            SalesPrintloading.setCanceledOnTouchOutside(false);
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    SalesPrintloading = ProgressDialog.show(context, "Connecting to printer", "Please wait", true);
+//                    SalesPrintloading.setCancelable(false);
+//                    SalesPrintloading.setCanceledOnTouchOutside(false);
+//                }
+//            });
         }
         @Override
         protected void onPostExecute(Boolean billPrinted) {
             // TODO Auto-generated method stub
             try {
-                //Thread.sleep(2000);
-                SalesPrintloading.dismiss();
-                Log.d("billPrinted 1q",String.valueOf(billPrinted));
-                SalesActivity.staticreviewsalesitems.clear();
-                SalesActivity.salesitems.clear();
-                txtSalesprint.setVisibility(View.GONE);
-                txtSalesprint.setEnabled(true);
-                Intent i = new Intent(ReviewActivity.this, SalesListActivity.class);
-                startActivity(i);
+                //SalesPrintloading.dismiss();
+                if (!billPrinted) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Unable to connect Bluetooth Printer. Please check the printer is turn or or not!", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            if(Getbilltypecode.equals("2")) {
+                                imgcamera.setVisibility(View.VISIBLE);
+                                txtSalesprint.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+
+                    printData = null;
+
+                }
+                //SalesActivity.staticreviewsalesitems.clear();
+                //SalesActivity.salesitems.clear();
+                //txtSalesprint.setVisibility(View.GONE);
+                //txtSalesprint.setEnabled(true);
+                //Intent i = new Intent(ReviewActivity.this, SalesListActivity.class);
+                //startActivity(i);
+//                SalesPrintloading.dismiss();
 
                 //SalesDCprint(finalGetsalestransano, financialyearcode,Getbilltypecode);
 
-                //new AsyncPrintSalesDCDetails().execute(finalGetsalestransano, financialyearcode,Getbilltypecode);
+//                new AsyncPrintSalesDCDetails().execute(finalGetsalestransano, financialyearcode,Getbilltypecode);
 
 
                 // sales delivery note print function
@@ -2088,8 +2138,8 @@ public class ReviewActivity extends AppCompatActivity {
                 startActivity(i);*/
 
             }catch (Exception e) {
+                hidePrintLoader();
                 // TODO Auto-generated catch block
-                Log.d("AsyncScheduleDetails", e.getLocalizedMessage());
                 DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
                 mDbErrHelper.open();
                 String geterrror = e.toString();
@@ -2106,34 +2156,30 @@ public class ReviewActivity extends AppCompatActivity {
         Boolean billPrinted = false;
         JSONObject jsonObj = null;
         String Getbilltypecode;
-        ProgressDialog loader = null;
+        ProgressDialog loading;
         @Override
         protected Boolean doInBackground(String... params) {
             final String finalGetsalestransano = params[0];
             final String financialyearcode = params[1];
             Getbilltypecode = params[2];
             try {
-                //Log.d("AsyncDOINB_DCPrint", "AsyncDOINB_DCPrint");
-                printData = new PrintData(context);
-                deviceFound = printData.findBT();
+                EpsonT20Printer epsonT20Printer = new EpsonT20Printer(ReviewActivity.this, ReviewActivity.this, receiveListener);
+                deviceFound = epsonT20Printer.findBT();
                 Log.d("deviceFound",String.valueOf(deviceFound));
                 if (!deviceFound) {
                     billPrinted = deviceFound;
                 } else {
-                    billPrinted = (boolean) printData.GetDCPrint(finalGetsalestransano, financialyearcode,ReviewActivity.this);
-
+                    billPrinted = (boolean) epsonT20Printer.GetDCPrint(finalGetsalestransano, financialyearcode,ReviewActivity.this, false);
                 }
                 Log.d("billPrinted",String.valueOf(billPrinted));
             }
             catch (Exception e){
-                printData = null;
+                hidePrintLoader();
                 billPrinted = true;
-
-                Log.d("Sales_DC_PRINT", e.getLocalizedMessage());
+                Log.d("aaaa", e.getLocalizedMessage());
                 DataBaseAdapter mDbErrHelper2 = new DataBaseAdapter(context);
                 mDbErrHelper2.open();
-                mDbErrHelper2.insertErrorLog(e.toString(), this.getClass().getSimpleName()+
-                        " - AsyncPrintSalesDCDetails", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper2.insertErrorLog(e.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
                 mDbErrHelper2.close();
             }
             return billPrinted;
@@ -2141,43 +2187,70 @@ public class ReviewActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            loader = ProgressDialog.show(ReviewActivity.this, "Connecting to printer", "Please wait");
-            loader.setCanceledOnTouchOutside(false);
-            loader.setCancelable(false);
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    loading = ProgressDialog.show(context,"Connecting to printer","Please wait",true);
+//                    loading.setCancelable(false);
+//                    loading.setCanceledOnTouchOutside(false);
+//                }
+//            });
         }
         @Override
         protected void onPostExecute(Boolean billPrinted) {
             // TODO Auto-generated method stub
             try {
-                //Log.d("AsyncPOST_DCPrint",String.valueOf(billPrinted));
-                loader.dismiss();
+                hidePrintLoader();
+                //loading.dismiss();
                 if (!billPrinted) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Unable to connect Bluetooth Printer. Please check the printer is turn or or not!", Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
-                    if(Getbilltypecode.equals("2")) {
-                        imgcamera.setVisibility(View.VISIBLE);
-                        txtSalesprint.setVisibility(View.GONE);
-                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Unable to connect Bluetooth Printer. Please check the printer is turn or or not!", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            if(Getbilltypecode.equals("2")) {
+                                imgcamera.setVisibility(View.VISIBLE);
+                                txtSalesprint.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+
                     printData = null;
 
                 }
-                SalesActivity.staticreviewsalesitems.clear();
-                SalesActivity.salesitems.clear();
-                txtSalesprint.setVisibility(View.GONE);
-                txtSalesprint.setEnabled(true);
-                Intent i = new Intent(ReviewActivity.this, SalesListActivity.class);
-                startActivity(i);
 
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        SalesActivity.staticreviewsalesitems.clear();
+//                        SalesActivity.salesitems.clear();
+//                        txtSalesprint.setVisibility(View.GONE);
+//                        txtSalesprint.setEnabled(true);
+//                        Intent i = new Intent(ReviewActivity.this, SalesListActivity.class);
+//                        startActivity(i);
+//                    }
+//                });
             }catch (Exception e) {
                 // TODO Auto-generated catch block
-                Log.d("AsyncScheduleDetails", e.getLocalizedMessage());
                 DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
                 mDbErrHelper.open();
                 String geterrror = e.toString();
                 mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName()+
                         " - Check Bluetooth in post execute", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
                 mDbErrHelper.close();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SalesActivity.staticreviewsalesitems.clear();
+                        SalesActivity.salesitems.clear();
+                        txtSalesprint.setVisibility(View.GONE);
+                        txtSalesprint.setEnabled(true);
+                        Intent i = new Intent(ReviewActivity.this, SalesListActivity.class);
+                        startActivity(i);
+                    }
+                });
             }
         }
     }
@@ -2476,5 +2549,219 @@ public class ReviewActivity extends AppCompatActivity {
     }
 
 
+    public boolean isSalesValueReachLimit() {
+        try{
 
+            DataBaseAdapter objdatabaseadapter=new DataBaseAdapter(context);
+            objdatabaseadapter.open();
+//            Cursor getItemCur = objdatabaseadapter.GetCartItemQtyAndPrice(itemcode);
+//            if (getItemCur.getCount() > 0) {
+//                return true;
+//            }
+            String maxbillamount = preferenceMangr.pref_getString("getmaxbillamount");
+            String maxbillannualamount = preferenceMangr.pref_getString("getmaxbillannualamount");
+            if(Utilities.isNullOrEmpty(maxbillamount) || Double.parseDouble(maxbillamount) <= 0 ||
+                    Utilities.isNullOrEmpty(maxbillannualamount) || Double.parseDouble(maxbillannualamount) <= 0){
+                return true;
+            }
+
+            final DecimalFormat dft = new DecimalFormat("0.00");
+            double res1 = 0;
+            double res2 = 0;
+
+            boolean result = false;
+            for (int i = 0; i < SalesActivity.staticreviewsalesitems.size(); i++) {
+                double amount =0;
+                String saleseqty = SalesActivity.staticreviewsalesitems.get(i).getItemqty();
+                String salessubtotal = SalesActivity.staticreviewsalesitems.get(i).getSubtotal();
+                String rate = SalesActivity.staticreviewsalesitems.get(i).getNewprice();
+                String getsaleseqty;
+                if (saleseqty.equals("")) {
+                    getsaleseqty = "0";
+                } else {
+                    getsaleseqty = saleseqty;
+                }
+                String getsalessubtotal;
+                if (salessubtotal.equals("")) {
+                    getsalessubtotal = "0";
+                } else {
+                    getsalessubtotal = salessubtotal;
+                }
+
+                res1 = res1 + Double.parseDouble(getsalessubtotal);
+                //res2 = res2 + Double.parseDouble(getsaleseqty);
+
+                if (res1 + Double.parseDouble(SalesActivity.annualsalesamt) <=  Double.parseDouble(maxbillannualamount)){
+                    if (res1 + Double.parseDouble(SalesActivity.daywisesalesamt) <=  Double.parseDouble(maxbillamount)){
+                        result =  true;
+                    } else {
+                        result = false;
+                        break;
+                    }
+                } else {
+                    result = false;
+                    break;
+                }
+            }
+
+            return result;
+
+        }catch (Exception e){
+            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+            mDbErrHelper.open();
+            String geterrror = e.toString();
+            mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            mDbErrHelper.close();
+        }
+        return false;
+    }
+
+    public void enablePrintButtons() {
+        txtSalesprint.setEnabled(true);
+        addmore.setEnabled(true);
+    }
+
+    public void disablePrintButtons() {
+        txtSalesprint.setEnabled(false);
+        addmore.setEnabled(false);
+    }
+
+    public void checkAndPrintBill() {
+        try {
+            if (companyCodeList == null && companyCodeList.size() <= 0) {
+                enablePrintButtons();
+                hidePrintLoader();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SalesActivity.staticreviewsalesitems.clear();
+                        SalesActivity.salesitems.clear();
+                        txtSalesprint.setVisibility(View.GONE);
+                        txtSalesprint.setEnabled(true);
+                        Intent i = new Intent(ReviewActivity.this, SalesListActivity.class);
+                        startActivity(i);
+                    }
+                });
+                return;
+            }
+            Log.e("", "companyCodeList : firstIndex : " + companyCodeList.get(0));
+            Log.e("", "companyCodeList : length : " + companyCodeList.size());
+
+            companyCodeList.remove(0);
+
+            if (companyCodeList != null && companyCodeList.size() > 0) {
+                Log.e("", "companyCodeList : firstIndex : " + companyCodeList.get(0));
+                Log.e("", "companyCodeList : length : " + companyCodeList.size());
+            }
+            printBill();
+        } catch (Exception e) {
+            hidePrintLoader();
+            Log.e("", "Exception in enablePrintButtons : " + e.getLocalizedMessage());
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    SalesActivity.staticreviewsalesitems.clear();
+                    SalesActivity.salesitems.clear();
+                    txtSalesprint.setVisibility(View.GONE);
+                    txtSalesprint.setEnabled(true);
+                    Intent i = new Intent(ReviewActivity.this, SalesListActivity.class);
+                    startActivity(i);
+                }
+            });
+        }
+    }
+
+    public void printBill() {
+        try {
+
+            if (companyCodeList == null || companyCodeList.size() <=0) {
+                enablePrintButtons();
+                hidePrintLoader();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SalesActivity.staticreviewsalesitems.clear();
+                        SalesActivity.salesitems.clear();
+                        txtSalesprint.setVisibility(View.GONE);
+                        txtSalesprint.setEnabled(true);
+                        Intent i = new Intent(ReviewActivity.this, SalesListActivity.class);
+                        startActivity(i);
+                    }
+                });
+
+                return;
+            }
+
+            String companycode = companyCodeList.get(0);
+            String printNetAmount =  companyCodeList.size() == 2 ? "yes" : "no";
+            boolean printdc =  companycode.equalsIgnoreCase("dc") ? true : false;
+
+            if (!printdc) {
+                String printEinvoiceQR = "no";
+                /*if (companycode.startsWith("einvoice_qr")) {
+                    printEinvoiceQR = "yes";
+                    String[] detailArr = companycode.split("_");
+                    if (detailArr == null || detailArr.length <= 2)
+                        return;
+
+                    // 0th position has the einvoice_qr text
+                    // 1st position has the company code
+                    companycode = detailArr[2];
+                }*/
+
+                new AsyncPrintSalesDetails().execute(getsalestransactionno, preferenceMangr.pref_getString("getfinanceyrcode"), getbilltypecode, companycode, printNetAmount, printEinvoiceQR);
+
+            }else
+                new AsyncPrintSalesDCDetails().execute(getsalestransactionno, preferenceMangr.pref_getString("getfinanceyrcode"), getbilltypecode);
+
+        } catch (Exception e) {
+            Log.d("", "Exception in printBill : " + e.getLocalizedMessage());
+            hidePrintLoader();
+//            Toast toast1 = Toast.makeText(getApplicationContext(), "Unable to connect to Bluetooth Printer!", Toast.LENGTH_LONG);
+//            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R)
+//                toast1.setGravity(Gravity.CENTER, 0, 0);
+//            toast1.show();
+            //  Toast.makeText(context, "Unable to connect to Bluetooth Printer!", Toast.LENGTH_SHORT).show();
+            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+            mDbErrHelper.open();
+            String geterrror = e.toString();
+            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName()
+                    + " - Unable to connect bluetooth", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            mDbErrHelper.close();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    SalesActivity.staticreviewsalesitems.clear();
+                    SalesActivity.salesitems.clear();
+                    txtSalesprint.setVisibility(View.GONE);
+                    txtSalesprint.setEnabled(true);
+                    Intent i = new Intent(ReviewActivity.this, SalesListActivity.class);
+                    startActivity(i);
+                }
+            });
+
+        }
+    }
+
+    public void showPrintLoader(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loaderPrint = ProgressDialog.show(context, "Connecting to printer", "Please wait", true);
+                loaderPrint.setCancelable(false);
+                loaderPrint.setCanceledOnTouchOutside(false);
+            }
+        });
+    }
+
+    public void hidePrintLoader(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loaderPrint.dismiss();
+            }
+        });
+    }
 }
