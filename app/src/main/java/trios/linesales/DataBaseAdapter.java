@@ -8790,12 +8790,14 @@ if(schemeitem.equals("yes")){
 
             String sql="";
             getdate = GenCreatedDate();
-            sql = " select b.companycode  " +
+            sql = " select b.companycode,f.companyname, f.companynametamil, f.shortname, f.street, f.area, f.mobileno, " +
+                    " f.gstin, f.city, f.telephone, f.panno, f.pincode  " +
                     " from " +
                     " tblstocktransaction as a inner join tblitemmaster as b on " +
-                    " a.itemcode=b.itemcode  " +
-                    " inner join tblcompanymaster as f on f.companycode=b.companycode " +
-                    " where "+getcompanycode+" and a.flag!=3  "  +
+                    " a.itemcode=b.itemcode inner join tblunitmaster as c on b.unitcode=c.unitcode " +
+                    " inner join tblitemsubgroupmaster as d on  d.itemsubgroupcode=b.itemsubgroupcode " +
+                    " inner join tblbrandmaster as e on b.brandcode=e.brandcode  inner join tblcompanymaster as f on f.companycode=b.companycode " +
+                    " where "+getcompanycode+" and  "+getitemtype+" and "+getitemsubgroupcode+" and a.flag!=3  "  +
                     " group by b.companycode order by b.companycode desc ";
             //parentcode,itemorder,b.itemname
 
@@ -15703,6 +15705,43 @@ if(schemeitem.equals("yes")){
         }catch (Exception ex){
             insertErrorLog(ex.toString(), this.getClass().getSimpleName() + " - getexcessfreeitemqty", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
         }
+        return mCur;
+    }
+
+
+    public Cursor GetVanStockCompanyPrint(String companycode)
+    {
+        Cursor mCur =null;
+        try{
+            String getcompanycode="";
+            if(companycode.equals("0")){
+                getcompanycode = "1=1";
+            }else{
+                getcompanycode = "b.companycode='"+companycode+"'";
+            }
+
+
+            String sql="";
+            getdate = GenCreatedDate();
+            sql = " select b.companycode  " +
+                    " from " +
+                    " tblstocktransaction as a inner join tblitemmaster as b on " +
+                    " a.itemcode=b.itemcode  " +
+                    " inner join tblcompanymaster as f on f.companycode=b.companycode " +
+                    " where "+getcompanycode+" and a.flag!=3  "  +
+                    " group by b.companycode order by b.companycode desc ";
+            //parentcode,itemorder,b.itemname
+
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+
+
         return mCur;
     }
 

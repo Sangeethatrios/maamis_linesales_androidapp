@@ -80,6 +80,8 @@ public class SalesViewActivity extends AppCompatActivity {
     public static PreferenceMangr preferenceMangr=null;
     ReceiveListener receiveListener = null;
 
+    public static ArrayList<String> companyCodeList = new ArrayList<>();
+    ProgressDialog loaderPrint;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +127,7 @@ public class SalesViewActivity extends AppCompatActivity {
                 @Override
                 public void onPtrReceive(Printer printer, int i, PrinterStatusInfo printerStatusInfo, String s) {
                     enablePrintButtons();
+                    checkAndPrintBill();
                 }
             };
         }catch (Exception e){
@@ -511,8 +514,22 @@ public class SalesViewActivity extends AppCompatActivity {
 
                                 if (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_ON) {
                                     if(!preferenceMangr.pref_getString("SelectedPrinterAddress").equals("")) {
+
                                         disablePrintButtons();
-                                        new AsyncPrintSalesBillDetails().execute(finalGetSalestransano,financialyearcode);
+                                        companyCodeList = new ArrayList<>();
+                                        DataBaseAdapter mDbHelper = new DataBaseAdapter(SalesViewActivity.this);
+                                        mDbHelper.open();
+                                        Cursor mCur = mDbHelper.getAllCompanyCodeForBill(SalesListActivity.getsalesreviewtransactionno,preferenceMangr.pref_getString("getfinanceyrcode"));
+
+                                        if (mCur != null && mCur.getCount() >0) {
+                                            for (int i=0; i<mCur.getCount(); i++) {
+                                                companyCodeList.add(i, mCur.getString(0));
+                                                //companyCodeList.add(companyCodeList.size(), "einvoice_qr_" + mCur.getString(0));
+                                                mCur.moveToNext();
+                                            }
+                                        }
+                                        showPrintLoader();
+                                        printBill();
                                         printpopup.dismiss();
                                     }else{
                                         Toast toast = Toast.makeText(getApplicationContext(), "Please select the bluetooth printer in app", Toast.LENGTH_LONG);
@@ -1587,6 +1604,8 @@ public class SalesViewActivity extends AppCompatActivity {
         protected Boolean doInBackground(String... params) {
             finalGetsalestransano = params[0];
             financialyearcode = params[1];
+            String companycode = params[2];
+            String printNetAmount = params[3];
             //Getbilltypecode = params[2];
             try {
                 //printData = new PrintData(context);
@@ -1605,7 +1624,7 @@ public class SalesViewActivity extends AppCompatActivity {
                     if(txtshowdcchallan.equals("yes")){
                         printDC = true;
                     }
-                    billPrinted = (boolean) epsonT20Printer.GetSalesBillPrint(finalGetsalestransano, financialyearcode,SalesViewActivity.this, printDC,"","");
+                    billPrinted = (boolean) epsonT20Printer.GetSalesBillPrint(finalGetsalestransano, financialyearcode,SalesViewActivity.this, false, companycode, printNetAmount);
                     //printpopup.dismiss();
                 }
                 Log.d("billPrinted",String.valueOf(billPrinted));
@@ -1767,5 +1786,122 @@ public class SalesViewActivity extends AppCompatActivity {
     public void disablePrintButtons() {
         txtviewSalesprint.setEnabled(false);
         txtviewSalesDCprint.setEnabled(false);
+    }
+
+
+
+    public void checkAndPrintBill() {
+        try {
+            if (companyCodeList == null && companyCodeList.size() <= 0) {
+                enablePrintButtons();
+                hidePrintLoader();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+                return;
+            }
+            Log.e("", "companyCodeList : firstIndex : " + companyCodeList.get(0));
+            Log.e("", "companyCodeList : length : " + companyCodeList.size());
+
+            companyCodeList.remove(0);
+
+            if (companyCodeList != null && companyCodeList.size() > 0) {
+                Log.e("", "companyCodeList : firstIndex : " + companyCodeList.get(0));
+                Log.e("", "companyCodeList : length : " + companyCodeList.size());
+            }
+            printBill();
+        } catch (Exception e) {
+            hidePrintLoader();
+            Log.e("", "Exception in enablePrintButtons : " + e.getLocalizedMessage());
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                }
+            });
+        }
+    }
+
+    public void printBill() {
+        try {
+
+            if (companyCodeList == null || companyCodeList.size() <=0) {
+                enablePrintButtons();
+                hidePrintLoader();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+
+                return;
+            }
+
+            String companycode = companyCodeList.get(0);
+            String printNetAmount =  companyCodeList.size() == 2 ? "yes" : "no";
+            boolean printdc =  companycode.equalsIgnoreCase("dc") ? true : false;
+
+            if (!printdc) {
+                String printEinvoiceQR = "no";
+                /*if (companycode.startsWith("einvoice_qr")) {
+                    printEinvoiceQR = "yes";
+                    String[] detailArr = companycode.split("_");
+                    if (detailArr == null || detailArr.length <= 2)
+                        return;
+
+                    // 0th position has the einvoice_qr text
+                    // 1st position has the company code
+                    companycode = detailArr[2];
+                }*/
+
+
+                new AsyncPrintSalesBillDetails().execute(SalesListActivity.getsalesreviewtransactionno,SalesListActivity.getsalesreviewfinanicialyear, companycode, printNetAmount);
+            }//else
+
+//                new AsyncPrintSalesBillDCDetails().execute(SalesListActivity.getsalesreviewtransactionno,SalesListActivity.getsalesreviewfinanicialyear);
+        } catch (Exception e) {
+            Log.d("", "Exception in printBill : " + e.getLocalizedMessage());
+            hidePrintLoader();
+//            Toast toast1 = Toast.makeText(getApplicationContext(), "Unable to connect to Bluetooth Printer!", Toast.LENGTH_LONG);
+//            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R)
+//                toast1.setGravity(Gravity.CENTER, 0, 0);
+//            toast1.show();
+            //  Toast.makeText(context, "Unable to connect to Bluetooth Printer!", Toast.LENGTH_SHORT).show();
+            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+            mDbErrHelper.open();
+            String geterrror = e.toString();
+            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName()
+                    + " - Unable to connect bluetooth", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            mDbErrHelper.close();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                }
+            });
+
+        }
+    }
+
+    public void showPrintLoader(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loaderPrint = ProgressDialog.show(context, "Connecting to printer", "Please wait", true);
+                loaderPrint.setCancelable(false);
+                loaderPrint.setCanceledOnTouchOutside(false);
+            }
+        });
+    }
+
+    public void hidePrintLoader(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loaderPrint.dismiss();
+            }
+        });
     }
 }

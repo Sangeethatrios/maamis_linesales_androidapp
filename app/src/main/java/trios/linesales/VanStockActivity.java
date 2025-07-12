@@ -104,6 +104,7 @@ public class VanStockActivity extends AppCompatActivity {
                 @Override
                 public void onPtrReceive(Printer printer, int i, PrinterStatusInfo printerStatusInfo, String s) {
                     enablePrintButtons();
+                    checkAndPrintBill();
                 }
             };
         }catch (Exception e){
@@ -208,11 +209,11 @@ public class VanStockActivity extends AppCompatActivity {
                                                 companyCodeList = new ArrayList<>();
                                                 DataBaseAdapter mDbHelper = new DataBaseAdapter(VanStockActivity.this);
                                                 mDbHelper.open();
-                                                Cursor mCur = mDbHelper.getAllCompanyCodeForCustomer(VanStockActivity.getlistcompanycode);
-                                                if (mCur != null && mCur.getCount() >0) {
-                                                    for (int i=0; i<mCur.getCount(); i++) {
-                                                        companyCodeList.add(i, mCur.getString(0));
-                                                        mCur.moveToNext();
+                                                Cursor mCur2 = mDbHelper.GetVanStockCompanyPrint(VanStockActivity.getlistcompanycode);
+                                                if (mCur2 != null && mCur2.getCount() >0) {
+                                                    for (int i=0; i<mCur2.getCount(); i++) {
+                                                        companyCodeList.add(i, mCur2.getString(0));
+                                                        mCur2.moveToNext();
                                                     }
                                                 }
 
@@ -695,10 +696,13 @@ public class VanStockActivity extends AppCompatActivity {
         Boolean billPrinted = false;
         JSONObject jsonObj = null;
         ProgressDialog loading;
+        String  Companycode="";
         @Override
         protected Boolean doInBackground(String... params) {
             //final String finalGetreceipttransano = params[0];
             //final String financialyearcode = params[1];
+
+            Companycode = params[0];
             try {
                 EpsonT20Printer epsonT20Printer = new EpsonT20Printer(VanStockActivity.this, VanStockActivity.this, receiveListener);
                 deviceFound = epsonT20Printer.findBT();
@@ -710,7 +714,7 @@ public class VanStockActivity extends AppCompatActivity {
                     billPrinted = deviceFound;
                     //toast.show();
                 } else {
-                    billPrinted = (boolean) epsonT20Printer.GetVanStockPrint(VanStockActivity.this);
+                    billPrinted = (boolean) epsonT20Printer.GetVanStockPrint(Companycode,VanStockActivity.this);
                     //printpopup.dismiss();
                 }
                 Log.d("billPrinted",String.valueOf(billPrinted));
@@ -788,7 +792,7 @@ public class VanStockActivity extends AppCompatActivity {
 
             String companycode = companyCodeList.get(0);
 
-            new AsyncPrintVanStockDetails().execute();
+            new AsyncPrintVanStockDetails().execute(companycode);
 
         } catch (Exception e) {
             Log.e("", "Exception in printBill : " + e.getLocalizedMessage());

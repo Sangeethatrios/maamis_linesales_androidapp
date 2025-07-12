@@ -3101,7 +3101,7 @@ public class EpsonT20Printer implements ReceiveListener {
 
     //Van Stock print
     @SuppressLint("LongLogTag")
-    public boolean GetVanStockPrint(Activity objActivity) {
+    public boolean GetVanStockPrint(String companycode, Activity objActivity) {
 
         if (mPrinter == null) {
             initializePrinter(objActivity.getApplicationContext());
@@ -3149,7 +3149,7 @@ public class EpsonT20Printer implements ReceiveListener {
             printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
             printer.addTextFont(Printer.FONT_B);
             printer.addText("Date : "+LoginActivity.getcurrentdatetime + "\n");*/
-            Cursor mCur1 = objcustomerAdaptor.GetVanStockCompany(VanStockActivity.getlistcompanycode,
+            Cursor mCur1 = objcustomerAdaptor.GetVanStockCompany(companycode,
                     VanStockActivity.getitemsatus, VanStockActivity.getlistitemsubgroupcode);
 
             if (mCur1.getCount() > 0) {
@@ -3294,8 +3294,10 @@ public class EpsonT20Printer implements ReceiveListener {
                 String poweredby ="Powered by www.shivasoftwares.com\n\n";
                 mPrinter.addText(poweredby);
 
-                String emptylines1 = "\n\n\n\n";
+                String emptylines1 = "\n\n\n";
                 mPrinter.addText(emptylines1);
+                String emptylines2 = "\n\n\n";
+                mPrinter.addText(emptylines2);
 
                 //objcustomerAdaptor.close();
 
