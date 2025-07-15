@@ -1824,7 +1824,8 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                                 LinearLayout LL_UPI = (LinearLayout) dialogstatus.findViewById(R.id.LL_UPI);
 
                                 txtbillamount.setText(billAmount);
-                                txtbillamount.setEnabled(false);
+                                txtbillamount.setEnabled(false) ;
+
                                 if (!upiAmount.equals("0")) {
                                     txtupiamount.setText(upiAmount);
                                     payoutStatus.setVisibility(View.GONE);
@@ -1839,7 +1840,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                                     radio_cash.setChecked(false);
                                 }
 
-                                //txtupiamount.setEnabled(false);
+                                txtupiamount.setEnabled(false);
                                 txtcashamount.setText(cashAmount);
                                 txtcashamount.setEnabled(false);
                                 paymentbookingno.setText("BK.NO. "+getbookingno);
@@ -2278,6 +2279,8 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                                 final String[] upi_getfinanicialyear = {"0"};
                                 final String[] upi_getbillcopystatus = {"0"};
 
+
+                                txtupiamount.setEnabled(false);
                                 if (Utilities.isNullOrEmpty(getupiimageurl))
                                     radio_upi.setVisibility(View.INVISIBLE);
                                 else
@@ -2292,6 +2295,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                                 getbillamount = String.valueOf(Math.round(billAmount));
 
                                 tvBillAmount.setText(getbillamount);
+                                txtupiamount.setEnabled(false);
 
                                 closepopup.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -2375,9 +2379,9 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
 
 
                                                 txtbillamount.setText(String.valueOf(billAmount));
-                                                txtbillamount.setEnabled(false);
+                                                txtbillamount.setEnabled(false) ;
                                                 txtupiamount.setText(String.valueOf(billAmount));
-                                                //txtupiamount.setEnabled(false);
+                                                txtupiamount.setEnabled(false);
 
                                                 radio_cash.setChecked(false);
                                                 radio_notpaid.setChecked(false);
@@ -6168,9 +6172,9 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                 LinearLayout LL_UPI = (LinearLayout) dialogstatus.findViewById(R.id.LL_UPI);
 
                 txtbillamount.setText(Cur1.getString(5));
-                txtbillamount.setEnabled(false);
+                txtbillamount.setEnabled(false) ;
                 txtupiamount.setText(Cur1.getString(5));
-                //txtupiamount.setEnabled(false);
+                txtupiamount.setEnabled(false);
                 payoutStatus.setVisibility(View.VISIBLE);
                 radio_upi.setChecked(true);
                 radio_notpaid.setChecked(false);
@@ -6626,7 +6630,6 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                     final String[] upi_getsalestransactionno = {"0"};
                     final String[] upi_getfinanicialyear = {"0"};
                     final String[] upi_getbillcopystatus = {"0"};
-
                     paymentbookingno.setText("BK.NO. "+getbookingno);
                     paymentbillno.setText("Bill No. "+getbillno);
                     tvCustomerName.setText(getcustomername);
@@ -6766,9 +6769,9 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                                     billAmount = Math.round(billAmount);
 
                                     txtbillamount.setText(String.valueOf(billAmount));
-                                    txtbillamount.setEnabled(false);
+                                    txtbillamount.setEnabled(false) ;
                                     txtupiamount.setText(String.valueOf(billAmount));
-                                    //txtupiamount.setEnabled(false);
+                                    txtupiamount.setEnabled(false);
 
                                     radio_cash.setChecked(false);
                                     radio_notpaid.setChecked(false);

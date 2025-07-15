@@ -1622,6 +1622,7 @@ public class SalesReturnListActivity extends AppCompatActivity {
 
                 txtbillamount.setText(Cur1.getString(5));
                 txtbillamount.setEnabled(false);
+                txtupiamount.setEnabled(false);
                 txtupiamount.setText(Cur1.getString(5));
                 payoutStatus.setVisibility(View.VISIBLE);
                 radio_upi.setChecked(true);

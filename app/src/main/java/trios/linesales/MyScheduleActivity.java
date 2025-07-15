@@ -2859,7 +2859,8 @@ public class MyScheduleActivity extends AppCompatActivity   {
                 final EditText txtcashamount=(EditText)dialogstatus.findViewById(R.id.txtcashamount);
 
                 txtbillamount.setText(Cur1.getString(5));
-                txtbillamount.setEnabled(false);
+                txtbillamount.setEnabled(false) ;
+                txtupiamount.setEnabled(false);
                 txtupiamount.setText(Cur1.getString(5));
                 payoutStatus.setVisibility(View.VISIBLE);
                 radio_upi.setChecked(true);

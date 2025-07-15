@@ -290,7 +290,8 @@
                         android:padding="10dp"
                         android:textColor="@color/black"
                         android:maxLength="10"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp"
+                        />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -304,7 +305,7 @@
                 android:layout_marginRight="10dp"
                 android:weightSum="1"
                 android:id="@+id/LLCashAmount"
-                android:visibility="visible">
+                android:visibility="gone">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

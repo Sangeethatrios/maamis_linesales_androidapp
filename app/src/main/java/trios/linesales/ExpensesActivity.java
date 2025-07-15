@@ -736,7 +736,7 @@ public class ExpensesActivity extends AppCompatActivity {
             expenseslist.clear();
             objdatabaseadapter = new DataBaseAdapter(context);
             objdatabaseadapter.open();
-            Cur = objdatabaseadapter.GetExpenseListDB(getexpenselistdate,preferenceMangr.pref_getString("getsalesschedulecode"));
+            Cur = objdatabaseadapter.GetExpenseListDB(getexpenselistdate,preferenceMangr.pref_getString("getschedulecode"));
             String gettripadvance = objdatabaseadapter.GetScheduleTripAdavanceDB(getexpenselistdate);
             if(gettripadvance.equals("")){
                 gettripadvance = "0";
@@ -1913,7 +1913,8 @@ public class ExpensesActivity extends AppCompatActivity {
                 final EditText txtcashamount=(EditText)dialogstatus.findViewById(R.id.txtcashamount);
 
                 txtbillamount.setText(Cur1.getString(5));
-                txtbillamount.setEnabled(false);
+                txtbillamount.setEnabled(false) ;
+                txtupiamount.setEnabled(false);
                 txtupiamount.setText(Cur1.getString(5));
                 payoutStatus.setVisibility(View.VISIBLE);
                 radio_upi.setChecked(true);

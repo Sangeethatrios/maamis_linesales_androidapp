@@ -617,14 +617,18 @@ public class MenuActivity extends AppCompatActivity {
             Sales_Layout.setVisibility(View.GONE);
             ReportsOrderChildLL.setVisibility(View.VISIBLE);
             SalesOrderLL.setVisibility(View.VISIBLE);
+            generatePDF.setVisibility(View.GONE);
+
         }else   if(preferenceMangr.pref_getString("getbusiness_type").equals("1")){
             Cash_Close_LL.setVisibility(View.GONE);
             SalesOrderLL.setVisibility(View.GONE);
             ReportsOrderChildLL.setVisibility(View.GONE);
+            generatePDF.setVisibility(View.VISIBLE);
         }else{
             SalesOrderLL.setVisibility(View.VISIBLE);
             Cash_Close_LL.setVisibility(View.GONE);
             ReportsOrderChildLL.setVisibility(View.VISIBLE);
+            generatePDF.setVisibility(View.VISIBLE);
         }
 
 
