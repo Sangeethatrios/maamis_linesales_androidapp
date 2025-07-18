@@ -101,12 +101,12 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
     String[] SubGroupCode,SubGroupName,SubGroupNameTamil;
     String[] CustomerCode,CustomerCategory,CustomerName,CustomerNameTamil,Address,CustomerAreaCode,MobileNo,
             TelephoneNo,GSTN,SchemeApplicable,customertypecode,CustomerCityName,CustomerAreaName,CustomerTotalOrder,
-            Customerbillcount, CusNotPurchasedCount,DayWiseSalesamt,AnnualSalesamt,BillWiseBudget,cusLatitude,cusLongitude;
+            Customerbillcount, CusNotPurchasedCount,DayWiseSalesamt,AnnualSalesamt,BillWiseBudget,cusLatitude,cusLongitude,Gstinverificationstatus;
 
     String[] FreeItemName,FreeItemOp,FreeItemHandover,FreeItemDistributed,FreeItemBalance,
             FreeItemCode,FreeItemSNO;
     Dialog areadialog,customerdialog,freeitemdialog, routedialog,dialogNotPurchased,remarksDialog;
-    static public String  customercode="",customercategory="",gstnnumber="",daywisesalesamt="",annualsalesamt="",billwisebudget="",
+    static public String  customercode="",customercategory="",gstnnumber="",daywisesalesamt="",annualsalesamt="",billwisebudget="",gstinverificationstatus="",
             getschemeapplicable="",getstaticsubcode="",getstaticchilditemcode="",getstaticgetchildqty="",
             getlabelchildqty="",customercityname="",customerareaname="",customername="",customercityarea="",fromcustomer="",
             otptimevalidity="",otptimevaliditybackend="",getmobilenoverifycount="",orderbillno="",
@@ -165,6 +165,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
     private TransactionsExpandableAdapter transactionsExpandableAdapter;
     String[] notPurchasedRemarks, notPurchasedRemarksCode;
     GPSTracker gpsTracker;
+    ArrayList<DisplayGroupDetails> displayGroupDetails = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -263,12 +264,18 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             radio_credit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     togglegstin.setChecked(true);
                     CheckToggleButton();
                     togglegstin.setTextOn("GSTIN \n " + gstnnumber);
                     togglegstin.setBackgroundColor(getResources().getColor(R.color.green));
                     if (gstnnumber.equals("")) {
                         togglegstin.setBackgroundColor(getResources().getColor(R.color.graycolor));
+                    }
+                    // ***  customer credit type gstin verified or not check ***
+                    if(!Utilities.isNullOrEmpty(gstnnumber) && gstinverificationstatus.equals("0")){
+                        radio_cash.setChecked(true);
+                        Toast.makeText(context, "GSTIN not verified for this customer", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -758,15 +765,15 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                         //Toast.makeText(getApplicationContext(), "Please enter Mobile No. or GSTIN", Toast.LENGTH_SHORT).show();
                         return;
                     }
-
-                    if ( getsalestype.equals("") || getsalestype.equals("null") || getsalestype.equals(null) ||
-                            getsalestypecode.equals("") || getsalestypecode.equals("null") || getsalestypecode.equals(null)) {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Please select sales type", Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
-                        //Toast.makeText(getApplicationContext(), "Please enter Mobile No. or GSTIN", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+//
+//                    if ( getsalestype.equals("") || getsalestype.equals("null") || getsalestype.equals(null) ||
+//                            getsalestypecode.equals("") || getsalestypecode.equals("null") || getsalestypecode.equals(null)) {
+//                        Toast toast = Toast.makeText(getApplicationContext(), "Please select sales type", Toast.LENGTH_LONG);
+//                        toast.setGravity(Gravity.CENTER, 0, 0);
+//                        toast.show();
+//                        //Toast.makeText(getApplicationContext(), "Please enter Mobile No. or GSTIN", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
 
 
                     btnSaveCustomer.setEnabled(false);
@@ -1206,6 +1213,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                 CusNotPurchasedCount = new String[Cur.getCount()];
                 cusLatitude= new String[Cur.getCount()];
                 cusLongitude= new String[Cur.getCount()];
+                Gstinverificationstatus= new String[Cur.getCount()];
                 for(int i=0;i<Cur.getCount();i++){
                     CustomerCode[i] = Cur.getString(0);
                     CustomerName[i] = Cur.getString(1);
@@ -1228,6 +1236,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     BillWiseBudget[i]=Cur.getString(Cur.getColumnIndex("billwisebudget"));
                     cusLatitude[i]=Cur.getString(Cur.getColumnIndex("latitude"));
                     cusLongitude[i]=Cur.getString(Cur.getColumnIndex("longitude"));
+                    Gstinverificationstatus[i]=Cur.getString(Cur.getColumnIndex("gstinverificationstatus"));
                     Cur.moveToNext();
                 }
 
@@ -1342,7 +1351,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
         try{
             objdatabaseadapter = new DataBaseAdapter(context);
             objdatabaseadapter.open();
-            Cur = objdatabaseadapter.GetSubGroupDB();
+            Cur = objdatabaseadapter.GetDisplayGroupList();
             if(Cur.getCount()>0) {
                 SubGroupCode = new String[Cur.getCount()];
                 SubGroupName = new String[Cur.getCount()];
@@ -1442,6 +1451,136 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             if(Cur != null)
                 Cur.close();
         }
+    }
+
+    @SuppressLint("Range")
+    public  void GetDisplayGroupList(){
+        DataBaseAdapter objdatabaseadapter = null;
+        Cursor Cur=null;
+        displayGroupDetails.clear();
+        try{
+            objdatabaseadapter = new DataBaseAdapter(context);
+            objdatabaseadapter.open();
+            Cur = objdatabaseadapter.GetDisplayGroupList();
+            if(Cur.getCount()>0) {
+                for(int i=0;i<Cur.getCount();i++){
+                    displayGroupDetails.add(new DisplayGroupDetails(
+                            Cur.getString(Cur.getColumnIndex("dgroupcode")),
+                            Cur.getString(Cur.getColumnIndex("dgroupname")),
+                            Cur.getString(Cur.getColumnIndex("dgrouptamil"))));
+                    Cur.moveToNext();
+                }
+
+                DisplayGroupAdapter adapter = new DisplayGroupAdapter(context, displayGroupDetails);
+                lv_subgroup.setAdapter(adapter);
+            }else{
+                Toast toast = Toast.makeText(getApplicationContext(),"Van out of stock", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        }  catch (Exception e){
+            Log.i("GetDisplayGroupList", e.toString());
+        }
+        finally {
+            if(objdatabaseadapter != null)
+                objdatabaseadapter.close();
+            if(Cur != null)
+                Cur.close();
+        }
+    }
+
+
+
+    public class DisplayGroupAdapter extends BaseAdapter {
+
+        private Context context;
+        private LayoutInflater layoutInflater;
+        ArrayList<DisplayGroupDetails> displayGroupDetails;
+        DisplayGroupAdapter(Context c, ArrayList<DisplayGroupDetails> displayGroupDetails) {
+            context = c;
+            this.displayGroupDetails = displayGroupDetails;
+            layoutInflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public int getCount() {
+            return this.displayGroupDetails.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return this.displayGroupDetails.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+        @Override
+        public int getViewTypeCount() {
+            return getCount();
+        }
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+        @SuppressLint("InflateParams")
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+
+            ViewHolder mHolder;
+
+            if (convertView == null) {
+                convertView = layoutInflater.inflate(R.layout.subgrouppopuplist, parent, false);
+                mHolder = new ViewHolder();
+                try {
+                    mHolder.listsubgroup = (TextView) convertView.findViewById(R.id.listsubgroup);
+                } catch (Exception e) {
+                    Log.i("Customer", e.toString());
+                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                    mDbErrHelper.open();
+                    String geterrror = e.toString();
+                    mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                    mDbErrHelper.close();
+                }
+                convertView.setTag(mHolder);
+            } else {
+                mHolder = (ViewHolder) convertView.getTag();
+            }
+
+            DisplayGroupDetails currentListData = (DisplayGroupDetails) getItem(position);
+            try {
+                mHolder.listsubgroup.setText(currentListData.getDisplayGroupNameTamil());
+            } catch (Exception e) {
+                Log.i("Customer", e.toString());
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            }
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getstaticsubcode = currentListData.getDisplayGroupCode();
+                    getitemsfromcode = currentListData.getDisplayGroupCode();
+
+
+                    GetItems(currentListData.getDisplayGroupCode());
+                    window.dismiss();
+                    fabgroupitem.startAnimation(rotate_backward);
+                    isFabOpen = false;
+                    isopenpopup = false;
+                }
+            });
+            return convertView;
+        }
+
+        private class ViewHolder {
+            private TextView listsubgroup;
+
+        }
+
     }
 
     public  void GetFreeItemexcess(){
@@ -1595,45 +1734,45 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             }*/
 
 
-            if(drilldownitem.equals("group")) {
-                isopenshowpopup=true;
-                LayoutInflater inflater = (LayoutInflater) SalesActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View layout = inflater.inflate(R.layout.grouppopup, null);
-                window = new PopupWindow(layout, 650, 1000, false);
-
-                expList = (ExpandableListView) layout.findViewById(R.id.expandible_listview);
-                ImageView close = (ImageView) layout.findViewById(R.id.close);
-
-                close.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        window.dismiss();
-                        fabgroupitem.startAnimation(rotate_backward);
-                        isFabOpen = false;
-                        isopenpopup = false;
-                    }
-                });
-                //window.setOutsideTouchable(true);
-                window.showAtLocation(layout, Gravity.BOTTOM, 0, 140);
-                //setUpAdapter();
-                window.setOutsideTouchable(false);
-                isopenpopup = true;
-                setChildItems();
-
-                expandableAdapter = new ExpandableAdapter(this, listDataHEader, listhash);
-                expList.setAdapter(expandableAdapter);
-
-                expList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-                    int previousGroup = -1;
-
-                    @Override
-                    public void onGroupExpand(int groupPosition) {
-                        if (groupPosition != previousGroup)
-                            expList.collapseGroup(previousGroup);
-                        previousGroup = groupPosition;
-                    }
-                });
-            }else{
+//            if(drilldownitem.equals("group")) {
+//                isopenshowpopup=true;
+//                LayoutInflater inflater = (LayoutInflater) SalesActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                View layout = inflater.inflate(R.layout.grouppopup, null);
+//                window = new PopupWindow(layout, 650, 1000, false);
+//
+//                expList = (ExpandableListView) layout.findViewById(R.id.expandible_listview);
+//                ImageView close = (ImageView) layout.findViewById(R.id.close);
+//
+//                close.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        window.dismiss();
+//                        fabgroupitem.startAnimation(rotate_backward);
+//                        isFabOpen = false;
+//                        isopenpopup = false;
+//                    }
+//                });
+//                //window.setOutsideTouchable(true);
+//                window.showAtLocation(layout, Gravity.BOTTOM, 0, 140);
+//                //setUpAdapter();
+//                window.setOutsideTouchable(false);
+//                isopenpopup = true;
+//                setChildItems();
+//
+//                expandableAdapter = new ExpandableAdapter(this, listDataHEader, listhash);
+//                expList.setAdapter(expandableAdapter);
+//
+//                expList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+//                    int previousGroup = -1;
+//
+//                    @Override
+//                    public void onGroupExpand(int groupPosition) {
+//                        if (groupPosition != previousGroup)
+//                            expList.collapseGroup(previousGroup);
+//                        previousGroup = groupPosition;
+//                    }
+//                });
+//            }else{
                 isopenshowpopup=true;
                 LayoutInflater inflater = (LayoutInflater) SalesActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View layout = inflater.inflate(R.layout.subgrouppopup, null);
@@ -1658,9 +1797,9 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                 isopenpopup = true;
 
                 //Call Sub group list
-                GetSubGroupList();
+            GetDisplayGroupList();
 
-            }
+           // }
 
         }catch (Exception e){
             DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -4343,7 +4482,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                         customercategory = "0";
                                         daywisesalesamt = "0";
                                         annualsalesamt = "0";
-                                        gstnnumber = "";billwisebudget="0";
+                                        gstnnumber = "";billwisebudget="0";gstinverificationstatus="0";
                                         getschemeapplicable = "";
                                         togglegstin.setBackgroundColor(getResources().getColor(R.color.graycolor));
                                         togglegstin.setText("GSTIN \n ");
@@ -4377,7 +4516,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                         txtcustomername.setText("");
                         customercode = "0";
                         customercategory="0";
-                        annualsalesamt = "0";billwisebudget="0";
+                        annualsalesamt = "0";billwisebudget="0";gstinverificationstatus="0";
                         daywisesalesamt = "0"; gstnnumber = "";
                         getschemeapplicable = "";
                         togglegstin.setBackgroundColor(getResources().getColor(R.color.graycolor));
@@ -4555,13 +4694,22 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                             return;
                         }
                     }
+
+                    gstnnumber = GSTN[position];
+                    gstinverificationstatus = Gstinverificationstatus[position];
+//                    if(customertypecode[position].equals("2")){
+//                      // ***  customer credit type gstin verified or not check ***
+//                        if(!Utilities.isNullOrEmpty(gstnnumber) && gstinverificationstatus.equals("0")){
+//                            Toast.makeText(context, "GSTIN not verify for this customer", Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
+//                    }
                     txtcustomername.setText(String.valueOf(CustomerNameTamil[position]));
                     customercode = CustomerCode[position];
                     customercategory = CustomerCategory[position];
                     daywisesalesamt = DayWiseSalesamt[position];
                     annualsalesamt = AnnualSalesamt[position];
                     billwisebudget = BillWiseBudget[position];
-                    gstnnumber = GSTN[position];
                     getschemeapplicable = SchemeApplicable[position];
                     customercityname = CustomerCityName[position];
                     customerareaname = CustomerAreaName[position];
@@ -4590,6 +4738,10 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                         //radio_credit.setEnabled(false);
                         getpaymenttypecode = "2";
                         getpaymenttypename = "CREDIT";
+                        if(!Utilities.isNullOrEmpty(gstnnumber) && gstinverificationstatus.equals("0")){
+                            radio_cash.setChecked(true);
+                            Toast.makeText(context, "GSTIN not verified for this customer", Toast.LENGTH_SHORT).show();
+                        }
                         confromBilltype=false;
                     }
 

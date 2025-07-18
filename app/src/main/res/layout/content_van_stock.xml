@@ -107,7 +107,7 @@
         android:hint="Item Sub-Group"
         android:gravity="left|center"
         android:id="@+id/vanitemsubgroup"
-        android:text="All Item Sub-Group"
+        android:text="All Display Group"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@color/black"

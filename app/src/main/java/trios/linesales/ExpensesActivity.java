@@ -327,7 +327,11 @@ public class ExpensesActivity extends AppCompatActivity {
                     objdatabaseadapter1 = new DataBaseAdapter(context);
                     objdatabaseadapter1.open();
                     String todayschedulecount = objdatabaseadapter1.gettodayschedulecount();
-                    if (todayschedulecount.equals("0")) {
+
+                    String getprevschedulecode = objdatabaseadapter1.GetPrevStartScheduleCode();
+                    String getprevcashclose = objdatabaseadapter1.GetCashClose(getprevschedulecode);
+                    String getprevsaleclose = objdatabaseadapter1.GetSalesClose(getprevschedulecode);
+                    if (todayschedulecount.equals("0") || (!getprevschedulecode.equals("0") && (getprevcashclose.equals("0") ||  getprevsaleclose.equals("0"))) ) {
                         try {
 
                             ScheduleActivity.getschedulecount = objdatabaseadapter1.GetScheduleCount();
@@ -485,6 +489,15 @@ public class ExpensesActivity extends AppCompatActivity {
 
 
                     } else{
+                        String getactiveschedule = objdatabaseadapter1.GetActiveSchedule();
+
+                        if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) ){
+                            Toast toast = Toast.makeText(getApplicationContext(),"Please start the current schedule", Toast.LENGTH_LONG);
+                            toast.show();
+                            Intent i = new Intent(ExpensesActivity.this,MyScheduleActivity.class);
+                            startActivity(i);
+                            return;
+                        }
                         if(!preferenceMangr.pref_getString("getcashclosecount").equals("0") && !preferenceMangr.pref_getString("getcashclosecount").equals("null") &&
                                 !preferenceMangr.pref_getString("getcashclosecount").equals("") && !preferenceMangr.pref_getString("getcashclosecount").equals(null) ){
                             Toast toast = Toast.makeText(getApplicationContext(),"Cash Closed ", Toast.LENGTH_LONG);

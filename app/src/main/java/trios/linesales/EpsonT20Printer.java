@@ -979,13 +979,13 @@ public class EpsonT20Printer implements ReceiveListener {
                     String line_spacee = "------------------------------------------\n";
                     mPrinter.addText(line_spacee);
 
-                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                    String poweredby ="Powered by www.shivasoftwares.com\n";
-                    mPrinter.addText(poweredby);
+//                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                    String poweredby ="Powered by www.shivasoftwares.com\n";
+//                    mPrinter.addText(poweredby);
 
-                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                    String line_spacee1 = "------------------------------------------\n";
-                    mPrinter.addText(line_spacee1);
+//                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                    String line_spacee1 = "------------------------------------------\n";
+//                    mPrinter.addText(line_spacee1);
                     mPrinter.addTextAlign(Printer.ALIGN_CENTER);
                     mPrinter.addTextFont(Printer.FONT_B);
                     String thankmsg = "         "+preferenceMangr.pref_getString("getwishmsg")+"      \n\n\n";
@@ -1531,13 +1531,13 @@ public class EpsonT20Printer implements ReceiveListener {
                 String line_space13 = "-----------------------------------------\n";
                 mPrinter.addText(line_space13);
 
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n";
-                mPrinter.addText(poweredby);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n";
+//                mPrinter.addText(poweredby);
 
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String line_space4 = "------------------------------------------\n";
-                mPrinter.addText(line_space4);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                String line_space4 = "------------------------------------------\n";
+//                mPrinter.addText(line_space4);
                 mPrinter.addTextAlign(Printer.ALIGN_CENTER);
                 mPrinter.addTextFont(Printer.FONT_B);
                 String thankmsg = "         "+preferenceMangr.pref_getString("getwishmsg")+"      \n\n\n";
@@ -2040,13 +2040,13 @@ public class EpsonT20Printer implements ReceiveListener {
                 String line_spacee = "------------------------------------------\n";
                 mPrinter.addText(line_spacee);
 
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n";
-                mPrinter.addText(poweredby);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n";
+//                mPrinter.addText(poweredby);
 
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String line_spacee1 = "------------------------------------------\n";
-                mPrinter.addText(line_spacee1);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                String line_spacee1 = "------------------------------------------\n";
+//                mPrinter.addText(line_spacee1);
                 mPrinter.addTextAlign(Printer.ALIGN_CENTER);
                 mPrinter.addTextFont(Printer.FONT_B);
                 String thankmsg = "         "+preferenceMangr.pref_getString("getwishmsg")+"      \n\n\n";
@@ -2688,19 +2688,19 @@ public class EpsonT20Printer implements ReceiveListener {
                 mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
                 String line_space19 = "--------------------------------\n";
                 mPrinter.addText(line_space19);
+//
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                mPrinter.addTextFont(Printer.FONT_C);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+////                String poweredby ="Powered by www.shivasoftwares.com\n";
+////                mPrinter.addText(poweredby);
 
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                mPrinter.addTextFont(Printer.FONT_C);
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                String poweredby ="Powered by www.shivasoftwares.com\n";
-                mPrinter.addText(poweredby);
-
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                mPrinter.addTextFont(Printer.FONT_A);
-                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                String line_space1  = "--------------------------------\n";
-                mPrinter.addText(line_space1);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                mPrinter.addTextFont(Printer.FONT_A);
+//                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+//                String line_space1  = "--------------------------------\n";
+//                mPrinter.addText(line_space1);
                 mPrinter.addTextAlign(Printer.ALIGN_CENTER);
                 mPrinter.addTextFont(Printer.FONT_B);
                 String thankmsg = "         "+preferenceMangr.pref_getString("getwishmsg")+"      \n\n\n";
@@ -3040,15 +3040,15 @@ public class EpsonT20Printer implements ReceiveListener {
                 String line_spacep = "------------------------------------------";
                 mPrinter.addText(line_spacep);
 
-                mPrinter.addTextFont(Printer.FONT_C);
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
-                String poweredby ="Powered by www.shivasoftwares.com\n";
-                mPrinter.addText(poweredby);
+//                mPrinter.addTextFont(Printer.FONT_C);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+////                String poweredby ="Powered by www.shivasoftwares.com\n";
+////                mPrinter.addText(poweredby);
 
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String line_space4 = "------------------------------------------\n";
-                mPrinter.addText(line_space4);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                String line_space4 = "------------------------------------------\n";
+//                mPrinter.addText(line_space4);
                 mPrinter.addTextAlign(Printer.ALIGN_CENTER);
                 mPrinter.addTextFont(Printer.FONT_B);
                 //String thankmsg = "       நன்றி      \n\n\n";
@@ -3290,9 +3290,9 @@ public class EpsonT20Printer implements ReceiveListener {
                 String line_space13 = "------------------------------------------\n";
                 mPrinter.addText(line_space13);
 
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n\n";
-                mPrinter.addText(poweredby);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n\n";
+//                mPrinter.addText(poweredby);
 
                 String emptylines1 = "\n\n\n";
                 mPrinter.addText(emptylines1);
@@ -3577,9 +3577,9 @@ public class EpsonT20Printer implements ReceiveListener {
                 String line_space13 = "-----------------------------------------\n";
                 mPrinter.addText(line_space13);
 
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n\n";
-                mPrinter.addText(poweredby);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n\n";
+//                mPrinter.addText(poweredby);
 
                 String emptylines1 = "\n\n\n";
                 mPrinter.addText(emptylines1);
@@ -3795,15 +3795,15 @@ public class EpsonT20Printer implements ReceiveListener {
                 String retailerdetails = Gencode + "\n";
                 mPrinter.addText(retailerdetails);
 
-                mPrinter.addTextFont(Printer.FONT_C);
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                String line_space13 = "-----------------------------------------\n";
-                mPrinter.addText(line_space13);
+//                mPrinter.addTextFont(Printer.FONT_C);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+//                String line_space13 = "-----------------------------------------\n";
+//                mPrinter.addText(line_space13);
 
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby = "Powered by www.shivasoftwares.com\n\n";
-                mPrinter.addText(poweredby);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby = "Powered by www.shivasoftwares.com\n\n";
+//                mPrinter.addText(poweredby);
 
                 String emptylines1 = "\n\n\n";
                 mPrinter.addText(emptylines1);
@@ -4110,9 +4110,9 @@ public class EpsonT20Printer implements ReceiveListener {
                 String line_space13 = "-----------------------------------------\n";
                 mPrinter.addText(line_space13);
 
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n\n";
-                mPrinter.addText(poweredby);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n\n";
+//                mPrinter.addText(poweredby);
 
                 String emptylines1 = "\n\n\n";
                 mPrinter.addText(emptylines1);
@@ -4335,9 +4335,9 @@ public class EpsonT20Printer implements ReceiveListener {
                 String line_space13 = "-----------------------------------------\n";
                 mPrinter.addText(line_space13);
 
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n\n";
-                mPrinter.addText(poweredby);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n\n";
+//                mPrinter.addText(poweredby);
 
                 String emptylines1 = "\n\n\n";
                 mPrinter.addText(emptylines1);
@@ -4570,16 +4570,16 @@ public class EpsonT20Printer implements ReceiveListener {
                         String Gencode= GenCreatedDate();
                         String retailerdetails =  Gencode +"\n";
                         mPrinter.addText(retailerdetails);
-
+//
                         mPrinter.addTextFont(Printer.FONT_C);
                         mPrinter.addTextAlign(Printer.ALIGN_LEFT);
                         mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
                         String line_space13 = "-----------------------------------------\n";
                         mPrinter.addText(line_space13);
 
-                        mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                        String poweredby ="Powered by www.shivasoftwares.com\n\n";
-                        mPrinter.addText(poweredby);
+//                        mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                        String poweredby ="Powered by www.shivasoftwares.com\n\n";
+//                        mPrinter.addText(poweredby);
 
                         String emptylines1 = "\n\n\n";
                         mPrinter.addText(emptylines1);
@@ -4809,9 +4809,9 @@ public class EpsonT20Printer implements ReceiveListener {
                 String line_space13 = "-----------------------------------------\n";
                 mPrinter.addText(line_space13);
 
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n\n";
-                mPrinter.addText(poweredby);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n\n";
+//                mPrinter.addText(poweredby);
 
                 String emptylines1 = "\n\n\n";
                 mPrinter.addText(emptylines1);
@@ -5452,11 +5452,11 @@ public class EpsonT20Printer implements ReceiveListener {
             mPrinter.addTextFont(Printer.FONT_C);
             mPrinter.addText(  GenCreatedDate() +"\n");
             mPrinter.addText(linespace1);
-            mPrinter.addTextFont(Printer.FONT_C);
-            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-            mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
-            String poweredby ="Powered by www.shivasoftwares.com\n";
-            mPrinter.addText(poweredby);
+//            mPrinter.addTextFont(Printer.FONT_C);
+//            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//            mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+////            String poweredby ="Powered by www.shivasoftwares.com\n";
+////            mPrinter.addText(poweredby);
 
             mPrinter.addText("\n\n\n");
 
@@ -5742,11 +5742,11 @@ public class EpsonT20Printer implements ReceiveListener {
             mPrinter.addTextFont(Printer.FONT_C);
             mPrinter.addText(  GenCreatedDate() +"\n");
             mPrinter.addText(linespace1);
-            mPrinter.addTextFont(Printer.FONT_C);
-            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-            mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
-            String poweredby ="Powered by www.shivasoftwares.com\n";
-            mPrinter.addText(poweredby);
+//            mPrinter.addTextFont(Printer.FONT_C);
+//            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//            mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+////            String poweredby ="Powered by www.shivasoftwares.com\n";
+////            mPrinter.addText(poweredby);
 
             mPrinter.addText("\n\n\n");
 
@@ -6204,11 +6204,11 @@ public class EpsonT20Printer implements ReceiveListener {
             mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
             mPrinter.addText(line_space);
 
-            mPrinter.addTextFont(Printer.FONT_C);
-            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-            mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
-            String poweredby ="Powered by www.shivasoftwares.com\n";
-            mPrinter.addText(poweredby);
+//            mPrinter.addTextFont(Printer.FONT_C);
+//            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//            mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+////            String poweredby ="Powered by www.shivasoftwares.com\n";
+////            mPrinter.addText(poweredby);
 
             mPrinter.addText("\n\n\n");
 
@@ -6500,14 +6500,14 @@ public class EpsonT20Printer implements ReceiveListener {
                 String line_space3 = "--------------------------------\n";
                 mPrinter.addText(line_space3);
 
-                mPrinter.addTextFont(Printer.FONT_C);
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n";
-                mPrinter.addText(poweredby);
-                mPrinter.addTextFont(Printer.FONT_A);
-                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                String line_spacee1 = "--------------------------------\n";
-                mPrinter.addText(line_spacee1);
+//                mPrinter.addTextFont(Printer.FONT_C);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+////                String poweredby ="Powered by www.shivasoftwares.com\n";
+////                mPrinter.addText(poweredby);
+//                mPrinter.addTextFont(Printer.FONT_A);
+//                mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+//                String line_spacee1 = "--------------------------------\n";
+//                mPrinter.addText(line_spacee1);
                 mPrinter.addTextAlign(Printer.ALIGN_CENTER);
                 mPrinter.addTextFont(Printer.FONT_B);
                 String thankmsg = "         "+preferenceMangr.pref_getString("getwishmsg")+"      \n\n\n";

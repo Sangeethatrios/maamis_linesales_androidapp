@@ -643,6 +643,13 @@ public class SyncActivity extends AppCompatActivity {
                         dataBaseAdapter.syncbrandmaster(jsonObj);
                         api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "brandmaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
                     }
+                    ////if(BuildConfig.DEBUG)
+                    Log.w("Sync Activity : "," Sync All : display group ");
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncdisplaygroup.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.syncdisplaygroup(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "displaygroup", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
 
                     //currency
                     ////if(BuildConfig.DEBUG)
@@ -1437,6 +1444,13 @@ public class SyncActivity extends AppCompatActivity {
                         api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "brandmaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
                     }
 
+                    ////if(BuildConfig.DEBUG)
+                    Log.w("Sync Activity : "," Sync All : display group ");
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncdisplaygroup.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.syncdisplaygroup(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "displaygroup", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
 
                     //tax
                     //if(BuildConfig.DEBUG)

@@ -92,6 +92,9 @@ public class SalesReturnActivity extends AppCompatActivity implements View.OnCli
     Integer routeflag=0;
     public static String getscheduleroutecode;
     String[] routecode,routename,routenametamil,routeday;
+
+    ArrayList<DisplayGroupDetails> displayGroupDetails = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -881,6 +884,134 @@ public class SalesReturnActivity extends AppCompatActivity implements View.OnCli
     }
 
 
+
+    @SuppressLint("Range")
+    public  void GetDisplayGroupList(){
+        DataBaseAdapter objdatabaseadapter = null;
+        Cursor Cur=null;
+        displayGroupDetails.clear();
+        try{
+            objdatabaseadapter = new DataBaseAdapter(context);
+            objdatabaseadapter.open();
+            Cur = objdatabaseadapter.GetDisplayGroupList();
+            if(Cur.getCount()>0) {
+                for(int i=0;i<Cur.getCount();i++){
+                    displayGroupDetails.add(new DisplayGroupDetails(
+                            Cur.getString(Cur.getColumnIndex("dgroupcode")),
+                            Cur.getString(Cur.getColumnIndex("dgroupname")),
+                            Cur.getString(Cur.getColumnIndex("dgrouptamil"))));
+                    Cur.moveToNext();
+                }
+
+                DisplayGroupAdapter adapter = new DisplayGroupAdapter(context, displayGroupDetails);
+                lv_subgroup.setAdapter(adapter);
+            }else{
+                Toast toast = Toast.makeText(getApplicationContext(),"Van out of stock", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        }  catch (Exception e){
+            Log.i("GetDisplayGroupList", e.toString());
+        }
+        finally {
+            if(objdatabaseadapter != null)
+                objdatabaseadapter.close();
+            if(Cur != null)
+                Cur.close();
+        }
+    }
+
+    public class DisplayGroupAdapter extends BaseAdapter {
+
+        private Context context;
+        private LayoutInflater layoutInflater;
+        ArrayList<DisplayGroupDetails> displayGroupDetails;
+        DisplayGroupAdapter(Context c, ArrayList<DisplayGroupDetails> displayGroupDetails) {
+            context = c;
+            this.displayGroupDetails = displayGroupDetails;
+            layoutInflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public int getCount() {
+            return this.displayGroupDetails.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return this.displayGroupDetails.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+        @Override
+        public int getViewTypeCount() {
+            return getCount();
+        }
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+        @SuppressLint("InflateParams")
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+
+            SalesReturnActivity.DisplayGroupAdapter.ViewHolder mHolder;
+
+            if (convertView == null) {
+                convertView = layoutInflater.inflate(R.layout.subgrouppopuplist, parent, false);
+                mHolder = new SalesReturnActivity.DisplayGroupAdapter.ViewHolder();
+                try {
+                    mHolder.listsubgroup = (TextView) convertView.findViewById(R.id.listsubgroup);
+                } catch (Exception e) {
+                    Log.i("Customer", e.toString());
+                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                    mDbErrHelper.open();
+                    String geterrror = e.toString();
+                    mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                    mDbErrHelper.close();
+                }
+                convertView.setTag(mHolder);
+            } else {
+                mHolder = (SalesReturnActivity.DisplayGroupAdapter.ViewHolder) convertView.getTag();
+            }
+
+            DisplayGroupDetails currentListData = (DisplayGroupDetails) getItem(position);
+            try {
+                mHolder.listsubgroup.setText(currentListData.getDisplayGroupNameTamil());
+            } catch (Exception e) {
+                Log.i("Customer", e.toString());
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            }
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getstaticsubcode = currentListData.getDisplayGroupCode();
+//                    getitemsfromcode = currentListData.getDisplayGroupCode();
+
+
+                    GetItems(currentListData.getDisplayGroupCode());
+                    window.dismiss();
+                    fabgroupitem.startAnimation(rotate_backward);
+                    isFabOpen = false;
+                    isopenpopup = false;
+                }
+            });
+            return convertView;
+        }
+
+        private class ViewHolder {
+            private TextView listsubgroup;
+
+        }
+
+    }
     //Subgroup Adapter
     public class SalesSubGroupAdapter extends BaseAdapter {
 
@@ -1071,44 +1202,44 @@ public class SalesReturnActivity extends AppCompatActivity implements View.OnCli
                 if(objdatabaseadapter != null)
                     objdatabaseadapter.close();
             }
-            if(drilldownitem.equals("group")) {
-                LayoutInflater inflater = (LayoutInflater) SalesReturnActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View layout = inflater.inflate(R.layout.grouppopup, null);
-                window = new PopupWindow(layout, 650, 1000, false);
-
-                expList = (ExpandableListView) layout.findViewById(R.id.expandible_listview);
-                ImageView close = (ImageView) layout.findViewById(R.id.close);
-
-                close.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        window.dismiss();
-                        fabgroupitem.startAnimation(rotate_backward);
-                        isFabOpen = false;
-                        isopenpopup = false;
-                    }
-                });
-                //window.setOutsideTouchable(true);
-                window.showAtLocation(layout, Gravity.BOTTOM, 0, 140);
-                //setUpAdapter();
-                window.setOutsideTouchable(false);
-                isopenpopup = true;
-                setChildItems();
-
-                expandableAdapter = new ExpandableAdapter(this, listDataHEader, listhash);
-                expList.setAdapter(expandableAdapter);
-
-                expList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-                    int previousGroup = -1;
-
-                    @Override
-                    public void onGroupExpand(int groupPosition) {
-                        if (groupPosition != previousGroup)
-                            expList.collapseGroup(previousGroup);
-                        previousGroup = groupPosition;
-                    }
-                });
-            }else{
+//            if(drilldownitem.equals("group")) {
+//                LayoutInflater inflater = (LayoutInflater) SalesReturnActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                View layout = inflater.inflate(R.layout.grouppopup, null);
+//                window = new PopupWindow(layout, 650, 1000, false);
+//
+//                expList = (ExpandableListView) layout.findViewById(R.id.expandible_listview);
+//                ImageView close = (ImageView) layout.findViewById(R.id.close);
+//
+//                close.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        window.dismiss();
+//                        fabgroupitem.startAnimation(rotate_backward);
+//                        isFabOpen = false;
+//                        isopenpopup = false;
+//                    }
+//                });
+//                //window.setOutsideTouchable(true);
+//                window.showAtLocation(layout, Gravity.BOTTOM, 0, 140);
+//                //setUpAdapter();
+//                window.setOutsideTouchable(false);
+//                isopenpopup = true;
+//                setChildItems();
+//
+//                expandableAdapter = new ExpandableAdapter(this, listDataHEader, listhash);
+//                expList.setAdapter(expandableAdapter);
+//
+//                expList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+//                    int previousGroup = -1;
+//
+//                    @Override
+//                    public void onGroupExpand(int groupPosition) {
+//                        if (groupPosition != previousGroup)
+//                            expList.collapseGroup(previousGroup);
+//                        previousGroup = groupPosition;
+//                    }
+//                });
+//            }else{
                 LayoutInflater inflater = (LayoutInflater) SalesReturnActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View layout = inflater.inflate(R.layout.subgrouppopup, null);
                 window = new PopupWindow(layout, 650, 1000, false);
@@ -1132,9 +1263,9 @@ public class SalesReturnActivity extends AppCompatActivity implements View.OnCli
                 isopenpopup = true;
 
                 //Call Sub group list
-                GetSubGroupList();
-
-            }
+//                GetSubGroupList();
+                GetDisplayGroupList();
+//            }
 
         }catch (Exception e){
 

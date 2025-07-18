@@ -1593,20 +1593,22 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
 
                     case 1:
                         addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_VIEW);
-                        if (!billType.equals("2"))
+                        if (!billType.equals("2") && !billType.equals("3"))
                             addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_EDIT);
 
                         break;
                     case 2:
                         addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_VIEW);
-                        if (!billType.equals("2"))
+                        if (!billType.equals("2") && !billType.equals("3"))
                             addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_EDIT);
-                        addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_UPLOAD);
+                        if( !billType.equals("3")){
+                            addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_UPLOAD);
+                        }
                         break;
 
                     case 3:
                         addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_VIEW);
-                        if (!billType.equals("2"))
+                        if (!billType.equals("2") && !billType.equals("3"))
                             addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_EDIT);
                         addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_DOWNLOAD);
                         addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_SHARE);
@@ -1621,7 +1623,9 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                     case 6:
                         addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_VIEW);
                         addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_UPI);
-                        addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_UPLOAD);
+                        if( !billType.equals("3")){
+                            addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_UPLOAD);
+                        }
                         break;
                     case 7:
                         addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_VIEW);
@@ -1631,7 +1635,9 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                         break;
                     case 8:
                         addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_VIEW);
-                        addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_UPLOAD);
+                        if( !billType.equals("3")){
+                            addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_UPLOAD);
+                        }
                         break;
                     case 9:
                         addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_VIEW);
@@ -2304,7 +2310,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                                     }
                                 });
 
-                                if (getbilltype.equals("2")) {
+                                if (getbilltype.equals("2") || getbilltype.equals("3")) {
                                     radio_cash.setChecked(false);
                                     radio_notpaid.setChecked(true);
                                     radio_cash.setEnabled(false);
@@ -6660,7 +6666,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                         cashpaid.setVisibility(View.GONE);
                     }
 
-                    if (billtypecode.equals("2")) {
+                    if (billtypecode.equals("2") || billtypecode.equals("3")) {
                         radio_cash.setChecked(false);
                         radio_notpaid.setChecked(true);
                         radio_cash.setEnabled(false);

@@ -539,15 +539,15 @@ public class PrintData {
                 String retailerdetails =  Gencode +"\n";
                 printer.addText(retailerdetails);
 
-                printer.addTextFont(Printer.FONT_C);
-                printer.addTextAlign(Printer.ALIGN_LEFT);
-                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                String line_space13 = "------------------------------------------\n";
-                printer.addText(line_space13);
+//                printer.addTextFont(Printer.FONT_C);
+//                printer.addTextAlign(Printer.ALIGN_LEFT);
+//                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+//                String line_space13 = "------------------------------------------\n";
+//                printer.addText(line_space13);
 
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n\n";
-                printer.addText(poweredby);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n\n";
+//                printer.addText(poweredby);
 
                 String emptylines1 = "\n\n\n\n";
                 printer.addText(emptylines1);
@@ -839,15 +839,15 @@ public class PrintData {
                 String retailerdetails =  Gencode +"\n";
                 printer.addText(retailerdetails);
 
-                printer.addTextFont(Printer.FONT_C);
-                printer.addTextAlign(Printer.ALIGN_LEFT);
-                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                String line_space13 = "-----------------------------------------\n";
-                printer.addText(line_space13);
+//                printer.addTextFont(Printer.FONT_C);
+//                printer.addTextAlign(Printer.ALIGN_LEFT);
+//                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+//                String line_space13 = "-----------------------------------------\n";
+//                printer.addText(line_space13);
 
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n\n";
-                printer.addText(poweredby);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n\n";
+//                printer.addText(poweredby);
 
                 String emptylines1 = "\n\n\n";
                 printer.addText(emptylines1);
@@ -1081,15 +1081,15 @@ public class PrintData {
                 String retailerdetails = Gencode + "\n";
                 printer.addText(retailerdetails);
 
-                printer.addTextFont(Printer.FONT_C);
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                String line_space13 = "-----------------------------------------\n";
-                printer.addText(line_space13);
+//                printer.addTextFont(Printer.FONT_C);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+//                String line_space13 = "-----------------------------------------\n";
+//                printer.addText(line_space13);
 
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby = "Powered by www.shivasoftwares.com\n\n";
-                printer.addText(poweredby);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby = "Powered by www.shivasoftwares.com\n\n";
+//                printer.addText(poweredby);
 
                 String emptylines1 = "\n\n\n";
                 printer.addText(emptylines1);
@@ -1325,15 +1325,15 @@ public class PrintData {
                 String retailerdetails =  Gencode +"\n";
                 printer.addText(retailerdetails);
 
-                printer.addTextFont(Printer.FONT_C);
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                String line_space13 = "-----------------------------------------\n";
-                printer.addText(line_space13);
+//                printer.addTextFont(Printer.FONT_C);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+//                String line_space13 = "-----------------------------------------\n";
+//                printer.addText(line_space13);
 
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n\n";
-                printer.addText(poweredby);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n\n";
+//                printer.addText(poweredby);
 
                 String emptylines1 = "\n\n\n";
                 printer.addText(emptylines1);
@@ -1563,15 +1563,15 @@ public class PrintData {
                 String retailerdetails =  Gencode +"\n";
                 printer.addText(retailerdetails);
 
-                printer.addTextFont(Printer.FONT_C);
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                String line_space13 = "-----------------------------------------\n";
-                printer.addText(line_space13);
+//                printer.addTextFont(Printer.FONT_C);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+//                String line_space13 = "-----------------------------------------\n";
+//                printer.addText(line_space13);
 
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n\n";
-                printer.addText(poweredby);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n\n";
+//                printer.addText(poweredby);
 
                 String emptylines1 = "\n\n\n";
                 printer.addText(emptylines1);
@@ -1918,19 +1918,19 @@ public class PrintData {
                 printer.addTextAlign(Printer.ALIGN_CENTER);
                 printer.addText(scheduledetails);
 
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                String line_spacep = "------------------------------------------";
-                printer.addText(line_spacep);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                String line_spacep = "------------------------------------------";
+//                printer.addText(line_spacep);
 
-                printer.addTextFont(Printer.FONT_C);
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
-                String poweredby ="Powered by www.shivasoftwares.com\n";
-                printer.addText(poweredby);
+//                printer.addTextFont(Printer.FONT_C);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+////                String poweredby ="Powered by www.shivasoftwares.com\n";
+////                printer.addText(poweredby);
 
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                String line_space4 = "------------------------------------------\n";
-                printer.addText(line_space4);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                String line_space4 = "------------------------------------------\n";
+//                printer.addText(line_space4);
                 printer.addTextAlign(Printer.ALIGN_CENTER);
                 printer.addTextFont(Printer.FONT_B);
                 //String thankmsg = "       நன்றி      \n\n\n";
@@ -2589,9 +2589,9 @@ public class PrintData {
                 String line_spacee = "------------------------------------------\n";
                 printer.addText(line_spacee);
 
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n";
-                printer.addText(poweredby);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n";
+//                printer.addText(poweredby);
 
                 printer.addTextAlign(Printer.ALIGN_CENTER);
                 String line_spacee1 = "------------------------------------------\n";
@@ -3000,24 +3000,24 @@ public class PrintData {
 
 
 
-                printer.addTextAlign(Printer.ALIGN_LEFT);
-                printer.addTextFont(Printer.FONT_A);
-                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                String line_space19 = "--------------------------------\n";
-                printer.addText(line_space19);
+//                printer.addTextAlign(Printer.ALIGN_LEFT);
+//                printer.addTextFont(Printer.FONT_A);
+//                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+//                String line_space19 = "--------------------------------\n";
+//                printer.addText(line_space19);
+//
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                printer.addTextFont(Printer.FONT_C);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+////                String poweredby ="Powered by www.shivasoftwares.com\n";
+////                printer.addText(poweredby);
 
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                printer.addTextFont(Printer.FONT_C);
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                String poweredby ="Powered by www.shivasoftwares.com\n";
-                printer.addText(poweredby);
-
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                printer.addTextFont(Printer.FONT_A);
-                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                String line_space1  = "--------------------------------\n";
-                printer.addText(line_space1);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                printer.addTextFont(Printer.FONT_A);
+//                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+//                String line_space1  = "--------------------------------\n";
+//                printer.addText(line_space1);
                 printer.addTextAlign(Printer.ALIGN_CENTER);
                 printer.addTextFont(Printer.FONT_B);
                 String thankmsg = "         "+preferenceMangr.pref_getString("getwishmsg")+"      \n\n\n";
@@ -3543,13 +3543,13 @@ public class PrintData {
                 String line_spacee = "------------------------------------------\n";
                 printer.addText(line_spacee);
 
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n";
-                printer.addText(poweredby);
-
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                String line_spacee1 = "------------------------------------------\n";
-                printer.addText(line_spacee1);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n";
+//                printer.addText(poweredby);
+//
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                String line_spacee1 = "------------------------------------------\n";
+//                printer.addText(line_spacee1);
                 printer.addTextAlign(Printer.ALIGN_CENTER);
                 printer.addTextFont(Printer.FONT_B);
                 String thankmsg = "         "+preferenceMangr.pref_getString("getwishmsg")+"      \n\n\n";
@@ -4072,11 +4072,11 @@ public class PrintData {
             printer.addTextAlign(Printer.ALIGN_RIGHT);
             printer.addText(line_space);
 
-            printer.addTextFont(Printer.FONT_C);
-            printer.addTextAlign(Printer.ALIGN_CENTER);
-            printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
-            String poweredby ="Powered by www.shivasoftwares.com\n";
-            printer.addText(poweredby);
+//            printer.addTextFont(Printer.FONT_C);
+//            printer.addTextAlign(Printer.ALIGN_CENTER);
+//            printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+////            String poweredby ="Powered by www.shivasoftwares.com\n";
+////            printer.addText(poweredby);
 
             printer.addText("\n\n\n");
 
@@ -4874,19 +4874,19 @@ public class PrintData {
                 printer.addText( mCur4.getString(1) +"/"+ GenCreatedDate() +"\n");
 
 
-                printer.addTextFont(Printer.FONT_C);
-                printer.addTextAlign(Printer.ALIGN_LEFT);
-                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                String line_space13 = "-----------------------------------------\n";
-                printer.addText(line_space13);
+//                printer.addTextFont(Printer.FONT_C);
+//                printer.addTextAlign(Printer.ALIGN_LEFT);
+//                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+//                String line_space13 = "-----------------------------------------\n";
+//                printer.addText(line_space13);
 
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n";
-                printer.addText(poweredby);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n";
+//                printer.addText(poweredby);
 
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                String line_space4 = "------------------------------------------\n";
-                printer.addText(line_space4);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                String line_space4 = "------------------------------------------\n";
+//                printer.addText(line_space4);
                 printer.addTextAlign(Printer.ALIGN_CENTER);
                 printer.addTextFont(Printer.FONT_B);
                 String thankmsg = "         "+preferenceMangr.pref_getString("getwishmsg")+"      \n\n\n";
@@ -5544,11 +5544,11 @@ public class PrintData {
             printer.addTextFont(Printer.FONT_C);
             printer.addText(  GenCreatedDate() +"\n");
             printer.addText(linespace1);
-            printer.addTextFont(Printer.FONT_C);
-            printer.addTextAlign(Printer.ALIGN_CENTER);
-            printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
-            String poweredby ="Powered by www.shivasoftwares.com\n";
-            printer.addText(poweredby);
+//            printer.addTextFont(Printer.FONT_C);
+//            printer.addTextAlign(Printer.ALIGN_CENTER);
+//            printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+////            String poweredby ="Powered by www.shivasoftwares.com\n";
+////            printer.addText(poweredby);
 
             printer.addText("\n\n\n");
 
@@ -5851,11 +5851,11 @@ public class PrintData {
             printer.addTextFont(Printer.FONT_C);
             printer.addText(  GenCreatedDate() +"\n");
             printer.addText(linespace1);
-            printer.addTextFont(Printer.FONT_C);
-            printer.addTextAlign(Printer.ALIGN_CENTER);
-            printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
-            String poweredby ="Powered by www.shivasoftwares.com\n";
-            printer.addText(poweredby);
+//            printer.addTextFont(Printer.FONT_C);
+//            printer.addTextAlign(Printer.ALIGN_CENTER);
+//            printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+////            String poweredby ="Powered by www.shivasoftwares.com\n";
+////            printer.addText(poweredby);
 
             printer.addText("\n\n\n");
 
@@ -6160,15 +6160,15 @@ public class PrintData {
                 String retailerdetails =  Gencode +"\n";
                 printer.addText(retailerdetails);
 
-                printer.addTextFont(Printer.FONT_C);
-                printer.addTextAlign(Printer.ALIGN_LEFT);
-                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                String line_space13 = "-----------------------------------------\n";
-                printer.addText(line_space13);
+//                printer.addTextFont(Printer.FONT_C);
+//                printer.addTextAlign(Printer.ALIGN_LEFT);
+//                printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+//                String line_space13 = "-----------------------------------------\n";
+//                printer.addText(line_space13);
 
-                printer.addTextAlign(Printer.ALIGN_CENTER);
-                String poweredby ="Powered by www.shivasoftwares.com\n\n";
-                printer.addText(poweredby);
+//                printer.addTextAlign(Printer.ALIGN_CENTER);
+//                String poweredby ="Powered by www.shivasoftwares.com\n\n";
+//                printer.addText(poweredby);
 
                 String emptylines1 = "\n\n\n";
                 printer.addText(emptylines1);
@@ -6427,15 +6427,15 @@ public class PrintData {
                         String retailerdetails =  Gencode +"\n";
                         printer.addText(retailerdetails);
 
-                        printer.addTextFont(Printer.FONT_C);
-                        printer.addTextAlign(Printer.ALIGN_LEFT);
-                        printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                        String line_space13 = "-----------------------------------------\n";
-                        printer.addText(line_space13);
+//                        printer.addTextFont(Printer.FONT_C);
+//                        printer.addTextAlign(Printer.ALIGN_LEFT);
+//                        printer.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+//                        String line_space13 = "-----------------------------------------\n";
+//                        printer.addText(line_space13);
 
-                        printer.addTextAlign(Printer.ALIGN_CENTER);
-                        String poweredby ="Powered by www.shivasoftwares.com\n\n";
-                        printer.addText(poweredby);
+//                        printer.addTextAlign(Printer.ALIGN_CENTER);
+//                        String poweredby ="Powered by www.shivasoftwares.com\n\n";
+//                        printer.addText(poweredby);
 
                         String emptylines1 = "\n\n\n";
                         printer.addText(emptylines1);

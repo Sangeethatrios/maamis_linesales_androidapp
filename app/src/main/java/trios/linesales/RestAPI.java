@@ -1292,4 +1292,29 @@ public class RestAPI {
         return myResponse;
     }
 
+    //Get All master from mysql
+    public JSONObject DeviceVerification(String paraimeino,String paraphpfile,String parascheduledate) throws Exception {
+        String url;
+
+        url = urlString + paraphpfile;
+
+        JSONObject myResponse = null;
+
+        String data = "&" +URLEncoder.encode("paraimeino", "UTF-8") + "="
+                + URLEncoder.encode(paraimeino, "UTF-8");
+
+        data +="&" +  URLEncoder.encode("parascheduledate", "UTF-8")
+                + "=" + URLEncoder.encode(parascheduledate, "UTF-8");
+        // Send data
+        try {
+            //Read JSON response and print
+            myResponse = new JSONObject(GetJSONResponse(url, data));
+            //Log.i("LoginException",myResponse.getString("UserID"));
+        } catch (JSONException ex) {
+            Log.i("LoginException", ex.toString());
+        }
+
+        return myResponse;
+    }
+
 }

@@ -1234,7 +1234,7 @@ public class DataBaseAdapter
             }else{
                 itemgroupcode = "itemgroupcode='"+getitemgroupcode+"'";
             }
-            String sql ="select '0' as itemsubgroupcode,'All Item Sub-Group' as itemsubgroupname,'All Item Sub-Group' as  " +
+            String sql ="select '0' as itemsubgroupcode,'All Display Group' as itemsubgroupname,'All Display Group' as  " +
                     " itemsubgroupnametamil union all " +
                     " select itemsubgroupcode,itemsubgroupname,itemsubgroupnametamil " +
                     " from tblitemsubgroupmaster where status='"+statusvar+"' and "+itemgroupcode+" "+
@@ -1748,10 +1748,10 @@ public class DataBaseAdapter
         Cursor mCur = null;
         try{
             String itemsubgroupcode="";
-            if(getsubitemgroupcode.equals("0")){
+            if(getsubitemgroupcode.equals("0") || getsubitemgroupcode.equals("")){
                 itemsubgroupcode = "1=1";
             }else{
-                itemsubgroupcode = "a.itemsubgroupcode='"+getsubitemgroupcode+"'";
+                itemsubgroupcode = "a.displaygroupcode='"+getsubitemgroupcode+"'";
             }
             String itemgroupcode="";
             if(getitemgroupcode.equals("0")){
@@ -1768,7 +1768,7 @@ public class DataBaseAdapter
                     ",(select coalesce(sum(op)+sum(inward)-sum(outward),0) from tblstocktransaction" +
                     " where itemcode=a.itemcode and flag!=3) as stock,a.uppweight" +
                     " from tblitemmaster as a inner join tblitemsubgroupmaster as c on a.itemsubgroupcode=c.itemsubgroupcode " +
-                    " inner join tblbrandmaster as d on a.brandcode=d.brandcode " +
+                    " inner join tblbrandmaster as d on a.brandcode=d.brandcode LEFT JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode" +
                     " where a.status='"+statusvar+"' and "+itemgroupcode+" and "+itemsubgroupcode+" group  by a.itemcode,a.companycode,a.brandcode,a.manualitemcode," +
                     " a.itemname,a.itemnametamil,a.unitcode,a.unitweightunitcode,a.unitweight,a.uppunitcode,a.uppweight," +
                     " a.itemcategory,a.parentitemcode,a.allowpriceedit,a.allownegativestock,a.allowdiscount" +
@@ -1854,8 +1854,8 @@ public class DataBaseAdapter
                     " and  validityto>=datetime('"+getdate+"')))  and  "+getbusinesstype+" ) as freecount " +
                     " from tblitemmaster as a   " +
                     " inner join tblitemsubgroupmaster as c on c.itemsubgroupcode=a.itemsubgroupcode" +
-                    " inner join tblbrandmaster as d on a.brandcode=d.brandcode  where "+getitembusinesstype+" and " +
-                    " a.itemsubgroupcode ='"+itemsubgroupcode+"' and a.status='"+statusvar+"'  and " +
+                    " inner join tblbrandmaster as d on a.brandcode=d.brandcode LEFT JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode  where "+getitembusinesstype+" and " +
+                    " a.displaygroupcode ='"+itemsubgroupcode+"' and a.status='"+statusvar+"'  and " +
                     " itemtype!=2 group by a.itemcode,a.companycode,a.brandcode,a.manualitemcode," +
                     "a.itemname,a.itemnametamil,a.unitcode,a.unitweightunitcode,a.unitweight,a.uppunitcode,a.uppweight," +
                     "a.itemcategory,a.parentitemcode,a.allowpriceedit,a.allownegativestock,a.allowdiscount" +
@@ -1957,9 +1957,9 @@ public class DataBaseAdapter
                     " end as parentcode,case when itemcategory='parent' then 1 else  2 end as itemorder ," +
                     " c.itemsubgroupname,d.brandname,a.itemcategory," +
                     " case when f.createddate  >= datetime('now','-1 day')   then 'pricechanged' else 'nochanges' end as pricetatus,  " +
-                    " coalesce((select oldorderprice from tblitempricelisttransaction where itemcode=a.itemcode AND customertype=f.customertype " +
+                    " coalesce((select oldprice from tblitempricelisttransaction where itemcode=a.itemcode AND customertype=f.customertype " +
                     " order by autonum desc limit 1),0) as oldorderprice," +
-                    " coalesce((select neworderprice from tblitempricelisttransaction" +
+                    " coalesce((select newprice from tblitempricelisttransaction" +
                     " where itemcode=a.itemcode AND customertype=f.customertype order by autonum desc limit 1),0) as neworderprice " +
                     " from tblitemmaster as a inner join tblitemsubgroupmaster as c on" +
                     " a.itemsubgroupcode=c.itemsubgroupcode  inner join tblbrandmaster as d on a.brandcode=d.brandcode inner join " +
@@ -2404,7 +2404,7 @@ public class DataBaseAdapter
         try{
             String getdate = GenCreatedDate();
             String sql ="select schedulecode from tblsalesschedule where vancode='"+ preferenceMangr.pref_getString("getvancode") +"'" +
-                    " and  NOT ((datetime('"+getdate+"') BETWEEN scheduledate AND scheduletodate)) AND scheduletodate IS NOT NULL AND scheduledate  IS NOT NULL " +
+                    " and  NOT ((date('"+getdate+"') BETWEEN (scheduledate) AND (scheduletodate))) AND scheduletodate IS NOT NULL AND scheduledate  IS NOT NULL " +
                     " order by scheduledate desc limit 1 ";
             Cursor mCur = mDb.rawQuery(sql, null);
 
@@ -2959,7 +2959,7 @@ public class DataBaseAdapter
         String getsalesreturn = "0";
         try{
             String sql ="select coalesce(sum(grandtotal),0) from tblsalesreturn where schedulecode='"+getschedulecode+"' " +
-                    " and flag!=3 and flag!=6 ";
+                    " and flag!=3 and flag!=6  and billtypecode = 1";
             Cursor mCur = mDb.rawQuery(sql, null);
 
             if (mCur.getCount() > 0)
@@ -5085,7 +5085,7 @@ public class DataBaseAdapter
                         ""+billqry+",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt ," +
                         "(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 AND    flag<>6 ) AS daywisesalesamt," +
                         "(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' AND    flag<>3 AND    flag<>6) AS billwisebudget, " +
-                        " COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude" +
+                        " COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude ,COALESCE(gstinverificationstatus,0) AS gstinverificationstatus" +
                         " from tblcustomer" +
                         " as a inner join tblareamaster as b on a.areacode=b.areacode inner join tblcitymaster as c " +
                         " on b.citycode=c.citycode" +
@@ -5102,7 +5102,12 @@ public class DataBaseAdapter
                 sql = "select * from (select customercode,customername,customernametamil,address,a.areacode,emailid,mobileno,telephoneno," +
                         " aadharno,gstin,schemeapplicable,coalesce(customertypecode,'1'),areanametamil,citynametamil," +
                         " (select count(*) from tblsalesorder where status = '1' and flag<>3 and flag<>6 and customercode=a.customercode) as orderCount" +
-                        ""+ billqry + ",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt,(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 AND    flag<>6) AS daywisesalesamt,(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3  AND    flag<>6) AS billwisebudget, COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude from tblcustomer " +
+                        ""+ billqry + ",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt," +
+                        "(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND " +
+                        "date(billdate)=  date('now') AND    flag<>3 AND    flag<>6) AS daywisesalesamt," +
+                        "(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  " +
+                        "schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3  AND    flag<>6) AS billwisebudget," +
+                        " COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude,COALESCE(gstinverificationstatus,0) AS gstinverificationstatus from tblcustomer " +
                         " as a inner join tblareamaster as b on a.areacode=b.areacode inner join tblcitymaster as c on b.citycode=c.citycode" +
                         " where a.areacode = '" + areacode + "' and a.status='" + statusvar + "' and (business_type='1' or business_type='3') " +
                         " order by customernametamil" +
@@ -5123,7 +5128,7 @@ public class DataBaseAdapter
                 sql = "select * from (select customercode,customername,customernametamil,address,a.areacode,emailid,mobileno,telephoneno," +
                         " aadharno,gstin,schemeapplicable,coalesce(customertypecode,'1'),areanametamil,citynametamil," +
                         " (select count(*) from tblsalesorder where status = '1' and flag<>3 and flag<>6 and customercode=a.customercode) as orderCount " +
-                        ""+billqry+",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt,(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 AND    flag<>6 ) AS daywisesalesamt,(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3 AND    flag<>6) AS billwisebudget, COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude  from" +
+                        ""+billqry+",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt,(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 AND    flag<>6 ) AS daywisesalesamt,(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3 AND    flag<>6) AS billwisebudget, COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude,COALESCE(gstinverificationstatus,0) AS gstinverificationstatus  from" +
                         " tblcustomer as a inner join tblareamaster as b on a.areacode=b.areacode inner " +
                         " join tblcitymaster as c on b.citycode=c.citycode where a.areacode = '" + areacode + "' and" +
                         " a.status='" + statusvar + "' and " + varBusinessType +
@@ -5168,6 +5173,7 @@ public class DataBaseAdapter
 
         return mCur;
     }
+
     public Cursor GetAllGroupDB(){
         Cursor mCur = null;
         try{
@@ -5466,9 +5472,11 @@ public class DataBaseAdapter
                     " as parentstockqty,(case when(a.minimumsalesqty<>'null' or a.minimumsalesqty<>null) then a.minimumsalesqty else 0 end) as minimumsalesqty,"+
                     " case when parentitemcode=0 then upp else (Select upp from tblitemmaster where itemcode=a.parentitemcode) end as upp,itemtype ,coalesce((select newprice from tblitempricelisttransaction  where itemcode=a.itemcode " +
                     " AND customertype = 1 order by autonum desc limit 1),0) as minprice "+
-                    " from tblitemmaster as a  inner join tblitemsubgroupmaster as c on " +
-                    " c.itemsubgroupcode=a.itemsubgroupcode inner join tblbrandmaster as d on a.brandcode=d.brandcode " +
-                    " where " + getitembusinesstype + " and a.itemsubgroupcode ='"+itemsubgroupcode+"' and a.status='"+statusvar+"'  " +
+                    " from tblitemmaster as a  " +
+                    "inner join tblitemsubgroupmaster as c on c.itemsubgroupcode=a.itemsubgroupcode " +
+                    "inner join tblbrandmaster as d on a.brandcode=d.brandcode " +
+                    " LEFT JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode" +
+                    " where " + getitembusinesstype + " and a.displaygroupcode ='"+itemsubgroupcode+"' and a.status='"+statusvar+"'  " +
                     " and (a.itemcode in (select itemcode from tblstocktransaction where  flag!=3) " +
                     " or parentcode in (select itemcode from tblstocktransaction where  flag!=3)) and " +
                     " a.companycode in (select companycode from tblcompanymaster where status='"+statusvar+"' ) ) as dec " +
@@ -6222,8 +6230,8 @@ public class DataBaseAdapter
                     "  c.itemsubgroupname,d.brandname,(case when(a.minimumsalesqty<>'null' or a.minimumsalesqty<>null) then a.minimumsalesqty else 0 end) as minimumsalesqty " +
                     " from tblitemmaster as a inner join tblstocktransaction as b " +
                     " inner join tblitemsubgroupmaster as c on c.itemsubgroupcode=a.itemsubgroupcode" +
-                    " inner join tblbrandmaster as d on a.brandcode=d.brandcode  where " +
-                    " a.itemsubgroupcode ='"+itemsubgroupcode+"' and a.status='"+statusvar+"' and b.flag!=3  " +
+                    " inner join tblbrandmaster as d on a.brandcode=d.brandcode LEFT JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode  where " +
+                    " a.displaygroupcode ='"+itemsubgroupcode+"' and a.status='"+statusvar+"' and b.flag!=3  " +
                     "and itemtype!=2 group by a.itemcode,a.companycode,a.brandcode,a.manualitemcode," +
                     "a.itemname,a.itemnametamil,a.unitcode,a.unitweightunitcode,a.unitweight,a.uppunitcode,a.uppweight," +
                     "a.itemcategory,a.parentitemcode,a.allowpriceedit,a.allownegativestock,a.allowdiscount" +
@@ -8829,7 +8837,7 @@ if(schemeitem.equals("yes")){
             if(itemsubgroupcode.equals("0")){
                 getitemsubgroupcode = "1=1";
             }else{
-                getitemsubgroupcode = "d.itemsubgroupcode='"+itemsubgroupcode+"'";
+                getitemsubgroupcode = "b.displaygroupcode='"+itemsubgroupcode+"'";
             }
 
             String getitemtype="";
@@ -8939,6 +8947,7 @@ if(schemeitem.equals("yes")){
                     "  INNER JOIN tblunitmaster AS c ON b.unitcode = c.unitcode  " +
                     "  INNER JOIN tblitemsubgroupmaster AS d ON d.itemsubgroupcode = b.itemsubgroupcode  " +
                     "  INNER JOIN tblbrandmaster AS e ON b.brandcode = e.brandcode  " +
+                     "LEFT JOIN tbldisplaygroup on b.displaygroupcode=dgroupcode" +
                     "  " +
                     "  WHERE "+getcompanycode+" and "+getitemtype+" and "+getitemsubgroupcode+" AND  a.flag NOT IN (3, 6)  " +
                     "  " +
@@ -9417,6 +9426,83 @@ if(schemeitem.equals("yes")){
         }
     }
 
+    // display group master
+
+    public void syncdisplaygroup (JSONObject object)
+    {
+        if(object!=null)
+        {
+            JSONArray json_category = null;
+            Cursor cursor = null;
+
+            try {
+                String success = object.getString("success");
+                if(success.equals("1"))
+                {
+                    json_category = object.getJSONArray("Value");
+                    for(int i=0;i<json_category.length();i++)
+                    {
+                        try {
+                            JSONObject obj = (JSONObject) json_category.get(i);
+                            if (obj.getString("process").equals("Insert")) {
+                                String sql = "SELECT * FROM 'tbldisplaygroup' WHERE dgroupcode=" + obj.getString("dgroupcode");
+                                cursor = mDb.rawQuery(sql, null);
+                                if (!cursor.moveToFirst()) {
+                                    int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
+
+                                    sql = "INSERT INTO 'tbldisplaygroup' VALUES('" + gc +"','" + obj.getString("dgroupcode")+"'," +
+                                            "'" + obj.getString("dgroupname").replaceAll("'","''")+"'," +
+                                            "'" + obj.getString("dgrouptamil").replaceAll("'","''")+"'," +
+                                            "'" + obj.getString("status")+"','" + obj.getString("makerid")+"'," +
+                                            "'" + obj.getString("createddate")+"','" + obj.getString("updateddate")+"')";
+                                    mDb.execSQL(sql);
+                                } else {
+                                    int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
+                                    String sql1 = "UPDATE 'tbldisplaygroup' SET autonum='" + gc +"'," +
+                                            "dgroupname='" + obj.getString("dgroupname").replaceAll("'","''")+"'," +
+                                            "dgrouptamil='" + obj.getString("dgrouptamil").replaceAll("'","''")+"'," +
+                                            "status='" + obj.getString("status")+"'," +
+                                            "makerid='" + obj.getString("makerid")+"'," +
+                                            "createddate='" + obj.getString("createddate")+"'," +
+                                            "updateddate='" + obj.getString("updateddate")+"' " +
+                                            " WHERE dgroupcode=" + obj.getString("dgroupcode");
+                                    mDb.execSQL(sql1);
+                                }
+
+                            }
+                            else {
+                                int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
+                                String sql1 = "UPDATE 'tbldisplaygroup' SET autonum='" + gc +"'," +
+                                        "dgroupname='" + obj.getString("dgroupname").replaceAll("'","''")+"'," +
+                                        "dgrouptamil='" + obj.getString("dgrouptamil").replaceAll("'","''")+"'," +
+                                        "status='" + obj.getString("status")+"'," +
+                                        "makerid='" + obj.getString("makerid")+"'," +
+                                        "createddate='" + obj.getString("createddate")+"'," +
+                                        "updateddate='" + obj.getString("updateddate")+"' " +
+                                        " WHERE dgroupcode=" + obj.getString("dgroupcode");
+                                mDb.execSQL(sql1);
+                            }
+                        } catch (JSONException ex) {
+                            if(cursor != null)
+                                cursor.close();
+                            insertErrorLog(ex.toString(), this.getClass().getSimpleName() + " - syncdisplaysubgroup", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                        } finally{
+                            if(cursor != null)
+                                cursor.close();
+                        }
+                    }
+                }
+            } catch (JSONException ex) {
+                // TODO Auto-generated catch block
+                if(cursor != null)
+                    cursor.close();
+                insertErrorLog(ex.toString(), this.getClass().getSimpleName() + " - syncdisplaysubgroup", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            } finally {
+                if(cursor != null)
+                    cursor.close();
+            }
+        }
+    }
     //Sync area mater to sqlite
     //column name
 //        "autonum"
@@ -10685,7 +10771,7 @@ if(schemeitem.equals("yes")){
                                             "'" + obj.getString("uppweightunitcode")+"','" + obj.getString("offset")+"'," +
                                             "'" + obj.getString("orderstatus")+"','" + obj.getString("maxorderqty")+"' ," +
                                             "'" + obj.getString("business_type")+"','" + obj.getString("minimumsalesqty")+"'," +
-                                            " '" + obj.getString("itemtype")+"','"+obj.getString("erpitemcode")+"')";
+                                            " '" + obj.getString("itemtype")+"','"+obj.getString("erpitemcode")+"','"+obj.getString("displaygroupcode")+"')";
                                     mDb.execSQL(sql);
                                 } else {
                                     int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
@@ -10710,7 +10796,8 @@ if(schemeitem.equals("yes")){
                                             " business_type='" + obj.getString("business_type")+"'," +
                                             " minimumsalesqty='" + obj.getString("minimumsalesqty")+"', " +
                                             " itemtype='"+ obj.getString("itemtype") +"'," +
-                                            "erpitemcode='"+obj.getString("erpitemcode")+"'"+
+                                            "erpitemcode='"+obj.getString("erpitemcode")+"',"+
+                                            "displaygroupcode='"+obj.getString("displaygroupcode")+"'"+
                                             " WHERE itemcode=" + obj.getString("itemcode");
                                     mDb.execSQL(sql1);
                                 }
@@ -10739,7 +10826,8 @@ if(schemeitem.equals("yes")){
                                         " business_type='" + obj.getString("business_type")+"'," +
                                         " minimumsalesqty='" + obj.getString("minimumsalesqty")+"' , " +
                                         " itemtype='"+ obj.getString("itemtype") +"'," +
-                                        "erpitemcode='"+obj.getString("erpitemcode")+"'"+
+                                        "erpitemcode='"+obj.getString("erpitemcode")+"',"+
+                                        "displaygroupcode='"+obj.getString("displaygroupcode")+"'"+
                                         " WHERE itemcode=" + obj.getString("itemcode");
                                 mDb.execSQL(sql1);
                             }
@@ -12648,6 +12736,8 @@ if(schemeitem.equals("yes")){
                 if(success.equals("1"))
                 {
                     json_category = object.getJSONArray("Value");
+                    String deletesql = "DELETE FROM 'tblsalesorder'";
+                    mDb.execSQL(deletesql);
                     String sqlcount = "SELECT coalesce(count(*),0) FROM 'tblsalesorder'";
                     Cursor mCur = mDb.rawQuery(sqlcount, null);
                     if (mCur.getCount() > 0)
@@ -15644,8 +15734,8 @@ if(schemeitem.equals("yes")){
                     " case when parentitemcode=0 then a.itemcode else parentitemcode  end as parentcode," +
                     " case when itemcategory='parent' then 1 else  2 end as itemorder , c.itemsubgroupname,d.brandname, a.itemcategory, " +
                     " case when f.createddate  >= datetime('now','-1 day')   then 'pricechanged' else 'nochanges' end as pricetatus," +
-                    " coalesce((select oldorderprice from tblitempricelisttransaction where itemcode=a.itemcode AND customertype=f.customertype  order by autonum desc limit 1),0) as oldorderprice, " +
-                    " coalesce((select neworderprice from tblitempricelisttransaction where itemcode=a.itemcode AND customertype=f.customertype order by autonum desc limit 1),0) as neworderprice  " +
+                    " coalesce((select oldprice from tblitempricelisttransaction where itemcode=a.itemcode AND customertype=f.customertype  order by autonum desc limit 1),0) as oldorderprice, " +
+                    " coalesce((select newprice from tblitempricelisttransaction where itemcode=a.itemcode AND customertype=f.customertype order by autonum desc limit 1),0) as neworderprice  " +
                     " from tblitemmaster as a " +
                     " inner join tblitemsubgroupmaster as c on a.itemsubgroupcode=c.itemsubgroupcode " +
                     " inner join tblbrandmaster as d on a.brandcode=d.brandcode " +
@@ -15744,5 +15834,27 @@ if(schemeitem.equals("yes")){
 
         return mCur;
     }
+    //for sales
+    public Cursor GetDisplayGroupList()
+    {
+        Cursor mCur = null;
+        try{
+            getdate = GenCreatedDate();
+            String sql ="select distinct b.dgroupcode,b.dgroupname,b.dgrouptamil " +
+                    "from tblitemmaster as a " +
+                    "LEFT join tbldisplaygroup as b on a.displaygroupcode=b.dgroupcode " +
+                    "where a.status='"+statusvar+"' and b.Status='"+statusvar+"' order by a.displaygroupcode ";
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+
+        return mCur;
+    }
+
 
 }

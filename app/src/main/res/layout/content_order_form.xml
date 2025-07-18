@@ -131,7 +131,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:text="Please select item sub group"
+            android:text="Please select display group"
             android:gravity="center"
             android:visibility="gone"
             android:id="@+id/txt_nodataavailable"

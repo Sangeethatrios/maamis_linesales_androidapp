@@ -37,7 +37,10 @@ android {
 
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
+//                    Test
+//                    outputFileName = "Trio-S_LineSales_V${defaultConfig.versionName}_Test.apk"
                     outputFileName = "Trio-S_LineSales_V${defaultConfig.versionName}.apk"
+
                 }
 
             }

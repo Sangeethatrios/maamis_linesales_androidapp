@@ -297,7 +297,7 @@ public class ReviewActivity extends AppCompatActivity {
             setItemAdapter();
 
             if(SalesActivity.ifsavedsales) {
-                if (getbilltypecode.equals("2")) {
+                if (getbilltypecode.equals("2")   || getbilltypecode.equals("3")) {
                     imgcamera.setVisibility(View.VISIBLE);
                     txtSalesprint.setVisibility(View.GONE);
                 } else {
@@ -351,14 +351,14 @@ public class ReviewActivity extends AppCompatActivity {
                                 }
 
                                 String getbillcopystatus = "";
-                                if (getbilltypecode.equals("2") || (getbilltypecode.equals("1") && !SalesActivity.gstnnumber.equals("")
+                                if ((getbilltypecode.equals("2") || (getbilltypecode.equals("1") || getbilltypecode.equals("3")) && !SalesActivity.gstnnumber.equals("")
                                         && !SalesActivity.gstnnumber.equals("null") && !SalesActivity.gstnnumber.equals(null))) {
                                     getbillcopystatus = "yes";
                                 } else {
                                     getbillcopystatus = "";
                                 }
                                 String getcashpaidstatus = "";
-                                if (getbilltypecode.equals("2")) {
+                                if (getbilltypecode.equals("2") || getbilltypecode.equals("3")) {
                                     getcashpaidstatus = "no";
                                 } else {
                                     getcashpaidstatus = "";
@@ -366,7 +366,7 @@ public class ReviewActivity extends AppCompatActivity {
 
                                 String getshowpopupstatus = objdatabaseadapter.getshowcashpaidpopupstatus();
                                 if (getshowpopupstatus.equals("no") || getshowpopupstatus.equals("null") || getshowpopupstatus.equals(null)) {
-                                    if (getbilltypecode.equals("2")) {
+                                    if (getbilltypecode.equals("2") || getbilltypecode.equals("3")) {
                                         getcashpaidstatus = "no";
                                     } else {
                                         getcashpaidstatus = "yes";
@@ -571,7 +571,7 @@ public class ReviewActivity extends AppCompatActivity {
                                                                     txtSalesprint.setEnabled(true);
                                                                     Intent i = new Intent(ReviewActivity.this, SalesListActivity.class);
                                                                     startActivity(i);
-                                                                    if (getbilltypecode.equals("2")) {
+                                                                    if (getbilltypecode.equals("2") || getbilltypecode.equals("3")) {
                                                                         imgcamera.setVisibility(View.VISIBLE);
                                                                         txtSalesprint.setVisibility(View.GONE);
                                                                     } else {
@@ -595,7 +595,7 @@ public class ReviewActivity extends AppCompatActivity {
                                                                 txtSalesprint.setEnabled(true);
                                                                 Intent i = new Intent(ReviewActivity.this, SalesListActivity.class);
                                                                 startActivity(i);
-                                                                if (getbilltypecode.equals("2")) {
+                                                                if (getbilltypecode.equals("2") || getbilltypecode.equals("3")) {
                                                                     imgcamera.setVisibility(View.VISIBLE);
                                                                     txtSalesprint.setVisibility(View.GONE);
                                                                 } else {
@@ -619,7 +619,7 @@ public class ReviewActivity extends AppCompatActivity {
                                                             txtSalesprint.setEnabled(true);
                                                             Intent i = new Intent(ReviewActivity.this, SalesListActivity.class);
                                                             startActivity(i);
-                                                            if (getbilltypecode.equals("2")) {
+                                                            if (getbilltypecode.equals("2") || getbilltypecode.equals("3")) {
                                                                 imgcamera.setVisibility(View.VISIBLE);
                                                                 txtSalesprint.setVisibility(View.GONE);
                                                             } else {
@@ -648,7 +648,7 @@ public class ReviewActivity extends AppCompatActivity {
                                                     //toast4.setGravity(Gravity.CENTER, 0, 0);
                                                     toast4.show();
                                                     printpopup.dismiss();
-                                                    if (getbilltypecode.equals("2")) {
+                                                    if (getbilltypecode.equals("2") || getbilltypecode.equals("3")) {
                                                         imgcamera.setVisibility(View.VISIBLE);
                                                         txtSalesprint.setVisibility(View.GONE);
                                                     } else {
@@ -685,7 +685,7 @@ public class ReviewActivity extends AppCompatActivity {
                                                 txtSalesprint.setVisibility(View.GONE);
                                                 txtSalesprint.setEnabled(true);
 
-                                                if (getbilltypecode.equals("2")) {
+                                                if (getbilltypecode.equals("2") || getbilltypecode.equals("3")) {
                                                     imgcamera.setVisibility(View.VISIBLE);
                                                     txtSalesprint.setVisibility(View.GONE);
                                                 } else {
@@ -2082,7 +2082,7 @@ public class ReviewActivity extends AppCompatActivity {
                             Toast toast = Toast.makeText(getApplicationContext(), "Unable to connect Bluetooth Printer. Please check the printer is turn or or not!", Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
-                            if(Getbilltypecode.equals("2")) {
+                            if(Getbilltypecode.equals("2") || getbilltypecode.equals("3")) {
                                 imgcamera.setVisibility(View.VISIBLE);
                                 txtSalesprint.setVisibility(View.GONE);
                             }
@@ -2209,7 +2209,7 @@ public class ReviewActivity extends AppCompatActivity {
                             Toast toast = Toast.makeText(getApplicationContext(), "Unable to connect Bluetooth Printer. Please check the printer is turn or or not!", Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
-                            if(Getbilltypecode.equals("2")) {
+                            if(Getbilltypecode.equals("2") || getbilltypecode.equals("3")) {
                                 imgcamera.setVisibility(View.VISIBLE);
                                 txtSalesprint.setVisibility(View.GONE);
                             }

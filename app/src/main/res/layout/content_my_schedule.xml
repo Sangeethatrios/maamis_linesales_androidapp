@@ -136,7 +136,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="8dp"
-                    android:weightSum="1">
+                    android:weightSum="1"
+                    android:id="@+id/lldriver">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -155,7 +156,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="8dp"
-                    android:weightSum="1">
+                    android:weightSum="1"
+                    android:id="@+id/llhelper">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -173,7 +175,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="8dp"
-                    android:weightSum="1">
+                    android:weightSum="1"
+                    android:id="@+id/lladvance">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -192,7 +195,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="8dp"
-                    android:weightSum="1">
+                    android:weightSum="1"
+                    android:id="@+id/llstartkl">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -442,7 +446,7 @@
                         android:layout_marginTop="4dp"
                         android:paddingRight="8dp"
                         android:paddingLeft="25dp"
-                        android:weightSum="1">
+                        android:weightSum="1" >
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"

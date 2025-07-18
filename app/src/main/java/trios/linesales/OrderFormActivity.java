@@ -74,6 +74,7 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
     public static OrderListBaseAdapter adapter;
     public static TextView txt_nodataavailable;
     public static PreferenceMangr preferenceMangr=null;
+    ArrayList<DisplayGroupDetails> displayGroupDetails = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -588,45 +589,46 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                     objdatabaseadapter.close();
             }
 
-            if(drilldownitem.equals("group")) {
-                isopenshowpopup=true;
-                LayoutInflater inflater = (LayoutInflater) OrderFormActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View layout = inflater.inflate(R.layout.grouppopup, null);
-                window = new PopupWindow(layout, 650, 1000, false);
-
-                expList = (ExpandableListView) layout.findViewById(R.id.expandible_listview);
-                ImageView close = (ImageView) layout.findViewById(R.id.close);
-
-                close.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        window.dismiss();
-                        fabgroupitem.startAnimation(rotate_backward);
-                        isFabOpen = false;
-                        isopenpopup = false;
-                    }
-                });
-                //window.setOutsideTouchable(true);
-                window.showAtLocation(layout, Gravity.BOTTOM, 0, 140);
-                //setUpAdapter();
-                window.setOutsideTouchable(false);
-                isopenpopup = true;
-                setChildItems();
-
-                expandableAdapter = new ExpandableAdapter(this, listDataHEader, listhash);
-                expList.setAdapter(expandableAdapter);
-
-                expList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-                    int previousGroup = -1;
-
-                    @Override
-                    public void onGroupExpand(int groupPosition) {
-                        if (groupPosition != previousGroup)
-                            expList.collapseGroup(previousGroup);
-                        previousGroup = groupPosition;
-                    }
-                });
-            }else{
+//            if(drilldownitem.equals("group")) {
+//                isopenshowpopup=true;
+//                LayoutInflater inflater = (LayoutInflater) OrderFormActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                View layout = inflater.inflate(R.layout.grouppopup, null);
+//                window = new PopupWindow(layout, 650, 1000, false);
+//
+//                expList = (ExpandableListView) layout.findViewById(R.id.expandible_listview);
+//                ImageView close = (ImageView) layout.findViewById(R.id.close);
+//
+//                close.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        window.dismiss();
+//                        fabgroupitem.startAnimation(rotate_backward);
+//                        isFabOpen = false;
+//                        isopenpopup = false;
+//                    }
+//                });
+//                //window.setOutsideTouchable(true);
+//                window.showAtLocation(layout, Gravity.BOTTOM, 0, 140);
+//                //setUpAdapter();
+//                window.setOutsideTouchable(false);
+//                isopenpopup = true;
+//                setChildItems();
+//
+//                expandableAdapter = new ExpandableAdapter(this, listDataHEader, listhash);
+//                expList.setAdapter(expandableAdapter);
+//
+//                expList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+//                    int previousGroup = -1;
+//
+//                    @Override
+//                    public void onGroupExpand(int groupPosition) {
+//                        if (groupPosition != previousGroup)
+//                            expList.collapseGroup(previousGroup);
+//                        previousGroup = groupPosition;
+//                    }
+//                });
+//            }
+//            else{
                 isopenshowpopup=true;
                 LayoutInflater inflater = (LayoutInflater) OrderFormActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View layout = inflater.inflate(R.layout.subgrouppopup, null);
@@ -651,8 +653,8 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                 isopenpopup = true;
 
                 //Call Sub group list
-                GetSubGroupList();
-            }
+                GetDisplayGroupList();
+//            }
 
         }catch (Exception e){
 
@@ -697,6 +699,139 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                 Cur.close();
         }
     }
+
+
+
+    @SuppressLint("Range")
+    public  void GetDisplayGroupList(){
+        DataBaseAdapter objdatabaseadapter = null;
+        Cursor Cur=null;
+        displayGroupDetails.clear();
+        try{
+            objdatabaseadapter = new DataBaseAdapter(context);
+            objdatabaseadapter.open();
+            Cur = objdatabaseadapter.GetDisplayGroupList();
+            if(Cur.getCount()>0) {
+                for(int i=0;i<Cur.getCount();i++){
+                    displayGroupDetails.add(new DisplayGroupDetails(
+                            Cur.getString(Cur.getColumnIndex("dgroupcode")),
+                            Cur.getString(Cur.getColumnIndex("dgroupname")),
+                            Cur.getString(Cur.getColumnIndex("dgrouptamil"))));
+                    Cur.moveToNext();
+                }
+
+                DisplayGroupAdapter adapter = new DisplayGroupAdapter(context, displayGroupDetails);
+                lv_subgroup.setAdapter(adapter);
+            }else{
+                Toast toast = Toast.makeText(getApplicationContext(),"Van out of stock", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        }  catch (Exception e){
+            Log.i("GetDisplayGroupList", e.toString());
+        }
+        finally {
+            if(objdatabaseadapter != null)
+                objdatabaseadapter.close();
+            if(Cur != null)
+                Cur.close();
+        }
+    }
+
+
+
+    public class DisplayGroupAdapter extends BaseAdapter {
+
+        private Context context;
+        private LayoutInflater layoutInflater;
+        ArrayList<DisplayGroupDetails> displayGroupDetails;
+        DisplayGroupAdapter(Context c, ArrayList<DisplayGroupDetails> displayGroupDetails) {
+            context = c;
+            this.displayGroupDetails = displayGroupDetails;
+            layoutInflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public int getCount() {
+            return this.displayGroupDetails.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return this.displayGroupDetails.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+        @Override
+        public int getViewTypeCount() {
+            return getCount();
+        }
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+        @SuppressLint("InflateParams")
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+
+            DisplayGroupAdapter.ViewHolder mHolder;
+
+            if (convertView == null) {
+                convertView = layoutInflater.inflate(R.layout.subgrouppopuplist, parent, false);
+                mHolder = new DisplayGroupAdapter.ViewHolder();
+                try {
+                    mHolder.listsubgroup = (TextView) convertView.findViewById(R.id.listsubgroup);
+                } catch (Exception e) {
+                    Log.i("Customer", e.toString());
+                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                    mDbErrHelper.open();
+                    String geterrror = e.toString();
+                    mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                    mDbErrHelper.close();
+                }
+                convertView.setTag(mHolder);
+            } else {
+                mHolder = (DisplayGroupAdapter.ViewHolder) convertView.getTag();
+            }
+
+            DisplayGroupDetails currentListData = (DisplayGroupDetails) getItem(position);
+            try {
+                mHolder.listsubgroup.setText(currentListData.getDisplayGroupNameTamil());
+            } catch (Exception e) {
+                Log.i("Customer", e.toString());
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            }
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getstaticsubcode = currentListData.getDisplayGroupCode();
+//                    getitemsfromcode = currentListData.getDisplayGroupCode();
+
+
+                    GetItem(currentListData.getDisplayGroupCode());
+                    window.dismiss();
+                    fabgroupitem.startAnimation(rotate_backward);
+                    isFabOpen = false;
+                    isopenpopup = false;
+                }
+            });
+            return convertView;
+        }
+
+        private class ViewHolder {
+            private TextView listsubgroup;
+
+        }
+
+    }
+
 
     //Subgroup Adapter
     public class SalesSubGroupAdapter extends BaseAdapter {
@@ -772,7 +907,7 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                 public void onClick(View v) {
                     getstaticsubcode = SubGroupCode[position];
                     getitemsgroupcode = "0";
-                    GetItem();
+                    GetItem(getstaticsubcode);
                     window.dismiss();
                     fabgroupitem.startAnimation(rotate_backward);
                     isFabOpen = false;
@@ -874,7 +1009,7 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                 public void onClick(View v) {
                      getstaticsubcode = finalGetsubgroupcode;
                      getitemsgroupcode = finalGetgroupcode;
-                    GetItem();
+                    GetItem(getstaticsubcode);
                     window.dismiss();
                     fabgroupitem.startAnimation(rotate_backward);
                     isFabOpen = false;
@@ -1037,13 +1172,13 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
         }
     }
     //Item master
-    public static void GetItem(){
+    public static void GetItem(String getdisplaygroupcode){
         DataBaseAdapter objdatabaseadapter = null;
         Cursor Cur=null;
         try{
             objdatabaseadapter = new DataBaseAdapter(context);
             objdatabaseadapter.open();
-            Cur = objdatabaseadapter.GetOrderItemDB(getitemsgroupcode,getstaticsubcode);
+            Cur = objdatabaseadapter.GetOrderItemDB(getitemsgroupcode,getdisplaygroupcode);
             if(Cur.getCount()>0) {
                 txt_nodataavailable.setVisibility(View.GONE);
                 orderFormDetails.clear();
@@ -1179,7 +1314,7 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                     getitemsubgroupcode="0";
                     txtitemsubgroup.setText("");
                     txtitemsubgroup.setHint("Item Sub-Group");
-                    GetItem();
+                    GetItem("");
                 }
             });
             return convertView;
@@ -1280,7 +1415,7 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
 
                     getitemsubgroupcode = itemsubgroupcode[position];
                     itemsubgroupdialog.dismiss();
-                    GetItem();
+                    GetItem("");
                 }
             });
             return convertView;

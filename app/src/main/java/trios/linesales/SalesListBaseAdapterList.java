@@ -163,7 +163,7 @@ class SalesListBaseAdapterList extends BaseAdapter {
                     !currentListData.getGstinumber().equals(null) && !currentListData.getGstinumber().equals("0")){
                 mHolder.saleslistgstin.setBackgroundColor(context.getResources().getColor(R.color.green));
                 mHolder.saleslistgstin.setText("GST");
-                if(currentListData.getPaymenttype().equals("2")) {
+                if(currentListData.getPaymenttype().equals("2")  ) {
                     if(currentListData.getFlag().equals("3") || currentListData.getFlag().equals("6")) {
                         mHolder.saleslistgstin.setBackgroundColor(context.getResources().getColor(R.color.gray));
                         mHolder.saleslistgstin.setText("");
@@ -189,7 +189,7 @@ class SalesListBaseAdapterList extends BaseAdapter {
                     }
                 }
             }else{
-                if(currentListData.getPaymenttype().equals("2")){
+                if(currentListData.getPaymenttype().equals("2")  ){
                    /* mHolder.saleslistgstin.setBackgroundColor(context.getResources().getColor(R.color.lightred));
                     mHolder.saleslistgstin.setText("No GST");*/
                     if(currentListData.getFlag().equals("3") || currentListData.getFlag().equals("6")) {
@@ -317,7 +317,7 @@ class SalesListBaseAdapterList extends BaseAdapter {
 
             for (int i = 0; i < myList.size(); i++) {
                 if(!myList.get(i).getFlag().equals("3") && !myList.get(i).getFlag().equals("6")
-                        && myList.get(i).getPaymenttype().equals("2")) {
+                        && (myList.get(i).getPaymenttype().equals("2") || myList.get(i).getPaymenttype().equals("3")) ) {
                     Double qty = Double.parseDouble(myList.get(i).getGrandtotal());
                     creditamt = creditamt +qty;
                 }

@@ -72,6 +72,7 @@ public class VanStockActivity extends AppCompatActivity {
 
     public static ArrayList<String> companyCodeList = new ArrayList<>();
 
+    ArrayList<DisplayGroupDetails> displayGroupDetails = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -315,7 +316,8 @@ public class VanStockActivity extends AppCompatActivity {
         vanitemsubgroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GetItemSubGroup();
+//                GetItemSubGroup();
+                GetDisplayGroupList();
             }
         });
     }
@@ -370,7 +372,7 @@ public class VanStockActivity extends AppCompatActivity {
                 lv_SubGroupList.setAdapter(adapter);
                 itemsubgroupdialog.show();
             }else{
-                Toast toast = Toast.makeText(getApplicationContext(),"No item sub group in this item group", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(),"No item display group in this item group", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
                 //Toast.makeText(getApplicationContext(),"No item sub group in this item group",Toast.LENGTH_SHORT).show();
@@ -385,6 +387,151 @@ public class VanStockActivity extends AppCompatActivity {
             if(Cur != null)
                 Cur.close();
         }
+    }
+
+
+
+
+    @SuppressLint("Range")
+    public  void GetDisplayGroupList(){
+        DataBaseAdapter objdatabaseadapter = null;
+        Cursor Cur=null;
+        displayGroupDetails.clear();
+        try{
+            objdatabaseadapter = new DataBaseAdapter(context);
+            objdatabaseadapter.open();
+            Cur = objdatabaseadapter.GetDisplayGroupList();
+            if(Cur.getCount()>0) {
+                for(int i=0;i<Cur.getCount();i++){
+                    displayGroupDetails.add(new DisplayGroupDetails(
+                            Cur.getString(Cur.getColumnIndex("dgroupcode")),
+                            Cur.getString(Cur.getColumnIndex("dgroupname")),
+                            Cur.getString(Cur.getColumnIndex("dgrouptamil"))));
+                    Cur.moveToNext();
+                }
+                itemsubgroupdialog = new Dialog(context);
+                itemsubgroupdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                itemsubgroupdialog.setContentView(R.layout.itemsubgrouppopup);
+                lv_SubGroupList = (ListView) itemsubgroupdialog.findViewById(R.id.lv_SubGroupList);
+                ImageView close = (ImageView) itemsubgroupdialog.findViewById(R.id.close);
+                close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        itemsubgroupdialog.dismiss();
+                    }
+                });
+                DisplayGroupAdapter adapter = new DisplayGroupAdapter(context, displayGroupDetails);
+                lv_SubGroupList.setAdapter(adapter);
+                itemsubgroupdialog.show();
+
+
+            }else{
+                Toast toast = Toast.makeText(getApplicationContext(),"Van out of stock", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        }  catch (Exception e){
+            Log.i("GetDisplayGroupList", e.toString());
+        }
+        finally {
+            if(objdatabaseadapter != null)
+                objdatabaseadapter.close();
+            if(Cur != null)
+                Cur.close();
+        }
+    }
+
+    public class DisplayGroupAdapter extends BaseAdapter {
+
+        private Context context;
+        private LayoutInflater layoutInflater;
+        ArrayList<DisplayGroupDetails> displayGroupDetails;
+        DisplayGroupAdapter(Context c, ArrayList<DisplayGroupDetails> displayGroupDetails) {
+            context = c;
+            this.displayGroupDetails = displayGroupDetails;
+            layoutInflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public int getCount() {
+            return this.displayGroupDetails.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return this.displayGroupDetails.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+        @Override
+        public int getViewTypeCount() {
+            return getCount();
+        }
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+        @SuppressLint("InflateParams")
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+
+            DisplayGroupAdapter.ViewHolder mHolder;
+
+            if (convertView == null) {
+                convertView = layoutInflater.inflate(R.layout.displaygrouppopuplist, parent, false);
+                mHolder = new DisplayGroupAdapter.ViewHolder();
+                try {
+                    mHolder.listsubgroup = (TextView) convertView.findViewById(R.id.listsubgroup);
+                } catch (Exception e) {
+                    Log.i("Customer", e.toString());
+                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                    mDbErrHelper.open();
+                    String geterrror = e.toString();
+                    mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                    mDbErrHelper.close();
+                }
+                convertView.setTag(mHolder);
+            } else {
+                mHolder = (DisplayGroupAdapter.ViewHolder) convertView.getTag();
+            }
+
+            DisplayGroupDetails currentListData = (DisplayGroupDetails) getItem(position);
+            try {
+                mHolder.listsubgroup.setText(currentListData.getDisplayGroupNameTamil());
+            } catch (Exception e) {
+                Log.i("Customer", e.toString());
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            }
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    if (!Utilities.isNullOrEmpty(currentListData.getDisplayGroupNameTamil())) {
+                        vanitemsubgroup.setText(String.valueOf(currentListData.getDisplayGroupNameTamil()));
+                    } else {
+                        vanitemsubgroup.setText(String.valueOf(currentListData.getDisplayGroupName()));
+                    }
+                    getlistitemsubgroupcode = currentListData.getDisplayGroupCode();
+                    itemsubgroupdialog.dismiss();
+                    GetVanStock();
+                }
+            });
+            return convertView;
+        }
+
+        private class ViewHolder {
+            private TextView listsubgroup;
+
+        }
+
     }
 
     //Get company List

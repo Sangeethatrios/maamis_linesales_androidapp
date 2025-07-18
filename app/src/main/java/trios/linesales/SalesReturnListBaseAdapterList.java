@@ -235,7 +235,7 @@ class SalesReturnListBaseAdapterList extends BaseAdapter {
 
             for (int i = 0; i < myList.size(); i++) {
                 if(!myList.get(i).getFlag().equals("3")   && !myList.get(i).getFlag().equals("6")
-                        && myList.get(i).getPaymenttype().equals("2")) {
+                        && (myList.get(i).getPaymenttype().equals("2") || myList.get(i).getPaymenttype().equals("3"))) {
                     Double qty = Double.parseDouble(myList.get(i).getGrandtotal());
                     creditamt = creditamt + qty ;
                 }
