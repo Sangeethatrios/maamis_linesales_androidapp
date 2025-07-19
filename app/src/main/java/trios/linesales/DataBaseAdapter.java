@@ -1768,7 +1768,7 @@ public class DataBaseAdapter
                     ",(select coalesce(sum(op)+sum(inward)-sum(outward),0) from tblstocktransaction" +
                     " where itemcode=a.itemcode and flag!=3) as stock,a.uppweight" +
                     " from tblitemmaster as a inner join tblitemsubgroupmaster as c on a.itemsubgroupcode=c.itemsubgroupcode " +
-                    " inner join tblbrandmaster as d on a.brandcode=d.brandcode LEFT JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode" +
+                    " inner join tblbrandmaster as d on a.brandcode=d.brandcode INNER JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode" +
                     " where a.status='"+statusvar+"' and "+itemgroupcode+" and "+itemsubgroupcode+" group  by a.itemcode,a.companycode,a.brandcode,a.manualitemcode," +
                     " a.itemname,a.itemnametamil,a.unitcode,a.unitweightunitcode,a.unitweight,a.uppunitcode,a.uppweight," +
                     " a.itemcategory,a.parentitemcode,a.allowpriceedit,a.allownegativestock,a.allowdiscount" +
@@ -1854,7 +1854,7 @@ public class DataBaseAdapter
                     " and  validityto>=datetime('"+getdate+"')))  and  "+getbusinesstype+" ) as freecount " +
                     " from tblitemmaster as a   " +
                     " inner join tblitemsubgroupmaster as c on c.itemsubgroupcode=a.itemsubgroupcode" +
-                    " inner join tblbrandmaster as d on a.brandcode=d.brandcode LEFT JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode  where "+getitembusinesstype+" and " +
+                    " inner join tblbrandmaster as d on a.brandcode=d.brandcode INNER JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode  where "+getitembusinesstype+" and " +
                     " a.displaygroupcode ='"+itemsubgroupcode+"' and a.status='"+statusvar+"'  and " +
                     " itemtype!=2 group by a.itemcode,a.companycode,a.brandcode,a.manualitemcode," +
                     "a.itemname,a.itemnametamil,a.unitcode,a.unitweightunitcode,a.unitweight,a.uppunitcode,a.uppweight," +
@@ -5475,7 +5475,7 @@ public class DataBaseAdapter
                     " from tblitemmaster as a  " +
                     "inner join tblitemsubgroupmaster as c on c.itemsubgroupcode=a.itemsubgroupcode " +
                     "inner join tblbrandmaster as d on a.brandcode=d.brandcode " +
-                    " LEFT JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode" +
+                    " INNER JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode" +
                     " where " + getitembusinesstype + " and a.displaygroupcode ='"+itemsubgroupcode+"' and a.status='"+statusvar+"'  " +
                     " and (a.itemcode in (select itemcode from tblstocktransaction where  flag!=3) " +
                     " or parentcode in (select itemcode from tblstocktransaction where  flag!=3)) and " +
@@ -6230,7 +6230,7 @@ public class DataBaseAdapter
                     "  c.itemsubgroupname,d.brandname,(case when(a.minimumsalesqty<>'null' or a.minimumsalesqty<>null) then a.minimumsalesqty else 0 end) as minimumsalesqty " +
                     " from tblitemmaster as a inner join tblstocktransaction as b " +
                     " inner join tblitemsubgroupmaster as c on c.itemsubgroupcode=a.itemsubgroupcode" +
-                    " inner join tblbrandmaster as d on a.brandcode=d.brandcode LEFT JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode  where " +
+                    " inner join tblbrandmaster as d on a.brandcode=d.brandcode INNER JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode  where " +
                     " a.displaygroupcode ='"+itemsubgroupcode+"' and a.status='"+statusvar+"' and b.flag!=3  " +
                     "and itemtype!=2 group by a.itemcode,a.companycode,a.brandcode,a.manualitemcode," +
                     "a.itemname,a.itemnametamil,a.unitcode,a.unitweightunitcode,a.unitweight,a.uppunitcode,a.uppweight," +
@@ -8947,7 +8947,7 @@ if(schemeitem.equals("yes")){
                     "  INNER JOIN tblunitmaster AS c ON b.unitcode = c.unitcode  " +
                     "  INNER JOIN tblitemsubgroupmaster AS d ON d.itemsubgroupcode = b.itemsubgroupcode  " +
                     "  INNER JOIN tblbrandmaster AS e ON b.brandcode = e.brandcode  " +
-                     "LEFT JOIN tbldisplaygroup on b.displaygroupcode=dgroupcode" +
+                     "INNER JOIN tbldisplaygroup on b.displaygroupcode=dgroupcode" +
                     "  " +
                     "  WHERE "+getcompanycode+" and "+getitemtype+" and "+getitemsubgroupcode+" AND  a.flag NOT IN (3, 6)  " +
                     "  " +
@@ -15842,7 +15842,7 @@ if(schemeitem.equals("yes")){
             getdate = GenCreatedDate();
             String sql ="select distinct b.dgroupcode,b.dgroupname,b.dgrouptamil " +
                     "from tblitemmaster as a " +
-                    "LEFT join tbldisplaygroup as b on a.displaygroupcode=b.dgroupcode " +
+                    "INNER join tbldisplaygroup as b on a.displaygroupcode=b.dgroupcode " +
                     "where a.status='"+statusvar+"' and b.Status='"+statusvar+"' order by a.displaygroupcode ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
