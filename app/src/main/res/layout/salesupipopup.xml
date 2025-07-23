@@ -282,7 +282,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/txtupiamount"
-                        android:background="@drawable/editbackgroundlightgray"
+                        android:background="@drawable/editbackground"
                         android:hint="UPI Amount"
                         android:textColorHint="@color/graycolor"
                         android:inputType="number"
@@ -304,8 +304,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="10dp"
                 android:weightSum="1"
-                android:id="@+id/LLCashAmount"
-                android:visibility="gone">
+                android:id="@+id/LLCashAmount" >
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

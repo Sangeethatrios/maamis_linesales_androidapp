@@ -708,12 +708,12 @@ public class ReviewActivity extends AppCompatActivity {
 
                                         networkstate = isNetworkAvailable();
                                         if (networkstate == true) {
-                                            new AsyncSalesDetails().execute("true");
+                                            new AsyncCheckIMEI().execute("true");
 //                                        new AsyncNilStockDetails().execute();
 //                                        runThread();
 //                                        AsyncPriceListTransaction();
 //                                        new AsyncPriceListTransaction().execute();
-                                            new AsyncSalesOrderDetails().execute();
+                                           // new AsyncSalesOrderDetails().execute();
                                         }
 
                                     } catch (Exception e) {
@@ -1897,7 +1897,8 @@ public class ReviewActivity extends AppCompatActivity {
                 startActivity(i);
                 networkstate = isNetworkAvailable();
                 if (networkstate == true) {
-                    new AsyncSalesDetails().execute("false");
+
+                    new AsyncCheckIMEI().execute("false");
                 }
             }else{
                 Toast toast = Toast.makeText(getApplicationContext(),"Error in image Captured", Toast.LENGTH_LONG);
@@ -1911,7 +1912,7 @@ public class ReviewActivity extends AppCompatActivity {
                 startActivity(i);
                 networkstate = isNetworkAvailable();
                 if (networkstate == true) {
-                    new AsyncSalesDetails().execute("false");
+                    new AsyncCheckIMEI().execute("false");
                 }
             }
         }
@@ -2763,5 +2764,102 @@ public class ReviewActivity extends AppCompatActivity {
                 loaderPrint.dismiss();
             }
         });
+    }
+
+
+    protected class AsyncCheckIMEI extends
+            AsyncTask<String, JSONObject,String> {
+        JSONObject jsonObj = null;
+        ProgressDialog loading;
+        String value="";
+        int code;
+        @Override
+        protected String doInBackground(String... params) {
+            String result = "";
+
+            value=params[0];
+            try {
+                RestAPI api = new RestAPI();
+                networkstate = isNetworkAvailable();
+                if (networkstate == true) {
+                    jsonObj = api.CheckIMEI(preferenceMangr.pref_getString("deviceid"),"check_imei.php");
+                }
+                else{
+                    result = "";
+                }
+                if(jsonObj!=null) {
+                    if(jsonObj.has("success")) {
+                        result = jsonObj.getString("success");
+                    }
+                }
+
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                Log.d("AsyncSync", e.getMessage());
+                result="";
+
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+            loading = ProgressDialog.show(context, "Loading", "Please wait...", true);
+            loading.setCancelable(false);
+            loading.setCanceledOnTouchOutside(false);
+        }
+
+        protected void onPostExecute(final String result) {
+            try {
+                loading.dismiss();
+                if(result.equals("1"))
+                {
+
+                    //** existing function only check imei no valid or not (by venkat)
+                    new AsyncSalesDetails().execute(value);
+
+                }
+                else if(result.equals(""))
+                {
+                    Toast.makeText(getApplicationContext(), "Server not reachable", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else
+                {
+                    DeleteIMEIDetails();
+                    Toast toast = Toast.makeText(getApplicationContext(),"You are not authorized to use this application", Toast.LENGTH_LONG);
+                    //toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                    return;
+                }
+            } catch (Exception e) {
+                Log.d("servererror",e.getMessage());
+            }
+
+        }
+
+        //Delete IMEI details
+        public   String  DeleteIMEIDetails(){
+            //Get phone imei number
+            DataBaseAdapter objdatabaseadapter = null;
+            String getcount="0";
+            try{
+                objdatabaseadapter = new DataBaseAdapter(context);
+                objdatabaseadapter.open();
+                objdatabaseadapter.deletevanmaster();
+            }  catch (Exception e){
+                Log.i("DeleteIMEIDetails", e.toString());
+            }
+            finally {
+                // this gets called even if there is an exception somewhere above
+                if(objdatabaseadapter != null)
+                    objdatabaseadapter.close();
+
+            }
+            return getcount;
+        }
+
     }
 }

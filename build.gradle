@@ -34,12 +34,12 @@ ext {
     targetSdkVersion = 34
     compileSdkVersion = 34
 //    Test verison
-//    versionCode = 2
-//    versionName = '1.16'
+    versionCode = 3
+    versionName = '1.18'
 
     //    Live verison
-    versionCode = 1
-    versionName = '1.0'
+//    versionCode = 1
+//    versionName = '1.0'
 }
 task clean(type: Delete) {
     delete rootProject.buildDir

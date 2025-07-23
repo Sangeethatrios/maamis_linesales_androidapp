@@ -15857,4 +15857,116 @@ if(schemeitem.equals("yes")){
     }
 
 
+
+
+    public Cursor GetSalesCloneDatasDB(String gettransactionno,String getfinancialyr,String billdate,String bookingno)
+    {
+        Cursor mCur = null;
+        try{
+            /*and b.transactiondate=datetime('"+getdate+"')*/
+            String getdate = GenCreatedDate();
+            String getbusinesstype = "";
+//            if(preferenceMangr.pref_getString("getbusiness_type").equals("2")){
+//                getbusinesstype=" (b.business_type = 2 or b.business_type = 3) ";
+//            }else  if(preferenceMangr.pref_getString("getbusiness_type").equals("1")){
+//                getbusinesstype="(b.business_type = 1 or b.business_type = 3)";
+//            }else{
+//                getbusinesstype="(b.business_type = 1 or  b.business_type = 2 or b.business_type = 3)";
+//            }
+//            String arr[]=preferenceMangr.pref_getString("getbusiness_type").split(",");
+//            if(arr.length>0) {
+////                for (int i = 0; i < arr.length; i++) {
+////                    if(arr[i].equals("2")){
+////                        getbusinesstype=" ((','||b.business_type||',') LIKE '%,2,%' or (','||b.business_type||',') LIKE '%,3,%') ";
+////                    }else if(arr[i].equals("1")){
+////                        getbusinesstype=" ((','||b.business_type||',') LIKE '%,1,%' or (','||b.business_type||',') LIKE '%,3,%') ";
+////                    }else{
+////                        getbusinesstype="((','||b.business_type||',') LIKE '%,1,%' or (','||b.business_type||',') LIKE '%,2,%' or (','||b.business_type||',') LIKE '%,3,%')";
+////                    }
+////                }
+//            }
+            String getitembusinesstype = "(a.business_type = 1 or  a.business_type = 2 or a.business_type = 3)";
+//            if(preferenceMangr.pref_getString("getbusiness_type").equals("2")){
+//                getitembusinesstype=" (a.business_type = 2 or a.business_type = 3) ";
+//            }else  if(preferenceMangr.pref_getString("getbusiness_type").equals("1")){
+//                getitembusinesstype="(a.business_type = 1 or a.business_type = 3)";
+//            }else{
+//                getitembusinesstype="(a.business_type = 1 or  a.business_type = 2 or a.business_type = 3)";
+//            }
+//            if(arr.length>0) {
+////                for (int i = 0; i < arr.length; i++) {
+////                    if(arr[i].equals("2")){
+////                        getitembusinesstype=" (a.business_type = 2 or a.business_type = 3) ";
+////                    }else if(arr[i].equals("1")){
+////                        getitembusinesstype=" (a.business_type = 1 or a.business_type = 3) ";
+////                    }else{
+////                        getitembusinesstype=" (a.business_type = 1 or  a.business_type = 2 or a.business_type = 3) ";
+////                    }
+////                }
+//            }
+            String sql = "select  '0' as cartcode, itemcode,   companycode,   brandcode,   manualitemcode, " +
+                    "itemname,   itemnametamil,   unitcode,   unitweightunitcode, " +
+                    "unitweight,   uppunitcode,   uppweight,   itemcategory, " +
+                    "parentitemcode,   allowpriceedit,   allownegativestock, " +
+                    "allowdiscount,   stockqty,   unitname,   noofdecimals, " +
+                    "oldprice,   newprice,   colourcode,   hsn,   tax, " +
+                    "itemqty,  subtotal,  routeallowpricedit,  discount,  freeflag, " +
+                    "purchaseitemcode,  freeitemcode,  '0' as dumyprice,  ratecount, " +
+                    "freecount,  minsalesqty,  upp,  itemtype,  ratediscount,  schemeapplicable, " +
+                    "orgprice,  itemsubgroupcode,  minprice, budget_utilize as budget_utilize,  " +
+                    "schemeitem from (" +
+                    " select a.itemcode,a.companycode,a.brandcode,a.manualitemcode,a.itemname,a.itemnametamil,a.unitcode," +
+                    " a.unitweightunitcode,a.unitweight,a.uppunitcode,a.uppweight,a.itemcategory,a.parentitemcode, " +
+                    " a.allowpriceedit,a.allownegativestock,a.allowdiscount,  " +
+                    " coalesce(coalesce((select sum(op)+sum(inward)-Sum(outward) from tblstocktransaction where itemcode=a.itemcode and vancode='1060' and flag!=3),0) +" +
+                    " coalesce((select sum(inward)-Sum(outward) from tblstockconversion where itemcode=a.itemcode  and vancode='1060'  ),0),0) as stockqty," +
+                    " (Select unitname  from tblunitmaster where unitcode=a.unitcode) as unitname, " +
+                    " coalesce((Select noofdecimals from tblunitmaster where unitcode=a.unitcode),0) as noofdecimals, " +
+                    " coalesce((select oldprice from tblitempricelisttransaction where itemcode=a.itemcode AND customertype = f.categorycode  order by autonum desc limit 1),0) as oldprice,  " +
+                    " coalesce((select newprice from tblitempricelisttransaction  where itemcode=a.itemcode AND customertype =  f.categorycode order by autonum desc limit 1),0) as newprice, " +
+                    " CASE WHEN itemtype=2 then (SELECT freeitemcolor from tblgeneralsettings) else coalesce((select colourcode  from tblcompanymaster where companycode=a.companycode),'#000000') END as colourcode," +
+                    " coalesce(c.hsn,'')  as hsn,coalesce(c.tax,'') as tax,(select allowpriceedit from tblroutedetails where   areacode='f.areacode') as routeallowpricedit," +
+                    " case when parentitemcode=0 then a.itemcode else parentitemcode  end as parentcode,case when itemcategory='parent' then 1 else  2 end as itemorder, " +
+                    " c.itemsubgroupname,d.brandname,(select count(*) from tblschemeratedetails as aa inner join " +
+                    "  tblscheme as b on aa.schemecode=b.schemecode where aa.itemcode=a.itemcode and b.status='"+statusvar+"'  " +
+                    "and (','||multipleroutecode||',')   and (','||multipleareacode||',')      and(validityfrom<=datetime( "+getdate+"))" +
+                    " and (ifnull(validityto,'')='' or  (validityfrom<=datetime( "+getdate+")  and  validityto>=datetime( "+getdate+")))    ) as ratecount," +
+                    " (select count(*) from tblschemeitemdetails as ab  inner join  tblscheme as b " +
+                    " on ab.schemecode=b.schemecode where ab.purchaseitemcode=a.itemcode and b.status='"+statusvar+"'and (','||multipleroutecode||',')   " +
+                    " and (','||multipleareacode||',')    and(validityfrom<=datetime( "+getdate+")) and (ifnull(validityto,'')='' or (validityfrom<=datetime( "+getdate+") " +
+                    " and  validityto>=datetime( "+getdate+")))     ) as freecount," +
+                    "  coalesce(coalesce((select sum(op)+sum(inward)-Sum(outward) from tblstocktransaction where itemcode=a.parentitemcode  and vancode='1060' and flag!=3)," +
+                    "0) +  coalesce((select sum(inward)-Sum(outward) from tblstockconversion where itemcode=a.parentitemcode  and vancode='1060'  ),0),0) " +
+                    " as parentstockqty,(case when(a.minimumsalesqty<>'null' or a.minimumsalesqty<>null) then a.minimumsalesqty else 0 end) as minimumsalesqty," +
+                    " case when parentitemcode=0 then upp else (Select upp from tblitemmaster where itemcode=a.parentitemcode) end as upp," +
+                    "itemtype ,coalesce((select newprice from tblitempricelisttransaction  where itemcode=a.itemcode  AND customertype = 1 order by autonum desc limit 1),0)" +
+                    " as minprice,budget_utilize ,schemeitem ,minimumsalesqty as minsalesqty,e.qty as itemqty ,e.discount,subtotal,freeitemstatus as freeflag," +
+                    "e.itemcode as purchaseitemcode, case when e.freeitemstatus <> '' then e.itemcode else '' end as freeitemcode," +
+                    "e.schemeapplicable,e.orgprice,e.ratediscount,a.itemsubgroupcode,f.customernametamil,(select areanametamil from tblareamaster where areacode=f.areacode )  as areaname  " +
+                    " from tblitemmaster as a  " +
+                    " inner join tblitemsubgroupmaster as c on c.itemsubgroupcode=a.itemsubgroupcode " +
+                    " inner join tblbrandmaster as d on a.brandcode=d.brandcode " +
+                    " INNER JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode " +
+                    " INNER JOIN tblsalesitemdetails as e on e.itemcode = a.itemcode  " +
+                    " INNER JOIN tblsales as g ON g.transactionno=e.transactionno " +
+                    " INNER JOIN tblcustomer as f on g.customercode=f.customercode  " +
+                    " where " + getitembusinesstype + " and g.transactionno="+gettransactionno+" and g.bookingno="+bookingno+" and a.status='"+statusvar+"' " +
+                    " and (a.itemcode in (select itemcode from tblstocktransaction where  flag!=3)  or parentcode in" +
+                    " (select itemcode from tblstocktransaction where  flag!=3)) and  a.companycode in (select companycode from tblcompanymaster where  " +
+                    "status='"+statusvar+"' ) ) as dec  where ((itemcategory='child'  and (parentstockqty>0 or stockqty>0) ) or" +
+                    " (itemcategory= 'parent' and stockqty>0 ) ) AND   newprice <> 0   order by   itemtype,itemcategory desc,uppweight desc";
+
+            //brandname
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur != null && mCur.getCount() > 0) {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            Log.e("GetSalesCloneDatasDB", "Exception in GetSalesCloneDatasDB : " + ex.getLocalizedMessage());
+            insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+
+        return mCur;
+    }
+
 }

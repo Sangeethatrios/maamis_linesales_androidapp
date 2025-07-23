@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -1773,10 +1774,16 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
 //                    }
 //                });
 //            }else{
+                        DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+            int screenHeight = displayMetrics.heightPixels;
+            int popupHeight = (int) (screenHeight * 0.8); // 80% of screen height
+            int popupWidth = (int) (screenHeight * 0.40); // or use screen width similarly
                 isopenshowpopup=true;
                 LayoutInflater inflater = (LayoutInflater) SalesActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View layout = inflater.inflate(R.layout.subgrouppopup, null);
-                window = new PopupWindow(layout, 650, 1000, false);
+                window = new PopupWindow(layout, popupWidth, popupHeight, false);
 
                 lv_subgroup = (ListView) layout.findViewById(R.id.lv_subgroup);
                 ImageView close = (ImageView) layout.findViewById(R.id.close);
@@ -4834,7 +4841,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                 customerdialog.dismiss();
 
                                 if (Utilities.isNetworkAvailable(context)) {
-                                    new AsyncRecentTransactions().execute(CustomerCode[position]);
+                                    new AsyncCheckIMEI().execute(CustomerCode[position]);
+//                                    new AsyncRecentTransactions().execute();
                                     notifyDataSetChanged();
                                 }
 
@@ -9020,5 +9028,95 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    protected class AsyncCheckIMEI extends
+            AsyncTask<String, JSONObject,String> {
+        JSONObject jsonObj = null;
+        ProgressDialog loading;
+        String customercode="";
+        int code;
+        @Override
+        protected String doInBackground(String... params) {
+            customercode=params[0];
+            String result = "";
+            try {
+                RestAPI api = new RestAPI();
+                networkstate = isNetworkAvailable();
+                if (networkstate == true) {
+                    jsonObj = api.CheckIMEI(preferenceMangr.pref_getString("deviceid"),"check_imei.php");
+                }
+                else{
+                    result = "";
+                }
+                if(jsonObj!=null) {
+                    if(jsonObj.has("success")) {
+                        result = jsonObj.getString("success");
+                    }
+                }
 
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                Log.d("AsyncSync", e.getMessage());
+                result="";
+
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+            loading = ProgressDialog.show(context, "Loading", "Please wait...", true);
+            loading.setCancelable(false);
+            loading.setCanceledOnTouchOutside(false);
+        }
+
+        protected void onPostExecute(final String result) {
+            try {
+                loading.dismiss();
+                if(result.equals("1"))
+                {
+                    new  AsyncRecentTransactions().execute(customercode);
+                }
+                else if(result.equals(""))
+                {
+                    Toast.makeText(getApplicationContext(), "Server not reachable", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else
+                {
+                    DeleteIMEIDetails();
+                    Toast toast = Toast.makeText(getApplicationContext(),"You are not authorized to use this application", Toast.LENGTH_LONG);
+                    //toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                    return;
+                }
+            } catch (Exception e) {
+                Log.d("servererror",e.getMessage());
+            }
+
+        }
+
+        //Delete IMEI details
+        public   String  DeleteIMEIDetails(){
+            //Get phone imei number
+            DataBaseAdapter objdatabaseadapter = null;
+            String getcount="0";
+            try{
+                objdatabaseadapter = new DataBaseAdapter(context);
+                objdatabaseadapter.open();
+                objdatabaseadapter.deletevanmaster();
+            }  catch (Exception e){
+                Log.i("DeleteIMEIDetails", e.toString());
+            }
+            finally {
+                // this gets called even if there is an exception somewhere above
+                if(objdatabaseadapter != null)
+                    objdatabaseadapter.close();
+
+            }
+            return getcount;
+        }
+
+    }
 }

@@ -32,6 +32,7 @@ public class Constants {
     public static final String KEY_MENU_ITEM_UPLOAD="Upload";
     public static final String KEY_MENU_ITEM_DOWNLOAD="Download";
     public static final String KEY_MENU_ITEM_SHARE="Share";
+    public static final String KEY_MENU_BILL_CLONE="CLONE";
 
     public static final String KEY_ORDER_TO_SALES_TRANS_NO="orderTransNo";
     public static final String KEY_ORDER_TO_SALES_FINANCIALYEAR="orderFinancialyear";
@@ -95,6 +96,7 @@ public class Constants {
     public static final String SWIPE_MENU_DOWNLOAD = "DOWNLOAD";
     public static final String SWIPE_MENU_UPLOAD = "UPLOAD";
     public static final String SWIPE_MENU_SHARE = "SHARE";
+    public static final String SWIPE_MENU_CLONE = "CLONE";
 
     public static final int DEFAULT_PERMISSION = 999;
     public static final int WRITE_EXTERNAL_STORAGE_PERMISSION = 1000;
@@ -111,5 +113,10 @@ public class Constants {
     public static final String SYNC_TYPE_SALESCASH = "salescash";
     public static final String SYNC_TYPE_SCHEME = "scheme";
 
+    public static final String CLONE_TRANSACTIONNO = "transactionno";
+    public static final String CLONE_FINANICIAL = "finanicialyear";
+    public static final String CLONE_COMPANYCODE = "companycode";
+    public static final String CLONE_BILLDATE = "billdate";
+    public static final String CLONE_BOOKINGNO = "bookingno";
 
 }

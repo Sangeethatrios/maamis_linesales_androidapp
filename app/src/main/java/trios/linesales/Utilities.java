@@ -368,7 +368,7 @@ public class Utilities {
         return sd;
     }
     public static void CheckDeliveryNoteDialog(Context context){
-        String message="Please check your van stock or contact office.";
+        String message="There are pending inward transactions please contact office.";
         AlertDialog.Builder dn_builder = new AlertDialog.Builder(context);
         // dn_builder.setTitle("Alert !");
         TextView title = new TextView(context);
@@ -648,4 +648,5 @@ public class Utilities {
         }
         return true;
     }
+
 }

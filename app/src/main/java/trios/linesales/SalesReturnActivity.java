@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -1240,11 +1241,18 @@ public class SalesReturnActivity extends AppCompatActivity implements View.OnCli
 //                    }
 //                });
 //            }else{
-                LayoutInflater inflater = (LayoutInflater) SalesReturnActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View layout = inflater.inflate(R.layout.subgrouppopup, null);
-                window = new PopupWindow(layout, 650, 1000, false);
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-                lv_subgroup = (ListView) layout.findViewById(R.id.lv_subgroup);
+            int screenHeight = displayMetrics.heightPixels;
+            int popupHeight = (int) (screenHeight * 0.8); // 80% of screen height
+            int popupWidth = (int) (screenHeight * 0.40); // or use screen width similarly
+
+            LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View layout = inflater.inflate(R.layout.subgrouppopup, null);
+            window = new PopupWindow(layout, popupWidth, popupHeight, false);
+
+            lv_subgroup = (ListView) layout.findViewById(R.id.lv_subgroup);
                 ImageView close = (ImageView) layout.findViewById(R.id.close);
 
                 close.setOnClickListener(new View.OnClickListener() {

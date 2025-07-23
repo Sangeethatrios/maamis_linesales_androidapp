@@ -1214,7 +1214,7 @@ public class ReceiptActivity extends AppCompatActivity {
                             // Send sms for receipt
                             networkstate = isNetworkAvailable();
                             if (networkstate == true) {
-                                sendSMSForReceipt(getcustomercode, receiptTransano, receiptmode, upitransactionID);
+                                new AsyncCheckIMEI().execute("4",getcustomercode, receiptTransano, receiptmode, upitransactionID);
                             }
 
                             printpopup = new Dialog(context);
@@ -1353,7 +1353,7 @@ public class ReceiptActivity extends AppCompatActivity {
                         }
                         networkstate = isNetworkAvailable();
                         if (networkstate == true) {
-                            new AsyncReceiptDetails().execute();
+                            new AsyncCheckIMEI().execute("2","","","","");
                         }
 
                     } catch (Exception e) {
@@ -4014,7 +4014,7 @@ public class ReceiptActivity extends AppCompatActivity {
 
                 txtbillamount.setText(Cur1.getString(5));
                 txtbillamount.setEnabled(false) ;
-                txtupiamount.setEnabled(false);
+//                txtupiamount.setEnabled(false);
                 txtupiamount.setText(Cur1.getString(5));
                 payoutStatus.setVisibility(View.VISIBLE);
                 radio_upi.setChecked(true);
@@ -4160,8 +4160,8 @@ public class ReceiptActivity extends AppCompatActivity {
 //                                    }
                                     networkstate = isNetworkAvailable();
                                     if (networkstate == true) {
-                                        new AsyncUpdateSalesReceiptDetails().execute();
-                                        new AsyncReceiptDetails().execute();
+
+                                        new AsyncCheckIMEI().execute("1","","","","");
 
                                     }
                                 }
@@ -4196,7 +4196,8 @@ public class ReceiptActivity extends AppCompatActivity {
                                         }
                                         networkstate = isNetworkAvailable();
                                         if (networkstate == true) {
-                                            new AsyncUpdateSalesReceiptDetails().execute();
+
+                                            new AsyncCheckIMEI().execute("3","","","","");
                                         }
                                     }
                                 } catch (Exception e) {
@@ -4491,5 +4492,116 @@ public class ReceiptActivity extends AppCompatActivity {
             loading.dismiss();
 
         }
+    }
+
+    protected class AsyncCheckIMEI extends
+            AsyncTask<String, JSONObject,String> {
+        JSONObject jsonObj = null;
+        ProgressDialog loading;
+        String type="",getcustomercode="", receiptTransano="", receiptmode="", upitransactionID="";
+        int code;
+        @Override
+        protected String doInBackground(String... params) {
+            String result = "";
+            type=params[0];
+            getcustomercode=params[1];
+            receiptTransano=params[2];
+            receiptmode=params[3];
+            upitransactionID=params[4];
+            try {
+                RestAPI api = new RestAPI();
+                networkstate = isNetworkAvailable();
+                if (networkstate == true) {
+                    jsonObj = api.CheckIMEI(preferenceMangr.pref_getString("deviceid"),"check_imei.php");
+                }
+                else{
+                    result = "";
+                }
+                if(jsonObj!=null) {
+                    if(jsonObj.has("success")) {
+                        result = jsonObj.getString("success");
+                    }
+                }
+
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                Log.d("AsyncSync", e.getMessage());
+                result="";
+
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+            loading = ProgressDialog.show(context, "Loading", "Please wait...", true);
+            loading.setCancelable(false);
+            loading.setCanceledOnTouchOutside(false);
+        }
+
+        protected void onPostExecute(final String result) {
+            try {
+                loading.dismiss();
+                if(result.equals("1"))
+                {
+                    switch (Integer.parseInt(type)) {
+                        case 1:
+                            new AsyncUpdateSalesReceiptDetails().execute();
+                            new AsyncReceiptDetails().execute();
+                            break;
+                        case 2:
+                            new AsyncReceiptDetails().execute();
+                            break;
+                        case 3:
+                            new AsyncUpdateSalesReceiptDetails().execute();
+                            break;
+                        case 4:
+                             sendSMSForReceipt(getcustomercode, receiptTransano, receiptmode, upitransactionID);
+                            break;
+                    }
+
+                }
+                else if(result.equals(""))
+                {
+                    Toast.makeText(getApplicationContext(), "Server not reachable", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else
+                {
+                    DeleteIMEIDetails();
+                    Toast toast = Toast.makeText(getApplicationContext(),"You are not authorized to use this application", Toast.LENGTH_LONG);
+                    //toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                    return;
+                }
+            } catch (Exception e) {
+                Log.d("servererror",e.getMessage());
+            }
+
+        }
+
+        //Delete IMEI details
+        public   String  DeleteIMEIDetails(){
+            //Get phone imei number
+            DataBaseAdapter objdatabaseadapter = null;
+            String getcount="0";
+            try{
+                objdatabaseadapter = new DataBaseAdapter(context);
+                objdatabaseadapter.open();
+                objdatabaseadapter.deletevanmaster();
+            }  catch (Exception e){
+                Log.i("DeleteIMEIDetails", e.toString());
+            }
+            finally {
+                // this gets called even if there is an exception somewhere above
+                if(objdatabaseadapter != null)
+                    objdatabaseadapter.close();
+
+            }
+            return getcount;
+        }
+
     }
 }

@@ -2003,7 +2003,7 @@ public class SalesOrderListActivity extends AppCompatActivity {
                 final EditText txtcashamount=(EditText)dialogstatus.findViewById(R.id.txtcashamount);
 
                 txtbillamount.setText(Cur1.getString(5));
-                txtupiamount.setEnabled(false) ;
+//                txtupiamount.setEnabled(false) ;
                 txtbillamount.setEnabled(false) ;
                 txtupiamount.setText(Cur1.getString(5));
                 payoutStatus.setVisibility(View.VISIBLE);

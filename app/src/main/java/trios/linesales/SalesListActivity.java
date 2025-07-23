@@ -294,11 +294,9 @@ public class SalesListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 networkstate = isNetworkAvailable();
                 if(networkstate == true){
-                    new AsyncCustomerDetails().execute();
-                    new AsyncSalesDetails().execute();
-                    new AsyncNilStockDetails().execute();
-                    new AsyncSalesCancelDetails().execute();
-                    new AsyncSalesStockConversionDetails().execute();
+
+                    new AsyncCheckIMEI().execute("","","","","","","1");
+                    //** existing function only check imei no valid or not (by venkat)
                 }else{
                     Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
                     //toast.setGravity(Gravity.CENTER, 0, 0);
@@ -1615,6 +1613,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                         break;
                     case 4:
                         addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_VIEW);
+//                        addSwipeMenuItems(menu,Constants.KEY_MENU_BILL_CLONE);
                         break;
                     case 5:
                         addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_VIEW);
@@ -1661,6 +1660,8 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
 
                     //case 0:
                     case Constants.SWIPE_MENU_VIEW:
+                        case Constants.SWIPE_MENU_CLONE:
+
                         ArrayList<SalesListDetails> currentListDatareview = getdata;
                         getsalesreviewtransactionno = currentListDatareview.get(position).getTransactionno();
                         getsalesreviewfinanicialyear = currentListDatareview.get(position).getFinancialyearcode();
@@ -1696,9 +1697,22 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                         }
 
 
+                        if(selectedMenu == Constants.SWIPE_MENU_VIEW){
+                            Intent i = new Intent(context,SalesViewActivity.class);
+                            startActivity(i);
+                        }
+                        else{
+                            Intent i = new Intent(context, SalesCloneActivity.class);
+                            i.putExtra("FROM","CLONE");
+                            i.putExtra(Constants.CLONE_TRANSACTIONNO,getsalesreviewtransactionno);
+                            i.putExtra(Constants.CLONE_FINANICIAL,getsalesreviewfinanicialyear);
+                            i.putExtra(Constants.CLONE_COMPANYCODE,getsalesreviewcompanycode);
+                            i.putExtra(Constants.CLONE_BILLDATE,getsalesreviewtbilldate);
+                            i.putExtra(Constants.CLONE_BOOKINGNO,gesalesreviewbookingno);
+                            startActivity(i);
+
+                        }
                         //Call saels view page
-                        Intent i = new Intent(context,SalesViewActivity.class);
-                        startActivity(i);
 
                         break;
                     //case 1:
@@ -1846,7 +1860,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                                     radio_cash.setChecked(false);
                                 }
 
-                                txtupiamount.setEnabled(false);
+//                                txtupiamount.setEnabled(false);
                                 txtcashamount.setText(cashAmount);
                                 txtcashamount.setEnabled(false);
                                 paymentbookingno.setText("BK.NO. "+getbookingno);
@@ -2286,7 +2300,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                                 final String[] upi_getbillcopystatus = {"0"};
 
 
-                                txtupiamount.setEnabled(false);
+//                                txtupiamount.setEnabled(false);
                                 if (Utilities.isNullOrEmpty(getupiimageurl))
                                     radio_upi.setVisibility(View.INVISIBLE);
                                 else
@@ -2301,7 +2315,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                                 getbillamount = String.valueOf(Math.round(billAmount));
 
                                 tvBillAmount.setText(getbillamount);
-                                txtupiamount.setEnabled(false);
+//                                txtupiamount.setEnabled(false);
 
                                 closepopup.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -2387,7 +2401,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                                                 txtbillamount.setText(String.valueOf(billAmount));
                                                 txtbillamount.setEnabled(false) ;
                                                 txtupiamount.setText(String.valueOf(billAmount));
-                                                txtupiamount.setEnabled(false);
+//                                                txtupiamount.setEnabled(false);
 
                                                 radio_cash.setChecked(false);
                                                 radio_notpaid.setChecked(false);
@@ -2867,6 +2881,8 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
 //                        }
 
                         break;
+
+
                 }
                 // false : close the menu; true : not close the menu
                 return false;
@@ -5904,6 +5920,14 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                 shareItem.setTitle("SHARE");
                 menu.addMenuItem(shareItem);
                 break;
+            case Constants.KEY_MENU_BILL_CLONE:
+                SwipeMenuItem clonebill = new SwipeMenuItem(
+                        getApplicationContext());
+                clonebill.setWidth(130);
+                clonebill.setIcon(R.drawable.ic_clone);
+                clonebill.setTitle("CLONE");
+                menu.addMenuItem(clonebill);
+                break;
         }
     }
 
@@ -6180,7 +6204,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                 txtbillamount.setText(Cur1.getString(5));
                 txtbillamount.setEnabled(false) ;
                 txtupiamount.setText(Cur1.getString(5));
-                txtupiamount.setEnabled(false);
+//                txtupiamount.setEnabled(false);
                 payoutStatus.setVisibility(View.VISIBLE);
                 radio_upi.setChecked(true);
                 radio_notpaid.setChecked(false);
@@ -6455,7 +6479,8 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                 toast.show();
                 return;
             }
-            new AsyncSendSMSForSalesBill().execute(cusMobNum, billno, paymentType, upiTransNo, companyCode, from);
+            new AsyncSendSMSForSalesBill().execute();
+            new AsyncCheckIMEI().execute(cusMobNum, billno, paymentType, upiTransNo, companyCode, from,"2");
 
         } catch (Exception e) {
             DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -6777,7 +6802,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                                     txtbillamount.setText(String.valueOf(billAmount));
                                     txtbillamount.setEnabled(false) ;
                                     txtupiamount.setText(String.valueOf(billAmount));
-                                    txtupiamount.setEnabled(false);
+//                                    txtupiamount.setEnabled(false);
 
                                     radio_cash.setChecked(false);
                                     radio_notpaid.setChecked(false);
@@ -7139,6 +7164,117 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
         printpopup.setCanceledOnTouchOutside(false);
         printpopup.setCancelable(false);
         printpopup.show();
+    }
+
+    protected class AsyncCheckIMEI extends
+            AsyncTask<String, JSONObject,String> {
+        JSONObject jsonObj = null;
+        ProgressDialog loading;
+        String cusMobNum="", billno="", paymentType="", upiTransNo="", companyCode="", from="",type="";
+        int code;
+        @Override
+        protected String doInBackground(String... params) {
+            String result = "";
+            cusMobNum=params[0];
+            billno=params[1];
+            paymentType=params[2];
+            upiTransNo=params[3];
+            companyCode=params[4];
+            from=params[5];
+            type=params[6];
+            try {
+                RestAPI api = new RestAPI();
+                networkstate = isNetworkAvailable();
+                if (networkstate == true) {
+                    jsonObj = api.CheckIMEI(preferenceMangr.pref_getString("deviceid"),"check_imei.php");
+                }
+                else{
+                    result = "";
+                }
+                if(jsonObj!=null) {
+                    if(jsonObj.has("success")) {
+                        result = jsonObj.getString("success");
+                    }
+                }
+
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                Log.d("AsyncSync", e.getMessage());
+                result="";
+
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+            loading = ProgressDialog.show(context, "Loading", "Please wait...", true);
+            loading.setCancelable(false);
+            loading.setCanceledOnTouchOutside(false);
+        }
+
+        protected void onPostExecute(final String result) {
+            try {
+                loading.dismiss();
+                if(result.equals("1"))
+                {
+                    //** existing function only check imei no valid or not (by venkat)
+                    switch (Integer.parseInt(type)) {
+                        case 1:
+                            new AsyncCustomerDetails().execute();
+                            new AsyncSalesDetails().execute();
+                            new AsyncNilStockDetails().execute();
+                            new AsyncSalesCancelDetails().execute();
+                            new AsyncSalesStockConversionDetails().execute();
+                            break;
+                        case 2:
+                            new AsyncSendSMSForSalesBill().execute(cusMobNum, billno, paymentType, upiTransNo, companyCode, from);
+                            break;
+                    }
+
+                }
+                else if(result.equals(""))
+                {
+                    Toast.makeText(getApplicationContext(), "Server not reachable", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else
+                {
+                    DeleteIMEIDetails();
+                    Toast toast = Toast.makeText(getApplicationContext(),"You are not authorized to use this application", Toast.LENGTH_LONG);
+                    //toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                    return;
+                }
+            } catch (Exception e) {
+                Log.d("servererror",e.getMessage());
+            }
+
+        }
+
+        //Delete IMEI details
+        public   String  DeleteIMEIDetails(){
+            //Get phone imei number
+            DataBaseAdapter objdatabaseadapter = null;
+            String getcount="0";
+            try{
+                objdatabaseadapter = new DataBaseAdapter(context);
+                objdatabaseadapter.open();
+                objdatabaseadapter.deletevanmaster();
+            }  catch (Exception e){
+                Log.i("DeleteIMEIDetails", e.toString());
+            }
+            finally {
+                // this gets called even if there is an exception somewhere above
+                if(objdatabaseadapter != null)
+                    objdatabaseadapter.close();
+
+            }
+            return getcount;
+        }
+
     }
 
 }
