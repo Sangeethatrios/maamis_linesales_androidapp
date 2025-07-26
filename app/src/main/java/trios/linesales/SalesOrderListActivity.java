@@ -195,6 +195,9 @@ public class SalesOrderListActivity extends AppCompatActivity {
                    String getprevschedulecode = objdatabaseadapter1.GetPrevStartScheduleCode();
                    String getprevcashclose = objdatabaseadapter1.GetCashClose(getprevschedulecode);
                    String getprevsaleclose = objdatabaseadapter1.GetSalesClose(getprevschedulecode);
+                   if (preferenceMangr.pref_getString("getbusiness_type").equals("2")) {
+                       getprevsaleclose="1";
+                   }
                    if (todayschedulecount.equals("0") || (!getprevschedulecode.equals("0") && (getprevcashclose.equals("0") ||  getprevsaleclose.equals("0"))) ) {
                        try {
 
