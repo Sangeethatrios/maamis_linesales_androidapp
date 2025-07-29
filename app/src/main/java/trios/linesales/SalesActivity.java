@@ -2596,8 +2596,9 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                 }
                             }
                         }
+
                         double amount = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Double.parseDouble(mHolder.listitemqty.getText().toString());
-                        if(!isSalesValueReachLimit(amount,mHolder.listitemcode.getText().toString(),isthisitemincart)){
+                        if(radio_cash.isChecked() && !isSalesValueReachLimit(amount,mHolder.listitemcode.getText().toString(),isthisitemincart)){
                            Toast toast = Toast.makeText(getApplicationContext(),"The total bill amount for this customer has exceeded the daily limit.", Toast.LENGTH_LONG);
                            toast.setGravity(Gravity.CENTER, 0, 0);
                            toast.show();

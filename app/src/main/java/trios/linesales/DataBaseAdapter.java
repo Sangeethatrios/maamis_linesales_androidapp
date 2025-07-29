@@ -6780,7 +6780,7 @@ if(schemeitem.equals("yes")){
                             " discount='" + discount + "',freeflag='" + freeflag + "',purchaseitemcode='" + purchaseitemcode + "'," +
                             " freeitemcode='" + freeitemcode + "',minimumsalesqty='" + minstockqty + "'" +
                             ",actualamount='"+actualprice+"',ratediscount='"+ ratediscount +"'  " +
-                            " , schemeapplicable =  '" + itemschemeapplicable + "',orgprice='" + orgprice + "' , budgetutilize='"+budgetutilize+"',schemeitem='"+varschemeitem+"' " +
+                            " , schemeapplicable =  '" + itemschemeapplicable + "',orgprice='" + orgprice + "' , budget_utilize='"+budgetutilize+"',schemeitem='"+varschemeitem+"' " +
                             " where  cartcode='"+getcartcode+"'" +
                             " and itemcode='"+itemcode+"' and  freeflag='' ";
                     mDb.execSQL(sqlcart);
@@ -6798,7 +6798,7 @@ if(schemeitem.equals("yes")){
                             " discount='" + discount + "',freeflag='" + freeflag + "',purchaseitemcode='" + purchaseitemcode + "'," +
                             " freeitemcode='" + freeitemcode + "',minimumsalesqty='" + minstockqty + "'," +
                             "actualamount='"+ actualprice +"',ratediscount='"+ ratediscount +"'," +
-                            " schemeapplicable =  '" + itemschemeapplicable + "' ,orgprice='" + orgprice + "' , budgetutilize='"+budgetutilize+"',schemeitem='"+varschemeitem+"' " +
+                            " schemeapplicable =  '" + itemschemeapplicable + "' ,orgprice='" + orgprice + "' , budget_utilize='"+budgetutilize+"',schemeitem='"+varschemeitem+"' " +
                             "  where  cartcode='"+getcartcode+"'" +
                             " and itemcode='"+itemcode+"' and  freeflag='freerate' ";
                     mDb.execSQL(sqlcart);

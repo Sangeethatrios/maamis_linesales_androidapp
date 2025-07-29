@@ -322,7 +322,7 @@ public class ReviewActivity extends AppCompatActivity {
                             SalesActivity.gstnnumber = SalesActivity.gstnnumber;
                         }
 //                        double amount = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Double.parseDouble(mHolder.listitemqty.getText().toString());
-                        if(!isSalesValueReachLimit()){
+                        if(SalesActivity.getpaymenttypecode.equals("1") && !isSalesValueReachLimit()){
                             Toast toast = Toast.makeText(getApplicationContext(),"The total bill amount for this customer has exceeded the daily limit.", Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show(); 
