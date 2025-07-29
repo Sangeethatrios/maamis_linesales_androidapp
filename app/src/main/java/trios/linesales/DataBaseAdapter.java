@@ -9096,7 +9096,8 @@ if(schemeitem.equals("yes")){
                 getcompany="d.companycode='"+getcompanycode+"'";
             }
 
-            sql="SELECT a.itemcode,COALESCE(itemnametamil,itemname) || CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN ' (Free)' ELSE '' END as itemname,COALESCE(sum(qty),0) " +
+            sql="SELECT a.itemcode,COALESCE(itemnametamil,itemname) || CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN ' (Free)' ELSE '' END as itemname," +
+                    "sum(COALESCE(qty,0)) " +
                     " as quantity,u.unitname,cast(sum(COALESCE(amount,0)) as decimal(32,2)) " +
                     "as totalamt, case when parentitemcode=0 then i.itemcode else i.parentitemcode " +
                     "  end as parentcode,case when itemcategory='parent' then 1 else  2 end as itemorder, " +
@@ -9137,7 +9138,7 @@ if(schemeitem.equals("yes")){
                 getcompany="d.companycode='"+getcompanycode+"'";
             }
 
-            sql="SELECT a.itemcode,COALESCE(itemnametamil,itemname) as itemname,COALESCE(sum(qty),0) as quantity," +
+            sql="SELECT a.itemcode,COALESCE(itemnametamil,itemname) as itemname,cast(sum(COALESCE(qty,0)) as decimal(32,2)) as quantity," +
                     " u.unitname,cast(sum(COALESCE(amount,0)) as decimal(32,2)) " +
                     "as totalamt , case when parentitemcode=0 then i.itemcode else i.parentitemcode " +
                     "  end as parentcode,case when itemcategory='parent' then 1 else  2 end as itemorder, " +
@@ -9176,7 +9177,7 @@ if(schemeitem.equals("yes")){
             String sql;
 
 
-            sql="SELECT a.itemcode,COALESCE(itemnametamil,itemname) as itemname,COALESCE(sum(qty),0) as quantity," +
+            sql="SELECT a.itemcode,COALESCE(itemnametamil,itemname) as itemname,cast(sum(COALESCE(qty,0)) as decimal(32,2)) as quantity," +
                     " u.unitname,cast(sum(COALESCE(amount,0)) as decimal(32,2)) " +
                     "as totalamt , case when parentitemcode=0 then i.itemcode else i.parentitemcode " +
                     "  end as parentcode,case when itemcategory='parent' then 1 else  2 end as itemorder, " +
@@ -9221,7 +9222,7 @@ if(schemeitem.equals("yes")){
             }else{
                 getcompany="a.companycode='"+getcompanycode+"'";
             }
-            sql="SELECT a.itemcode,COALESCE(itemnametamil,itemname) as itemname,COALESCE(sum(qty),0) as quantity," +
+            sql="SELECT a.itemcode,COALESCE(itemnametamil,itemname) as itemname,cast(sum(COALESCE(qty,0)) as decimal(32,2)) as quantity," +
                     " u.unitname,cast(sum(COALESCE(amount,0)) as decimal(32,2)) " +
                     "as totalamt , case when parentitemcode=0 then i.itemcode else i.parentitemcode " +
                     "  end as parentcode,case when itemcategory='parent' then 1 else  2 end as itemorder, " +

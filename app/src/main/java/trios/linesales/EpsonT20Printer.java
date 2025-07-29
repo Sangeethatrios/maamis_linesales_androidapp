@@ -3755,7 +3755,7 @@ public class EpsonT20Printer implements ReceiveListener {
                             SalesBuffer.append(SalesDetails);
 
 
-                            SalesBuffer.append(Util.nameLeftValueRightJustify(Integer.toString(mCur.getInt(2)),
+                            SalesBuffer.append(Util.nameLeftValueRightJustify(String.valueOf(mCur.getDouble(2)),
                                     mCur.getString(3), String.format("%.2f", mCur.getFloat(4)),
                                     32));
                             SalesDetails = SalesBuffer.toString();
