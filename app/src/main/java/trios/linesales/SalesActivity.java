@@ -204,6 +204,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             }
 
             ifsavedsales = false;
+            //Set total cart items
+            totalcartitems.setText("0");
 
             try{
                 //locManager = new LocManager(context,SalesActivity.this,Constants.FROM_SALES_ACT);
@@ -242,6 +244,76 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             }
             //Set values for corresponding values
             txtareaname.setText(LoginActivity.getareaname);
+
+            if(getIntent() != null) {
+                if (getIntent().hasExtra(Constants.SALES_CUSTOMERCODE)) {
+                    //set Invoice heading
+                    int areacode = getIntent().getIntExtra(Constants.SALES_AREACODE, 1);
+                    getareacode = String.valueOf(areacode);
+                    String billtypecode = getIntent().getStringExtra(Constants.SALES_BILLTYPECODE);
+
+                    customercode = getIntent().getStringExtra(Constants.SALES_CUSTOMERCODE );
+                    txtcustomername.setText(getIntent().getStringExtra(Constants.SALES_CUSTOMERNAME));
+                    txtareaname.setText(getIntent().getStringExtra(Constants.SALES_AREANAME));
+
+                    if(getpaymenttypecode.equals("1")) {
+                        radio_cash.setChecked(true);
+                        radio_credit.setChecked(false);
+                        radio_credit.setEnabled(false);
+                    }
+
+                    if(getpaymenttypecode.equals("2")) {
+                        radio_cash.setChecked(false);
+                        radio_credit.setChecked(true);
+                        radio_cash.setEnabled(true);
+                        radio_credit.setEnabled(true);
+                        if(!Utilities.isNullOrEmpty(gstnnumber) && gstinverificationstatus.equals("0")){
+                            radio_cash.setChecked(true);
+                            Toast.makeText(context, "GSTIN not verified for this customer", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    if (billtypecode.equals("1")) {
+
+                        radio_cash.setEnabled(true);
+                        radio_cash.setChecked(true);
+                    } else {
+                        radio_credit.setChecked(true);
+                        radio_cash.setEnabled(true);
+                    }
+
+                    if(gstnnumber.equals("")||gstnnumber.equals(null)||gstnnumber.equals("0")){
+                        togglegstin.setBackgroundColor(getResources().getColor(R.color.graycolor));
+                    }else{
+                        togglegstin.setBackgroundColor(getResources().getColor(R.color.green));
+                    }
+
+                    togglegstin.setText("GSTIN \n "+gstnnumber);
+                    togglegstin.setTextOn("GSTIN \n "+gstnnumber);
+                    togglegstin.setTextOff("GSTIN \n "+gstnnumber);
+
+                    DataBaseAdapter objcartdatabaseadapter = null;
+                    Cursor getcart_datas = null;
+                    try{
+                        objcartdatabaseadapter = new DataBaseAdapter(context);
+                        objcartdatabaseadapter.open();
+                        getcart_datas = objcartdatabaseadapter.GetSalesItemsCart();
+                         if(getcart_datas.getCount()>0){
+                            totalcartitems.setText(String.valueOf(staticreviewsalesitems.size()));
+
+                        }
+                    } catch (Exception e) {
+                        Log.d("AsyncSync", e.getMessage());
+                    }finally {
+                        if(objcartdatabaseadapter!=null){
+                            objcartdatabaseadapter.close();
+                        }
+                        if(getcart_datas!=null){
+                            getcart_datas.close();
+                        }
+                    }
+                }
+            }
 
             //salesfabclickoption
             fabgroupitem.setOnClickListener(this);
@@ -415,8 +487,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             txtroutename.setText(preferenceMangr.pref_getString("getroutename"));
             txtsalesdate.setText(preferenceMangr.pref_getString("getcurrentdatetime"));
 
-            //Set total cart items
-            totalcartitems.setText("0");
+
 
 
             btnaddcustomer.setOnClickListener(new View.OnClickListener() {
@@ -1412,12 +1483,12 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     );
                     Cur.moveToNext();
                 }
-                CalculateTotal();
-
 
                 SalesItemAdapter adapter = new SalesItemAdapter(context,salesitems,"0");
                 lv_sales_items.setAdapter(adapter);
+                CalculateTotal();
                 isopenshowpopup=false;
+
                 //Set ITEMQTY PRICE AND TOTAL
                 for (int i = 0; i < staticreviewsalesitems.size(); i++) {
                     for (int j = 0; j < salesitems.size();j++) {
@@ -1430,6 +1501,9 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                         }
                     }
                 }
+
+
+
 
 
             }else{
@@ -2090,7 +2164,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                         //Order item details
                                         objdatabaseadapter = new DataBaseAdapter(context);
                                         objdatabaseadapter.open();
-                                        String getresult = objdatabaseadapter.DeleteItemInCart(salesItemList.get(pos1).getItemcode());
+                                        String getresult = objdatabaseadapter.DeleteItemInCart(salesItemList.get(pos1).getItemcode(), "");
                                         if (getresult.equals("Success")) {
                                             staticreviewsalesitems.removeIf(item -> item.getItemcode().equals(salesItemList.get(pos1).getItemcode()));
 
@@ -2137,7 +2211,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                             //Order item details
                                             objdatabaseadapter = new DataBaseAdapter(context);
                                             objdatabaseadapter.open();
-                                            String getresult = objdatabaseadapter.DeleteItemInCart(salesItemList.get(pos1).getItemcode());
+                                            String getresult = objdatabaseadapter.DeleteItemInCart(salesItemList.get(pos1).getItemcode(),"");
                                             if (getresult.equals("Success")) {
                                                 staticreviewsalesitems.removeIf(item -> item.getItemcode().equals(salesItemList.get(pos1).getItemcode()));
                                                 getcartdatas = objdatabaseadapter.GetSalesItemsCart();
@@ -3562,7 +3636,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                           removebudgetutilzeamount(getitemcode);
                             objdatabaseadapter = new DataBaseAdapter(context);
                             objdatabaseadapter.open();
-                            String getresult = objdatabaseadapter.DeleteItemInCart(getitemcode);
+                            String getresult = objdatabaseadapter.DeleteItemInCart(getitemcode, "");
                             if(getresult.equals("Success")){
 
                                 //Get cart datas from database temp table
@@ -4059,7 +4133,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             //Order item details
             objdatabaseadapter = new DataBaseAdapter(context);
             objdatabaseadapter.open();
-            getresult = objdatabaseadapter.DeleteItemInCart(getitemcode);
+            getresult = objdatabaseadapter.DeleteItemInCart(getitemcode, "");
             if (getresult.equals("Success")) {
                 getcartdatas = objdatabaseadapter.GetSalesItemsCart();
                 if(getcartdatas.getCount()>0){
@@ -5951,7 +6025,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                         removebudgetutilzeamount(getitemcode);
                                         objdatabaseadapter = new DataBaseAdapter(context);
                                         objdatabaseadapter.open();
-                                        String getresult = objdatabaseadapter.DeleteItemInCart(getitemcode);
+                                        String getresult = objdatabaseadapter.DeleteItemInCart(getitemcode, "");
                                         if(getresult.equals("Success")){
                                             getcartdatas = objdatabaseadapter.GetSalesItemsCart();
                                             SalesActivity.staticreviewsalesitems.clear();

@@ -118,5 +118,22 @@ public class Constants {
     public static final String CLONE_COMPANYCODE = "companycode";
     public static final String CLONE_BILLDATE = "billdate";
     public static final String CLONE_BOOKINGNO = "bookingno";
+    public static final String CLONE_AREACITY = "areacityname";
+    public static final String CLONE_CITYNAME = "cityname";
+    public static final String CLONE_CUSTOMERNAME = "customername";
+
+    public static final String CLONE_AREANAME = "cloneareaname";
+    public static final String CLONE_AREACODE = "cloneareacode";
+    public static final String CLONE_CUSTOMERCODE = "clonecustomercode";
+
+    public static final String SALES_CUSTOMERCODE = "salescustomercode";
+    public static final String SALES_CUSTOMERNAME = "salescustomername";
+
+    public static final String SALES_AREACODE = "salesareacode";
+    public static final String SALES_AREANAME = "salesareaname";
+    public static final String CLONE_BILLTYPECODE = "clonebilltypecode";
+    public static final String SALES_BILLTYPECODE = "salesbilltypecode";
+
+//    public static final String SALES_AREACODE = "salesareacode";
 
 }

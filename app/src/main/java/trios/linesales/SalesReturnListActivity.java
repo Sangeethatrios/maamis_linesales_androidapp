@@ -740,7 +740,7 @@ public class SalesReturnListActivity extends AppCompatActivity {
                             Cur.getString(22),Cur.getString(10),
                             Cur.getString(18),Cur.getString(24),Cur.getString(15)
                             ,Cur.getString(16),Cur.getString(2),Cur.getString(17),
-                            Cur.getString(0),Cur.getInt(25),0,"0"));
+                            Cur.getString(0),Cur.getInt(25),0,"0", 0));
                     Cur.moveToNext();
                 }
                 getdata = saleslist;

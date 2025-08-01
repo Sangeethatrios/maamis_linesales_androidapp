@@ -92,8 +92,11 @@ public class SalesListActivity extends AppCompatActivity {
     public static String getsalesreviewtransactionno="",getsalesreviewfinanicialyear="",
             getsalesreviewcompanycode="",getfiltercompanycode="0",getstaticflag="0",getcancelflag="",gesalesreviewbookingno="",
             getsalesreviewtbilldate="",geteinvoicepending="0", geteinvoicegenerated="0",
-            gettotaleinvoicebills="0";
-    public static Integer geteinvoicestatus=0;
+            gettotaleinvoicebills="0", getsalesreviewtcityareaname = "" ,
+            getsalesreviewtcustomername = "", getsalesreviewcustomercode="0", getsalesreviewtareaname = ""
+            , getsalesreviewbilltypecode = "", getsalesreviewtcityname = "";
+    public static Integer geteinvoicestatus=0 ,
+            getsalesreviewareacode = 0;
     Spinner selectpaymenttype,selectpaymentstatus;
     String[] arrapaymenttype,arrpaymentstatus;
     String getpaymenttype="All Bills";
@@ -1287,7 +1290,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                         break;
                     case 4:
                         addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_VIEW);
-//                        addSwipeMenuItems(menu,Constants.KEY_MENU_BILL_CLONE);
+                        addSwipeMenuItems(menu,Constants.KEY_MENU_BILL_CLONE);
                         break;
                     case 5:
                         addSwipeMenuItems(menu,Constants.KEY_MENU_ITEM_VIEW);
@@ -1343,7 +1346,16 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                         getstaticflag = currentListDatareview.get(position).getFlag();
                         gesalesreviewbookingno=currentListDatareview.get(position).getBookingno();
                         getsalesreviewtbilldate=currentListDatareview.get(position).getVoucherdate();
-                        final String listschedulecode = currentListDatareview.get(position).getSchedulecode();
+                        String areacity = currentListDatareview.get(position).getArea() + "," + currentListDatareview.get(position).getRetailercity();
+                        getsalesreviewtcityareaname = areacity;
+                        getsalesreviewtcityname = currentListDatareview.get(position).getRetailercity();
+                        getsalesreviewtcustomername = currentListDatareview.get(position).getRetailernametamil();
+                        getsalesreviewcustomercode = currentListDatareview.get(position).getRetailercode();
+                        getsalesreviewtareaname = currentListDatareview.get(position).getArea();
+                        getsalesreviewareacode = currentListDatareview.get(position).getAreacode();
+                        getsalesreviewbilltypecode = currentListDatareview.get(position).getPaymenttype();
+
+                            final String listschedulecode = currentListDatareview.get(position).getSchedulecode();
                         String listsalescount = "";
                         //Get Current date
                         DataBaseAdapter objdatabaseadapter = null;
@@ -1383,6 +1395,14 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                             i.putExtra(Constants.CLONE_COMPANYCODE,getsalesreviewcompanycode);
                             i.putExtra(Constants.CLONE_BILLDATE,getsalesreviewtbilldate);
                             i.putExtra(Constants.CLONE_BOOKINGNO,gesalesreviewbookingno);
+                            i.putExtra(Constants.CLONE_AREACITY,getsalesreviewtcityareaname);
+                            i.putExtra(Constants.CLONE_CUSTOMERNAME,getsalesreviewtcustomername);
+                            i.putExtra(Constants.CLONE_CUSTOMERCODE,getsalesreviewcustomercode);
+                            i.putExtra(Constants.CLONE_AREACODE,getsalesreviewareacode);
+                            i.putExtra(Constants.CLONE_AREANAME,getsalesreviewtareaname);
+                            i.putExtra(Constants.CLONE_BILLTYPECODE,getsalesreviewbilltypecode);
+                            i.putExtra(Constants.CLONE_CITYNAME,getsalesreviewtcityname);
+
                             startActivity(i);
 
                         }
@@ -4054,7 +4074,8 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                             Cur.getString(22),Cur.getString(10),
                             Cur.getString(18),Cur.getString(24),Cur.getString(15)
                             ,Cur.getString(16),Cur.getString(2),Cur.getString(17),
-                            Cur.getString(0),Cur.getInt(29),Cur.getInt(30),Cur.getString(13)));
+                            Cur.getString(0),Cur.getInt(29),Cur.getInt(30),Cur.getString(13),
+                            Cur.getInt(31)));
                     Cur.moveToNext();
                 }
                 getdata = saleslist;

@@ -3103,7 +3103,7 @@ public class DataBaseAdapter
                     "einvoiceurl,irn_no,ack_no,einvoice_status,syncstatus,(SELECT count(voucherno) FROM " +
                     " tblreceipt where voucherno in  (SELECT billno FROM tblsales WHERE a.transactionno " +
                     "= transactionno AND financialyearcode = a.financialyearcode) AND type = 'Sales') " +
-                    "AS upipaid " +
+                    "AS upipaid, (select areacode from tblcustomer where customercode=a.customercode ) AS areacode " +
                     "from tblsales as a where billdate = datetime('" + getdate + "') " +
                     "and vancode = '" + preferenceMangr.pref_getString("getvancode") + "'  and " +
                     " "+getcompany+" and "+getbilltype+" and  "+getpaymentstaus+"" +
@@ -5308,7 +5308,7 @@ public class DataBaseAdapter
         Cursor mCur = null;
         try{
             /*  "  and a.transactiondate=datetime('"+getdate+"') " +*/
-            getdate = GenCreatedDate();
+//            getdate = GenCreatedDate();
             String sql ="SELECT * FROM (select * from tblsalescartdatas where freeflag!='freeitem' order by cartcode asc) " +
                     " as dev UNION ALL " +
                     " SELECT * FROM (select * from tblsalescartdatas where freeflag='freeitem' order by cartcode asc) as dev1 ";
@@ -7647,6 +7647,7 @@ if(schemeitem.equals("yes")){
                     "then 'yes' else CASE WHEN (SELECT count(*) as count FROM tblsalescartdatas where schemeapplicable='no')" +
                     "then 'no' else 'not applicable' end end as scheme),'" + billLatLong + "','" + orderTransNo + "','" + totalbudgetutilize + "' "  +
                     " from tbltempsalesitemdetails as  a where refno='"+ getrefno +"' group by companycode";
+            Log.i("sql", sql);
             mDb.execSQL(sql);
 
             String sqlseletecash =  "UPDATE tblnilstocktransaction set flag=3,syncflag=0 where salesitemcode" +
@@ -8398,143 +8399,107 @@ if(schemeitem.equals("yes")){
 
     }
     //Check customer already exists
-    public String DeleteItemInCart(String getitemcode)
+    public String DeleteItemInCart(String getitemcode, String getfreeflag)
     {
         Cursor mCur = null;
         try{
             mDb = mDbHelper.getReadableDatabase();
             String getbusinesstype = "";
+            if (getfreeflag.equals("freeitem")) {
+
+                String sql3 = "delete from tblsalescartdatas  where" +
+                        " itemcode='" + getitemcode + "'";
+                mDb.execSQL(sql3);
+
+            } else {
 //
-            String arr[]=preferenceMangr.pref_getString("getbusiness_type").split(",");
-            if(arr.length>0) {
-                for (int i = 0; i < arr.length; i++) {
-                    if(arr[i].equals("2")){
-                        getbusinesstype=" (','||c.business_type||',') LIKE '%,2,%' or (','||c.business_type||',') LIKE '%,3,%') ";
-                    }else if(arr[i].equals("1")){
-                        getbusinesstype=" ((','||c.business_type||',') LIKE '%,1,%' or (','||c.business_type||',') LIKE '%,3,%') ";
-                    }else{
-                        getbusinesstype=" ((','||c.business_type||',') LIKE '%,1,%' or (','||c.business_type||',') LIKE '%,2,%' or (','||c.business_type||',') LIKE '%,3,%') ";
+                String arr[] = preferenceMangr.pref_getString("getbusiness_type").split(",");
+                if (arr.length > 0) {
+                    for (int i = 0; i < arr.length; i++) {
+                        if (arr[i].equals("2")) {
+                            getbusinesstype = " (','||c.business_type||',') LIKE '%,2,%' or (','||c.business_type||',') LIKE '%,3,%') ";
+                        } else if (arr[i].equals("1")) {
+                            getbusinesstype = " ((','||c.business_type||',') LIKE '%,1,%' or (','||c.business_type||',') LIKE '%,3,%') ";
+                        } else {
+                            getbusinesstype = " ((','||c.business_type||',') LIKE '%,1,%' or (','||c.business_type||',') LIKE '%,2,%' or (','||c.business_type||',') LIKE '%,3,%') ";
+                        }
                     }
                 }
-            }
-            String GenDate= GenCreatedDate();
-            String sql="SELECT ((cast(itemweight as INTEGER)/cast(purchaseqty as INTEGER))*cast(freeqty as INTEGER)) as" +
-                    "  freeitemqty,(select purchaseitemcode  from tblsalescartdatas  where  freeitemcode =dev.freeitemcode " +
-                    "and freeflag='freeitem') as apcitemcode,(select newprice  from tblsalescartdatas  where " +
-                    " freeitemcode =dev.freeitemcode and freeflag='freeitem')" +
-                    " as price,(SELECT (select coalesce((sum(op)+sum(inward)-sum(outward)),0) from tblstocktransaction " +
-                    " where itemcode=dev.freeitemcode and flag!=3 ) + (select coalesce((sum(inward)-sum(outward)),0) " +
-                    " from tblstockconversion where itemcode=dev.freeitemcode )) as stockqty,* FROM" +
-                    " (SELECT coalesce(sum(itemqty*unitweight),0) as " +
-                    "itemweight,group_concat(itemcode,',') as purchaseitemcode,c.purchaseqty,(select " +
-                    "(freeqty) from tblscheme as c where  c.schemecode=b.schemecode  and '"+getitemcode+"' in " +
-                    "(SELECT purchaseitemcode from tblschemeitemdetails where c.schemecode=schemecode )  ) as freeqty," +
-                    " (select (freeitemcode) from tblscheme as c where   c.schemecode=b.schemecode  and '"+getitemcode+"' in " +
-                    "(SELECT purchaseitemcode from tblschemeitemdetails where c.schemecode=schemecode ) ) as" +
-                    " freeitemcode FROM tblsalescartdatas as a inner join tblschemeitemdetails as b on " +
-                    "b.purchaseitemcode=a.itemcode INNER JOIN tblscheme as c on c.schemecode=b.schemecode where " +
-                    "schemetype='item' and status='"+statusvar+"' and   "+getbusinesstype+" " +
-                    "  and (','||multipleroutecode||',') LIKE '%,"+ preferenceMangr.pref_getString("getroutecode") +",%'" +
-                    "  and (validityfrom<=datetime('"+GenDate+"')) and (ifnull(validityto,'')='' or " +
-                    "(validityfrom<=datetime('"+GenDate+"')  and" +
-                    " validityto>=datetime('"+GenDate+"'))) and c.schemecode in (SELECT distinct schemecode from " +
-                    "tblschemeitemdetails where purchaseitemcode='"+getitemcode+"' ) and itemcode<>'"+getitemcode+"') as dev";
-//            String sql ="SELECT ((cast(itemweight as INTEGER)/cast(purchaseqty as INTEGER))*cast(freeqty as INTEGER)) as " +
-//                    " freeitemqty,(select purchaseitemcode  from tblsalescartdatas  where " +
-//                    " freeitemcode =dev.freeitemcode and freeflag='freeitem') as apcitemcode," +
-//                    " (select newprice  from tblsalescartdatas  where " +
-//                    " freeitemcode =dev.freeitemcode and freeflag='freeitem') as price," +
-//                    "(SELECT (select coalesce((sum(op)+sum(inward)-sum(outward)),0) from tblstocktransaction " +
-//                    " where itemcode=dev.freeitemcode and flag!=3 ) + (select coalesce((sum(inward)-sum(outward)),0) " +
-//                    " from tblstockconversion where itemcode=dev.freeitemcode )) as stockqty," +
-//                    "* from (SELECT (SELECT  coalesce(sum(itemqty*unitweight),0) as itemweight" +
-//                    " from (SELECT c.* from tblsalescartdatas as c inner join tblschemeitemdetails as b on " +
-//                    " c.itemcode=b.purchaseitemcode inner join tblscheme as a on b.schemecode=a.schemecode where " +
-//                    " schemetype='item' and  a.status='"+statusvar+"' and  "+getbusinesstype+" " +
-//                    " and (','||multipleroutecode||',') LIKE '%,"+ preferenceMangr.pref_getString("getroutecode") +",%' " +
-//                    "and (validityfrom<=datetime('"+GenDate+"')) " +
-//                    " and (ifnull(validityto,'')='' or   (validityfrom<=datetime('"+GenDate+"') and " +
-//                    " validityto>=datetime('"+GenDate+"'))) and   a.schemecode=(SELECT distinct" +
-//                    " schemecode from tblschemeitemdetails where purchaseitemcode='"+getitemcode+"') " +
-//                    " and itemcode<>'"+getitemcode+"') ) as itemweight," +
-//                    " (SELECT group_concat(itemcode,',') " +
-//                    " from (SELECT itemcode from tblsalescartdatas as c inner join tblschemeitemdetails as b on " +
-//                    " c.itemcode=b.purchaseitemcode inner join tblscheme as a on b.schemecode=a.schemecode where " +
-//                    " schemetype='item' and  a.status='"+statusvar+"' and  "+getbusinesstype+"  " +
-//                    " and (','||multipleroutecode||',') LIKE '%,"+ preferenceMangr.pref_getString("getroutecode") +",%' " +
-//                    "and (validityfrom<=datetime('"+GenDate+"')) and (ifnull(validityto,'')='' or " +
-//                    "  (validityfrom<=datetime('"+GenDate+"') and  validityto>=datetime('"+GenDate+"'))) and " +
-//                    "  a.schemecode=(SELECT distinct schemecode from tblschemeitemdetails where" +
-//                    " purchaseitemcode='"+getitemcode+"')  and itemcode<>'"+getitemcode+"') ) " +
-//                    " as purchaseitemcode,(select (purchaseqty) from tblscheme as a where a.schemetype='item' and a.status='"+statusvar+"' and" +
-//                    "  "+getbusinesstype+" and (','||multipleroutecode||',') LIKE '%,"+ preferenceMangr.pref_getString("getroutecode") +",%' " +
-//                    " and (validityfrom<=datetime('"+GenDate+"')) and (ifnull(validityto,'')='' or (validityfrom<=datetime('"+GenDate+"') " +
-//                    " and validityto>=datetime('"+GenDate+"')))  ) as purchaseqty,(select (freeqty) from tblscheme as a where " +
-//                    " a.schemetype='item' and a.status='"+statusvar+"' and "+getbusinesstype+" and (','||multipleroutecode||',') LIKE " +
-//                    "'%,"+ preferenceMangr.pref_getString("getroutecode") +",%' and (validityfrom<=datetime('"+GenDate+"'))" +
-//                    " and (ifnull(validityto,'')='' or (validityfrom<=datetime('"+GenDate+"') and "+
-//                    " validityto>=datetime('"+GenDate+"'))) " +
-//                    " and '"+getitemcode+"' in (SELECT purchaseitemcode from tblschemeitemdetails where a.schemecode=schemecode )  ) as freeqty," +
-//                    "(select (freeitemcode) from tblscheme as a where " +
-//                    " a.schemetype='item' and a.status='"+statusvar+"' and "+getbusinesstype+" and (','||multipleroutecode||',') LIKE " +
-//                    "'%,"+ preferenceMangr.pref_getString("getroutecode") +",%' and (validityfrom<=datetime('"+GenDate+"'))" +
-//                    " and (ifnull(validityto,'')='' or (validityfrom<=datetime('"+GenDate+"') and "+
-//                    " validityto>=datetime('"+GenDate+"'))) and '"+getitemcode+"' in (SELECT purchaseitemcode " +
-//                    "from tblschemeitemdetails where a.schemecode=schemecode ) ) as freeitemcode from tblsalescartdatas" +
-//                    " where itemcode <> '"+getitemcode+"' AND freeflag='') as dev ";
-            mCur = mDb.rawQuery(sql, null);
-            if (mCur.getCount() > 0)
-            {
-                mCur.moveToFirst();
-                String getfreecount = (mCur.moveToFirst()) ? mCur.getString(0) : "0";
-                String getapcitemcode = (mCur.moveToFirst()) ? mCur.getString(1) : "0";
-                String getfreeitemprice = (mCur.moveToFirst()) ? mCur.getString(2) : "0";
-                String getstockqty = (mCur.moveToFirst()) ? mCur.getString(3) : "0";
-                String getpurchaseitemcode = (mCur.moveToFirst()) ? mCur.getString(5) : "0";
-                String getfreeitemcode = (mCur.moveToFirst()) ? mCur.getString(8) : "0";
-                if(getapcitemcode!=null && getapcitemcode!="null"){
-                    String apcitemcodearr= getapcitemcode.replace(",", "', '") ;
-                    if(getfreecount.equals("0") ) {
+                String GenDate = GenCreatedDate();
+                String sql = "SELECT ((cast(itemweight as INTEGER)/cast(purchaseqty as INTEGER))*cast(freeqty as INTEGER)) as" +
+                        "  freeitemqty,(select purchaseitemcode  from tblsalescartdatas  where  freeitemcode =dev.freeitemcode " +
+                        "and freeflag='freeitem') as apcitemcode,(select newprice  from tblsalescartdatas  where " +
+                        " freeitemcode =dev.freeitemcode and freeflag='freeitem')" +
+                        " as price,(SELECT (select coalesce((sum(op)+sum(inward)-sum(outward)),0) from tblstocktransaction " +
+                        " where itemcode=dev.freeitemcode and flag!=3 ) + (select coalesce((sum(inward)-sum(outward)),0) " +
+                        " from tblstockconversion where itemcode=dev.freeitemcode )) as stockqty,* FROM" +
+                        " (SELECT coalesce(sum(itemqty*unitweight),0) as " +
+                        "itemweight,group_concat(itemcode,',') as purchaseitemcode,c.purchaseqty,(select " +
+                        "(freeqty) from tblscheme as c where  c.schemecode=b.schemecode  and '" + getitemcode + "' in " +
+                        "(SELECT purchaseitemcode from tblschemeitemdetails where c.schemecode=schemecode )  ) as freeqty," +
+                        " (select (freeitemcode) from tblscheme as c where   c.schemecode=b.schemecode  and '" + getitemcode + "' in " +
+                        "(SELECT purchaseitemcode from tblschemeitemdetails where c.schemecode=schemecode ) ) as" +
+                        " freeitemcode FROM tblsalescartdatas as a inner join tblschemeitemdetails as b on " +
+                        "b.purchaseitemcode=a.itemcode INNER JOIN tblscheme as c on c.schemecode=b.schemecode where " +
+                        "schemetype='item' and status='" + statusvar + "' and   " + getbusinesstype + " " +
+                        "  and (','||multipleroutecode||',') LIKE '%," + preferenceMangr.pref_getString("getroutecode") + ",%'" +
+                        "  and (validityfrom<=datetime('" + GenDate + "')) and (ifnull(validityto,'')='' or " +
+                        "(validityfrom<=datetime('" + GenDate + "')  and" +
+                        " validityto>=datetime('" + GenDate + "'))) and c.schemecode in (SELECT distinct schemecode from " +
+                        "tblschemeitemdetails where purchaseitemcode='" + getitemcode + "' ) and itemcode<>'" + getitemcode + "') as dev";
+
+                mCur = mDb.rawQuery(sql, null);
+                if (mCur.getCount() > 0) {
+                    mCur.moveToFirst();
+                    String getfreecount = (mCur.moveToFirst()) ? mCur.getString(0) : "0";
+                    String getapcitemcode = (mCur.moveToFirst()) ? mCur.getString(1) : "0";
+                    String getfreeitemprice = (mCur.moveToFirst()) ? mCur.getString(2) : "0";
+                    String getstockqty = (mCur.moveToFirst()) ? mCur.getString(3) : "0";
+                    String getpurchaseitemcode = (mCur.moveToFirst()) ? mCur.getString(5) : "0";
+                    String getfreeitemcode = (mCur.moveToFirst()) ? mCur.getString(8) : "0";
+                    if (getapcitemcode != null && getapcitemcode != "null") {
+                        String apcitemcodearr = getapcitemcode.replace(",", "', '");
+                        if (getfreecount.equals("0")) {
 //                        String sql1= "delete from tblsalescartdatas   where" +
 //                                " '"+getitemcode+"' in  ('"+apcitemcodearr+"')  and  freeflag='freeitem' ";
 //                        mDb.execSQL(sql1);
-                        String sql1= "delete from tblsalescartdatas   where" +
-                                " (','||purchaseitemcode||',') LIKE '%,"+getitemcode+",%' and  freeflag='freeitem' ";
+                            String sql1 = "delete from tblsalescartdatas   where" +
+                                    " (','||purchaseitemcode||',') LIKE '%," + getitemcode + ",%' and  freeflag='freeitem' ";
+                            mDb.execSQL(sql1);
+                        } else {
+                            double getsubtotal = Double.parseDouble(getfreeitemprice) * Double.parseDouble(getfreecount);
+                            String sql1 = "Update tblsalescartdatas set  discount='" + getsubtotal + "'," +
+                                    " subtotal='" + getsubtotal + "', purchaseitemcode='" + getpurchaseitemcode + "'," +
+                                    " itemqty='" + getfreecount + "',stockqty='" + getstockqty + "' where " +
+                                    " '" + getitemcode + "' in  ('" + apcitemcodearr + "') and  itemcode='" + getfreeitemcode + "'" +
+                                    " and freeflag='freeitem' ";
+                            mDb.execSQL(sql1);
+                        }
+                    } else {
+                        String sql1 = "delete from tblsalescartdatas   where" +
+                                " '" + getitemcode + "' in (purchaseitemcode)  and  freeflag='freeitem' ";
                         mDb.execSQL(sql1);
-                    }else{
-                        double getsubtotal = Double.parseDouble(getfreeitemprice) * Double.parseDouble(getfreecount);
-                        String sql1= "Update tblsalescartdatas set  discount='"+getsubtotal+"'," +
-                                " subtotal='"+getsubtotal+"', purchaseitemcode='"+getpurchaseitemcode+"'," +
-                                " itemqty='"+getfreecount+"',stockqty='"+getstockqty+"' where " +
-                                " '"+getitemcode+"' in  ('"+apcitemcodearr+"') and  itemcode='"+getfreeitemcode+"'" +
-                                " and freeflag='freeitem' ";
-                        mDb.execSQL(sql1);
+
                     }
-                }else{
-                    String sql1= "delete from tblsalescartdatas   where" +
-                            " '"+getitemcode+"' in (purchaseitemcode)  and  freeflag='freeitem' ";
+                    String sql2 = "delete from tblsalescartdatas  where" +
+                            " itemcode='" + getitemcode + "' and  freeflag='' ";
+                    mDb.execSQL(sql2);
+
+                } else {
+                    String sql2 = "delete from tblsalescartdatas  where" +
+                            " itemcode='" + getitemcode + "' and  freeflag='' ";
+                    mDb.execSQL(sql2);
+
+                    String sql1 = "delete from tblsalescartdatas   where" +
+                            " (','||purchaseitemcode||',') LIKE '%," + getitemcode + ",%' and  freeflag='freeitem' ";
                     mDb.execSQL(sql1);
-
                 }
-                String sql2 = "delete from tblsalescartdatas  where" +
-                        " itemcode='"+getitemcode+"' and  freeflag='' ";
-                mDb.execSQL(sql2);
 
-            } else{
-                String sql2 = "delete from tblsalescartdatas  where" +
-                        " itemcode='"+getitemcode+"' and  freeflag='' ";
-                mDb.execSQL(sql2);
 
-                String sql1= "delete from tblsalescartdatas   where" +
-                        " (','||purchaseitemcode||',') LIKE '%,"+getitemcode+",%' and  freeflag='freeitem' ";
-                mDb.execSQL(sql1);
+                String sql3 = "delete from tblsalescartdatas  where" +
+                        " itemcode='" + getitemcode + "' and  freeflag='freerate' ";
+                mDb.execSQL(sql3);
             }
-
-
-
-            String sql3 = "delete from tblsalescartdatas  where" +
-                    " itemcode='"+getitemcode+"' and  freeflag='freerate' ";
-            mDb.execSQL(sql3);
 //            String sql4 = "delete from tblstockconversion  where" +
 //                    " itemcode='"+getitemcode+"'";
 //            mDb.execSQL(sql4);
@@ -15178,6 +15143,7 @@ if(schemeitem.equals("yes")){
                     " where (itemcategory='child'  and (parentstockqty>0 or stockqty>0) ) or (itemcategory= 'parent' and stockqty>0 )   " +
                     " order by   itemcategory desc,uppweight desc";
             //brandname
+            Log.i("sql====>", sql);
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0) {
                 mCur.moveToFirst();
@@ -15867,44 +15833,9 @@ if(schemeitem.equals("yes")){
             /*and b.transactiondate=datetime('"+getdate+"')*/
             String getdate = GenCreatedDate();
             String getbusinesstype = "";
-//            if(preferenceMangr.pref_getString("getbusiness_type").equals("2")){
-//                getbusinesstype=" (b.business_type = 2 or b.business_type = 3) ";
-//            }else  if(preferenceMangr.pref_getString("getbusiness_type").equals("1")){
-//                getbusinesstype="(b.business_type = 1 or b.business_type = 3)";
-//            }else{
-//                getbusinesstype="(b.business_type = 1 or  b.business_type = 2 or b.business_type = 3)";
-//            }
-//            String arr[]=preferenceMangr.pref_getString("getbusiness_type").split(",");
-//            if(arr.length>0) {
-////                for (int i = 0; i < arr.length; i++) {
-////                    if(arr[i].equals("2")){
-////                        getbusinesstype=" ((','||b.business_type||',') LIKE '%,2,%' or (','||b.business_type||',') LIKE '%,3,%') ";
-////                    }else if(arr[i].equals("1")){
-////                        getbusinesstype=" ((','||b.business_type||',') LIKE '%,1,%' or (','||b.business_type||',') LIKE '%,3,%') ";
-////                    }else{
-////                        getbusinesstype="((','||b.business_type||',') LIKE '%,1,%' or (','||b.business_type||',') LIKE '%,2,%' or (','||b.business_type||',') LIKE '%,3,%')";
-////                    }
-////                }
-//            }
+
             String getitembusinesstype = "(a.business_type = 1 or  a.business_type = 2 or a.business_type = 3)";
-//            if(preferenceMangr.pref_getString("getbusiness_type").equals("2")){
-//                getitembusinesstype=" (a.business_type = 2 or a.business_type = 3) ";
-//            }else  if(preferenceMangr.pref_getString("getbusiness_type").equals("1")){
-//                getitembusinesstype="(a.business_type = 1 or a.business_type = 3)";
-//            }else{
-//                getitembusinesstype="(a.business_type = 1 or  a.business_type = 2 or a.business_type = 3)";
-//            }
-//            if(arr.length>0) {
-////                for (int i = 0; i < arr.length; i++) {
-////                    if(arr[i].equals("2")){
-////                        getitembusinesstype=" (a.business_type = 2 or a.business_type = 3) ";
-////                    }else if(arr[i].equals("1")){
-////                        getitembusinesstype=" (a.business_type = 1 or a.business_type = 3) ";
-////                    }else{
-////                        getitembusinesstype=" (a.business_type = 1 or  a.business_type = 2 or a.business_type = 3) ";
-////                    }
-////                }
-//            }
+
             String sql = "select  '0' as cartcode, itemcode,   companycode,   brandcode,   manualitemcode, " +
                     "itemname,   itemnametamil,   unitcode,   unitweightunitcode, " +
                     "unitweight,   uppunitcode,   uppweight,   itemcategory, " +
@@ -15941,7 +15872,7 @@ if(schemeitem.equals("yes")){
                     " as parentstockqty,(case when(a.minimumsalesqty<>'null' or a.minimumsalesqty<>null) then a.minimumsalesqty else 0 end) as minimumsalesqty," +
                     " case when parentitemcode=0 then upp else (Select upp from tblitemmaster where itemcode=a.parentitemcode) end as upp," +
                     "itemtype ,coalesce((select newprice from tblitempricelisttransaction  where itemcode=a.itemcode  AND customertype = 1 order by autonum desc limit 1),0)" +
-                    " as minprice,budget_utilize ,schemeitem ,minimumsalesqty as minsalesqty,e.qty as itemqty ,e.discount,subtotal,freeitemstatus as freeflag," +
+                    " as minprice,budget_utilize ,schemeitem ,minimumsalesqty as minsalesqty,e.qty as itemqty ,e.discount,e.amount AS subtotal,freeitemstatus as freeflag," +
                     "e.itemcode as purchaseitemcode, case when e.freeitemstatus <> '' then e.itemcode else '' end as freeitemcode," +
                     "e.schemeapplicable,e.orgprice,e.ratediscount,a.itemsubgroupcode,f.customernametamil,(select areanametamil from tblareamaster where areacode=f.areacode )  as areaname  " +
                     " from tblitemmaster as a  " +
@@ -15954,10 +15885,9 @@ if(schemeitem.equals("yes")){
                     " where " + getitembusinesstype + " and g.transactionno="+gettransactionno+" and g.bookingno="+bookingno+" and a.status='"+statusvar+"' " +
                     " and (a.itemcode in (select itemcode from tblstocktransaction where  flag!=3)  or parentcode in" +
                     " (select itemcode from tblstocktransaction where  flag!=3)) and  a.companycode in (select companycode from tblcompanymaster where  " +
-                    "status='"+statusvar+"' ) ) as dec  where ((itemcategory='child'  and (parentstockqty>0 or stockqty>0) ) or" +
-                    " (itemcategory= 'parent' and stockqty>0 ) ) AND   newprice <> 0   order by   itemtype,itemcategory desc,uppweight desc";
+                    "status='"+statusvar+"' ) ) as dec order by   itemtype,itemcategory desc,uppweight desc";
 
-            //brandname
+
             mCur = mDb.rawQuery(sql, null);
             if (mCur != null && mCur.getCount() > 0) {
                 mCur.moveToFirst();
@@ -15968,6 +15898,33 @@ if(schemeitem.equals("yes")){
         }
 
         return mCur;
+    }
+
+    //Get Van Datas form database for each imeino
+    public Cursor GetCustomerAnualAmt(String customercode)
+    {
+        Cursor mCur = null;
+        try{
+            String sql ="SELECT annualsalesamt, (SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM " +
+                    "tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 AND    " +
+                    "flag<>6 ) AS daywisesalesamt,a.gstin,a.mobilenoverificationstatus, a.categorycode, " +
+                    "(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales " +
+                    "WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' " +
+                    "AND    flag<>3 AND    flag<>6) AS billwisebudget, schemeapplicable, COALESCE(customertypecode,1) as customertypecode  FROM tblcustomer AS a " +
+                    "WHERE customercode = '"+customercode+"'";
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+
+
+        return mCur;
+
+
     }
 
 }

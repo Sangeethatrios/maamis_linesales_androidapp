@@ -25,6 +25,8 @@ class SalesListDetails {
     public int upipaidcount;
     public String discount;
 
+    public int areacode;
+
     public String getBillcode() {
         return billcode;
     }
@@ -115,13 +117,18 @@ class SalesListDetails {
         return discount;
     }
 
+
+    public int getAreacode() {
+        return areacode;
+    }
+
     public SalesListDetails(String billcode, String voucherdate, String retailercode,
                             String retailername, String retailernametamil, String paymenttype,
                             String grandtotal, String sno, String schedulecode, String retailercity, String flag,
                             String area, String gstinumber, String bookingno,
                             String companyshortname, String billcopystatus, String cashpaidstatus,
                             String transactionno, String financialyearcode, String companycode,
-                            int syncstatus, int upipaidcount, String discount) {
+                            int syncstatus, int upipaidcount, String discount, int areacode ) {
         this.billcode = billcode;
         this.voucherdate = voucherdate;
         this.retailercode = retailercode;
@@ -145,5 +152,6 @@ class SalesListDetails {
         this.syncstatus=syncstatus;
         this.upipaidcount = upipaidcount;
         this.discount = discount;
-    }
+        this.areacode = areacode;
+     }
 }

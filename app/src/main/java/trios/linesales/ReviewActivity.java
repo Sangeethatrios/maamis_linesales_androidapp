@@ -1320,13 +1320,16 @@ public class ReviewActivity extends AppCompatActivity {
                 //Check Free Item
                 if(salesItemList.get(position).getFreeflag().equals("freeitem")){
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightblue));
-                    mHolder.deleteitem.setVisibility(View.GONE);
+//                    mHolder.deleteitem.setVisibility(View.GONE);
                     mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightblue));
                     mHolder.listdiscount.setText("");
-                    mHolder.dummydeleteitem.setVisibility(View.VISIBLE);
+//                    mHolder.dummydeleteitem.setVisibility(View.VISIBLE);
                     mHolder.schemecount.setText("F");
                     mHolder.dummycount.setVisibility(View.GONE);
                     mHolder.schemecount.setVisibility(View.VISIBLE);
+
+                    mHolder.deleteitem.setVisibility(View.VISIBLE);
+                    mHolder.dummydeleteitem.setVisibility(View.GONE);
                 }else{
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
                     mHolder.deleteitem.setVisibility(View.VISIBLE);
@@ -1358,6 +1361,7 @@ public class ReviewActivity extends AppCompatActivity {
                                     int getpurchasitemposition = 011111111222;
                                     String getitemcode = salesItemList.get(position).getItemcode();
                                     String getparentitemcode=salesItemList.get(position).getParentitemcode();
+                                    String getfreeflag=salesItemList.get(position).getFreeflag();
                                     DataBaseAdapter objdatabaseadapter = null;
                                     Cursor getcartdatas = null;
                                     try {
@@ -1365,7 +1369,7 @@ public class ReviewActivity extends AppCompatActivity {
                                         //Order item details
                                         objdatabaseadapter = new DataBaseAdapter(context);
                                         objdatabaseadapter.open();
-                                        String getresult = objdatabaseadapter.DeleteItemInCart(getitemcode);
+                                        String getresult = objdatabaseadapter.DeleteItemInCart(getitemcode, getfreeflag);
                                         String getresult1 = objdatabaseadapter.DeleteItemInStockConversion(getitemcode,getparentitemcode);
                                         if(getresult.equals("Success") && getresult1.equals("Success")){
                                             SalesActivity.gblitemcount=0;

@@ -86,7 +86,10 @@ public class SalesCloneActivity extends AppCompatActivity {
     String orderTransNo="",orderFinancialyear="",orderCompanyCode="";
     ReceiveListener receiveListener = null;
     ProgressDialog loaderPrint;
-    String TRANSACTIONNO ="", BOOKINGNO ="", BILLDATE ="",FINANICIAL="", FROM = "";
+    String TRANSACTIONNO ="", BOOKINGNO ="", BILLDATE ="",FINANICIAL="", FROM = "",
+            CUSTOMERNAME = "", AREACITYNAME = "", CUSTOMERCODE = "",
+            AREANAME = "", BILLTYPECODE = "", CITYNAME = "";
+    int AREACODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +153,66 @@ public class SalesCloneActivity extends AppCompatActivity {
                     BILLDATE = getIntent().getStringExtra(Constants.CLONE_BILLDATE);
                     FINANICIAL= getIntent().getStringExtra(Constants.CLONE_FINANICIAL);
                     FROM= getIntent().getStringExtra("FROM");
+                    CUSTOMERNAME = getIntent().getStringExtra(Constants.CLONE_CUSTOMERNAME);
+                    AREACITYNAME =  getIntent().getStringExtra(Constants.CLONE_AREACITY);
+                    CITYNAME =  getIntent().getStringExtra(Constants.CLONE_CITYNAME);
+
+                    CUSTOMERCODE = getIntent().getStringExtra(Constants.CLONE_CUSTOMERCODE);
+                    AREACODE = getIntent().getIntExtra(Constants.CLONE_AREACODE, 0);
+                    AREANAME = getIntent().getStringExtra(Constants.CLONE_AREANAME);
+                    BILLTYPECODE = getIntent().getStringExtra(Constants.CLONE_BILLTYPECODE);
+                    getbilltypecode = BILLTYPECODE;
+                    SalesActivity.customercode = CUSTOMERCODE;
+                    LoginActivity.getareacode = String.valueOf(AREACODE);
                 }
+            }
+
+
+
+
+            try {
+                objdatabaseadapter = new DataBaseAdapter(context);
+
+                objdatabaseadapter.open();
+                Cursor getcartdatas = null;
+                getcartdatas = objdatabaseadapter.GetCustomerAnualAmt(CUSTOMERCODE);
+
+                if (getcartdatas != null && getcartdatas.getCount() > 0) {
+                    for (int i = 0; i < getcartdatas.getCount(); i++) {
+
+                        SalesActivity.annualsalesamt = getcartdatas.getString(0);
+                        SalesActivity.daywisesalesamt = getcartdatas.getString(1);
+                        SalesActivity.gstnnumber = getcartdatas.getString(2);
+                        SalesActivity.getmobilenoverifycount = getcartdatas.getString(3);
+                        SalesActivity.customercategory = getcartdatas.getString(4);
+                        SalesActivity.billwisebudget = getcartdatas.getString(5);
+
+                        SalesActivity.getschemeapplicable = getcartdatas.getString(6);
+                        SalesActivity.customercityname = CITYNAME;
+                        SalesActivity.customerareaname = AREANAME;
+                        SalesActivity.customername = CUSTOMERNAME;
+                        SalesActivity.customercityarea = AREACITYNAME;
+                        String customertypecode = getcartdatas.getString(7);
+                        if(customertypecode.equals("1")) {
+                            SalesActivity.getpaymenttypecode = "1";
+                            SalesActivity.getpaymenttypename = "CASH";
+                            SalesActivity.confromBilltype=true;
+                        }
+
+                        if(customertypecode.equals("2")) {
+                            SalesActivity.getpaymenttypecode = "2";
+                            SalesActivity.getpaymenttypename = "CREDIT";
+                            SalesActivity.confromBilltype=false;
+                        }
+
+
+                    }
+
+                }
+
+
+            } catch (Exception e) {
+                Log.e("","Exception in getAmount : " + e.getLocalizedMessage());
             }
 
             try {
@@ -159,12 +221,14 @@ public class SalesCloneActivity extends AppCompatActivity {
 
                 objdatabaseadapter.open();
                 Cursor getcartdatas = null;
+                Cursor insertcart = null;
                 getcartdatas = objdatabaseadapter.GetSalesCloneDatasDB(TRANSACTIONNO,
                         FINANICIAL, BILLDATE, BOOKINGNO);
 
 
                 if (getcartdatas != null && getcartdatas.getCount() > 0) {
-
+                    SalesActivity.ifsavedsales = true;
+                    SalesActivity.staticreviewsalesitems.clear();
                     for (int i = 0; i < getcartdatas.getCount(); i++) {
                         SalesActivity.staticreviewsalesitems.add(new SalesItemDetails(getcartdatas.getString(1), getcartdatas.getString(2),
                                 getcartdatas.getString(3), getcartdatas.getString(4)
@@ -183,12 +247,40 @@ public class SalesCloneActivity extends AppCompatActivity {
                                 "", "", getcartdatas.getString(32),"","",
                                 getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",
                                 getcartdatas.getDouble( getcartdatas.getColumnIndex("budget_utilize")),getcartdatas.getString( getcartdatas.getColumnIndex("schemeitem")) ));
+
+//
+
+                             objdatabaseadapter.insertSalesCart(getcartdatas.getString(1), getcartdatas.getString(2),
+                                    getcartdatas.getString(3),  getcartdatas.getString(4)
+                                , getcartdatas.getString(5), getcartdatas.getString(6),
+                                    getcartdatas.getString(7), getcartdatas.getString(8)
+                                , getcartdatas.getString(9), getcartdatas.getString(10)
+                                    , getcartdatas.getString(11), getcartdatas.getString(12),
+                                    getcartdatas.getString(13),
+                                    getcartdatas.getString(14), getcartdatas.getString(15)
+                                    , getcartdatas.getString(16),
+                                    getcartdatas.getString(17), getcartdatas.getString(18),
+                                    getcartdatas.getString(19), getcartdatas.getString(20),
+                                    getcartdatas.getString(21), getcartdatas.getString(22), getcartdatas.getString(23),
+                                    getcartdatas.getString(24), getcartdatas.getString(25), getcartdatas.getString(26)
+                                    , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
+                                    getcartdatas.getString(30), getcartdatas.getString(31),
+                                    getcartdatas.getString(32),getcartdatas.getString(21),getcartdatas.getString(34)
+                                ,getcartdatas.getString(35),getcartdatas.getString(36),
+                                    getcartdatas.getDouble( getcartdatas.getColumnIndex("budget_utilize")),
+                                    getcartdatas.getString( getcartdatas.getColumnIndex("schemeitem")));
+
+
                         getcartdatas.moveToNext();
 
-                        txtcustomername.setText(SalesActivity.txtcustomername.getText().toString());
-                        txtareacity.setText(SalesActivity.txtareaname.getText().toString());
-                        txtreviewdate.setText(SalesActivity.txtsalesdate.getText().toString());
+                        txtcustomername.setText(CUSTOMERNAME);
+                        txtareacity.setText(AREACITYNAME);
+                        txtreviewdate.setText(BILLDATE);
                     }
+
+
+//
+//
 
                     getsalesdate = preferenceMangr.pref_getString("getformatdate");
                     //Adapter
@@ -210,31 +302,6 @@ public class SalesCloneActivity extends AppCompatActivity {
             }
 
 
-//            if(getIntent().hasExtra("Payment_Type")){
-//                //set Invoice heading
-//                boolean b = getIntent().getBooleanExtra("Payment_Type", false);
-//
-//                if(b){
-//                    paymenttypeinvoice.setText("CASH");
-//                    getbilltypecode = "1";
-//
-//                }else{
-//                    gstnLL.setVisibility(View.VISIBLE);
-//                    paymenttypeinvoice.setText("CREDIT");
-//                    if(!SalesActivity.gstnnumber.equals("")){
-//                        getbilltypecode = "2";
-//                    }
-//                    if(SalesActivity.gstnnumber.equals("")){
-//                        getbilltypecode = "3";
-//                    }
-//                }
-//
-//            } else {
-//                Toast toast = Toast.makeText(getApplicationContext(), "Please check the payment type", Toast.LENGTH_LONG);
-//                //toast.setGravity(Gravity.CENTER, 0, 0);
-//                toast.show();
-//                return;
-//            }
 
             try{
 
@@ -246,24 +313,9 @@ public class SalesCloneActivity extends AppCompatActivity {
                 gettransactionno = objdatabaseadapter.GetTransactionNo();
                 txtbookingno.setText("BK.No. : "+getbookingno);
 
-
-//                orderTransNo = preferenceMangr.pref_getString(Constants.KEY_ORDER_TO_SALES_TRANS_NO);
-//                orderFinancialyear = preferenceMangr.pref_getString(Constants.KEY_ORDER_TO_SALES_FINANCIALYEAR);
-//                orderCompanyCode = preferenceMangr.pref_getString(Constants.KEY_ORDER_TO_SALES_COMPANYCODE);
             }catch (Exception e){
 
             }
-            /*if(SalesActivity.getpaymenttypecode.equals("1")){
-                paymenttypeinvoice.setText("CASH");
-                getbilltypecode = "1";
-
-
-            }else if(SalesActivity.getpaymenttypecode.equals("2")){
-                gstnLL.setVisibility(View.VISIBLE);
-                paymenttypeinvoice.setText("CREDIT");
-                getbilltypecode = "2";
-            }*/
-
 
 
             //Get Current date
@@ -271,8 +323,6 @@ public class SalesCloneActivity extends AppCompatActivity {
             try{
                 objdatabaseadapter1 = new DataBaseAdapter(context);
                 objdatabaseadapter1.open();
-                //LoginActivity.getformatdate = objdatabaseadapter1.GenCreatedDate();
-                //LoginActivity.getcurrentdatetime = objdatabaseadapter1.GenCurrentCreatedDate();
                 preferenceMangr.pref_putString("getformatdate",objdatabaseadapter1.GenCreatedDate());
                 preferenceMangr.pref_putString("getcurrentdatetime",objdatabaseadapter1.GenCurrentCreatedDate());
             }catch (Exception e){
@@ -338,7 +388,17 @@ public class SalesCloneActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     isfromcart = true;
-                    finish();
+
+                    Intent i = new Intent(context, SalesActivity.class);
+                    i.putExtra("FROM","CLONE");
+                    i.putExtra(Constants.SALES_CUSTOMERCODE,CUSTOMERCODE);
+                    i.putExtra(Constants.SALES_CUSTOMERNAME,CUSTOMERNAME);
+                    i.putExtra(Constants.SALES_AREACODE,AREACODE);
+                    i.putExtra(Constants.SALES_AREANAME,AREANAME);
+                    i.putExtra(Constants.SALES_BILLTYPECODE,BILLTYPECODE);
+                    startActivity(i);
+
+//                    finish();
                 }
             });
             reviewlistgoback.setOnClickListener(new View.OnClickListener() {
@@ -372,16 +432,7 @@ public class SalesCloneActivity extends AppCompatActivity {
             //Item Adapter
             setItemAdapter();
 
-            if(SalesActivity.ifsavedsales) {
-                if (getbilltypecode.equals("2")   || getbilltypecode.equals("3")) {
-                    imgcamera.setVisibility(View.VISIBLE);
-                    txtSalesprint.setVisibility(View.GONE);
-                } else {
-                    imgcamera.setVisibility(View.GONE);
-                    txtSalesprint.setVisibility(View.GONE);
-                }
 
-            }
 
             //Sales save functionality
             txtSalesprint.setOnClickListener(new View.OnClickListener() {
@@ -466,6 +517,7 @@ public class SalesCloneActivity extends AppCompatActivity {
                                     objdatabaseadapter.insertErrorLog("SalesCloneActivity : Exception in getLatLong value : " + String.valueOf(e).replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
                                 }
 
+
                                 getsalestransactionno = objdatabaseadapter.InsertSales(preferenceMangr.pref_getString("getvancode"), getsalesdate, SalesActivity.customercode,
                                         getbilltypecode, SalesActivity.gstnnumber, preferenceMangr.pref_getString("getschedulecode"), getsubtotalamount,
                                         getdiscountamt, getgrandtotal, preferenceMangr.pref_getString("getfinanceyrcode"),
@@ -475,25 +527,42 @@ public class SalesCloneActivity extends AppCompatActivity {
                                 //Get General settings
                                 if (!getsalestransactionno.equals("") && !getsalestransactionno.equals(null)
                                         && !getsalestransactionno.equals("null")) {
-                                    /*Toast toast = Toast.makeText(getApplicationContext(), "Saved Successfully", Toast.LENGTH_LONG);
-                                    toast.setGravity(Gravity.BOTTOM, 0, 150);
-                                    toast.show();*/
+
+
                                     SalesActivity.ifsavedsales = true;
                                     SalesActivity.gstnnumber = "";
-//                                SalesActivity.customercode ="";
 
                                     SalesActivity.getpaymenttypecode = "";
                                     SalesActivity.getpaymenttypename = "";
                                     SalesActivity.confromBilltype = false;
 
-                                    SalesActivity.txtareaname.setEnabled(true);
-                                    SalesActivity.txtcustomername.setEnabled(true);
+                                    SalesActivity.customercode = "";
+                                    SalesActivity.annualsalesamt = "";
+                                    SalesActivity.daywisesalesamt = "";
+                                    SalesActivity.getmobilenoverifycount = "";
+                                    SalesActivity.customercategory = "";
+                                    SalesActivity.billwisebudget = "";
 
-                                    Utilities.deleteOrderToSalesConverstionDetails(getApplicationContext());
+                                    SalesActivity.getschemeapplicable = "";
+                                    SalesActivity.customercityname = "";
+                                    SalesActivity.customerareaname = "";
+                                    SalesActivity.customername = "";
+                                    SalesActivity.customercityarea = "";
+
+
+
+
+                                    if(SalesActivity.txtareaname != null) {
+                                        SalesActivity.txtareaname.setEnabled(true);
+                                        SalesActivity.txtcustomername.setEnabled(true);
+                                    }
+
+
 
                                     String result = objdatabaseadapter.InsertnilStock(preferenceMangr.pref_getString("getvancode"),
                                             preferenceMangr.pref_getString("getschedulecode"), getsalestransactionno, getbookingno, preferenceMangr.pref_getString("getfinanceyrcode"),
                                             SalesActivity.customercode);
+
 
                                     companyCodeList = new ArrayList<>();
                                     DataBaseAdapter mDbHelper = new DataBaseAdapter(SalesCloneActivity.this);
@@ -508,8 +577,7 @@ public class SalesCloneActivity extends AppCompatActivity {
                                         }
                                     }
                                     companyCodeList.add(companyCodeList.size(), "dc");
-
-                                    try {
+                                     try {
                                         printpopup = new Dialog(context);
                                         printpopup.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                         printpopup.setContentView(R.layout.printpopup);
@@ -785,11 +853,7 @@ public class SalesCloneActivity extends AppCompatActivity {
                                         networkstate = isNetworkAvailable();
                                         if (networkstate == true) {
                                             new AsyncCheckIMEI().execute("true");
-//                                        new AsyncNilStockDetails().execute();
-//                                        runThread();
-//                                        AsyncPriceListTransaction();
-//                                        new AsyncPriceListTransaction().execute();
-                                            // new AsyncSalesOrderDetails().execute();
+
                                         }
 
                                     } catch (Exception e) {
@@ -804,132 +868,7 @@ public class SalesCloneActivity extends AppCompatActivity {
                                                 + " - Unable to connect bluetooth", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
                                         mDbErrHelper.close();
                                     }
-/*
-                        String getbillcopystatus = objdatabaseadapter.GetBillCopyDB();
-                        if (getbillcopystatus.equals("yes")){
-                            if (!getsalestransactionno.equals("") && !getsalestransactionno.equals(null)
-                                    && !getsalestransactionno.equals("null")) {
-                                SalesActivity.ifsavedsales = true;
-                                dialogstatus = new Dialog(context);
-                                dialogstatus.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialogstatus.setContentView(R.layout.salesreceipt);
-                                dialogstatus.setCanceledOnTouchOutside(false);
-                                final CheckBox checkbillcopy = (CheckBox) dialogstatus.findViewById(R.id.checkbillcopy);
-                                final RadioButton radio_paid = (RadioButton) dialogstatus.findViewById(R.id.radio_paid);
-                                RadioButton radio_notpaid = (RadioButton) dialogstatus.findViewById(R.id.radio_notpaid);
-                                Button btnsalessubmit = (Button) dialogstatus.findViewById(R.id.btnsalessubmit);
-                                ImageView closepopup = (ImageView) dialogstatus.findViewById(R.id.closepopup);
-                                closepopup.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialogstatus.dismiss();
-                                    }
-                                });
-                                if(getbilltypecode.equals("2")){
-                                    radio_paid.setChecked(false);
-                                    radio_notpaid.setChecked(true);
-                                    radio_paid.setEnabled(false);
-                                    radio_notpaid.setEnabled(false);
-                                    checkbillcopy.setChecked(true);
-                                }else{
-                                    radio_paid.setChecked(true);
-                                    radio_notpaid.setChecked(false);
-                                    radio_paid.setEnabled(true);
-                                    radio_notpaid.setEnabled(true);
-                                    checkbillcopy.setChecked(false);
-                                }
-                                closepopup.setVisibility(View.GONE);
-                                final DataBaseAdapter finalObjdatabaseadapter = new DataBaseAdapter(context);
-                                btnsalessubmit.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        String getbillcopy = "";
-                                        String getpaymentstatus = "";
-                                        if (checkbillcopy.isChecked()) {
-                                            getbillcopy = "yes";
-                                        } else {
-                                            getbillcopy = "no";
-                                        }
-                                        if (radio_paid.isChecked()) {
-                                            getpaymentstatus = "yes";
-                                        } else {
-                                            getpaymentstatus = "no";
-                                        }
-                                        try {
-                                            finalObjdatabaseadapter.open();
-                                            String getresult = finalObjdatabaseadapter.UpdateSalesReceipt(getsalestransactionno, getbillcopy, getpaymentstatus);
 
-                                            if (getresult.equals("success")) {
-                                                dialogstatus.dismiss();
-                                                Toast toast = Toast.makeText(getApplicationContext(),"Saved Successfully", Toast.LENGTH_LONG);
-                                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                                toast.show();
-                                                //Toast.makeText(getApplicationContext(), "Saved Successfully", Toast.LENGTH_SHORT).show();
-                                                SalesActivity.staticreviewsalesitems.clear();
-                                                SalesActivity.salesitems.clear();
-
-                                                try {
-                                                    deviceFound = LoginActivity.p.findBT();
-                                                    if (!deviceFound) {
-                                                        Toast toast1 = Toast.makeText(getApplicationContext(),"Please connect to the Bluetooth Printer!", Toast.LENGTH_LONG);
-                                                        toast1.setGravity(Gravity.CENTER, 0, 0);
-                                                        toast1.show();
-                                                        //Toast.makeText(context, "Please connect to the Bluetooth Printer!", Toast.LENGTH_SHORT).show();
-                                                    } else {
-                                                        boolean billPrinted = false;
-                                                        billPrinted = (boolean) LoginActivity.p.GetSalesBillPrint(getsalestransactionno, LoginActivity.getfinanceyrcode);
-                                                        billPrinted = (boolean)LoginActivity.p.GetDCPrint(getsalestransactionno, LoginActivity.getfinanceyrcode);
-                                                        if (!billPrinted) {
-                                                            Toast toast1 = Toast.makeText(getApplicationContext(),"Unable to connect to Bluetooth Printer!", Toast.LENGTH_LONG);
-                                                            toast1.setGravity(Gravity.CENTER, 0, 0);
-                                                            toast1.show();
-                                                            //Toast.makeText(context, "Unable to connect to Bluetooth Printer!", Toast.LENGTH_SHORT).show();
-                                                            return;
-                                                        }
-                                                    }
-                                                }
-                                                catch (Exception e) {
-                                                    Toast toast1 = Toast.makeText(getApplicationContext(),"Unable to connect to Bluetooth Printer!", Toast.LENGTH_LONG);
-                                                    toast1.setGravity(Gravity.CENTER, 0, 0);
-                                                    toast1.show();
-                                                    //Toast.makeText(context, "Unable to connect to Bluetooth Printer!", Toast.LENGTH_SHORT).show();
-                                                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-                                                    mDbErrHelper.open();
-                                                    String geterrror = e.toString();
-                                                    mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-                                                    mDbErrHelper.close();
-                                                }
-                                                if(getbilltypecode.equals("2")) {
-                                                    imgcamera.setVisibility(View.VISIBLE);
-                                                    txtSalesprint.setVisibility(View.GONE);
-                                                }else {
-                                                    txtSalesprint.setVisibility(View.GONE);
-                                                    Intent in = new Intent(SalesCloneActivity.this, SalesListActivity.class);
-                                                    startActivity(in);
-                                                    networkstate = isNetworkAvailable();
-                                                    if (networkstate == true) {
-                                                        new AsyncSalesDetails().execute();
-                                                    }
-                                                }
-                                            }
-                                        } catch (Exception e) {
-                                            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-                                            mDbErrHelper.open();
-                                            String geterrror = e.toString();
-                                            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-                                            mDbErrHelper.close();
-                                        } finally {
-                                            if (finalObjdatabaseadapter != null)
-                                                finalObjdatabaseadapter.close();
-                                        }
-
-                                    }
-                                });
-                                dialogstatus.show();
-                            }f
-                    }else{
-
-                        }*/
                                 } else {
                                     txtSalesprint.setEnabled(true);
                                     Toast toast = Toast.makeText(getApplicationContext(), "Cart is empty", Toast.LENGTH_LONG);
@@ -1168,10 +1107,7 @@ public class SalesCloneActivity extends AppCompatActivity {
 
     //Checking internet connection
     public boolean isNetworkAvailable() {
-        /*ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();*/
+
         int code;
         Boolean result=false;
         try {
@@ -1396,10 +1332,12 @@ public class SalesCloneActivity extends AppCompatActivity {
                 //Check Free Item
                 if(salesItemList.get(position).getFreeflag().equals("freeitem")){
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightblue));
-                    mHolder.deleteitem.setVisibility(View.GONE);
+                    mHolder.deleteitem.setVisibility(View.VISIBLE);
+//                    mHolder.deleteitem.setVisibility(View.GONE);
                     mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightblue));
                     mHolder.listdiscount.setText("");
-                    mHolder.dummydeleteitem.setVisibility(View.VISIBLE);
+//                    mHolder.dummydeleteitem.setVisibility(View.VISIBLE);
+                    mHolder.dummydeleteitem.setVisibility(View.GONE);
                     mHolder.schemecount.setText("F");
                     mHolder.dummycount.setVisibility(View.GONE);
                     mHolder.schemecount.setVisibility(View.VISIBLE);
@@ -1434,6 +1372,8 @@ public class SalesCloneActivity extends AppCompatActivity {
                                     int getpurchasitemposition = 011111111222;
                                     String getitemcode = salesItemList.get(position).getItemcode();
                                     String getparentitemcode=salesItemList.get(position).getParentitemcode();
+                                    String getfreeflag=salesItemList.get(position).getFreeflag();
+
                                     DataBaseAdapter objdatabaseadapter = null;
                                     Cursor getcartdatas = null;
                                     try {
@@ -1441,7 +1381,7 @@ public class SalesCloneActivity extends AppCompatActivity {
                                         //Order item details
                                         objdatabaseadapter = new DataBaseAdapter(context);
                                         objdatabaseadapter.open();
-                                        String getresult = objdatabaseadapter.DeleteItemInCart(getitemcode);
+                                        String getresult = objdatabaseadapter.DeleteItemInCart(getitemcode, getfreeflag);
                                         String getresult1 = objdatabaseadapter.DeleteItemInStockConversion(getitemcode,getparentitemcode);
                                         if(getresult.equals("Success") && getresult1.equals("Success")){
                                             SalesActivity.gblitemcount=0;
@@ -1497,33 +1437,7 @@ public class SalesCloneActivity extends AppCompatActivity {
                                         if(getcartdatas!=null)
                                             getcartdatas.close();
                                     }
-                                    /*for(int p=0;p<SalesActivity.staticreviewsalesitems.size();p++){
-                                        if(salesItemList.get(position).getItemcode().equals
-                                                (SalesActivity.staticreviewsalesitems.get(p).getPurchaseitemcode())
-                                        && salesItemList.get(p).getFreeflag().equals("freeitem")){
-                                            deletefree = true;
-                                            getpurchasitemposition = p;
-                                        }
-                                    }
-                                    if(deletefree){
-                                        SalesActivity.staticreviewsalesitems.remove(position);
-                                        SalesActivity.staticreviewsalesitems.remove(getpurchasitemposition);
-                                        Toast toast = Toast.makeText(getApplicationContext(),"Item removed from cart", Toast.LENGTH_LONG);
-                                        toast.setGravity(Gravity.CENTER, 0, 0);
-                                        toast.show();
-                                       // Toast.makeText(getApplicationContext(),"Item removed from cart",Toast.LENGTH_SHORT).show();
-                                        setItemAdapter();
-                                        CalculateTotal();
-                                        return;
-                                    }else{
-                                        SalesActivity.staticreviewsalesitems.remove(position);
-                                        Toast toast = Toast.makeText(getApplicationContext(),"Item removed from cart", Toast.LENGTH_LONG);
-                                        toast.setGravity(Gravity.CENTER, 0, 0);
-                                        toast.show();
-                                       // Toast.makeText(getApplicationContext(),"Item removed from cart",Toast.LENGTH_SHORT).show();
-                                        setItemAdapter();
-                                        return;
-                                    }*/
+
                                 }
                             })
                             .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -2069,6 +1983,14 @@ public class SalesCloneActivity extends AppCompatActivity {
         if(SalesActivity.ifsavedsales){
             SalesActivity.staticreviewsalesitems.clear();
             SalesActivity.salesitems.clear();
+
+            DataBaseAdapter objdeletecartdataAdaptor = null;
+            objdeletecartdataAdaptor = new DataBaseAdapter(context);
+            objdeletecartdataAdaptor.open();
+            objdeletecartdataAdaptor.DeleteSalesItemCart();
+            if (objdeletecartdataAdaptor != null)
+                objdeletecartdataAdaptor.close();
+
             Intent i = new Intent(context, SalesListActivity.class);
             startActivity(i);
         }else {
@@ -2081,6 +2003,13 @@ public class SalesCloneActivity extends AppCompatActivity {
         if(SalesActivity.ifsavedsales){
             SalesActivity.staticreviewsalesitems.clear();
             SalesActivity.salesitems.clear();
+            DataBaseAdapter objdeletecartdataAdaptor = null;
+            objdeletecartdataAdaptor = new DataBaseAdapter(context);
+            objdeletecartdataAdaptor.open();
+            objdeletecartdataAdaptor.DeleteSalesItemCart();
+            if (objdeletecartdataAdaptor != null)
+                objdeletecartdataAdaptor.close();
+
             Intent i = new Intent(context, SalesListActivity.class);
             startActivity(i);
         }else {
@@ -2170,50 +2099,7 @@ public class SalesCloneActivity extends AppCompatActivity {
                     printData = null;
 
                 }
-                //SalesActivity.staticreviewsalesitems.clear();
-                //SalesActivity.salesitems.clear();
-                //txtSalesprint.setVisibility(View.GONE);
-                //txtSalesprint.setEnabled(true);
-                //Intent i = new Intent(SalesCloneActivity.this, SalesListActivity.class);
-                //startActivity(i);
-//                SalesPrintloading.dismiss();
 
-                //SalesDCprint(finalGetsalestransano, financialyearcode,Getbilltypecode);
-
-//                new AsyncPrintSalesDCDetails().execute(finalGetsalestransano, financialyearcode,Getbilltypecode);
-
-
-                // sales delivery note print function
-                //billPrinted = (boolean) printData.GetDCPrint(finalGetsalestransano, financialyearcode,SalesCloneActivity.this);
-
-                /*if (!billPrinted) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Unable to connect Bluetooth Printer. Please check the printer is turn or or not!", Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    //printpopup.dismiss();
-                    toast.show();
-                    if(Getbilltypecode.equals("2")) {
-                        imgcamera.setVisibility(View.VISIBLE);
-                        txtSalesprint.setVisibility(View.GONE);
-                    }else {
-                        SalesActivity.staticreviewsalesitems.clear();
-                        SalesActivity.salesitems.clear();
-                        txtSalesprint.setVisibility(View.GONE);
-                        txtSalesprint.setEnabled(true);
-                        Intent i = new Intent(SalesCloneActivity.this, SalesListActivity.class);
-                        startActivity(i);
-
-                    }
-
-                    //Toast.makeText(context, "Unable to connect to Bluetooth Printer!", Toast.LENGTH_SHORT).show();
-                    printData = null;
-
-                }
-                SalesActivity.staticreviewsalesitems.clear();
-                SalesActivity.salesitems.clear();
-                txtSalesprint.setVisibility(View.GONE);
-                txtSalesprint.setEnabled(true);
-                Intent i = new Intent(SalesCloneActivity.this, SalesListActivity.class);
-                startActivity(i);*/
 
             }catch (Exception e) {
                 hidePrintLoader();
@@ -2265,14 +2151,7 @@ public class SalesCloneActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    loading = ProgressDialog.show(context,"Connecting to printer","Please wait",true);
-//                    loading.setCancelable(false);
-//                    loading.setCanceledOnTouchOutside(false);
-//                }
-//            });
+
         }
         @Override
         protected void onPostExecute(Boolean billPrinted) {
@@ -2298,17 +2177,6 @@ public class SalesCloneActivity extends AppCompatActivity {
 
                 }
 
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        SalesActivity.staticreviewsalesitems.clear();
-//                        SalesActivity.salesitems.clear();
-//                        txtSalesprint.setVisibility(View.GONE);
-//                        txtSalesprint.setEnabled(true);
-//                        Intent i = new Intent(SalesCloneActivity.this, SalesListActivity.class);
-//                        startActivity(i);
-//                    }
-//                });
             }catch (Exception e) {
                 // TODO Auto-generated catch block
                 DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -2333,75 +2201,6 @@ public class SalesCloneActivity extends AppCompatActivity {
         }
     }
 
-//    private void runThread() {
-//
-//        new Thread() {
-//            public void run() {
-////                while (i++ < 1000) {
-//                    try {
-//                        runOnUiThread(new Runnable() {
-//
-//                            @Override
-//                            public void run() {
-//                                AsyncPriceListTransaction();
-//                            }
-//                        });
-//                        Thread.sleep(300);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-    ////            }
-//        }.start();
-//    }
-//    public void AsyncPriceListTransaction(){
-//        JSONObject jsonObj = null;
-//        RestAPI api = new RestAPI();
-//        String result = "";
-//        DataBaseAdapter pricelistdataBaseAdapter =null;
-//        String deviceid = preferenceMangr.pref_getString("deviceid");
-//
-//        try {
-//            if (context == null && getApplicationContext() != null)
-//                context=getApplicationContext();
-//            pricelistdataBaseAdapter = new DataBaseAdapter(context);
-//            pricelistdataBaseAdapter.open();
-//            networkstate = isNetworkAvailable();
-//            if (networkstate == true) {
-//                //itemn price list transaction
-//                jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncitempricelisttransaction.php",context);
-//                if (isSuccessful(jsonObj)) {
-//                    pricelistdataBaseAdapter.syncitempricelisttransaction(jsonObj);
-//
-//                            /*Calendar calendar = Calendar.getInstance();
-//                            SimpleDateFormat mformat= new SimpleDateFormat("dd-MM-yyyy h:mm a");
-//                            MenuActivity.pricelistlastsyncdate = mformat.format(calendar.getTime());*/
-//                    //Toast.makeText(context,pricelistlastsyncdate,Toast.LENGTH_SHORT).show();
-//
-//                    api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "itempricelisttransaction", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
-//                }
-//
-//
-//            }
-//
-//
-//        } catch (Exception e) {
-//            // TODO Auto-generated catch block
-//            Log.d("AsyncPriceList", e.getMessage());
-//            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-//            mDbErrHelper.open();
-//            String geterrror = e.toString();
-//            mDbErrHelper.insertErrorLog(geterrror.replace("'"," "),
-//                    this.getClass().getSimpleName() +" Review Activity Sync - AsyncPriceListTransaction", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-//            mDbErrHelper.close();
-//        }
-//        finally {
-//            if (pricelistdataBaseAdapter != null) {
-//                pricelistdataBaseAdapter.close();
-//            }
-//        }
-//
-//    }
     protected  class AsyncPriceListTransaction extends
             AsyncTask<String, JSONObject, String> {
         String List = "Success";
@@ -2426,10 +2225,7 @@ public class SalesCloneActivity extends AppCompatActivity {
                     if (isSuccessful(jsonObj)) {
                         pricelistdataBaseAdapter.syncitempricelisttransaction(jsonObj);
 
-                        /*Calendar calendar = Calendar.getInstance();
-                        SimpleDateFormat mformat= new SimpleDateFormat("dd-MM-yyyy h:mm a");
-                        MenuActivity.pricelistlastsyncdate = mformat.format(calendar.getTime());*/
-                        //Toast.makeText(context,pricelistlastsyncdate,Toast.LENGTH_SHORT).show();
+
 
                         api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "itempricelisttransaction", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
                     }
@@ -2463,18 +2259,7 @@ public class SalesCloneActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
-//            new AsyncSalesDetails().execute();
-           /* try {
-                //loading.dismiss();
 
-
-            }catch (Exception e) {
-                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-                mDbErrHelper.open();
-                String geterrror = e.toString();
-                mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-                mDbErrHelper.close();
-            }*/
 
         }
     }
@@ -2668,6 +2453,8 @@ public class SalesCloneActivity extends AppCompatActivity {
 
                 res1 = res1 + Double.parseDouble(getsalessubtotal);
                 //res2 = res2 + Double.parseDouble(getsaleseqty);
+                Log.e("SalesActivity.annualsalesamt=====>", SalesActivity.annualsalesamt);
+                Log.e("SalesActivity.daywisesalesamt=====>", SalesActivity.daywisesalesamt);
 
                 if (res1 + Double.parseDouble(SalesActivity.annualsalesamt) <=  Double.parseDouble(maxbillannualamount)){
                     if (res1 + Double.parseDouble(SalesActivity.daywisesalesamt) <=  Double.parseDouble(maxbillamount)){
@@ -2777,16 +2564,7 @@ public class SalesCloneActivity extends AppCompatActivity {
 
             if (!printdc) {
                 String printEinvoiceQR = "no";
-                /*if (companycode.startsWith("einvoice_qr")) {
-                    printEinvoiceQR = "yes";
-                    String[] detailArr = companycode.split("_");
-                    if (detailArr == null || detailArr.length <= 2)
-                        return;
 
-                    // 0th position has the einvoice_qr text
-                    // 1st position has the company code
-                    companycode = detailArr[2];
-                }*/
 
                 new AsyncPrintSalesDetails().execute(getsalestransactionno, preferenceMangr.pref_getString("getfinanceyrcode"), getbilltypecode, companycode, printNetAmount, printEinvoiceQR);
 
