@@ -610,7 +610,7 @@ public class Utilities {
                 curLong = gpsTracker.getLongitude();
             }
 
-            if(Integer.parseInt(cusLat) == 0 ||  Integer.parseInt(cusLong) == 0){
+            if(Double.parseDouble(cusLat) == 0 ||  Double.parseDouble(cusLong) == 0){
                 SalesActivity.txtcustomername.setText("");
                 SalesActivity.customercode="0";
                 Toast.makeText(context, "location not update for this customer", Toast.LENGTH_SHORT).show();
