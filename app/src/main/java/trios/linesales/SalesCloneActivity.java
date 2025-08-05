@@ -404,7 +404,20 @@ public class SalesCloneActivity extends AppCompatActivity {
             reviewlistgoback.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    isfromcart = true; finish();
+//                    isfromcart = true; finish();
+                    if(SalesActivity.ifsavedsales) {
+                        SalesActivity.staticreviewsalesitems.clear();
+                        SalesActivity.salesitems.clear();
+                        DataBaseAdapter objdeletecartdataAdaptor = null;
+                        objdeletecartdataAdaptor = new DataBaseAdapter(context);
+                        objdeletecartdataAdaptor.open();
+                        objdeletecartdataAdaptor.DeleteSalesItemCart();
+                        if (objdeletecartdataAdaptor != null)
+                            objdeletecartdataAdaptor.close();
+
+                        Intent i = new Intent(context, SalesListActivity.class);
+                        startActivity(i);
+                    }
                 }
             });
 
@@ -449,7 +462,7 @@ public class SalesCloneActivity extends AppCompatActivity {
                             SalesActivity.gstnnumber = SalesActivity.gstnnumber;
                         }
 //                        double amount = Double.parseDouble(mHolder.listitemrate.getText().toString()) * Double.parseDouble(mHolder.listitemqty.getText().toString());
-                        if(!isSalesValueReachLimit()){
+                        if(BILLTYPECODE.equals("1") && !isSalesValueReachLimit()){
                             Toast toast = Toast.makeText(getApplicationContext(),"The total bill amount for this customer has exceeded the daily limit.", Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
@@ -592,104 +605,6 @@ public class SalesCloneActivity extends AppCompatActivity {
 
                                                 try {
 
-                                                /*printData = new PrintData(context);
-                                                deviceFound = printData.findBT();
-
-                                                if (!deviceFound) {
-                                                    Toast toast1 = Toast.makeText(getApplicationContext(), "Please connect to the Bluetooth Printer!", Toast.LENGTH_LONG);
-                                                    toast1.setGravity(Gravity.CENTER, 0, 0);
-                                                   // printpopup.dismiss();
-                                                    toast1.show();
-                                                    if (getbilltypecode.equals("2")) {
-                                                        imgcamera.setVisibility(View.VISIBLE);
-                                                        txtSalesprint.setVisibility(View.GONE);
-                                                    } else {
-                                                        SalesActivity.staticreviewsalesitems.clear();
-                                                        SalesActivity.salesitems.clear();
-                                                        txtSalesprint.setVisibility(View.GONE);
-                                                        txtSalesprint.setEnabled(true);
-                                                        Intent i = new Intent(SalesCloneActivity.this, SalesListActivity.class);
-                                                        startActivity(i);
-
-                                                    }
-                                                } else {*/
-
-                                                    /*boolean billPrinted = false;
-                                                    billPrinted = (boolean) printData.GetSalesBillPrint(getsalestransactionno, LoginActivity.getfinanceyrcode);
-                                                    if (!billPrinted) {
-                                                        Toast toast2 = Toast.makeText(getApplicationContext(), "Unable to connect to Bluetooth Printer!", Toast.LENGTH_LONG);
-                                                        toast2.setGravity(Gravity.CENTER, 0, 0);
-                                                        //printpopup.dismiss();
-                                                        toast2.show();
-                                                        if(getbilltypecode.equals("2")) {
-                                                            imgcamera.setVisibility(View.VISIBLE);
-                                                            txtSalesprint.setVisibility(View.GONE);
-                                                        }else {
-                                                            SalesActivity.staticreviewsalesitems.clear();
-                                                            SalesActivity.salesitems.clear();
-                                                            txtSalesprint.setVisibility(View.GONE);
-                                                            txtSalesprint.setEnabled(true);
-                                                            Intent i = new Intent(SalesCloneActivity.this, SalesListActivity.class);
-                                                            startActivity(i);
-
-                                                        }
-                                                        SalesActivity.staticreviewsalesitems.clear();
-                                                        SalesActivity.salesitems.clear();
-                                                        txtSalesprint.setVisibility(View.GONE);
-                                                        txtSalesprint.setEnabled(true);
-                                                        Intent i = new Intent(SalesCloneActivity.this, SalesListActivity.class);
-                                                        startActivity(i);
-                                                        //Toast.makeText(context, "Unable to connect to Bluetooth Printer!", Toast.LENGTH_SHORT).show();
-                                                        return;
-                                                    }
-                                                    billPrinted = (boolean) printData.GetDCPrint(getsalestransactionno, LoginActivity.getfinanceyrcode);
-
-                                                    if (!billPrinted) {
-                                                        Toast toast3 = Toast.makeText(getApplicationContext(), "Unable to connect to Bluetooth Printer!", Toast.LENGTH_LONG);
-                                                        toast3.setGravity(Gravity.CENTER, 0, 0);
-                                                        //printpopup.dismiss();
-                                                        toast3.show();
-                                                        if(getbilltypecode.equals("2")) {
-                                                            imgcamera.setVisibility(View.VISIBLE);
-                                                            txtSalesprint.setVisibility(View.GONE);
-                                                        }else {
-                                                            SalesActivity.staticreviewsalesitems.clear();
-                                                            SalesActivity.salesitems.clear();
-                                                            txtSalesprint.setVisibility(View.GONE);
-                                                            txtSalesprint.setEnabled(true);
-                                                            Intent i = new Intent(SalesCloneActivity.this, SalesListActivity.class);
-                                                            startActivity(i);
-
-                                                        }
-                                                        SalesActivity.staticreviewsalesitems.clear();
-                                                        SalesActivity.salesitems.clear();
-                                                        txtSalesprint.setVisibility(View.GONE);
-                                                        txtSalesprint.setEnabled(true);
-                                                        Intent i = new Intent(SalesCloneActivity.this, SalesListActivity.class);
-                                                        startActivity(i);
-                                                        //Toast.makeText(context, "Unable to connect to Bluetooth Printer!", Toast.LENGTH_SHORT).show();
-                                                        return;
-                                                    }else {
-                                                        //printpopup.dismiss();
-                                                        if(getbilltypecode.equals("2")) {
-                                                            imgcamera.setVisibility(View.VISIBLE);
-                                                            txtSalesprint.setVisibility(View.GONE);
-                                                        }else {
-                                                            SalesActivity.staticreviewsalesitems.clear();
-                                                            SalesActivity.salesitems.clear();
-                                                            txtSalesprint.setVisibility(View.GONE);
-                                                            txtSalesprint.setEnabled(true);
-                                                            Intent i = new Intent(SalesCloneActivity.this, SalesListActivity.class);
-                                                            startActivity(i);
-
-                                                        }
-                                                        SalesActivity.staticreviewsalesitems.clear();
-                                                        SalesActivity.salesitems.clear();
-                                                        txtSalesprint.setVisibility(View.GONE);
-                                                        txtSalesprint.setEnabled(true);
-                                                        Intent i = new Intent(SalesCloneActivity.this, SalesListActivity.class);
-                                                        startActivity(i);
-                                                    }*/
                                                     try {
 
 
@@ -2423,10 +2338,12 @@ public class SalesCloneActivity extends AppCompatActivity {
 //            }
             String maxbillamount = preferenceMangr.pref_getString("getmaxbillamount");
             String maxbillannualamount = preferenceMangr.pref_getString("getmaxbillannualamount");
+            Log.i("maxbillannualamount", maxbillannualamount);
             if(Utilities.isNullOrEmpty(maxbillamount) || Double.parseDouble(maxbillamount) <= 0 ||
                     Utilities.isNullOrEmpty(maxbillannualamount) || Double.parseDouble(maxbillannualamount) <= 0){
                 return true;
             }
+            Log.i("maxbillamount", maxbillamount);
 
             final DecimalFormat dft = new DecimalFormat("0.00");
             double res1 = 0;

@@ -15855,7 +15855,7 @@ if(schemeitem.equals("yes")){
                     " (Select unitname  from tblunitmaster where unitcode=a.unitcode) as unitname, " +
                     " coalesce((Select noofdecimals from tblunitmaster where unitcode=a.unitcode),0) as noofdecimals, " +
                     " coalesce((select oldprice from tblitempricelisttransaction where itemcode=a.itemcode AND customertype = f.categorycode  order by autonum desc limit 1),0) as oldprice,  " +
-                    " coalesce((select newprice from tblitempricelisttransaction  where itemcode=a.itemcode AND customertype =  f.categorycode order by autonum desc limit 1),0) as newprice, " +
+                    " coalesce((e.price),0) as newprice, " +
                     " CASE WHEN itemtype=2 then (SELECT freeitemcolor from tblgeneralsettings) else coalesce((select colourcode  from tblcompanymaster where companycode=a.companycode),'#000000') END as colourcode," +
                     " coalesce(c.hsn,'')  as hsn,coalesce(c.tax,'') as tax,(select allowpriceedit from tblroutedetails where   areacode='f.areacode') as routeallowpricedit," +
                     " case when parentitemcode=0 then a.itemcode else parentitemcode  end as parentcode,case when itemcategory='parent' then 1 else  2 end as itemorder, " +
@@ -15907,10 +15907,10 @@ if(schemeitem.equals("yes")){
         try{
             String sql ="SELECT annualsalesamt, (SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM " +
                     "tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 AND    " +
-                    "flag<>6 ) AS daywisesalesamt,a.gstin,a.mobilenoverificationstatus, a.categorycode, " +
+                    "flag<>6 AND billtypecode = 1) AS daywisesalesamt,a.gstin,a.mobilenoverificationstatus, a.categorycode, " +
                     "(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales " +
                     "WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' " +
-                    "AND    flag<>3 AND    flag<>6) AS billwisebudget, schemeapplicable, COALESCE(customertypecode,1) as customertypecode  FROM tblcustomer AS a " +
+                    "AND    flag<>3 AND    flag<>6 AND billtypecode = 1) AS billwisebudget, schemeapplicable, COALESCE(customertypecode,1) as customertypecode  FROM tblcustomer AS a " +
                     "WHERE customercode = '"+customercode+"'";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
