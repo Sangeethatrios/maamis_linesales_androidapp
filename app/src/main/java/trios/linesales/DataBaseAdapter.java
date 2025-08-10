@@ -5742,7 +5742,7 @@ public class DataBaseAdapter
                     " where purchaseitemcode='"+getitemcode+"' and a.status='"+statusvar+"' and schemetype='item' and "+getbusinesstype+" and (','||multipleroutecode||',') LIKE '%,"+ getroutecode +",%' and" +
                     " (validityfrom<=datetime('"+GenDate+"')) and (ifnull(validityto,'')='' or (validityfrom<=datetime('"+GenDate+"')" +
                     " and  validityto>=datetime('"+GenDate+"')))" +
-                    " ))";
+                    " )) and freeflag='' ";
             Cursor mCur = mDb.rawQuery(sql, null);
 
             if (mCur.getCount() > 0)
@@ -5836,7 +5836,7 @@ public class DataBaseAdapter
         Cursor mCur = null;
         try{
             String sql ="select coalesce(itemqty,0),coalesce(newprice,0) " +
-                    " from tblsalescartdatas where itemcode = '"+getitemcode+"' ";
+                    " from tblsalescartdatas where itemcode = '"+getitemcode+"' and freeflag='' ";
             mCur = mDb.rawQuery(sql, null);
             String getqty = "0";
             if (mCur.getCount() > 0)
