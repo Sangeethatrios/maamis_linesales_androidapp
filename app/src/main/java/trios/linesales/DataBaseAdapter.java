@@ -8408,7 +8408,7 @@ if(schemeitem.equals("yes")){
             if (getfreeflag.equals("freeitem")) {
 
                 String sql3 = "delete from tblsalescartdatas  where" +
-                        " itemcode='" + getitemcode + "'";
+                        " itemcode='" + getitemcode + "' and freeflag='freeitem'";
                 mDb.execSQL(sql3);
 
             } else {
@@ -8446,7 +8446,7 @@ if(schemeitem.equals("yes")){
                         "  and (validityfrom<=datetime('" + GenDate + "')) and (ifnull(validityto,'')='' or " +
                         "(validityfrom<=datetime('" + GenDate + "')  and" +
                         " validityto>=datetime('" + GenDate + "'))) and c.schemecode in (SELECT distinct schemecode from " +
-                        "tblschemeitemdetails where purchaseitemcode='" + getitemcode + "' ) and itemcode<>'" + getitemcode + "') as dev";
+                        "tblschemeitemdetails where purchaseitemcode='" + getitemcode + "' ) and (itemcode<>'" + getitemcode + "' || freeflag<>'freeitem')) as dev";
 
                 mCur = mDb.rawQuery(sql, null);
                 if (mCur.getCount() > 0) {

@@ -3400,6 +3400,15 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                                     freeitems.remove(j);
                                                                                 }
                                                                             }
+
+                                                                            // Both purchase and free item is same
+                                                                            // in this case change the price of purchase item to change the free item rate
+                                                                            String oldPrice = getFreeStock.getString(19);
+                                                                            String newPrice = getFreeStock.getString(20);
+                                                                            if (getfreeitemcode.equals(getpurchaseitemcode)) {
+                                                                                newPrice = mHolder.listitemrate.getText().toString();
+                                                                            }
+
                                                                             freeitems.add(new SalesItemDetails(getFreeStock.getString(0), getFreeStock.getString(1),
                                                                                     getFreeStock.getString(2)
                                                                                     , getFreeStock.getString(3), getFreeStock.getString(4),
@@ -3409,8 +3418,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                                     , getFreeStock.getString(11), getFreeStock.getString(12)
                                                                                     , getFreeStock.getString(13), getFreeStock.getString(14), getFreeStock.getString(15)
                                                                                     , getFreeStock.getString(16), getFreeStock.getString(17)
-                                                                                    , getFreeStock.getString(18), getFreeStock.getString(19),
-                                                                                    getFreeStock.getString(20)
+                                                                                    , getFreeStock.getString(18), oldPrice,
+                                                                                    newPrice
                                                                                     , getFreeStock.getString(21), getFreeStock.getString(22)
                                                                                     , getFreeStock.getString(23), String.valueOf(getactualqtyvalue), String.valueOf(getsubtotal),
                                                                                     getFreeStock.getString(24), String.valueOf(getsubtotal),
