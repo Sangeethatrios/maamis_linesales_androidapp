@@ -8446,7 +8446,10 @@ if(schemeitem.equals("yes")){
                         "  and (validityfrom<=datetime('" + GenDate + "')) and (ifnull(validityto,'')='' or " +
                         "(validityfrom<=datetime('" + GenDate + "')  and" +
                         " validityto>=datetime('" + GenDate + "'))) and c.schemecode in (SELECT distinct schemecode from " +
-                        "tblschemeitemdetails where purchaseitemcode='" + getitemcode + "' ) and (itemcode<>'" + getitemcode + "' || freeflag<>'freeitem')) as dev";
+                        "tblschemeitemdetails where purchaseitemcode='" + getitemcode + "' ) and (CASE WHEN " +
+                        "a.freeitemcode = '" + getitemcode + "' AND freeflag='freeitem' THEN (itemcode<>'" + getitemcode + "' ||  " +
+                        "freeflag<>'freeitem' )  ELSE itemcode<>'" + getitemcode + "' END )) as dev";
+//              (itemcode<>'" + getitemcode + "' )  || freeflag<>'freeitem'
 
                 mCur = mDb.rawQuery(sql, null);
                 if (mCur.getCount() > 0) {

@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -2493,6 +2494,16 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
 //                    mHolder.listitemqty.setBackgroundResource(R.drawable.editbackground);
 //                    mHolder.listitemqty.setEnabled(true);
 //                }
+
+                String noOfDecimal = salesItemList.get(position).getNoofdecimals();
+
+                if (Integer.parseInt(noOfDecimal) > 0) {
+                    // Allow decimals
+                    mHolder.listitemqty.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                } else {
+                    // Disallow decimals — only integers
+                    mHolder.listitemqty.setInputType(InputType.TYPE_CLASS_NUMBER);
+                }
                 if (getschemeapplicable.equals("yes")) {
                     if(ItemApplyScheme) {
                         if (getSchemebusinesstype.contains("1") || getSchemebusinesstype.contains("3")) {
@@ -2938,8 +2949,6 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                             if (Double.parseDouble(mHolder.listitemqty.getText().toString()) >0  ) {
 
 
-
-
                                 //<=Double.parseDouble(mHolder.labelstock.getText().toString())
                                 DecimalFormat dffor = new DecimalFormat("0.00");
                                 String getdecimalvalue = salesItemList.get(pos).getNoofdecimals();
@@ -2956,8 +2965,11 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                 if (getdecimalvalue.equals("3")) {
                                     getnoofdigits = "000";
                                 }
-                                df = new DecimalFormat("0.'" + getnoofdigits + "'");
 
+                                if (Utilities.isNullOrEmpty(getnoofdigits))
+                                    df = new DecimalFormat("0");
+                                else
+                                    df = new DecimalFormat("0." + getnoofdigits );
 //
 
                                 if (getschemeapplicable.equals("yes")) {
@@ -3070,7 +3082,13 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                     mHolder.listdiscount.setText("");
                                 }
                                 addedqty = true;
-                                mHolder.labelstock.setText(String.valueOf(Double.parseDouble(salesItemList.get(pos).getStockqty()) - Double.parseDouble(salesItemList.get(pos).getItemqty())));
+
+
+                                Toast toast = Toast.makeText(getApplicationContext(),salesItemList.get(pos).getItemqty(), Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
+
+                                mHolder.labelstock.setText(df.format(Double.parseDouble(salesItemList.get(pos).getStockqty()) - Double.parseDouble(salesItemList.get(pos).getItemqty())));
                                 CalculateTotal();
                             } else {
                                 Toast toast = Toast.makeText(getApplicationContext(),"Please enter valid quantity", Toast.LENGTH_LONG);
