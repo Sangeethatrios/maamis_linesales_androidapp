@@ -9077,8 +9077,8 @@ if(schemeitem.equals("yes")){
                     " on u.unitcode=i.unitcode inner join tblsales as d on d.transactionno=a.transactionno" +
                     " and d.companycode=a.companycode inner join tblitemsubgroupmaster as e on  " +
                     " e.itemsubgroupcode=i.itemsubgroupcode inner join tblbrandmaster as g on g.brandcode=i.brandcode  " +
-                    " where "+ getcompany +" and  datetime(d.billdate) = datetime('"+fromdate+"') and a.freeitemstatus<>'freeitem' " +
-                    "  and d.flag!=3 and d.flag!=6 group by a.itemcode  " +
+                    " where "+ getcompany +" and  datetime(d.billdate) = datetime('"+fromdate+"') " +
+                    "  and d.flag!=3 and d.flag!=6 group by a.itemcode, freeitemstatus " +
                     " order by  itemtype,e.itemgroupcode,e.itemsubgroupcode,g.brandname,i.itemcategory desc";
             //group by a.itemcode ,itemname,itemnametamil,u.unitname
             //,parentcode,itemorder,i.itemname
