@@ -3083,11 +3083,6 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                 }
                                 addedqty = true;
 
-
-                                Toast toast = Toast.makeText(getApplicationContext(),salesItemList.get(pos).getItemqty(), Toast.LENGTH_LONG);
-                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                toast.show();
-
                                 mHolder.labelstock.setText(df.format(Double.parseDouble(salesItemList.get(pos).getStockqty()) - Double.parseDouble(salesItemList.get(pos).getItemqty())));
                                 CalculateTotal();
                             } else {
@@ -3379,7 +3374,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                         //Calculate Qty with total qty
                                                         Double getactualqty = Double.parseDouble(getqty);
 
-                                                        Double getfreeqtyval = ( Double.parseDouble(getpurchaseitemweight) / Double.parseDouble(getpurchaseqty));
+                                                        int getfreeqtyval = (int) ( Double.parseDouble(getpurchaseitemweight) / Double.parseDouble(getpurchaseqty));
                                                         Double getactualqtyvalue = (getfreeqtyval * Double.parseDouble(getfreeqty));
                                                         if (getpurchaseitemcode.equals(getfreeitemcode)) {
                                                             if (Double.parseDouble(salesItemList.get(pos).getStockqty())
@@ -5699,7 +5694,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
 
                                                                 //Calculate Qty with total qty
                                                                 Double getactualqty = Double.parseDouble(getqty);
-                                                                Double getfreeqtyval = (getactualqty / Double.parseDouble(getpurchaseqty));
+                                                                int getfreeqtyval = (int) (getactualqty / Double.parseDouble(getpurchaseqty));
                                                                 Double getactualqtyvalue = (getfreeqtyval * Double.parseDouble(getfreeqty));
                                                                 String getcartqty = objdatabaseadapter.GetCartItemStock(getfreeitemcode);
                                                                 if(getpurchaseitemcode.equals(getfreeitemcode)){
