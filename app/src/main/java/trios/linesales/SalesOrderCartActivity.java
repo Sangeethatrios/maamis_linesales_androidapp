@@ -749,7 +749,7 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
                     getnoofdigits = "000";
                 }
 
-                df = new DecimalFormat("0.'"+getnoofdigits+"'");
+                df = new DecimalFormat("0."+getnoofdigits);
 
                 mHolder.dummydeleteitem.setVisibility(View.GONE);
                 if (!(salesItemList.get(position).getItemnametamil().equals(""))
@@ -802,10 +802,12 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
                 //Check Free Item
                 if(salesItemList.get(position).getFreeflag().equals("freeitem")){
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightblue));
-                    mHolder.deleteitem.setVisibility(View.GONE);
+                    //mHolder.deleteitem.setVisibility(View.GONE);
                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightblue));
                     mHolder.listdiscount.setText("");
-                    mHolder.dummydeleteitem.setVisibility(View.VISIBLE);
+                    //mHolder.dummydeleteitem.setVisibility(View.VISIBLE);
+                    mHolder.deleteitem.setVisibility(View.VISIBLE);
+                    mHolder.dummydeleteitem.setVisibility(View.GONE);
                 }else{
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
                     mHolder.deleteitem.setVisibility(View.VISIBLE);
@@ -828,13 +830,14 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
                                     boolean deletefree = false;
                                     int getpurchasitemposition = 011111111222;
                                     String getitemcode = salesItemList.get(position).getItemcode();
+                                    String getfreeflag=salesItemList.get(position).getFreeflag();
                                     DataBaseAdapter objdatabaseadapter = null;
                                     Cursor getcartdatas = null;
                                     try {
                                         //Order item details
                                         objdatabaseadapter = new DataBaseAdapter(context);
                                         objdatabaseadapter.open();
-                                        String getresult = objdatabaseadapter.DeleteOrderItemInCart(getitemcode);
+                                        String getresult = objdatabaseadapter.DeleteOrderItemInCart(getitemcode, getfreeflag);
                                         if(getresult.equals("Success")){
                                             Toast toast = Toast.makeText(getApplicationContext(),"Item removed from cart", Toast.LENGTH_LONG);
                                             toast.setGravity(Gravity.CENTER, 0, 0);

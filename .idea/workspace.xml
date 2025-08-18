@@ -5,9 +5,49 @@
       <config />
     </shared>
     <layouts>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_price_list.xml">
+        <config>
+          <theme>@style/AppTheme.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_sales_item_wise_report.xml">
         <config>
           <theme>@style/AppTheme.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/addreceipt.xml">
+        <config>
+          <theme>@style/AppTheme</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/content_price_list.xml">
+        <config>
+          <theme>@style/AppTheme.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/deviceidinfnpopup.xml">
+        <config>
+          <theme>@style/AppTheme</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/order_transaction_list.xml">
+        <config>
+          <theme>@style/AppTheme</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/orderparent_layout.xml">
+        <config>
+          <theme>@style/AppTheme</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/pricelist.xml">
+        <config>
+          <theme>@style/AppTheme</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/salesorderitemlist.xml">
+        <config>
+          <theme>@style/AppTheme</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/salesreviewlist.xml">
@@ -21,7 +61,31 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eba3b10e-7bfe-4158-9e30-b5e35257d56a" name="Changes" comment="Build v1_8 (sales_with_clone)&#10; - Fixed the scheme free item not delete issue&#10; - Fixed the scheme free item not showing in item-wise sales report issue" />
+    <list default="true" id="eba3b10e-7bfe-4158-9e30-b5e35257d56a" name="Changes" comment="Build v1_1_0 (sales_with_clone)&#10; - Code changes for max receipt amount validation&#10; - Code changes for added the traget and achieved amount in denomination print">
+      <change beforePath="$PROJECT_DIR$/.gradle/8.4/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.4/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.4/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.4/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.4/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.4/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.4/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.4/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.4/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.4/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/dblinesales.db" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/dblinesales.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/EpsonT20Printer.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/EpsonT20Printer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/PrintData.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/PrintData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/ReceiptActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/ReceiptActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/ReturnReviewActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/ReturnReviewActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/ReviewActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/ReviewActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesCloneActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesCloneActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesOrderActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesOrderActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesOrderCartActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesOrderCartActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesOrderViewActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesOrderViewActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesReturnActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesReturnActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesReturnViewActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesReturnViewActivity.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,7 +100,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\Muthukrishnan\.android\avd\Medium_Phone_API_35.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[RZ8M902KQHW]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -56,26 +120,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ApkExportedModule": "maamis_linesales_androidapp.app",
-    "ExportApk.ApkPathFormaamis_linesales_androidapp.app": "D:\\MuthuKrishnan\\AndroidStudioProjects\\Maamis_LineSales\\maamis_linesales_androidapp\\app",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "sales__with__clone",
-    "last_opened_file_path": "D:/MuthuKrishnan/AndroidStudioProjects/Maamis_LineSales/maamis_linesales_androidapp/SignedApk/maamislinesales.jks",
-    "show.migrate.to.gradle.popup": "false"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ApkExportedModule&quot;: &quot;maamis_linesales_androidapp.app&quot;,
+    &quot;DEBUGGABLE_DEVICE&quot;: &quot;samsung-sm_a507fn-RZ8M902KQHW&quot;,
+    &quot;DEBUGGABLE_PROCESS&quot;: &quot;trios.linesales&quot;,
+    &quot;DEBUGGER_ID&quot;: &quot;Auto&quot;,
+    &quot;ExportApk.ApkPathFormaamis_linesales_androidapp.app&quot;: &quot;D:\\MuthuKrishnan\\AndroidStudioProjects\\Maamis_LineSales\\maamis_linesales_androidapp\\app&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;SHOW_ALL_PROCESSES&quot;: &quot;false&quot;,
+    &quot;android-custom-viewC:/Users/Muthukrishnan/AppData/Local/Android/Sdk/sources/android-30/android/view/View.java_SELECTED&quot;: &quot;View&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;sales__with__clone&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/MuthuKrishnan/SQLite/Linesales/Maamis&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   },
-  "keyToStringList": {
-    "ExportApk.BuildVariants": [
-      "release"
+  &quot;keyToStringList&quot;: {
+    &quot;ExportApk.BuildVariants&quot;: [
+      &quot;release&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App">
       <module name="maamis_linesales_androidapp.app.main" />
@@ -162,7 +232,15 @@
       <option name="project" value="LOCAL" />
       <updated>1754985806750</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Build v1_9 (sales_with_clone)&#10; - Fixed the scheme free item quantity wrongly calculating issue">
+      <option name="closed" value="true" />
+      <created>1755004315046</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1755004315046</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -178,6 +256,71 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Build v1_8 (sales_with_clone)&#10; - Fixed the scheme free item not delete issue&#10; - Fixed the scheme free item not showing in item-wise sales report issue" />
-    <option name="LAST_COMMIT_MESSAGE" value="Build v1_8 (sales_with_clone)&#10; - Fixed the scheme free item not delete issue&#10; - Fixed the scheme free item not showing in item-wise sales report issue" />
+    <MESSAGE value="Build v1_9 (sales_with_clone)&#10; - Fixed the scheme free item quantity wrongly calculating issue" />
+    <option name="LAST_COMMIT_MESSAGE" value="Build v1_9 (sales_with_clone)&#10; - Fixed the scheme free item quantity wrongly calculating issue" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java</url>
+          <line>5597</line>
+          <option name="timeStamp" value="46" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java</url>
+          <line>5540</line>
+          <option name="timeStamp" value="47" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java</url>
+          <line>5652</line>
+          <option name="timeStamp" value="48" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java</url>
+          <line>5956</line>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java</url>
+          <line>6032</line>
+          <option name="timeStamp" value="50" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java</url>
+          <line>5810</line>
+          <option name="timeStamp" value="51" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java</url>
+          <line>5841</line>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java</url>
+          <line>6748</line>
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java</url>
+          <line>5921</line>
+          <option name="timeStamp" value="54" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java</url>
+          <line>5940</line>
+          <option name="timeStamp" value="55" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java</url>
+          <line>5944</line>
+          <option name="timeStamp" value="56" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="dart-exception" />
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

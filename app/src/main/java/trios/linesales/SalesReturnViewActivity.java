@@ -635,7 +635,7 @@ public class SalesReturnViewActivity extends AppCompatActivity {
                     getnoofdigits = "000";
                 }
 
-                df = new DecimalFormat("0.'"+getnoofdigits+"'");
+                df = new DecimalFormat("0."+getnoofdigits);
 
 
                 mHolder.listitemname.setText(String.valueOf(salesItemList.get(position).getItemname()));

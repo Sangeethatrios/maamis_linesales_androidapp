@@ -2597,7 +2597,8 @@ public class ReviewActivity extends AppCompatActivity {
                 //res2 = res2 + Double.parseDouble(getsaleseqty);
 
                 if (res1 + Double.parseDouble(SalesActivity.annualsalesamt) <=  Double.parseDouble(maxbillannualamount)){
-                    if (res1 + Double.parseDouble(SalesActivity.daywisesalesamt) <=  Double.parseDouble(maxbillamount)){
+                    //if (res1 + Double.parseDouble(SalesActivity.daywisesalesamt) <=  Double.parseDouble(maxbillamount)){
+                    if (res1 <=  Double.parseDouble(maxbillamount)){
                         result =  true;
                     } else {
                         result = false;
@@ -2702,6 +2703,13 @@ public class ReviewActivity extends AppCompatActivity {
             String printNetAmount =  companyCodeList.size() == 2 ? "yes" : "no";
             boolean printdc =  companycode.equalsIgnoreCase("dc") ? true : false;
 
+            Log.e("","SALES_BILL : getsalestransactionno : " + getsalestransactionno);
+            Log.e("","SALES_BILL : getfinanceyrcode : " + preferenceMangr.pref_getString("getfinanceyrcode"));
+            Log.e("","SALES_BILL : getbilltypecode : " + getbilltypecode);
+            Log.e("","SALES_BILL : companycode : " + companycode);
+            Log.e("","SALES_BILL : printNetAmount : " + printNetAmount);
+
+            Log.e("","SALES_BILL : print start");
             if (!printdc) {
                 String printEinvoiceQR = "no";
                 /*if (companycode.startsWith("einvoice_qr")) {
@@ -2715,10 +2723,16 @@ public class ReviewActivity extends AppCompatActivity {
                     companycode = detailArr[2];
                 }*/
 
+                Log.e("","SALES_BILL : print started");
+
                 new AsyncPrintSalesDetails().execute(getsalestransactionno, preferenceMangr.pref_getString("getfinanceyrcode"), getbilltypecode, companycode, printNetAmount, printEinvoiceQR);
 
-            }else
+            }else {
+                Log.e("","SALES_BILL : dc print started");
                 new AsyncPrintSalesDCDetails().execute(getsalestransactionno, preferenceMangr.pref_getString("getfinanceyrcode"), getbilltypecode);
+            }
+
+            Log.e("","SALES_BILL : print ended");
 
         } catch (Exception e) {
             Log.d("", "Exception in printBill : " + e.getLocalizedMessage());

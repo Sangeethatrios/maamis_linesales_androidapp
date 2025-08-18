@@ -176,6 +176,7 @@ public class SalesCloneActivity extends AppCompatActivity {
                 objdatabaseadapter.open();
                 Cursor getcartdatas = null;
                 getcartdatas = objdatabaseadapter.GetCustomerAnualAmt(CUSTOMERCODE);
+                SalesActivity.getmobilenoverifycount = objdatabaseadapter.Checkemobilenoverify(CUSTOMERCODE, preferenceMangr.pref_getString("getroutecode"));
 
                 if (getcartdatas != null && getcartdatas.getCount() > 0) {
                     for (int i = 0; i < getcartdatas.getCount(); i++) {
@@ -183,7 +184,6 @@ public class SalesCloneActivity extends AppCompatActivity {
                         SalesActivity.annualsalesamt = getcartdatas.getString(0);
                         SalesActivity.daywisesalesamt = getcartdatas.getString(1);
                         SalesActivity.gstnnumber = getcartdatas.getString(2);
-                        SalesActivity.getmobilenoverifycount = getcartdatas.getString(3);
                         SalesActivity.customercategory = getcartdatas.getString(4);
                         SalesActivity.billwisebudget = getcartdatas.getString(5);
 
@@ -2374,7 +2374,8 @@ public class SalesCloneActivity extends AppCompatActivity {
                 Log.e("SalesActivity.daywisesalesamt=====>", SalesActivity.daywisesalesamt);
 
                 if (res1 + Double.parseDouble(SalesActivity.annualsalesamt) <=  Double.parseDouble(maxbillannualamount)){
-                    if (res1 + Double.parseDouble(SalesActivity.daywisesalesamt) <=  Double.parseDouble(maxbillamount)){
+                    //if (res1 + Double.parseDouble(SalesActivity.daywisesalesamt) <=  Double.parseDouble(maxbillamount)){
+                    if (res1 <=  Double.parseDouble(maxbillamount)){
                         result =  true;
                     } else {
                         result = false;

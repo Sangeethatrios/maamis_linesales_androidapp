@@ -55,6 +55,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -1197,6 +1198,19 @@ public class ReceiptActivity extends AppCompatActivity {
                         //Save receipt details
                         objdatabaseadapter = new DataBaseAdapter(context);
                         objdatabaseadapter.open();
+                        String maxReceiptAmount = objdatabaseadapter.getMaxReceiptAmount();
+
+                        DecimalFormat df = new DecimalFormat("0.00");
+
+                        if(receiptmode.equals("Cash") &&
+                                (!Utilities.isNullOrEmpty(maxReceiptAmount) && Double.parseDouble(amount)> Double.parseDouble(maxReceiptAmount))) {
+                            Toast toast = Toast.makeText(getApplicationContext(),"Receipt amount should be less than or equal to Rs. " + String.valueOf(df.format(Double.parseDouble(maxReceiptAmount))), Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            //Toast.makeText(getApplicationContext(),"Please enter valid amount",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         getreceipttransano=objdatabaseadapter.insertReceipt(receiptdate,companycode,vancode,
                                 customercode,schedulecode,receiptremarkscode,receiptmode,
                                 chequerefno,String.valueOf(gettotalamount),financialyearcode,note,chequebankname,

@@ -493,7 +493,7 @@ public class PrintData {
                                 getnoofdigits = "000";
                             }
 
-                            df = new DecimalFormat("0.'" + getnoofdigits + "'");
+                            df = new DecimalFormat("0." + getnoofdigits);
                             if (getnoofdigits.equals("")) {
                                 SalesBuffer.append(Util.nameLeftValueRightJustify5(mCur.getString(2),
                                         mCur.getString(3), mCur.getString(12), mCur.getString(4),

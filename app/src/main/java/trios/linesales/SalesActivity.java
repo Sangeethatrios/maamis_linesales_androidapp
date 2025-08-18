@@ -4262,7 +4262,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
 
 
             if (amount + res1 + Double.parseDouble(annualsalesamt) <=  Double.parseDouble(maxbillannualamount)){
-                if (amount + res1 + Double.parseDouble(daywisesalesamt) <=  Double.parseDouble(maxbillamount)){
+                //if (amount + res1 + Double.parseDouble(daywisesalesamt) <=  Double.parseDouble(maxbillamount)){
+                if (amount + res1 <=  Double.parseDouble(maxbillamount)){
                     return true;
                 }
             }
@@ -5266,6 +5267,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     try {
                         databaseadapter = new DataBaseAdapter(context);
                         databaseadapter.open();
+                        databaseadapter.DeleteSalesItemCart();
                         Cursor Cur = null;
                         Cursor Cur1 = null;
                         Cursor Cur2 = null;
@@ -5276,7 +5278,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                             DecimalFormat dft = new DecimalFormat("0.00");
                             databaseadapter = new DataBaseAdapter(context);
                             databaseadapter.open();
-                            Cur2 = databaseadapter.GetItemDB(Cur1.getString(0), preferenceMangr.pref_getString(Constants.KEY_GET_MENU_ROUTECODE), preferenceMangr.pref_getString(Constants.KEY_GETAREACODE));
+                            String freeflag =  Cur1.getString(7);
+                            Cur2 = databaseadapter.GetItemDB(Cur1.getString(0), preferenceMangr.pref_getString("getroutecode"), preferenceMangr.pref_getString(Constants.KEY_GETAREACODE));
                             if(Cur2.getCount() > 0){
 
                                 boolean addedqty = false;
@@ -5312,7 +5315,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                 String subtotal = "0";
                                 String routeallowpricedit = Cur2.getString(24);
                                 String discount = "";
-                                String freeflag =  "";
+
                                 String purchaseitemcode = "0";
                                 String freeitemcode =  "";
                                 String dummyprice = Cur2.getString(20);
@@ -5516,79 +5519,6 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                     double getdiscount = 0;
                                     double getparentstock = 0;
 
-
-//                                    if (allownegativestock.equals("no")) {
-//                                        if (Double.parseDouble(qty.toString()) >
-//                                                Double.parseDouble(labelstock.toString())) {
-//                                            if (itemcategory.equals("child")) {
-//                                                DataBaseAdapter objdatabaseadapter = null;
-//                                                Cursor getStockCur = null;
-//                                                try {
-//                                                    objdatabaseadapter = new DataBaseAdapter(context);
-//                                                    objdatabaseadapter.open();
-//                                                    getStockCur = objdatabaseadapter.GetStockForItem(parentitemcode);
-//                                                    if (getStockCur.getCount() > 0) {
-//                                                        // for (int i = 0; i < getStockCur.getCount(); i++) {
-//                                                        getparentstock = getStockCur.getDouble(0);
-//                                                        //}
-//                                                    }
-//                                                    if (getparentstock > 0) {
-//                                                        isfreestock = "";
-//                                                        String getstaticparentitemcode = parentitemcode;
-//                                                        String getstaticchilditemname = itemnametamil;
-//                                                        String getstaticchildunitname = unitname;
-//                                                        String isparentopen = "yes";
-//                                                        qty="";
-//                                                        listitemtotal= "0.00";
-//                                                        subtotal = "0.00";
-//                                                        String getresult=DeleteItemCart(itemcode);
-//                                                        if(getresult.equals("Success")) {
-//                                                            itemqty = "";
-//                                                            newprice ="";
-//                                                        }
-//                                                    } else {
-//
-//                                                        listitemtotal = "0.00";
-//                                                        itemrate = dft.format(Double.parseDouble(dummyprice));
-//                                                        qty = "";
-//
-//
-//                                                        String getresult=DeleteItemCart(itemcode);
-//                                                        if(getresult.equals("Success")) {
-//                                                            itemqty = "";
-//                                                            newprice ="";
-//                                                        }
-//
-//                                                    }
-//                                                } catch (Exception e) {
-//                                                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-//                                                    mDbErrHelper.open();
-//                                                    String geterrror = e.toString();
-//                                                    mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-//                                                    mDbErrHelper.close();
-//                                                }
-//                                                finally {
-//                                                    if (objdatabaseadapter != null)
-//                                                        objdatabaseadapter.close();
-//                                                    if (getStockCur != null)
-//                                                        getStockCur.close();
-//                                                }
-//                                            } else {
-//                                                listitemtotal = "0.00";
-//
-//                                                itemrate = dft.format(Double.parseDouble(dummyprice));
-//                                                itemqty ="";
-//
-//                                                String getresult=DeleteItemCart(itemcode);
-//                                                if(getresult.equals("Success")) {
-//                                                    itemqty = "";
-//                                                    newprice ="";
-//                                                }
-//                                            }
-//                                        }
-//                                    }
-
-
                                     if (!qty.toString().equals("")) {
                                         if (Double.parseDouble(qty.toString()) >0
                                                 || allownegativestock.equals("yes") ) {
@@ -5607,220 +5537,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                             if (getdecimalvalue.equals("3")) {
                                                 getnoofdigits = "000";
                                             }
-                                            df = new DecimalFormat("0.'" + getnoofdigits + "'");
-                                            if (getschemeapplicable.equals("yes")) {
-
-                                                DataBaseAdapter objdatabaseadapter = null;
-                                                Cursor getschemeCur = null;
-
-                                                try {
-                                                    //Scheme Functionality
-                                                    objdatabaseadapter = new DataBaseAdapter(context);
-                                                    objdatabaseadapter.open();
-                                                    getschemeCur = objdatabaseadapter.GetSchemeFORItemDB(itemcode,
-                                                            preferenceMangr.pref_getString(Constants.KEY_GET_MENU_ROUTECODE),qty.toString());
-                                                    if (getschemeCur.getCount() > 0) {
-                                                        //  for (int i = 0; i < getschemeCur.getCount(); i++) {
-                                                        getminqty = getschemeCur.getDouble(0);
-                                                        getdiscount = getschemeCur.getDouble(1);
-                                                        // }
-                                                    }
-                                                } catch (Exception e) {
-                                                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-                                                    mDbErrHelper.open();
-                                                    String geterrror = e.toString();
-                                                    mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-                                                    mDbErrHelper.close();
-                                                } finally {
-                                                    if (objdatabaseadapter != null)
-                                                        objdatabaseadapter.close();
-                                                    if (getschemeCur != null)
-                                                        getschemeCur.close();
-                                                }
-
-                                                String getitemcode = itemcode;
-                                                String getqty = qty.toString();
-
-
-                                                //Get Free Item variable
-                                                String getfreeitemname = "";
-                                                //Get free and purchase item code
-                                                String getpurchaseitemcode = "";
-                                                String getpurchaseqty = "";
-                                                String getfreeitemcode = "";
-                                                String getfreeqty = "";
-                                                String getallownegativestock = "";
-                                                double getfreestockitem = 0;
-                                                String getitemcategory = "";
-                                                String getparentcode = "";
-                                                String getchilditemname = "";
-                                                String getchildunitname = "";
-
-                                                //Get Item based Free Item
-                                                DataBaseAdapter objdatabaseadapterfree = null;
-                                                Cursor getitemschemeCur = null;
-                                                Cursor getFreeStock = null;
-
-                                                try {
-                                                    //Scheme Functionality
-                                                    objdatabaseadapterfree = new DataBaseAdapter(context);
-                                                    objdatabaseadapterfree.open();
-                                                    getitemschemeCur = objdatabaseadapterfree.GetSchemeFORFreeItemDB(getitemcode, preferenceMangr.pref_getString(Constants.KEY_GET_MENU_ROUTECODE));
-                                                    if (getitemschemeCur.getCount() > 0) {
-                                                        getpurchaseitemcode = getitemschemeCur.getString(0);
-                                                        getpurchaseqty = getitemschemeCur.getString(1);
-                                                        getfreeitemcode = getitemschemeCur.getString(2);
-                                                        getfreeqty = getitemschemeCur.getString(3);
-                                                        if (Double.parseDouble(getpurchaseqty) <=
-                                                                Double.parseDouble(getqty)) {
-
-                                                            try {
-                                                                //Get Stock for parent item
-                                                                String getmanualfreeitemname = objdatabaseadapterfree.GetFreeitemname(getfreeitemcode);
-                                                                getfreeitemname = getmanualfreeitemname;
-                                                                getFreeStock = objdatabaseadapterfree.GetPurchaseItems(getfreeitemcode, preferenceMangr.pref_getString(Constants.KEY_GET_MENU_ROUTECODE), preferenceMangr.pref_getString(Constants.KEY_GETAREACODE));
-                                                                if (getFreeStock.getCount() > 0) {
-                                                                    for (int i = 0; i < getFreeStock.getCount(); i++) {
-                                                                        //getfreeitemstock = getFreeStock.getDouble(0);
-                                                                        getallownegativestock = getFreeStock.getString(14);
-                                                                        getfreestockitem = getFreeStock.getDouble(16);
-                                                                        getitemcategory = getFreeStock.getString(11);
-                                                                        getparentcode = getFreeStock.getString(12);
-                                                                        getchilditemname = getFreeStock.getString(5);
-                                                                        getchildunitname = getFreeStock.getString(17);
-
-                                                                    }
-                                                                }
-
-                                                                //Calculate Qty with total qty
-                                                                Double getactualqty = Double.parseDouble(getqty);
-                                                                int getfreeqtyval = (int) (getactualqty / Double.parseDouble(getpurchaseqty));
-                                                                Double getactualqtyvalue = (getfreeqtyval * Double.parseDouble(getfreeqty));
-                                                                String getcartqty = objdatabaseadapter.GetCartItemStock(getfreeitemcode);
-                                                                if(getpurchaseitemcode.equals(getfreeitemcode)){
-                                                                    if(Double.parseDouble(labelstock.toString())<(Double.parseDouble(String.valueOf(getactualqtyvalue))+Double.parseDouble(getqty))){
-                                                                        Toast toast = Toast.makeText(getApplicationContext(),"Insufficient stock for " + getfreeitemname , Toast.LENGTH_LONG);
-                                                                        toast.setGravity(Gravity.CENTER, 0, 0);
-                                                                        toast.show();
-                                                                        listitemtotal = "0.00";
-
-                                                                        return;
-                                                                    }
-                                                                }
-
-                                                                if (getfreestockitem  >= Double.parseDouble(String.valueOf(getactualqtyvalue))) {
-                                                                    getFreeStock = null;
-                                                                    getFreeStock = objdatabaseadapterfree.GetPurchaseItems(getfreeitemcode, preferenceMangr.pref_getString(Constants.KEY_GET_MENU_ROUTECODE), preferenceMangr.pref_getString(Constants.KEY_GETAREACODE));
-                                                                    if (getFreeStock.getCount() > 0) {
-                                                                        for (int i = 0; i < getFreeStock.getCount(); i++) {
-
-                                                                            double getsubtotal = Double.parseDouble(getFreeStock.getString(20)) * getactualqtyvalue;
-                                                                            for ( j = 0; j < freeitems.size(); j++) {
-                                                                                if (getpurchaseitemcode.equals(freeitems.get(j).getPurchaseitemcode()) &&
-                                                                                        getfreeitemcode.equals(freeitems.get(j).getFreeitemcode())) {
-                                                                                    freeitems.remove(j);
-                                                                                }
-                                                                            }
-                                                                            freeitems.add(new SalesItemDetails(getFreeStock.getString(0), getFreeStock.getString(1),
-                                                                                    getFreeStock.getString(2)
-                                                                                    , getFreeStock.getString(3), getFreeStock.getString(4),
-                                                                                    getFreeStock.getString(5), getFreeStock.getString(6),
-                                                                                    getFreeStock.getString(7)
-                                                                                    , getFreeStock.getString(8), getFreeStock.getString(9), getFreeStock.getString(10)
-                                                                                    , getFreeStock.getString(11), getFreeStock.getString(12)
-                                                                                    , getFreeStock.getString(13), getFreeStock.getString(14), getFreeStock.getString(15)
-                                                                                    , getFreeStock.getString(16), getFreeStock.getString(17)
-                                                                                    , getFreeStock.getString(18), getFreeStock.getString(19),
-                                                                                    getFreeStock.getString(20)
-                                                                                    , getFreeStock.getString(21), getFreeStock.getString(22)
-                                                                                    , getFreeStock.getString(23), String.valueOf(getactualqtyvalue), String.valueOf(getsubtotal),
-                                                                                    getFreeStock.getString(24), "",
-                                                                                    "freeitem", getpurchaseitemcode, getfreeitemcode,getFreeStock.getString(20),"","",
-                                                                                    "",getFreeStock.getString(27),"","","","",getFreeStock.getString(29),"",0,"no"));
-
-                                                                            Log.d("------------Free item : ",freeitems.toString());
-
-                                                                        }
-                                                                    }
-                                                                } else {
-                                                                    //freeitems.clear();
-                                                                    if (getallownegativestock.equals("no")) {
-                                                                        // if (Double.parseDouble(getqty) > getfreestockitem) {
-                                                                        if (getitemcategory.equals("child")) {
-                                                                            DataBaseAdapter objdatabaseadapter1 = null;
-                                                                            Cursor getStockCur = null;
-                                                                            try {
-                                                                                //Get Stock for parent item
-                                                                                objdatabaseadapter1 = new DataBaseAdapter(context);
-                                                                                objdatabaseadapter1.open();
-                                                                                getStockCur = objdatabaseadapter1.GetStockForItem(getparentcode);
-                                                                                String getcartparentqty = objdatabaseadapter.GetCartItemStock(getparentcode);
-                                                                                if (getStockCur.getCount() > 0) {
-                                                                                    for (int i = 0; i < getStockCur.getCount(); i++) {
-                                                                                        getparentstock = getStockCur.getDouble(0);
-
-                                                                                    }
-                                                                                    getparentstock = getparentstock - (Double.parseDouble(getcartparentqty));
-                                                                                }
-                                                                                if (getparentstock > 0 ) {
-                                                                                    listitemtotal="0.00";
-                                                                                    itemrate = dft.format(Double.parseDouble(dummyprice));
-                                                                                    return;
-
-
-                                                                                } else {
-                                                                                    listitemtotal = "0.00";
-                                                                                    itemrate = dft.format(Double.parseDouble(dummyprice));
-
-
-
-                                                                                }
-                                                                            } catch (Exception e) {
-                                                                                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-                                                                                mDbErrHelper.open();
-                                                                                String geterrror = e.toString();
-                                                                                mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-                                                                                mDbErrHelper.close();
-                                                                            } finally {
-                                                                                if (objdatabaseadapter1 != null)
-                                                                                    objdatabaseadapter1.close();
-                                                                                if (getStockCur != null)
-                                                                                    getStockCur.close();
-                                                                            }
-                                                                        } else {
-                                                                            listitemtotal ="0.00";
-                                                                            itemrate = dft.format(Double.parseDouble(dummyprice));
-
-
-                                                                        }
-                                                                        //}
-                                                                    }
-                                                                }
-                                                            } catch (Exception e) {
-                                                                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-                                                                mDbErrHelper.open();
-                                                                String geterrror = e.toString();
-                                                                mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-                                                                mDbErrHelper.close();
-                                                            }
-                                                        }
-                                                    }
-                                                } catch (Exception e) {
-                                                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-                                                    mDbErrHelper.open();
-                                                    String geterrror = e.toString();
-                                                    mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-                                                    mDbErrHelper.close();
-                                                } finally {
-                                                    if (objdatabaseadapterfree != null)
-                                                        objdatabaseadapterfree.close();
-                                                    if (getitemschemeCur != null)
-                                                        getitemschemeCur.close();
-                                                    if (getFreeStock != null)
-                                                        getFreeStock.close();
-                                                }
-
-                                            }
+                                            df = new DecimalFormat("0." + getnoofdigits);
 
                                             String varQty = qty.toString();
                                             if (varQty.equals("0") || varQty.equals("") || varQty.equals(null)) {
@@ -5923,7 +5640,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                 String.valueOf(oldprice),
                                                                 String.valueOf(newprice), String.valueOf(colourcode), String.valueOf(hsn),
                                                                 String.valueOf(tax), String.valueOf(itemqty), String.valueOf(getsubtotal)
-                                                                , String.valueOf(routeallowpricedit), String.valueOf(discount), "",
+                                                                , String.valueOf(routeallowpricedit), String.valueOf(discount), freeflag,
                                                                 String.valueOf(purchaseitemcode), String.valueOf(freeitemcode),"","","","",
                                                                 String.valueOf(orgprice),0,"no");
                                                     }
@@ -5956,7 +5673,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                         String.valueOf(oldprice),
                                                                         String.valueOf(newprice), String.valueOf(colourcode), String.valueOf(hsn),
                                                                         String.valueOf(tax), String.valueOf(itemqty), String.valueOf(getsubtotal)
-                                                                        , String.valueOf(routeallowpricedit), String.valueOf(discount), "",
+                                                                        , String.valueOf(routeallowpricedit), String.valueOf(discount), freeflag,
                                                                         String.valueOf(purchaseitemcode), String.valueOf(freeitemcode),"","","","",String.valueOf(orgprice),0,"no");
                                                             }
                                                         }
@@ -5968,49 +5685,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
 
                                             }
 
-                                            for (int k = 0; k < freeitems.size(); k++) {
-                                                Log.e(freeitems.get(k).toString(),"datas free items");
-                                                insertcart = dataBaseAdapter.insertFreeSalesCart(String.valueOf(freeitems.get(k).getItemcode()), String.valueOf(freeitems.get(k).getCompanycode()),
-                                                        String.valueOf(freeitems.get(k).getBrandcode()), String.valueOf(freeitems.get(k).getManualitemcode())
-                                                        , String.valueOf(freeitems.get(k).getItemname()),String.valueOf( freeitems.get(k).getItemnametamil()),
-                                                        String.valueOf(freeitems.get(k).getUnitcode()), String.valueOf(freeitems.get(k).getUnitweightunitcode())
-                                                        , String.valueOf(freeitems.get(k).getUnitweight()), String.valueOf(freeitems.get(k).getUppunitcode())
-                                                        , String.valueOf(freeitems.get(k).getUppweight()), String.valueOf(freeitems.get(k).getItemcategory()),
-                                                        String.valueOf(freeitems.get(k).getParentitemcode()),
-                                                        String.valueOf(freeitems.get(k).getAllowpriceedit()), String.valueOf(freeitems.get(k).getAllownegativestock())
-                                                        , String.valueOf(freeitems.get(k).getAllowdiscount()),
-                                                        String.valueOf(freeitems.get(k).getStockqty()), String.valueOf(freeitems.get(k).getUnitname()),
-                                                        String.valueOf(freeitems.get(k).getNoofdecimals()),
-                                                        String.valueOf(freeitems.get(k).getOldprice()),
-                                                        String.valueOf(freeitems.get(k).getNewprice()),String.valueOf(freeitems.get(k).getColourcode()), String.valueOf(freeitems.get(k).getHsn()),
-                                                        String.valueOf(freeitems.get(k).getTax()), String.valueOf(freeitems.get(k).getItemqty()), String.valueOf(freeitems.get(k).getSubtotal())
-                                                        , String.valueOf(freeitems.get(k).getRouteallowpricedit()), String.valueOf(freeitems.get(k).getDiscount()), String.valueOf(freeitems.get(k).getFreeflag()),
-                                                        String.valueOf(freeitems.get(k).getPurchaseitemcode()), String.valueOf(freeitems.get(k).getFreeitemcode()),"","","","","",String.valueOf(freeitems.get(k).getNewprice()));
 
-                                                checkfreeitem = true;
-                                            }
-                                            getcartdatas = dataBaseAdapter.GetSalesItemsCart();
-                                            if(getcartdatas.getCount()>0) {
-                                                staticreviewsalesitems.clear();
-                                                for (int i = 0; i < getcartdatas.getCount(); i++) {
-                                                    staticreviewsalesitems.add(new SalesItemDetails(getcartdatas.getString(1), getcartdatas.getString(2),
-                                                            getcartdatas.getString(3), getcartdatas.getString(4)
-                                                            , getcartdatas.getString(5), getcartdatas.getString(6),
-                                                            getcartdatas.getString(7), getcartdatas.getString(8)
-                                                            , getcartdatas.getString(9),getcartdatas.getString(10)
-                                                            , getcartdatas.getString(11), getcartdatas.getString(12), getcartdatas.getString(13),
-                                                            getcartdatas.getString(14), getcartdatas.getString(15)
-                                                            , getcartdatas.getString(16),
-                                                            getcartdatas.getString(17), getcartdatas.getString(18),
-                                                            getcartdatas.getString(19), getcartdatas.getString(20),
-                                                            getcartdatas.getString(21), getcartdatas.getString(22), getcartdatas.getString(23),
-                                                            getcartdatas.getString(24), getcartdatas.getString(25), getcartdatas.getString(26)
-                                                            , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
-                                                            getcartdatas.getString(30), getcartdatas.getString(31) ,getcartdatas.getString(21),"","",getcartdatas.getString(32),"","",
-                                                            "","",getcartdatas.getString(36),"","",0,"no"));
-                                                    getcartdatas.moveToNext();
-                                                }
-                                            }
                                         } catch (Exception e) {
                                             DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
                                             mDbErrHelper.open();
@@ -6022,6 +5697,271 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                 dataBaseAdapter.close();
                                             if (getcartdatas != null)
                                                 getcartdatas.close();
+                                        }
+
+                                        dataBaseAdapter = new DataBaseAdapter(context);
+                                        databaseadapter.open();
+
+//                                        if (getschemeapplicable.equals("yes")) {
+//
+//                                            DataBaseAdapter objdatabaseadapter = null;
+//                                            Cursor getschemeCur = null;
+//
+//                                            try {
+//                                                //Scheme Functionality
+//                                                objdatabaseadapter = new DataBaseAdapter(context);
+//                                                objdatabaseadapter.open();
+//                                                getschemeCur = objdatabaseadapter.GetSchemeFORItemDB(itemcode,
+//                                                        preferenceMangr.pref_getString("getroutecode"),qty.toString());
+//                                                if (getschemeCur.getCount() > 0) {
+//                                                    //  for (int i = 0; i < getschemeCur.getCount(); i++) {
+//                                                    getminqty = getschemeCur.getDouble(0);
+//                                                    getdiscount = getschemeCur.getDouble(1);
+//                                                    // }
+//                                                }
+//                                            } catch (Exception e) {
+//                                                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+//                                                mDbErrHelper.open();
+//                                                String geterrror = e.toString();
+//                                                mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+//                                                mDbErrHelper.close();
+//                                            } finally {
+//                                                if (objdatabaseadapter != null)
+//                                                    objdatabaseadapter.close();
+//                                                if (getschemeCur != null)
+//                                                    getschemeCur.close();
+//                                            }
+//
+//                                            String getitemcode = itemcode;
+//                                            String getqty = qty.toString();
+//
+//
+//                                            //Get Free Item variable
+//                                            String getfreeitemname = "";
+//                                            //Get free and purchase item code
+//                                            String getpurchaseitemcode = "";
+//                                            String getpurchaseqty = "";
+//                                            String getfreeitemcode = "";
+//                                            String getfreeqty = "";
+//                                            String getallownegativestock = "";
+//                                            double getfreestockitem = 0;
+//                                            String getitemcategory = "";
+//                                            String getparentcode = "";
+//                                            String getchilditemname = "";
+//                                            String getchildunitname = "";
+//
+//                                            //Get Item based Free Item
+//                                            DataBaseAdapter objdatabaseadapterfree = null;
+//                                            Cursor getitemschemeCur = null;
+//                                            Cursor getFreeStock = null;
+//
+//                                            try {
+//                                                //Scheme Functionality
+//                                                objdatabaseadapterfree = new DataBaseAdapter(context);
+//                                                objdatabaseadapterfree.open();
+//                                                getitemschemeCur = objdatabaseadapterfree.GetSchemeFORFreeItemDB(getitemcode, preferenceMangr.pref_getString("getroutecode"));
+//                                                if (getitemschemeCur.getCount() > 0) {
+//                                                    getpurchaseitemcode = getitemschemeCur.getString(0);
+//                                                    getpurchaseqty = getitemschemeCur.getString(1);
+//                                                    getfreeitemcode = getitemschemeCur.getString(2);
+//                                                    getfreeqty = getitemschemeCur.getString(3);
+//
+//                                                    String getpurchaseitemweight= objdatabaseadapterfree.GetCartItemScheme(getpurchaseitemcode,preferenceMangr.pref_getString("getroutecode"));
+//                                                    String getpurchaseitemforcart= objdatabaseadapterfree.GetCartPurchaseItemforScheme(getpurchaseitemcode,preferenceMangr.pref_getString("getroutecode"));
+//
+//                                                    if (Double.parseDouble(getpurchaseqty) <=
+//                                                            Double.parseDouble(getpurchaseitemweight)) {
+//
+//                                                        try {
+//                                                            //Get Stock for parent item
+//                                                            String getmanualfreeitemname = objdatabaseadapterfree.GetFreeitemname(getfreeitemcode);
+//                                                            getfreeitemname = getmanualfreeitemname;
+//                                                            getFreeStock = objdatabaseadapterfree.GetPurchaseItems(getfreeitemcode, preferenceMangr.pref_getString("getroutecode"), preferenceMangr.pref_getString(Constants.KEY_GETAREACODE));
+//                                                            if (getFreeStock.getCount() > 0) {
+//                                                                for (int i = 0; i < getFreeStock.getCount(); i++) {
+//                                                                    //getfreeitemstock = getFreeStock.getDouble(0);
+//                                                                    getallownegativestock = getFreeStock.getString(14);
+//                                                                    getfreestockitem = getFreeStock.getDouble(16);
+//                                                                    getitemcategory = getFreeStock.getString(11);
+//                                                                    getparentcode = getFreeStock.getString(12);
+//                                                                    getchilditemname = getFreeStock.getString(5);
+//                                                                    getchildunitname = getFreeStock.getString(17);
+//
+//                                                                }
+//                                                            }
+//
+//                                                            //Calculate Qty with total qty
+//                                                            Double getactualqty = Double.parseDouble(getqty);
+//                                                            int getfreeqtyval = (int) (getactualqty / Double.parseDouble(getpurchaseqty));
+//                                                            Double getactualqtyvalue = (getfreeqtyval * Double.parseDouble(getfreeqty));
+//                                                            String getcartqty = objdatabaseadapter.GetCartItemStock(getfreeitemcode);
+//                                                            if(getpurchaseitemcode.equals(getfreeitemcode)){
+//                                                                if(Double.parseDouble(labelstock.toString())<(Double.parseDouble(String.valueOf(getactualqtyvalue))+Double.parseDouble(getqty))){
+//                                                                    Toast toast = Toast.makeText(getApplicationContext(),"Insufficient stock for " + getfreeitemname , Toast.LENGTH_LONG);
+//                                                                    toast.setGravity(Gravity.CENTER, 0, 0);
+//                                                                    toast.show();
+//                                                                    listitemtotal = "0.00";
+//
+//                                                                    return;
+//                                                                }
+//                                                            }
+//
+//                                                            if (getfreestockitem  >= Double.parseDouble(String.valueOf(getactualqtyvalue))) {
+//                                                                getFreeStock = null;
+//                                                                getFreeStock = objdatabaseadapterfree.GetPurchaseItems(getfreeitemcode, preferenceMangr.pref_getString("getroutecode"), preferenceMangr.pref_getString(Constants.KEY_GETAREACODE));
+//                                                                if (getFreeStock.getCount() > 0) {
+//                                                                    for (int i = 0; i < getFreeStock.getCount(); i++) {
+//
+//                                                                        double getsubtotal = Double.parseDouble(getFreeStock.getString(20)) * getactualqtyvalue;
+//                                                                        for ( j = 0; j < freeitems.size(); j++) {
+//                                                                            if (getpurchaseitemcode.equals(freeitems.get(j).getPurchaseitemcode()) &&
+//                                                                                    getfreeitemcode.equals(freeitems.get(j).getFreeitemcode())) {
+//                                                                                freeitems.remove(j);
+//                                                                            }
+//                                                                        }
+//                                                                        freeitems.add(new SalesItemDetails(getFreeStock.getString(0), getFreeStock.getString(1),
+//                                                                                getFreeStock.getString(2)
+//                                                                                , getFreeStock.getString(3), getFreeStock.getString(4),
+//                                                                                getFreeStock.getString(5), getFreeStock.getString(6),
+//                                                                                getFreeStock.getString(7)
+//                                                                                , getFreeStock.getString(8), getFreeStock.getString(9), getFreeStock.getString(10)
+//                                                                                , getFreeStock.getString(11), getFreeStock.getString(12)
+//                                                                                , getFreeStock.getString(13), getFreeStock.getString(14), getFreeStock.getString(15)
+//                                                                                , getFreeStock.getString(16), getFreeStock.getString(17)
+//                                                                                , getFreeStock.getString(18), getFreeStock.getString(19),
+//                                                                                getFreeStock.getString(20)
+//                                                                                , getFreeStock.getString(21), getFreeStock.getString(22)
+//                                                                                , getFreeStock.getString(23), String.valueOf(getactualqtyvalue), String.valueOf(getsubtotal),
+//                                                                                getFreeStock.getString(24), "",
+//                                                                                "freeitem", getpurchaseitemcode, getfreeitemcode,getFreeStock.getString(20),"","",
+//                                                                                "",getFreeStock.getString(27),"","","","",getFreeStock.getString(29),"",0,"no"));
+//
+//                                                                        Log.d("------------Free item : ",freeitems.toString());
+//
+//                                                                    }
+//                                                                }
+//                                                            } else {
+//                                                                //freeitems.clear();
+//                                                                if (getallownegativestock.equals("no")) {
+//                                                                    // if (Double.parseDouble(getqty) > getfreestockitem) {
+//                                                                    if (getitemcategory.equals("child")) {
+//                                                                        DataBaseAdapter objdatabaseadapter1 = null;
+//                                                                        Cursor getStockCur = null;
+//                                                                        try {
+//                                                                            //Get Stock for parent item
+//                                                                            objdatabaseadapter1 = new DataBaseAdapter(context);
+//                                                                            objdatabaseadapter1.open();
+//                                                                            getStockCur = objdatabaseadapter1.GetStockForItem(getparentcode);
+//                                                                            String getcartparentqty = objdatabaseadapter.GetCartItemStock(getparentcode);
+//                                                                            if (getStockCur.getCount() > 0) {
+//                                                                                for (int i = 0; i < getStockCur.getCount(); i++) {
+//                                                                                    getparentstock = getStockCur.getDouble(0);
+//
+//                                                                                }
+//                                                                                getparentstock = getparentstock - (Double.parseDouble(getcartparentqty));
+//                                                                            }
+//                                                                            if (getparentstock > 0 ) {
+//                                                                                listitemtotal="0.00";
+//                                                                                itemrate = dft.format(Double.parseDouble(dummyprice));
+//                                                                                return;
+//
+//
+//                                                                            } else {
+//                                                                                listitemtotal = "0.00";
+//                                                                                itemrate = dft.format(Double.parseDouble(dummyprice));
+//
+//
+//
+//                                                                            }
+//                                                                        } catch (Exception e) {
+//                                                                            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+//                                                                            mDbErrHelper.open();
+//                                                                            String geterrror = e.toString();
+//                                                                            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+//                                                                            mDbErrHelper.close();
+//                                                                        } finally {
+//                                                                            if (objdatabaseadapter1 != null)
+//                                                                                objdatabaseadapter1.close();
+//                                                                            if (getStockCur != null)
+//                                                                                getStockCur.close();
+//                                                                        }
+//                                                                    } else {
+//                                                                        listitemtotal ="0.00";
+//                                                                        itemrate = dft.format(Double.parseDouble(dummyprice));
+//
+//
+//                                                                    }
+//                                                                    //}
+//                                                                }
+//                                                            }
+//                                                        } catch (Exception e) {
+//                                                            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+//                                                            mDbErrHelper.open();
+//                                                            String geterrror = e.toString();
+//                                                            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+//                                                            mDbErrHelper.close();
+//                                                        }
+//                                                    }
+//                                                }
+//                                            } catch (Exception e) {
+//                                                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+//                                                mDbErrHelper.open();
+//                                                String geterrror = e.toString();
+//                                                mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+//                                                mDbErrHelper.close();
+//                                            } finally {
+//                                                if (objdatabaseadapterfree != null)
+//                                                    objdatabaseadapterfree.close();
+//                                                if (getitemschemeCur != null)
+//                                                    getitemschemeCur.close();
+//                                                if (getFreeStock != null)
+//                                                    getFreeStock.close();
+//                                            }
+//
+//                                        }
+//
+//                                        for (int k = 0; k < freeitems.size(); k++) {
+//                                            Log.e(freeitems.get(k).toString(),"datas free items");
+//                                            insertcart = dataBaseAdapter.insertFreeSalesCart(String.valueOf(freeitems.get(k).getItemcode()), String.valueOf(freeitems.get(k).getCompanycode()),
+//                                                    String.valueOf(freeitems.get(k).getBrandcode()), String.valueOf(freeitems.get(k).getManualitemcode())
+//                                                    , String.valueOf(freeitems.get(k).getItemname()),String.valueOf( freeitems.get(k).getItemnametamil()),
+//                                                    String.valueOf(freeitems.get(k).getUnitcode()), String.valueOf(freeitems.get(k).getUnitweightunitcode())
+//                                                    , String.valueOf(freeitems.get(k).getUnitweight()), String.valueOf(freeitems.get(k).getUppunitcode())
+//                                                    , String.valueOf(freeitems.get(k).getUppweight()), String.valueOf(freeitems.get(k).getItemcategory()),
+//                                                    String.valueOf(freeitems.get(k).getParentitemcode()),
+//                                                    String.valueOf(freeitems.get(k).getAllowpriceedit()), String.valueOf(freeitems.get(k).getAllownegativestock())
+//                                                    , String.valueOf(freeitems.get(k).getAllowdiscount()),
+//                                                    String.valueOf(freeitems.get(k).getStockqty()), String.valueOf(freeitems.get(k).getUnitname()),
+//                                                    String.valueOf(freeitems.get(k).getNoofdecimals()),
+//                                                    String.valueOf(freeitems.get(k).getOldprice()),
+//                                                    String.valueOf(freeitems.get(k).getNewprice()),String.valueOf(freeitems.get(k).getColourcode()), String.valueOf(freeitems.get(k).getHsn()),
+//                                                    String.valueOf(freeitems.get(k).getTax()), String.valueOf(freeitems.get(k).getItemqty()), String.valueOf(freeitems.get(k).getSubtotal())
+//                                                    , String.valueOf(freeitems.get(k).getRouteallowpricedit()), String.valueOf(freeitems.get(k).getDiscount()), String.valueOf(freeitems.get(k).getFreeflag()),
+//                                                    String.valueOf(freeitems.get(k).getPurchaseitemcode()), String.valueOf(freeitems.get(k).getFreeitemcode()),"","","","","",String.valueOf(freeitems.get(k).getNewprice()));
+//
+//                                            checkfreeitem = true;
+//                                        }
+                                        getcartdatas = dataBaseAdapter.GetSalesItemsCart();
+                                        if(getcartdatas.getCount()>0) {
+                                            staticreviewsalesitems.clear();
+                                            for (int i = 0; i < getcartdatas.getCount(); i++) {
+                                                staticreviewsalesitems.add(new SalesItemDetails(getcartdatas.getString(1), getcartdatas.getString(2),
+                                                        getcartdatas.getString(3), getcartdatas.getString(4)
+                                                        , getcartdatas.getString(5), getcartdatas.getString(6),
+                                                        getcartdatas.getString(7), getcartdatas.getString(8)
+                                                        , getcartdatas.getString(9),getcartdatas.getString(10)
+                                                        , getcartdatas.getString(11), getcartdatas.getString(12), getcartdatas.getString(13),
+                                                        getcartdatas.getString(14), getcartdatas.getString(15)
+                                                        , getcartdatas.getString(16),
+                                                        getcartdatas.getString(17), getcartdatas.getString(18),
+                                                        getcartdatas.getString(19), getcartdatas.getString(20),
+                                                        getcartdatas.getString(21), getcartdatas.getString(22), getcartdatas.getString(23),
+                                                        getcartdatas.getString(24), getcartdatas.getString(25), getcartdatas.getString(26)
+                                                        , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
+                                                        getcartdatas.getString(30), getcartdatas.getString(31) ,getcartdatas.getString(21),"","",getcartdatas.getString(32),"","",
+                                                        "","",getcartdatas.getString(36),"","",0,"no"));
+                                                getcartdatas.moveToNext();
+                                            }
                                         }
 
                                         if (checkfreeitem) {
@@ -6208,15 +6148,29 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                 billdate_textview.setText(childtext.split("#")[0]);
                 TextView rate_textview = (TextView) view.findViewById(R.id.row_trans_list_item_rate);
 
-                df = new DecimalFormat("0.00");
+                String getdecimalvalue = childtext.split("#")[6];
+                String getnoofdigits = "0";
+                if(getdecimalvalue.equals("0")){
+                    getnoofdigits = "";
+                }
+                if(getdecimalvalue.equals("1")){
+                    getnoofdigits = "0";
+                }
+                if(getdecimalvalue.equals("2")){
+                    getnoofdigits = "00";
+                }
+                if(getdecimalvalue.equals("3")){
+                    getnoofdigits = "000";
+                }
+                DecimalFormat dfQty = new DecimalFormat("0."+getnoofdigits);
+                DecimalFormat dfRate = new DecimalFormat("0.00");
 
+                rate_textview.setText(dfRate.format(Double.parseDouble(childtext.split("#")[1])));
+                TextView qty_textview = (TextView) view.findViewById(R.id.row_trans_list_item_qty);
+                qty_textview.setText(dfQty.format(Double.parseDouble(childtext.split("#")[2]))+" "+childtext.split("#")[4]);
 
-                rate_textview.setText(df.format(Double.parseDouble(childtext.split("#")[1])));
-                TextView billno_textview = (TextView) view.findViewById(R.id.row_trans_list_item_qty);
-                billno_textview.setText(childtext.split("#")[2]+" "+childtext.split("#")[4]);
-
-                TextView amount_textview = (TextView) view.findViewById(R.id.row_trans_list_item_amount);
-                amount_textview.setText(childtext.split("#")[3]+" "+childtext.split("#")[4]);
+                TextView stock_textview = (TextView) view.findViewById(R.id.row_trans_list_item_amount);
+                stock_textview.setText(dfQty.format(Double.parseDouble(childtext.split("#")[3]))+" "+childtext.split("#")[4]);
 
             }
 
@@ -6253,7 +6207,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                         Cur2 = objdatabaseadapter.GetStockForItem(Cur1.getString(0));
                         String stock;
 
-                        orderlist.add(Cur1.getString(1) + "#" +Cur1.getString(6) + "#" +Cur1.getString(2) + "#" +Cur2.getString(0)+ "#" +Cur1.getString(8));
+                        orderlist.add(Cur1.getString(1) + "#" +Cur1.getString(6) + "#" +Cur1.getString(2) + "#" +Cur2.getString(0)+ "#" +Cur1.getString(8) +
+                                "#" + Cur1.getString(7) + "#" + Cur1.getString(13));
                         Cur1.moveToNext();
                     }
                     orderlisthash.put(orderlistDataHEader.get(i),orderlist);

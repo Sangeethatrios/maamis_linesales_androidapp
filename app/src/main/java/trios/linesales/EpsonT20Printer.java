@@ -417,12 +417,22 @@ public class EpsonT20Printer implements ReceiveListener {
         String printheader ="";
         try {
 
+            Log.e("","SALES_BILL : getsalestransactionno : " + gettransactiono);
+            Log.e("","SALES_BILL : getfinanceyrcode : " + getfinancialyearcode);
+            Log.e("","SALES_BILL : companycode : " + companyCode);
+            Log.e("","SALES_BILL : printNetAmount : " + printNetAmount);
+
             DataBaseAdapter mDbHelper = new DataBaseAdapter(mContext);
             mDbHelper.open();
             Cursor mCur = mDbHelper.GetSalesPrint(gettransactiono,getfinancialyearcode,companyCode);
             Cursor mCurDetails = mDbHelper.GetSalesPaymentVoucherDetailsPrint(gettransactiono,getfinancialyearcode);
 
+            Log.e("","SALES_BILL : mCur.count : " + String.valueOf(mCur.getCount()));
+            Log.e("","SALES_BILL : mCurDetails.count : " + String.valueOf(mCurDetails.getCount()));
+
             jurisdiction = mDbHelper.getjurisdiction();
+
+            Log.e("","SALES_BILL : jurisdiction : " + jurisdiction);
 
             if (mCur.getCount() > 0) {
 
@@ -1011,8 +1021,8 @@ public class EpsonT20Printer implements ReceiveListener {
                     //PrinterStatusInfo status = mPrinter.getStatus();
                     status = mPrinter.getStatus();
 
-                    Log.d("STATUS", Integer.toString(status.getConnection()));
-                    Log.d("ONLINE", Integer.toString(status.getOnline()));
+                    Log.e("STATUS", Integer.toString(status.getConnection()));
+                    Log.e("ONLINE", Integer.toString(status.getOnline()));
                     //Log.d("BATTERY", Integer.toString(status.getBatteryLevel()));
 
                     if ((status.getConnection() == 1) && (status.getOnline() == 1)) {
@@ -3238,7 +3248,7 @@ public class EpsonT20Printer implements ReceiveListener {
                                 getnoofdigits = "000";
                             }
 
-                            df = new DecimalFormat("0.'" + getnoofdigits + "'");
+                            df = new DecimalFormat("0." + getnoofdigits);
                             if (getnoofdigits.equals("")) {
                                 SalesBuffer.append(Util.nameLeftValueRightJustify5(mCur.getString(2),
                                         mCur.getString(3), mCur.getString(12), mCur.getString(4),
@@ -5809,6 +5819,16 @@ public class EpsonT20Printer implements ReceiveListener {
             mDbHelper.open();
             Cursor mCur = mDbHelper.GetSalesScheduleDetails(CashReportActivity.getschedulecode);
             Cursor mCur1 =  mDbHelper.getCompanydetailsforprint();
+            Cursor mCurScheduleDetails = mDbHelper.GetScheduleListDB(preferenceMangr.pref_getString("getformatdate"));
+
+            String target = "", achieved = "";
+            if (mCurScheduleDetails != null && mCurScheduleDetails.getCount()>0) {
+                String scheduleCode = mCurScheduleDetails.getString(mCurScheduleDetails.getColumnIndex("schedulecode"));
+                target = mCurScheduleDetails.getString(mCurScheduleDetails.getColumnIndex("target"));
+                if (target.contains("Target"))
+                    target = target.replace("Target : ","");
+                achieved = mDbHelper.getTotalAchievedAmount(scheduleCode);
+            }
 
             mPrinter.addTextAlign(Printer.ALIGN_CENTER);
             mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
@@ -5844,8 +5864,10 @@ public class EpsonT20Printer implements ReceiveListener {
 
             mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
             mPrinter.addTextFont(Printer.FONT_B);
-            mPrinter.addText("Route : "+ CashReportActivity.getstaticcashroutename+"\n");
-            mPrinter.addText("Van   : "+ preferenceMangr.pref_getString("getvanname") +"\n");
+            mPrinter.addText("Route    : "+ CashReportActivity.getstaticcashroutename+"\n");
+            mPrinter.addText("Van      : "+ preferenceMangr.pref_getString("getvanname") +"\n");
+            mPrinter.addText("Target   : \u20B9 "+ target +"\n");
+            mPrinter.addText("Achieved : \u20B9 "+ achieved +"\n");
 
             mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
             mPrinter.addTextFont(Printer.FONT_A);
@@ -6057,10 +6079,10 @@ public class EpsonT20Printer implements ReceiveListener {
                 int netbillcount=0;
                 double netbillvalue=0;
                 int totalcashcount=0;
-                int totalcreditcount=0;
+                int totalcreditcount=0, totalcreditnongst = 0;
                 int totalreturncount=0;
                 double totalcashvalue=0;
-                double totalcreditvalue=0;
+                double totalcreditvalue=0, totalcreditnongstvalue = 0;
                 double totalreturnvalue=0;
                 for (int i = 0; i < mCur1.getCount(); i++) {
                     mPrinter.addTextFont(Printer.FONT_A);
@@ -6097,6 +6119,10 @@ public class EpsonT20Printer implements ReceiveListener {
                                 if(mCur2.getString(0).equals("Credit")){
                                     totalcreditcount=totalcreditcount+mCur2.getInt(1);
                                     totalcreditvalue=totalcreditvalue+mCur2.getInt(2);
+                                }
+                                if(mCur2.getString(0).equals("Credit Non-GST")){
+                                    totalcreditnongst=totalcreditnongst+mCur2.getInt(1);
+                                    totalcreditnongstvalue=totalcreditnongstvalue+mCur2.getInt(2);
                                 }
                                 if(mCur2.getString(0).equals("Sales Return")){
                                     totalreturncount=totalreturncount+mCur2.getInt(1);
@@ -6168,6 +6194,9 @@ public class EpsonT20Printer implements ReceiveListener {
                         String.format("%.2f", totalcashvalue),32 ) + "\n");
                 mPrinter.addText(Util.nameLeftValueRightJustifybottomsalesv1("Credit", String.valueOf(totalcreditcount),
                         String.format("%.2f", totalcreditvalue),32 ) + "\n");
+                mPrinter.addText(Util.nameLeftValueRightJustifybottomsalesv1("Credit Non-GST", String.valueOf(totalcreditnongst),
+                        String.format("%.2f", totalcreditnongstvalue),32 ) + "\n");
+
                 mPrinter.addText(Util.nameLeftValueRightJustifybottomsalesv1("Sales Return", String.valueOf(totalreturncount),
                         String.format("%.2f", totalreturnvalue),32 ) + "\n");
 

@@ -20,7 +20,7 @@ import android.util.Log;
 
 public class DataBaseHelper extends SQLiteOpenHelper
 {
-    private static int DbVersion = 5;
+    private static int DbVersion = 6;
     private static String DB_PATH;
     private static String DB_NAME = "dblinesales.db";
     private static SQLiteDatabase mDataBase;
@@ -233,6 +233,10 @@ public class DataBaseHelper extends SQLiteOpenHelper
         if(oldVersion < 5){
             addcompanytype(db);
         }
+
+        if(oldVersion < 6){
+            addMaxReceiptAmtInGeneralSettings(db);
+        }
     }
     private void addLocationforcustomer(SQLiteDatabase db) {
         String querytblsales = "ALTER TABLE " + Constants.TBLSALES +
@@ -281,5 +285,18 @@ public class DataBaseHelper extends SQLiteOpenHelper
         db.execSQL(salesscheduletarget);
         String salesschedulebudget = "ALTER TABLE  tblsalesschedule ADD COLUMN budget FLOAT";
         db.execSQL(salesschedulebudget);
+    }
+
+    private void addMaxReceiptAmtInGeneralSettings(SQLiteDatabase db) {
+        String query = "ALTER TABLE tblgeneralsettings ADD COLUMN maxreceiptamt REAL default null;";
+        db.execSQL(query);
+        String query1 = "ALTER TABLE tblsalesordercartdatas ADD COLUMN actualamount TEXT default null;";
+        db.execSQL(query1);
+        String query2 = "ALTER TABLE tblsalesordercartdatas ADD COLUMN ratediscount TEXT default null;";
+        db.execSQL(query2);
+        String query3 = "ALTER TABLE tblsalesordercartdatas ADD COLUMN schemeapplicable TEXT default null;";
+        db.execSQL(query3);
+        String query4 = "ALTER TABLE tblsalesordercartdatas ADD COLUMN orgprice TEXT default null;";
+        db.execSQL(query4);
     }
 }

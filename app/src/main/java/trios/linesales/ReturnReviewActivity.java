@@ -555,7 +555,7 @@ public class ReturnReviewActivity extends AppCompatActivity {
                     getnoofdigits = "000";
                 }
 
-                df = new DecimalFormat("0.'"+getnoofdigits+"'");
+                df = new DecimalFormat("0."+getnoofdigits);
 
                 mHolder.dummydeleteitem.setVisibility(View.GONE);
                 if (!(salesItemList.get(position).getItemnametamil().equals(""))

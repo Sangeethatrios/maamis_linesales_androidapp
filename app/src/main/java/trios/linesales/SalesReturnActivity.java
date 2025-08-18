@@ -1735,7 +1735,7 @@ public class SalesReturnActivity extends AppCompatActivity implements View.OnCli
                               getnoofdigits = "000";
                           }
 
-                          df = new DecimalFormat("0.'" + getnoofdigits + "'");
+                          df = new DecimalFormat("0." + getnoofdigits);
 
 
                           final String varQty = mHolder.listitemqty.getText().toString();

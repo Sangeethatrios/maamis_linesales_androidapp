@@ -4040,8 +4040,11 @@ public class DataBaseAdapter
                     "(select tax from tblitemsubgroupmaster where itemsubgroupcode=b.itemsubgroupcode) as tax," +
                     " coalesce((Select noofdecimals from tblunitmaster where unitcode=b.unitcode),0) as noofdecimals," +
                     " CASE WHEN itemtype=2 then (SELECT freeitemcolor from tblgeneralsettings) else " +
-                    "coalesce((Select colourcode from tblcompanymaster where companycode=a.companycode),'#000000') END as colourcode" +
-                    " from tblsalesorderitemdetails as a inner join tblitemmaster as b on a.itemcode=b.itemcode" +
+                    "coalesce((Select colourcode from tblcompanymaster where companycode=a.companycode),'#000000') END as colourcode," +
+                    "c.noofdecimals " +
+                    " from tblsalesorderitemdetails as a " +
+                    " inner join tblitemmaster as b on a.itemcode=b.itemcode " +
+                    " inner join tblunitmaster as c on b.unitcode=c.unitcode " +
                     " where a.transactionno='"+gettransactionno+"'   " +
                     " and a.financialyearcode='"+getfinancialyr+"' order by itemtype ";
             mCur = mDb.rawQuery(sql, null);
@@ -6880,7 +6883,7 @@ if(schemeitem.equals("yes")){
                         " '" + colourcode + "','" + hsn + "','" + tax + "'," +
                         " '" + itemqty + "','" + subtotal + "','" + routeallowpricedit + "'," +
                         " '" + discount + "','" + freeflag + "','" + purchaseitemcode + "'," +
-                        " '" + freeitemcode + "'  )";
+                        " '" + freeitemcode + "','" + newprice + "','0', '','" + newprice + "'  )";
                 mDb.execSQL(sqlcart);
             }else if(Integer.parseInt(getcount) > 0){
                 if(getfreeflag.equals("")){
@@ -6895,7 +6898,9 @@ if(schemeitem.equals("yes")){
                             " colourcode='" + colourcode + "',hsn='" + hsn + "',tax='" + tax + "'," +
                             " itemqty='" + itemqty + "',subtotal='" + subtotal + "',routeallowpricedit='" + routeallowpricedit + "'," +
                             " discount='" + discount + "',freeflag='" + freeflag + "',purchaseitemcode='" + purchaseitemcode + "'," +
-                            " freeitemcode='" + freeitemcode + "'  where  cartcode='"+getcartcode+"'" +
+                            " freeitemcode='" + freeitemcode + "',actualamount='" + newprice + "', ratediscount='0', " +
+                            " schemeapplicable='" + newprice + "' " +
+                            "  where  cartcode='"+getcartcode+"'" +
                             " and itemcode='"+itemcode+"' and  freeflag='' ";
                     mDb.execSQL(sqlcart);
                 }else if(getfreeflag.equals("freerate")){
@@ -6910,7 +6915,9 @@ if(schemeitem.equals("yes")){
                             " colourcode='" + colourcode + "',hsn='" + hsn + "',tax='" + tax + "'," +
                             " itemqty='" + itemqty + "',subtotal='" + subtotal + "',routeallowpricedit='" + routeallowpricedit + "'," +
                             " discount='" + discount + "',freeflag='" + freeflag + "',purchaseitemcode='" + purchaseitemcode + "'," +
-                            " freeitemcode='" + freeitemcode + "'  where  cartcode='"+getcartcode+"'" +
+                            " freeitemcode='" + freeitemcode + "',actualamount='" + newprice + "', ratediscount='0', " +
+                            " schemeapplicable='" + newprice + "' " +
+                            "  where  cartcode='"+getcartcode+"'" +
                             " and itemcode='"+itemcode+"' and  freeflag='freerate' ";
                     mDb.execSQL(sqlcart);
                 }
@@ -7175,7 +7182,7 @@ if(schemeitem.equals("yes")){
                         " '" + allowdiscount + "','" + stockqty + "','" + unitname + "'," +
                         " '" + noofdecimals + "','" + oldprice + "','" + newprice + "'," +
                         " '" + colourcode + "','" + hsn + "','" + tax + "'," +
-                        " '" + itemqty + "','" + subtotal + "','" + routeallowpricedit + "'," +
+                        " '" + itemqty + "',0,'" + routeallowpricedit + "'," +
                         " '" + discount + "','" + freeflag + "','" + purchaseitemcode + "'," +
                         " '" + freeitemcode + "'  )";
                 mDb.execSQL(sqlcart);
@@ -7189,7 +7196,7 @@ if(schemeitem.equals("yes")){
                         " allowdiscount='" + allowdiscount + "',stockqty='" + stockqty + "',unitname='" + unitname + "'," +
                         " noofdecimals='" + noofdecimals + "',oldprice='" + oldprice + "',newprice='" + newprice + "'," +
                         " colourcode='" + colourcode + "',hsn='" + hsn + "',tax='" + tax + "'," +
-                        " itemqty='" + itemqty + "',subtotal='" + subtotal + "',routeallowpricedit='" + routeallowpricedit + "'," +
+                        " itemqty='" + itemqty + "',subtotal=0,routeallowpricedit='" + routeallowpricedit + "'," +
                         " discount='" + discount + "',freeflag='" + freeflag + "',purchaseitemcode='" + purchaseitemcode + "'," +
                         " freeitemcode='" + freeitemcode + "'   where  cartcode='"+getfreecartcode+"'" +
                         " and freeitemcode='"+freeitemcode+"' and purchaseitemcode='"+purchaseitemcode+"'" +
@@ -7205,6 +7212,198 @@ if(schemeitem.equals("yes")){
 
         return "success";
 
+    }
+
+    public String insertFreeSalesOrderCartV1(String itemcode, String companycode,String brandcode, String manualitemcode,
+                                             String itemname, String itemnametamil,
+                                             String unitcode, String unitweightunitcode, String unitweight,
+                                             String uppunitcode, String uppweight, String itemcategory, String parentitemcode,
+                                             String allowpriceedit,
+                                             String allownegativestock, String allowdiscount, String stockqty, String unitname, String noofdecimals,
+                                             String oldprice, String newprice,
+                                             String colourcode, String hsn, String tax,
+                                             String itemqty, String subtotal,
+                                             String routeallowpricedit, String discount, String freeflag,
+                                             String purchaseitemcode, String freeitemcode,String rateitemschemediscount,
+                                             String getroutecode,String curitemcode,String ratediscount,String getschemeapplicable,String orgprice)
+    {
+        Cursor mCur = null;
+        Cursor mCur1 = null;
+        Cursor mCur3 = null;
+        Cursor mCur2 = null;
+        Cursor mCurItemDS = null;
+        try{
+            double vartaxamount=((Double.parseDouble(newprice)/(1+Double.parseDouble(tax)/100))*(Double.parseDouble(tax)/100))*Double.parseDouble(itemqty);
+            double vardiscount=(Double.parseDouble(newprice)*Double.parseDouble(itemqty))-vartaxamount;
+//            double roundoffs = dft.format(vardiscount) - Math.floor(dft.format(vardiscount));
+//            if (roundoffs >= 0.5) {
+//                var dataround = 1 - parseFloat(roundoffs).toFixed(2);
+//                signwithroundoff = parseFloat(dataround).toFixed(2);
+//            } else if (roundoffs != 0) {
+//                signwithroundoff = '- ' + parseFloat(roundoffs).toFixed(2);
+//            } else {
+//                signwithroundoff = parseFloat(roundoffs).toFixed(2);
+//            }
+            String getbusinesstype = "";
+            String arr[]=preferenceMangr.pref_getString("getbusiness_type").split(",");
+            if(arr.length>0) {
+                for (int i = 0; i < arr.length; i++) {
+                    if(arr[i].equals("2")){
+                        getbusinesstype=" ((','||a.business_type||',') LIKE '%,2,%' or (','||a.business_type||',') LIKE '%,3,%') ";
+                    }else if(arr[i].equals("1")){
+                        getbusinesstype=" ((','||a.business_type||',') LIKE '%,1,%' or (','||a.business_type||',') LIKE '%,3,%') ";
+                    }else{
+                        getbusinesstype=" ((','||a.business_type||',') LIKE '%,1,%' or (','||a.business_type||',') LIKE '%,2,%' or (','||a.business_type||',') LIKE '%,3,%') ";
+                    }
+                }
+            }
+            String GenDate= GenCreatedDate();
+            mDb = mDbHelper.getReadableDatabase();
+            String sql1 = "select coalesce(max(cartcode),0)+1 from tblsalesordercartdatas";
+            mCur = mDb.rawQuery(sql1, null);
+            mCur.moveToFirst();
+            String getmaxcartcode = (mCur.moveToFirst()) ? mCur.getString(0) : "0";
+            //get free item discount from general settings
+            String itemDiscount = "SELECT zro_price_item_disc,cash_item_disc,item_disc_efrom FROM tblgeneralsettings " +
+                    "WHERE datetime(item_disc_efrom)<=datetime('"+GenDate+"')";
+            mCurItemDS = mDb.rawQuery(itemDiscount, null);
+            String itemdiscountAmount="";
+            String itemsubtotal="";
+            String itemprice="";
+            if(mCurItemDS!=null) {
+                mCurItemDS.moveToFirst();
+                itemdiscountAmount = (mCurItemDS.moveToFirst()) ?((mCurItemDS.getString(0).equals("yes"))?"0": dft.format(vardiscount)): "0";
+                itemsubtotal= (mCurItemDS.moveToFirst()) ?((mCurItemDS.getString(0).equals("yes"))?"0": subtotal): "0";
+                itemprice= (mCurItemDS.moveToFirst()) ?((mCurItemDS.getString(0).equals("yes"))?"0":newprice): "0";
+            }else{
+                itemdiscountAmount=dft.format(vardiscount);
+                itemsubtotal= subtotal;
+                itemprice=newprice;
+            }
+            // end
+//            String sqlpurchaseitemcode="SELECT  group_concat(purchaseitemcode,',') as purchaseitemcode " +
+//                    "from (select purchaseitemcode  from tblsalesordercartdatas  where " +
+//                    "freeitemcode = '" + freeitemcode + "' and freeflag='freeitem' ) ";
+//            mCur3 = mDb.rawQuery(sqlpurchaseitemcode, null);
+//            String purchasearr=null;
+//            if(mCur3!=null){
+//                mCur.moveToFirst();
+//                String purchaseitemvalue=(mCur3.moveToFirst()) ? mCur3.getString(0) : curitemcode;
+//                if(!Utilities.isNullOrEmpty(purchaseitemvalue) ) {
+//                    if( purchaseitemvalue.contains(",")){
+//                         purchasearr = purchaseitemvalue.replace(",", "', '");
+//                    }
+//                    else{
+//                        purchasearr = purchaseitemvalue;
+//                    }
+//                }
+//                else{
+//                    purchasearr = curitemcode;
+//                }
+//            }
+//            else{
+//                purchasearr = curitemcode;
+//            }
+            String sqlpurchaseitemcode="SELECT  group_concat(purchaseitemcode,',') as purchaseitemcode " +
+                    "from (select purchaseitemcode  from tblsalesordercartdatas  where " +
+                    "freeitemcode = '" + freeitemcode + "' and freeflag='freeitem'" +
+                    " union all select '"+curitemcode+"' as purchaseitemcode) as dev ";
+            mCur3 = mDb.rawQuery(sqlpurchaseitemcode, null);
+            String purchasearr=null;
+            if(mCur3!=null){
+                mCur.moveToFirst();
+                String purchaseitemvalue=(mCur3.moveToFirst()) ? mCur3.getString(0) : curitemcode;
+                purchasearr= purchaseitemvalue.replace(",", "', '") ;
+            }
+            else{
+                purchasearr = curitemcode;
+            }
+            String strpurchasecode= purchaseitemcode.replace(",", "', '") ;
+//            String sql3 = "select coalesce(count(*),0) as count,coalesce(cartcode,0) as cartcode from tblsalesordercartdatas " +
+//                    " where freeitemcode = '"+freeitemcode+"' and purchaseitemcode='"+purchaseitemcode+"' " +
+//                    " and freeflag='freeitem' ";
+//                        String sql3 = "select coalesce(count(*),0) as count,coalesce(cartcode,0) as cartcode from tblsalesordercartdatas " +
+//                    " where freeitemcode = '"+freeitemcode+"' and purchaseitemcode in " +
+//                    " (SELECT purchaseitemcode from tblschemeitemdetails where schemecode=(select a.schemecode from tblscheme as a " +
+//                    " inner join tblschemeitemdetails as b on a.schemecode=b.schemecode where purchaseitemcode='"+purchaseitemcode+"' " +
+//                    " and a.status='"+statusvar+"'  and "+getbusinesstype+" and (','||multipleroutecode||',') LIKE '%,"+ getroutecode +",%' and" +
+//                    " (validityfrom<=datetime('"+GenDate+"')) and (ifnull(validityto,'')=''  or (validityfrom<=datetime('"+GenDate+"') and " +
+//                    " validityto>=datetime('"+GenDate+"'))) )) and freeflag='freeitem' ";
+            String sql3 = "select coalesce(count(*),0) as count,coalesce(cartcode,0) as cartcode from tblsalesordercartdatas " +
+                    " where freeitemcode = '"+freeitemcode+"' and  '"+curitemcode+"' in ('"+purchasearr+"') and '"+curitemcode+"' in " +
+                    " (SELECT purchaseitemcode from tblschemeitemdetails where schemecode=(select DISTINCT a.schemecode from tblscheme as a " +
+                    " inner join tblschemeitemdetails as b on a.schemecode=b.schemecode where purchaseitemcode in ('"+strpurchasecode+"') " +
+                    " and a.status='"+statusvar+"' and schemetype='item'  and "+getbusinesstype+" and (','||multipleroutecode||',') LIKE '%,"+ getroutecode +",%' and" +
+                    " (validityfrom<=datetime('"+GenDate+"')) and (ifnull(validityto,'')=''  or (validityfrom<=datetime('"+GenDate+"') and " +
+                    " validityto>=datetime('"+GenDate+"'))) )) and freeflag='freeitem' ";
+            mCur2 = mDb.rawQuery(sql3, null);
+            mCur2.moveToFirst();
+            String getfreecount = (mCur2.moveToFirst()) ? mCur2.getString(0) : "0";
+            String getfreecartcode = (mCur2.moveToFirst()) ? mCur2.getString(1) : "0";
+            if(getfreecount.equals("0")) {
+                String sqlcart = "INSERT INTO  'tblsalesordercartdatas' VALUES " +
+                        "('" + getmaxcartcode + "','" + itemcode + "'," +
+                        " '" + companycode + "','" + brandcode + "','" + manualitemcode + "','" + itemname + "','" + itemnametamil + "'," +
+                        " '" + unitcode + "','" + unitweightunitcode + "','" + unitweight + "'," +
+                        " '" + uppunitcode + "','" + uppweight + "','" + itemcategory + "'," +
+                        " '" + parentitemcode + "','" + allowpriceedit + "','" + allownegativestock + "' ," +
+                        " '" + allowdiscount + "','" + stockqty + "','" + unitname + "'," +
+                        " '" + noofdecimals + "','" + oldprice + "','" + itemprice + "'," +
+                        " '" + colourcode + "','" + hsn + "','" + tax + "'," +
+                        " '" + itemqty + "',0,'" + routeallowpricedit + "'," +
+                        " '" + itemdiscountAmount + "','" + freeflag + "','" + purchaseitemcode + "'," +
+                        " '" + freeitemcode + "','" + newprice +"','" + ratediscount +"'" +
+                        ",'" + getschemeapplicable + "','" + orgprice + "' )";
+                mDb.execSQL(sqlcart);
+            }else if(Integer.parseInt(getfreecount) > 0){
+//                String sqlcart = "UPDATE   'tblsalesordercartdatas' SET " +
+//                        " companycode= '" + companycode + "',brandcode='" + brandcode + "'," +
+//                        " manualitemcode='" + manualitemcode + "',itemname='" + itemname + "',itemnametamil='" + itemnametamil + "'," +
+//                        " unitcode='" + unitcode + "',unitweightunitcode='" + unitweightunitcode + "',unitweight='" + unitweight + "'," +
+//                        " uppunitcode='" + uppunitcode + "',uppweight='" + uppweight + "',itemcategory='" + itemcategory + "'," +
+//                        " parentitemcode='" + parentitemcode + "',allowpriceedit='" + allowpriceedit + "',allownegativestock='" + allownegativestock + "' ," +
+//                        " allowdiscount='" + allowdiscount + "',stockqty='" + stockqty + "',unitname='" + unitname + "'," +
+//                        " noofdecimals='" + noofdecimals + "',oldprice='" + oldprice + "',newprice='" + newprice + "'," +
+//                        " colourcode='" + colourcode + "',hsn='" + hsn + "',tax='" + tax + "'," +
+//                        " itemqty='" + itemqty + "',subtotal='" + subtotal + "',routeallowpricedit='" + routeallowpricedit + "'," +
+//                        " discount='" + discount + "',freeflag='" + freeflag + "',purchaseitemcode='" + purchaseitemcode + "'," +
+//                        " freeitemcode='" + freeitemcode + "',minimumsalesqty='"+minimumsalesqty+"'   where  cartcode='"+getfreecartcode+"'" +
+//                        " and freeitemcode='"+freeitemcode+"' and purchaseitemcode='"+purchaseitemcode+"'" +
+//                        "  and  freeflag='freeitem' ";
+                String sqlcart = "UPDATE   'tblsalesordercartdatas' SET " +
+                        " companycode= '" + companycode + "',brandcode='" + brandcode + "'," +
+                        " manualitemcode='" + manualitemcode + "',itemname='" + itemname + "',itemnametamil='" + itemnametamil + "'," +
+                        " unitcode='" + unitcode + "',unitweightunitcode='" + unitweightunitcode + "',unitweight='" + unitweight + "'," +
+                        " uppunitcode='" + uppunitcode + "',uppweight='" + uppweight + "',itemcategory='" + itemcategory + "'," +
+                        " parentitemcode='" + parentitemcode + "',allowpriceedit='" + allowpriceedit + "',allownegativestock='" + allownegativestock + "' ," +
+                        " allowdiscount='" + allowdiscount + "',stockqty='" + stockqty + "',unitname='" + unitname + "'," +
+                        " noofdecimals='" + noofdecimals + "',oldprice='" + oldprice + "',newprice='" + itemprice + "'," +
+                        " colourcode='" + colourcode + "',hsn='" + hsn + "',tax='" + tax + "'," +
+                        " itemqty='" + itemqty + "',subtotal=0,routeallowpricedit='" + routeallowpricedit + "'," +
+                        " discount='" + itemdiscountAmount + "',freeflag='" + freeflag + "',purchaseitemcode='" + purchaseitemcode + "'," +
+                        " freeitemcode='" + freeitemcode + "'" +
+                        ",actualamount='"+ newprice +"',ratediscount='"+ ratediscount +"' " +
+                        ",schemeapplicable='" + getschemeapplicable + "',orgprice='" + orgprice + "' " +
+                        " where  cartcode='"+getfreecartcode+"'" +
+                        " and freeitemcode='"+freeitemcode+"' and '"+curitemcode+"' in" +
+                        " (SELECT purchaseitemcode from tblschemeitemdetails where schemecode=(select DISTINCT a.schemecode from tblscheme as a " +
+                        " inner join tblschemeitemdetails as b on a.schemecode=b.schemecode where purchaseitemcode in ('"+strpurchasecode+"') " +
+                        " and a.status='"+statusvar+"' and schemetype='item' and "+getbusinesstype+" and (','||multipleroutecode||',') LIKE '%,"+ getroutecode +",%' and" +
+                        " (validityfrom<=datetime('"+GenDate+"')) and (ifnull(validityto,'')=''  or (validityfrom<=datetime('"+GenDate+"') and " +
+                        " validityto>=datetime('"+GenDate+"'))) ))  and  freeflag='freeitem' ";
+                mDb.execSQL(sqlcart);
+            }
+        }catch (Exception ex){
+            insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }finally {
+            if(mCur != null)
+                mCur.close();
+            if(mCur2 != null)
+                mCur2.close();
+            if(mCur3 != null)
+                mCur3.close();
+        }
+        return "success";
     }
 
     //Update schedule Flag
@@ -8543,23 +8742,128 @@ if(schemeitem.equals("yes")){
     }
 
     //Check customer already exists
-    public String DeleteOrderItemInCart(String getitemcode)
+    public String DeleteOrderItemInCart(String getitemcode, String getfreeflag)
     {
         try{
             mDb = mDbHelper.getReadableDatabase();
-            String sql2 = "delete from tblsalesordercartdatas  where" +
-                    " itemcode='"+getitemcode+"' and  freeflag='' ";
-            mDb.execSQL(sql2);
+//            String sql2 = "delete from tblsalesordercartdatas  where" +
+//                    " itemcode='"+getitemcode+"' and  freeflag='' ";
+//            mDb.execSQL(sql2);
+//
+//            String sql1= "delete from tblsalesordercartdatas   where" +
+//                    " itemcode='"+getitemcode+"' and  freeflag='freeitem' ";
+//            mDb.execSQL(sql1);
+//
+//            String sql3= "delete from tblsalesordercartdatas   where" +
+//                    " itemcode='"+getitemcode+"' and  freeflag='freerate' ";
+//            mDb.execSQL(sql3);
 
-            String sql1= "delete from tblsalesordercartdatas   where" +
-                    " itemcode='"+getitemcode+"' and  freeflag='freeitem' ";
-            mDb.execSQL(sql1);
+            String getbusinesstype = "";
+            Cursor mCur = null;
+            if (getfreeflag.equals("freeitem")) {
 
-            String sql3= "delete from tblsalesordercartdatas   where" +
-                    " itemcode='"+getitemcode+"' and  freeflag='freerate' ";
-            mDb.execSQL(sql3);
+                String sql1= "delete from tblsalesordercartdatas   where" +
+                        " itemcode='"+getitemcode+"' and  freeflag='freeitem' ";
+                mDb.execSQL(sql1);
+
+            } else {
+//
+                String arr[] = preferenceMangr.pref_getString("getbusiness_type").split(",");
+                if (arr.length > 0) {
+                    for (int i = 0; i < arr.length; i++) {
+                        if (arr[i].equals("2")) {
+                            getbusinesstype = " (','||c.business_type||',') LIKE '%,2,%' or (','||c.business_type||',') LIKE '%,3,%') ";
+                        } else if (arr[i].equals("1")) {
+                            getbusinesstype = " ((','||c.business_type||',') LIKE '%,1,%' or (','||c.business_type||',') LIKE '%,3,%') ";
+                        } else {
+                            getbusinesstype = " ((','||c.business_type||',') LIKE '%,1,%' or (','||c.business_type||',') LIKE '%,2,%' or (','||c.business_type||',') LIKE '%,3,%') ";
+                        }
+                    }
+                }
+                String GenDate = GenCreatedDate();
+                String sql = "SELECT ((cast(itemweight as INTEGER)/cast(purchaseqty as INTEGER))*cast(freeqty as INTEGER)) as" +
+                        "  freeitemqty,(select purchaseitemcode  from tblsalesordercartdatas  where  freeitemcode =dev.freeitemcode " +
+                        " and freeflag='freeitem') as apcitemcode,(select newprice  from tblsalesordercartdatas  where " +
+                        " freeitemcode =dev.freeitemcode and freeflag='freeitem')" +
+                        " as price,(SELECT (select coalesce((sum(op)+sum(inward)-sum(outward)),0) from tblstocktransaction " +
+                        " where itemcode=dev.freeitemcode and flag!=3 ) + (select coalesce((sum(inward)-sum(outward)),0) " +
+                        " from tblstockconversion where itemcode=dev.freeitemcode )) as stockqty,* " +
+                        " FROM (" +
+                        " SELECT coalesce(sum(itemqty*unitweight),0) as " +
+                        " itemweight,group_concat(itemcode,',') as purchaseitemcode,c.purchaseqty,(select " +
+                        " (freeqty) from tblscheme as c where  c.schemecode=b.schemecode  and '" + getitemcode + "' in " +
+                        " (SELECT purchaseitemcode from tblschemeitemdetails where c.schemecode=schemecode )  ) as freeqty," +
+                        " (select (freeitemcode) from tblscheme as c where   c.schemecode=b.schemecode  and '" + getitemcode + "' in " +
+                        " (SELECT purchaseitemcode from tblschemeitemdetails where c.schemecode=schemecode ) ) as" +
+                        " freeitemcode " +
+                        " FROM tblsalesordercartdatas as a " +
+                        " inner join tblschemeitemdetails as b on b.purchaseitemcode=a.itemcode " +
+                        " INNER JOIN tblscheme as c on c.schemecode=b.schemecode " +
+                        " where schemetype='item' and status='" + statusvar + "' and " + getbusinesstype + " " +
+                        "  and (','||multipleroutecode||',') LIKE '%," + preferenceMangr.pref_getString("getroutecode") + ",%'" +
+                        "  and (validityfrom<=datetime('" + GenDate + "')) and (ifnull(validityto,'')='' or " +
+                        " (validityfrom<=datetime('" + GenDate + "')  and" +
+                        " validityto>=datetime('" + GenDate + "'))) and c.schemecode in (SELECT distinct schemecode from " +
+                        " tblschemeitemdetails where purchaseitemcode='" + getitemcode + "' ) and (CASE WHEN " +
+                        " a.freeitemcode = '" + getitemcode + "' AND freeflag='freeitem' THEN (itemcode<>'" + getitemcode + "' ||  " +
+                        " freeflag<>'freeitem' )  ELSE itemcode<>'" + getitemcode + "' END)" +
+                        ") as dev";
+//              (itemcode<>'" + getitemcode + "' )  || freeflag<>'freeitem'
+
+                mCur = mDb.rawQuery(sql, null);
+                if (mCur.getCount() > 0) {
+                    mCur.moveToFirst();
+                    String getfreecount = (mCur.moveToFirst()) ? mCur.getString(0) : "0";
+                    String getapcitemcode = (mCur.moveToFirst()) ? mCur.getString(1) : "0";
+                    String getfreeitemprice = (mCur.moveToFirst()) ? mCur.getString(2) : "0";
+                    String getstockqty = (mCur.moveToFirst()) ? mCur.getString(3) : "0";
+                    String getpurchaseitemcode = (mCur.moveToFirst()) ? mCur.getString(5) : "0";
+                    String getfreeitemcode = (mCur.moveToFirst()) ? mCur.getString(8) : "0";
+                    if (getapcitemcode != null && getapcitemcode != "null") {
+                        String apcitemcodearr = getapcitemcode.replace(",", "', '");
+                        if (getfreecount.equals("0")) {
+//                        String sql1= "delete from tblsalescartdatas   where" +
+//                                " '"+getitemcode+"' in  ('"+apcitemcodearr+"')  and  freeflag='freeitem' ";
+//                        mDb.execSQL(sql1);
+                            String sql1 = "delete from tblsalesordercartdatas   where" +
+                                    " (','||purchaseitemcode||',') LIKE '%," + getitemcode + ",%' and  freeflag='freeitem' ";
+                            mDb.execSQL(sql1);
+                        } else {
+                            double getsubtotal = Double.parseDouble(getfreeitemprice) * Double.parseDouble(getfreecount);
+                            String sql1 = "Update tblsalesordercartdatas set  discount='" + getsubtotal + "'," +
+                                    " subtotal='" + getsubtotal + "', purchaseitemcode='" + getpurchaseitemcode + "'," +
+                                    " itemqty='" + getfreecount + "',stockqty='" + getstockqty + "' where " +
+                                    " '" + getitemcode + "' in  ('" + apcitemcodearr + "') and  itemcode='" + getfreeitemcode + "'" +
+                                    " and freeflag='freeitem' ";
+                            mDb.execSQL(sql1);
+                        }
+                    } else {
+                        String sql1 = "delete from tblsalesordercartdatas   where" +
+                                " '" + getitemcode + "' in (purchaseitemcode)  and  freeflag='freeitem' ";
+                        mDb.execSQL(sql1);
+
+                    }
+                    String sql2 = "delete from tblsalesordercartdatas  where" +
+                            " itemcode='" + getitemcode + "' and  freeflag='' ";
+                    mDb.execSQL(sql2);
+
+                } else {
+                    String sql2 = "delete from tblsalesordercartdatas  where" +
+                            " itemcode='" + getitemcode + "' and  freeflag='' ";
+                    mDb.execSQL(sql2);
+
+                    String sql1 = "delete from tblsalesordercartdatas   where" +
+                            " (','||purchaseitemcode||',') LIKE '%," + getitemcode + ",%' and  freeflag='freeitem' ";
+                    mDb.execSQL(sql1);
+                }
+
+
+                String sql3 = "delete from tblsalesordercartdatas  where" +
+                        " itemcode='" + getitemcode + "' and  freeflag='freerate' ";
+                mDb.execSQL(sql3);
+            }
         }catch (Exception ex){
-            insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            insertErrorLog("Exception in DeleteOrderItemInCart : " + ex.toString(), this.getClass().getSimpleName() + " - DeleteOrderItemInCart", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
         }
 
         return "Success";
@@ -10547,7 +10851,7 @@ if(schemeitem.equals("yes")){
                                 String sql = "INSERT INTO 'tblgeneralsettings' (autonum,restrictmobileappdays,allowedithsn,allowedittax,enablebillwisediscount,enablegpstracking" +
                                         " ,enableallcustomersmobileapp,salesschedulemobileapp,billcopypopup,drilldownitem,wishmsg,drilldownorder,jurisdiction,printheader," +
                                         " showcashpaidpopup,freeitemcolor,item_disc_efrom,zro_price_item_disc,cash_item_disc,otp_time_validity," +
-                                        "otp_time_validity_backend,orderautoapproval,maxbillannualamount,maxbillamount,geofencing,geometer) VALUES('" + gc +"'," +
+                                        "otp_time_validity_backend,orderautoapproval,maxbillannualamount,maxbillamount,geofencing,geometer,maxreceiptamt) VALUES('" + gc +"'," +
                                         "'" + obj.getString("restrictmobileappdays")+"','" + obj.getString("allowedithsn")+"'," +
                                         "'" + obj.getString("allowedittax")+"','" + obj.getString("enablebillwisediscount")+"'," +
                                         "'" + obj.getString("enablegpstracking")+"','" + obj.getString("enableallcustomersmobileapp")+"'," +
@@ -10562,7 +10866,8 @@ if(schemeitem.equals("yes")){
                                         "'"+obj.getString("cash_item_disc")+"' ," +
                                         "'"+obj.getString("otp_time_validity")+"'," +
                                         "'"+obj.getString("otp_time_validity_backend")+"',"+
-                                        "'"+obj.getString("orderautoapproval")+"','"+obj.getString("maxbillannualamount")+"','"+obj.getString("maxbillamount")+"','"+obj.getString("geofencing")+"','"+obj.getString("geometer")+"' ) ";
+                                        "'"+obj.getString("orderautoapproval")+"','"+obj.getString("maxbillannualamount")+"','"+obj.getString("maxbillamount")+"'," +
+                                        "'"+obj.getString("geofencing")+"','"+obj.getString("geometer")+"','"+obj.optString("maxreceiptamt")+"' ) ";
                                 mDb.execSQL(sql);
                             }else{
                                 int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
@@ -10591,7 +10896,8 @@ if(schemeitem.equals("yes")){
                                         "maxbillamount='"+obj.getString("maxbillamount")+"', " +
                                         "maxbillannualamount='"+obj.getString("maxbillannualamount")+"'," +
                                         "geofencing='"+obj.getString("geofencing")+"'," +
-                                        "geometer='"+obj.getString("geometer")+"' ";
+                                        "geometer='"+obj.getString("geometer")+"'," +
+                                        "maxreceiptamt='"+obj.optString("maxreceiptamt")+"' ";
                                 mDb.execSQL(sql);
                             }
 
@@ -14917,15 +15223,33 @@ if(schemeitem.equals("yes")){
 
             String sql ="SELECT 'Cash' as billtype,count(a.billno) as billcount ," +
                     " case when count(a.billno)=0 then 0.00 else cast(sum(coalesce((grandtotal),0)) as decimal(32,3)) end as grandtotal" +
-                    " from tblsales as a where a.flag!=3 and schedulecode='"+getschedulecode+"' and billtypecode=1  and companycode="+companycode+"" +
+                    " from tblsales as a where a.flag!=3 and flag!=6 and schedulecode='"+getschedulecode+"' and billtypecode=1  and companycode="+companycode+"" +
                     " union all " +
                     " SELECT 'Credit' as billtype,count(a.billno) as billcount ," +
                     " case when count(a.billno)=0 then 0.00 else cast(sum(coalesce((grandtotal),0)) as decimal(32,3)) end as grandtotal" +
-                    " from tblsales as a where a.flag!=3 and schedulecode='"+getschedulecode+"' and billtypecode=2  and companycode="+companycode+"" +
+                    " from tblsales as a where a.flag!=3 and flag!=6 and schedulecode='"+getschedulecode+"' and billtypecode=2  and companycode="+companycode+"" +
+                    " union all " +
+                    " SELECT 'Credit Non-GST' as billtype,count(a.billno) as billcount ," +
+                    " case when count(a.billno)=0 then 0.00 else cast(sum(coalesce((grandtotal),0)) as decimal(32,3)) end as grandtotal" +
+                    " from tblsales as a where a.flag!=3 and flag!=6 and schedulecode='"+getschedulecode+"' and billtypecode=3  and companycode="+companycode+"" +
                     " union all" +
                     " SELECT 'Sales Return' as billtype,count(a.billno) as billcount," +
                     " case when count(a.billno)=0 then 0.00 else cast(sum(coalesce((grandtotal),0)) as decimal(32,3)) end as grandtotal" +
-                    " from tblsalesreturn as a where a.flag!=3 and schedulecode='"+getschedulecode+"' and companycode="+companycode+"; ";
+                    " from tblsalesreturn as a where a.flag!=3 and flag!=6 and schedulecode='"+getschedulecode+"' and companycode="+companycode+"; ";
+
+//            String sql = "SELECT " +
+//                    "    b.billtype," +
+//                    "    COALESCE(COUNT(a.billno), 0) AS billcount," +
+//                    "    COALESCE(SUM(a.grandtotal), 0) AS grandtotal," +
+//                    "    b.billtypecode " +
+//                    " FROM tblbilltype AS b " +
+//                    " LEFT JOIN tblsales AS a " +
+//                    "    ON a.billtypecode = b.billtypecode " +
+//                    "    AND a.flag != 3 AND a.flag !=6 " +
+//                    "    AND a.schedulecode = '"+getschedulecode+"' " +
+//                    "    AND a.companycode = "+companycode+" " +
+//                    " GROUP BY b.billtype, b.billtypecode " +
+//                    " ORDER BY b.billtype;";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -15928,6 +16252,46 @@ if(schemeitem.equals("yes")){
         return mCur;
 
 
+    }
+
+    public String getTotalAchievedAmount(String scheduleCode) {
+        String achievedAmt = "0";
+        Cursor mCur = null;
+        try {
+            String sql ="select printf('%.2f', COALESCE(sum(grandtotal), 0)) as total from tblsales where schedulecode='" + scheduleCode + "' and flag !=3 and flag!=6";
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0) {
+                mCur.moveToFirst();
+                achievedAmt = mCur.getString(0);
+            }
+        } catch (Exception ex) {
+            insertErrorLog("Exception in getTotalAchievedAmount : "+ex.toString(), this.getClass().getSimpleName() + " - getTotalAchievedAmount", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        } finally {
+            if (mCur != null)
+                mCur.close();
+        }
+
+        return achievedAmt;
+    }
+
+    public String getMaxReceiptAmount() {
+        String achievedAmt = "0";
+        Cursor mCur = null;
+        try {
+            String sql ="select COALESCE(maxreceiptamt, 0) as maxreceiptamt from tblgeneralsettings";
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0) {
+                mCur.moveToFirst();
+                achievedAmt = mCur.getString(0);
+            }
+        } catch (Exception ex) {
+            insertErrorLog("Exception in getMaxReceiptAmount : "+ex.toString(), this.getClass().getSimpleName() + " - getTotalAchievedAmount", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        } finally {
+            if (mCur != null)
+                mCur.close();
+        }
+
+        return achievedAmt;
     }
 
 }

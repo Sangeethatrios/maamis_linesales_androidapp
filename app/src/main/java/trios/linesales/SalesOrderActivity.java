@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -1740,6 +1741,9 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                     convertView.setTag(R.id.labelstockunit, mHolder.labelstockunit);
                     convertView.setTag(R.id.schemecount, mHolder.schemecount);
                     convertView.setTag(R.id.dummycount, mHolder.dummycount);
+                    convertView.setTag(R.id.listdiscount, mHolder.listdiscount);
+                    convertView.setTag(R.id.itemLL, mHolder.itemLL);
+                    convertView.setTag(R.id.pricearrow, mHolder.pricearrow);
                 } catch (Exception e) {
                     Log.i("Route", e.toString());
                     DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -1838,6 +1842,14 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
 
                 }
 
+                String noOfDecimal = salesItemList.get(position).getNoofdecimals();
+                if (Integer.parseInt(noOfDecimal) > 0) {
+                    // Allow decimals
+                    mHolder.listitemqty.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                } else {
+                    // Disallow decimals — only integers
+                    mHolder.listitemqty.setInputType(InputType.TYPE_CLASS_NUMBER);
+                }
 
                 if (getschemeapplicable.equals("yes")) {
                     if(getSchemebusinesstype.equals("2") || getSchemebusinesstype.equals("3")){
@@ -2021,7 +2033,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                                 if (getdecimalvalue.equals("3")) {
                                     getnoofdigits = "000";
                                 }
-                                df = new DecimalFormat("0.'" + getnoofdigits + "'");
+                                df = new DecimalFormat("0." + getnoofdigits);
 
                                 /*********SCHEME DETAILS*************/
                                 if (getschemeapplicable.equals("yes")) {
@@ -2137,7 +2149,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                                                         //Calculate Qty with total qty
                                                         Double getactualqty = Double.parseDouble(getqty);
                                                         int getfreeqtyval = (int) (getactualqty / Double.parseDouble(getpurchaseqty));
-                                                        int getactualqtyvalue = (int) (getfreeqtyval * Double.parseDouble(getfreeqty));
+                                                        Double getactualqtyvalue = (getfreeqtyval * Double.parseDouble(getfreeqty));
                                                         String getcartqty = objdatabaseadapter.GetCartOrderItemStock(getfreeitemcode);
 
 
@@ -2480,7 +2492,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
 
                                 //Add free item to cart
                                 for (int k = 0; k < freeitems.size(); k++) {
-                                    insertcart = dataBaseAdapter.insertFreeSalesOrderCart(String.valueOf(freeitems.get(k).getItemcode()), String.valueOf(freeitems.get(k).getCompanycode()),
+                                    insertcart = dataBaseAdapter.insertFreeSalesOrderCartV1(String.valueOf(freeitems.get(k).getItemcode()), String.valueOf(freeitems.get(k).getCompanycode()),
                                             String.valueOf(freeitems.get(k).getBrandcode()), String.valueOf(freeitems.get(k).getManualitemcode())
                                             , String.valueOf(freeitems.get(k).getItemname()),String.valueOf( freeitems.get(k).getItemnametamil()),
                                             String.valueOf(freeitems.get(k).getUnitcode()), String.valueOf(freeitems.get(k).getUnitweightunitcode())
@@ -2495,7 +2507,9 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                                             String.valueOf(freeitems.get(k).getNewprice()),String.valueOf(freeitems.get(k).getColourcode()), String.valueOf(freeitems.get(k).getHsn()),
                                             String.valueOf(freeitems.get(k).getTax()), String.valueOf(freeitems.get(k).getItemqty()), String.valueOf(freeitems.get(k).getSubtotal())
                                             , String.valueOf(freeitems.get(k).getRouteallowpricedit()), String.valueOf(freeitems.get(k).getDiscount()), String.valueOf(freeitems.get(k).getFreeflag()),
-                                            String.valueOf(freeitems.get(k).getPurchaseitemcode()), String.valueOf(freeitems.get(k).getFreeitemcode()),"0");
+                                            String.valueOf(freeitems.get(k).getPurchaseitemcode()), String.valueOf(freeitems.get(k).getFreeitemcode()),"0",
+                                            preferenceMangr.pref_getString("getroutecode"),freeitems.get(k).getPurchaseitemcode(),"",
+                                            "yes",String.valueOf(freeitems.get(k).getNewprice()));
 
                                     //Toast.makeText(context,String.valueOf(freeitems.get(k).getFreeflag()),Toast.LENGTH_SHORT).show();
                                     checkfreeitem = true;
@@ -2560,13 +2574,14 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                         toast.setGravity(Gravity.CENTER, 0, 0);
                         toast.show();
                         String getitemcode = salesItemList.get(position).getItemcode();
+                        String getfreeflag = salesItemList.get(position).getFreeflag();
                         DataBaseAdapter objdatabaseadapter = null;
                         Cursor getcartdatas = null;
                         try {
                             //Order item details
                             objdatabaseadapter = new DataBaseAdapter(context);
                             objdatabaseadapter.open();
-                            String getresult = objdatabaseadapter.DeleteItemOrderInCart(getitemcode);
+                            String getresult = objdatabaseadapter.DeleteOrderItemInCart(getitemcode, getfreeflag);
                             if(getresult.equals("Success")){
 
                                 //Get cart datas from database temp table
