@@ -38,8 +38,8 @@ ext {
 //    versionName = '1.18'
 
     //    Live verison
-    versionCode = 9
-    versionName = '1.9'
+    versionCode = 10
+    versionName = '1.1.0'
 }
 task clean(type: Delete) {
     delete rootProject.buildDir
