@@ -268,17 +268,15 @@ public class SalesCloneActivity extends AppCompatActivity {
                                     getcartdatas.getString(32),getcartdatas.getString(21),getcartdatas.getString(34)
                                 ,getcartdatas.getString(35),getcartdatas.getString(36),
                                     getcartdatas.getDouble( getcartdatas.getColumnIndex("budget_utilize")),
-                                    getcartdatas.getString( getcartdatas.getColumnIndex("schemeitem")));
+                                    getcartdatas.getString( getcartdatas.getColumnIndex("schemeitem")), "clone");
 
 
                         getcartdatas.moveToNext();
-
-                        txtcustomername.setText(CUSTOMERNAME);
-                        txtareacity.setText(AREACITYNAME);
-                        txtreviewdate.setText(BILLDATE);
                     }
 
-
+                    txtcustomername.setText(CUSTOMERNAME);
+                    txtareacity.setText(AREACITYNAME);
+                    txtreviewdate.setText(BILLDATE);
 //
 //
 
@@ -443,7 +441,7 @@ public class SalesCloneActivity extends AppCompatActivity {
                     objdatabaseadapter.close();
             }
             //Item Adapter
-            setItemAdapter();
+            //setItemAdapter();
 
 
 

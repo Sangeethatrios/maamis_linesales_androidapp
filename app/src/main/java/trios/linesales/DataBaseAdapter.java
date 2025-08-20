@@ -5312,9 +5312,11 @@ public class DataBaseAdapter
         try{
             /*  "  and a.transactiondate=datetime('"+getdate+"') " +*/
 //            getdate = GenCreatedDate();
-            String sql ="SELECT * FROM (select * from tblsalescartdatas where freeflag!='freeitem' order by cartcode asc) " +
-                    " as dev UNION ALL " +
-                    " SELECT * FROM (select * from tblsalescartdatas where freeflag='freeitem' order by cartcode asc) as dev1 ";
+//            String sql ="SELECT * FROM (select * from tblsalescartdatas where freeflag!='freeitem' order by cartcode asc) " +
+//                    " as dev UNION ALL " +
+//                    " SELECT * FROM (select * from tblsalescartdatas where freeflag='freeitem' order by cartcode asc) as dev1 ";
+
+            String sql ="SELECT * FROM tblsalescartdatas order by cartcode asc;";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -6732,7 +6734,8 @@ public class DataBaseAdapter
                                   String itemqty, String subtotal,
                                   String routeallowpricedit, String discount, String freeflag,
                                   String purchaseitemcode, String freeitemcode,String minstockqty,
-                                  String actualprice,String ratediscount,String itemschemeapplicable,String orgprice,double budgetutilize,String schemeitem)
+                                  String actualprice,String ratediscount,String itemschemeapplicable,String orgprice,double budgetutilize,String schemeitem,
+                                  String from)
     {
         try{
             String GenDate= GenCreatedDate();
@@ -6741,13 +6744,18 @@ public class DataBaseAdapter
             Cursor mCur = mDb.rawQuery(sql1, null);
             mCur.moveToFirst();
             String getmaxcartcode = (mCur.moveToFirst()) ? mCur.getString(0) : "0";
-Integer varschemeitem = 0;
-if(schemeitem.equals("yes")){
-    varschemeitem=1;
-}
+            Integer varschemeitem = 0;
+            if(schemeitem.equals("yes")){
+                varschemeitem=1;
+            }
 
             String sql2 = "select coalesce(count(*),0) as count,coalesce(cartcode,0) as cartcode,coalesce(freeflag,'') as freeflag from tblsalescartdatas " +
-                    " where itemcode = '"+itemcode+"' and (ifnull(freeflag,'')='' or (freeflag='freerate')) ";
+                " where itemcode = '" + itemcode + "' and (ifnull(freeflag,'')='' or (freeflag='freerate')) ";
+
+            if (from.equals("ordertosales") || from.equals("clone")) {
+                sql2 = "select coalesce(count(*),0) as count,coalesce(cartcode,0) as cartcode,coalesce(freeflag,'') as freeflag from tblsalescartdatas " +
+                        " where itemcode = '" + itemcode + "' and freeflag = '" + freeflag + "' ";
+            }
             Cursor mCur1 = mDb.rawQuery(sql2, null);
             mCur1.moveToFirst();
             String getcount = (mCur1.moveToFirst()) ? mCur1.getString(0) : "0";
@@ -7684,34 +7692,56 @@ if(schemeitem.equals("yes")){
             double cgst,sgst,igst,cgstamt,sgstamt,igstamt;
             if (!gstin.equals(""))
             {
-                if ((gstin.substring(0,2)).equals("33"))
-                {
-                    cgst=Double.parseDouble(tax)/2;
-                    sgst=cgst;
+                if(freeitemstatus.equals("freeitem")  ) {
                     igst=0;
-                    cgstamt=vartaxamount/2;
-                    sgstamt=cgstamt;
-                    igstamt=0;
-                }
-                else
-                {
-                    igst=Double.parseDouble(tax);
                     cgst=0;
                     sgst=0;
                     cgstamt=0;
                     sgstamt=0;
-                    igstamt=vartaxamount;
+                    igstamt=0;
+                    discount="0";
+                }else{
+                    if ((gstin.substring(0,2)).equals("33"))
+                    {
+                        cgst=Double.parseDouble(tax)/2;
+                        sgst=cgst;
+                        igst=0;
+                        cgstamt=vartaxamount/2;
+                        sgstamt=cgstamt;
+                        igstamt=0;
+                    }
+                    else
+                    {
+                        igst=Double.parseDouble(tax);
+                        cgst=0;
+                        sgst=0;
+                        cgstamt=0;
+                        sgstamt=0;
+                        igstamt=vartaxamount;
 
+                    }
                 }
+
             }
             else
             {
-                cgst=Double.parseDouble(tax)/2;
-                sgst=cgst;
-                igst=0;
-                cgstamt=vartaxamount/2;
-                sgstamt=cgstamt;
-                igstamt=0;
+                if(freeitemstatus.equals("freeitem")  ) {
+                    igst=0;
+                    cgst=0;
+                    sgst=0;
+                    cgstamt=0;
+                    sgstamt=0;
+                    igstamt=0;
+                    discount="0";
+
+                }else {
+                    cgst=Double.parseDouble(tax) / 2;
+                    sgst=cgst;
+                    igst=0;
+                    cgstamt=vartaxamount / 2;
+                    sgstamt=cgstamt;
+                    igstamt=0;
+                }
             }
             String sql="INSERT INTO tbltempsalesorderitemdetails(autonum,refno,companycode,itemcode,qty,price,discount," +
                     "amount,cgst,sgst,igst,cgstamt,sgstamt,igstamt,freeitemstatus,weight) " +

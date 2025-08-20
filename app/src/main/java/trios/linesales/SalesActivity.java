@@ -3245,7 +3245,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                         , String.valueOf(salesitems.get(i).getRouteallowpricedit()), schemeitemdiscount, freeitemstatus,
                                                         String.valueOf(salesitems.get(i).getPurchaseitemcode()), String.valueOf(salesitems.get(i).getFreeitemcode()),
                                                         String.valueOf(salesitems.get(i).getMinsalesqty()),String.valueOf(salesitems.get(i).getDumyprice()),String.valueOf(salesitems.get(i).getratediscount())
-                                                        ,itemschemeapplicable,String.valueOf(salesitems.get(i).getOrgprice()),budgetutilize,salesitems.get(i).getSchemeItem());
+                                                        ,itemschemeapplicable,String.valueOf(salesitems.get(i).getOrgprice()),budgetutilize,salesitems.get(i).getSchemeItem(), "sales");
 
                                                 //txtareaname.setEnabled(false);
                                                 //txtcustomername.setEnabled(false);
@@ -5065,6 +5065,26 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
         customercode = CustomerCode[position];
         gstnnumber = GSTN[position];
         getschemeapplicable = SchemeApplicable[position];
+
+        // check mobile number is verified
+        DataBaseAdapter objdatabaseadapter = null;
+        try{
+            objdatabaseadapter = new DataBaseAdapter(context);
+            objdatabaseadapter.open();
+            getmobilenoverifycount = objdatabaseadapter.Checkemobilenoverify(customercode,preferenceMangr.pref_getString("getroutecode"));
+        } catch (Exception e) {
+            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+            mDbErrHelper.open();
+            String geterrror = e.toString();
+            Log.w("customercode",geterrror);
+            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "),
+                    this.getClass().getSimpleName()+" - Check mobile no. pending", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            mDbErrHelper.close();
+        } finally {
+            if (objdatabaseadapter != null)
+                objdatabaseadapter.close();
+        }
+
         if (gstnnumber.equals("") || gstnnumber.equals(null) || gstnnumber.equals("0")) {
             togglegstin.setBackgroundColor(getResources().getColor(R.color.graycolor));
         } else {
@@ -5626,6 +5646,9 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
 
                                                         orgprice = String.valueOf(dft.format(getorgprice));
 
+                                                        if (freeflag.equals("freeitem"))
+                                                            getsubtotal = 0;
+
                                                         insertcart = dataBaseAdapter.insertSalesCart(String.valueOf(itemcode), String.valueOf(companycode),
                                                                 String.valueOf(brandcode), String.valueOf(manualitemcode)
                                                                 , String.valueOf(itemname), String.valueOf(itemnametamil),
@@ -5642,7 +5665,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                 String.valueOf(tax), String.valueOf(itemqty), String.valueOf(getsubtotal)
                                                                 , String.valueOf(routeallowpricedit), String.valueOf(discount), freeflag,
                                                                 String.valueOf(purchaseitemcode), String.valueOf(freeitemcode),"","","","",
-                                                                String.valueOf(orgprice),0,"no");
+                                                                String.valueOf(orgprice),0,"no","ordertosales");
                                                     }
                                                 }else{
                                                     try{
@@ -5659,6 +5682,9 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                 double getorgprice = Double.parseDouble(orgprice);
                                                                 orgprice = String.valueOf(dft.format(getorgprice));
 
+                                                                if (freeflag.equals("freeitem"))
+                                                                    getsubtotal = 0;
+
                                                                 insertcart = dataBaseAdapter.insertSalesCart(String.valueOf(itemcode), String.valueOf(companycode),
                                                                         String.valueOf(brandcode), String.valueOf(manualitemcode)
                                                                         , String.valueOf(itemname), String.valueOf(itemnametamil),
@@ -5674,7 +5700,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                         String.valueOf(newprice), String.valueOf(colourcode), String.valueOf(hsn),
                                                                         String.valueOf(tax), String.valueOf(itemqty), String.valueOf(getsubtotal)
                                                                         , String.valueOf(routeallowpricedit), String.valueOf(discount), freeflag,
-                                                                        String.valueOf(purchaseitemcode), String.valueOf(freeitemcode),"","","","",String.valueOf(orgprice),0,"no");
+                                                                        String.valueOf(purchaseitemcode), String.valueOf(freeitemcode),"","","","",String.valueOf(orgprice),0,"no",
+                                                                        "ordertosales");
                                                             }
                                                         }
 
@@ -8381,6 +8408,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                 if(getdecimalvalue.equals("3")){
                     getnoofdigits = "000";
                 }
+                DecimalFormat df = new DecimalFormat("0."+getnoofdigits);
                 mHolder.listitemname.setText(currentListData.getItemnametamil());
                 if(getnoofdigits!="") {
                     mHolder.listitemqty.setText(df.format(Double.parseDouble(currentListData.getItemqty())) +" "+currentListData.getUnitname());

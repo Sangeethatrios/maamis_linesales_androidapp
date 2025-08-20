@@ -2226,7 +2226,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                                                                         getFreeStock.getString(20)
                                                                         , getFreeStock.getString(21), getFreeStock.getString(22)
                                                                         , getFreeStock.getString(23), String.valueOf(getactualqtyvalue), String.valueOf(getsubtotal),
-                                                                        getFreeStock.getString(24),  String.valueOf(getsubtotal),
+                                                                        getFreeStock.getString(24),  "0",
                                                                         "freeitem", getpurchaseitemcode, getfreeitemcode, getFreeStock.getString(20), "", "", "", ""));
                                                                 //Toast.makeText(context,freeitemstatus,Toast.LENGTH_SHORT).show();
                                                             }
