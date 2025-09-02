@@ -9413,7 +9413,7 @@ public class DataBaseAdapter
                 getcompany="d.companycode='"+getcompanycode+"'";
             }
 
-            sql="SELECT a.itemcode,COALESCE(itemnametamil,itemname) || CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN ' (Free)' ELSE '' END as itemname," +
+            sql="SELECT a.itemcode,COALESCE(itemnametamil,itemname) || CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN ' (Free)' WHEN COALESCE(freeitemstatus,'')='freerate'  THEN ' (Rate)' ELSE '' END as itemname," +
                     "sum(COALESCE(qty,0)) " +
                     " as quantity,u.unitname,cast(sum(COALESCE(amount,0)) as decimal(32,2)) " +
                     "as totalamt, case when parentitemcode=0 then i.itemcode else i.parentitemcode " +
@@ -14101,7 +14101,7 @@ public class DataBaseAdapter
         Cursor mCur=null;
         try{
 
-            String sql ="select b.itemnametamil || CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN ' (Free)' ELSE '' END as itemnametamil,a.qty ,a.amount,a.price,c.unitname as unit," +
+            String sql ="select b.itemnametamil || CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN ' (Free)' WHEN COALESCE(freeitemstatus,'')='freerate'  THEN ' (Rate)' ELSE '' END as itemnametamil,a.qty ,a.amount,a.price,c.unitname as unit," +
                     "d.hsn,a.cgst+a.sgst+a.igst as tax from tblsalesitemdetails as a inner join tblitemmaster " +
                     "as b on a.itemcode=b.itemcode  inner join tblunitmaster as c on b.unitcode=c.unitcode  " +
                     " inner join tblitemsubgroupmaster as d on  d.itemsubgroupcode=b.itemsubgroupcode " +
