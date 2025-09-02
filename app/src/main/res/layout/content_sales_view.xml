@@ -285,12 +285,14 @@
                 android:padding="3dp"
                 android:layout_marginLeft="5dp"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_gravity="center">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:weightSum="1"
+                    android:visibility="gone">
                     <TextView android:layout_width="0dp"
                         android:id="@+id/lblviewsubtotalamt"
                         android:layout_height="wrap_content"
@@ -314,7 +316,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:weightSum="1"
+                    android:padding="5dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -323,7 +326,7 @@
                     android:textSize="14sp"
                     android:id="@+id/lblviewdiscountamt"
                     android:textColor="@android:color/black"
-                    android:text="Discount "/>
+                    android:text="Savings "/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

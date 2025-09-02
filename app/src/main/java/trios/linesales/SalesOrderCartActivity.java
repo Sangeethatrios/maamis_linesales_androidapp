@@ -700,6 +700,8 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
                     mHolder.listdiscount = (TextView)convertView.findViewById(R.id.listdiscount);
                     mHolder.deleteitem  = (ImageView)convertView.findViewById(R.id.deleteitem);
                     mHolder.dummydeleteitem = (TextView)convertView.findViewById(R.id.dummydeleteitem);
+                    mHolder.schemecount = (TextView)convertView.findViewById(R.id.schemecount);
+                    mHolder.dummycount = (TextView)convertView.findViewById(R.id.dummycount);
 
                     convertView.setTag(mHolder);
                     convertView.setTag(R.id.listitemname, mHolder.listitemname);
@@ -711,6 +713,8 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
                     // convertView.setTag(R.id.labelstock, mHolder.labelstock);
                     convertView.setTag(R.id.labelhsntax, mHolder.labelhsntax);
                     convertView.setTag(R.id.labelstockunit, mHolder.labelstockunit);
+                    convertView.setTag(R.id.schemecount, mHolder.schemecount);
+                    convertView.setTag(R.id.dummycount, mHolder.dummycount);
                 } catch (Exception e) {
                     Log.i("Route", e.toString());
                     DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -731,6 +735,8 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
             mHolder.listitemtax.setTag(position);
             mHolder.labelstockunit.setTag(position);
             mHolder.labelhsntax.setTag(position);
+            mHolder.schemecount.setTag(position);
+            mHolder.dummycount.setTag(position);
             try {
 
                 String getdecimalvalue  = salesItemList.get(position).getNoofdecimals();
@@ -789,27 +795,47 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
                 mHolder.listitemtotal.setText(dft.format(Double.parseDouble(salesItemList.get(position).getSubtotal())));
                 mHolder.labelstockunit.setText(salesItemList.get(position).getUnitname());
 
-                if(!salesItemList.get(position).getDiscount().equals("")
-                        && !salesItemList.get(position).getDiscount().equals(null)){
-
-                 //  mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightredgray));
-                    mHolder.listdiscount.setText("");
+                if(salesItemList.get(position).getFreeflag().equals("freerate") &&
+                        !Utilities.isNullOrEmpty(salesItemList.get(position).getDiscount()) &&
+                        Double.parseDouble(salesItemList.get(position).getDiscount()) > 0) {
+                    DecimalFormat df = new DecimalFormat("0.00");
+                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
+                    mHolder.listdiscount.setText("Disc: " + df.format(Double.parseDouble(salesItemList.get(position).getDiscount())));
                 }else{
-                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
+                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
                     mHolder.listdiscount.setText("");
                 }
 
                 //Check Free Item
                 if(salesItemList.get(position).getFreeflag().equals("freeitem")){
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightblue));
-                    //mHolder.deleteitem.setVisibility(View.GONE);
-                   mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightblue));
+                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightblue));
                     mHolder.listdiscount.setText("");
-                    //mHolder.dummydeleteitem.setVisibility(View.VISIBLE);
+
+                    mHolder.schemecount.setText("F");
+                    mHolder.dummycount.setVisibility(View.GONE);
+                    mHolder.schemecount.setVisibility(View.VISIBLE);
+
+                    mHolder.deleteitem.setVisibility(View.VISIBLE);
+                    mHolder.dummydeleteitem.setVisibility(View.GONE);
+                } else if(salesItemList.get(position).getFreeflag().equals("freerate")) {
+                    mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
+                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
+
+                    mHolder.schemecount.setText("R");
+                    mHolder.dummycount.setVisibility(View.GONE);
+                    mHolder.schemecount.setVisibility(View.VISIBLE);
+
                     mHolder.deleteitem.setVisibility(View.VISIBLE);
                     mHolder.dummydeleteitem.setVisibility(View.GONE);
                 }else{
-                    mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
+                    mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
+                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
+
+                    mHolder.schemecount.setVisibility(View.GONE);
+                    mHolder.schemecount.setText("");
+                    mHolder.dummycount.setVisibility(View.VISIBLE);
+
                     mHolder.deleteitem.setVisibility(View.VISIBLE);
                     mHolder.dummydeleteitem.setVisibility(View.GONE);
                 }
@@ -930,7 +956,7 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
         private class ViewHolder1 {
             private TextView listitemname,dummydeleteitem;
             private TextView listitemcode,labelnilstock,listitemqty,listitemrate;
-            private TextView listitemtotal,listitemtax,labelhsntax,labelstockunit,listdiscount;
+            private TextView listitemtotal,listitemtax,labelhsntax,labelstockunit,listdiscount, schemecount, dummycount;
             private LinearLayout itemLL,stockvalueLL;
             private  ImageView pricearrow,deleteitem;
         }
@@ -941,10 +967,11 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
         double res2 = 0;
         double res3 = 0;
         double res4 = 0;
+        double discoutAmt = 0;
         for (int i = 0; i < salesItemList.size(); i++) {
             String salessubtotal = salesItemList.get(i).getSubtotal();
             String salesweight = salesItemList.get(i).getUnitweight();
-            String salesdiscounttotal = salesItemList.get(i).getSubtotal();
+            String salesdiscounttotal = salesItemList.get(i).getDiscount();
             String salesqty = salesItemList.get(i).getItemqty();
 
             String getsalessubtotal;
@@ -974,6 +1001,10 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
             if(salesItemList.get(i).getFreeflag().equals("freeitem")){
                 res3 = res3 + Double.parseDouble(getdiscount);
             }
+            if(salesItemList.get(i).getFreeflag().equals("freerate")){
+                discoutAmt = discoutAmt + Double.parseDouble(getdiscount);
+            }
+
             res1 = res1 + Double.parseDouble(getsalessubtotal);
             res2 = res2 + (Double.parseDouble(getqty)*Double.parseDouble(getsalesweight));
             res4 = res1 - res3;
@@ -981,9 +1012,9 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
         getsubtotalamount = dft.format( Math.round(res1));
         getdiscountamt = dft.format( Math.round(res3));
         getgrandtotal =dft.format( Math.round(res4));
-        txtsubtotalamt.setText("Total    ₹  "+dft.format( Math.round(res1)));
+        txtsubtotalamt.setText("₹  "+dft.format( Math.round(res1)));
         //txtreviewweight.setText(String.valueOf(dft.format(res2)));
-        txtdiscountamt.setText("Discount ₹  "+dft.format(Math.round(res3)));
+        txtdiscountamt.setText("₹  "+dft.format(Math.round(discoutAmt)));
         txtcarttotalamt.setText(dft.format(Math.round(res4)));
 
         reviewitems.setText(String.valueOf(salesItemList.size()));

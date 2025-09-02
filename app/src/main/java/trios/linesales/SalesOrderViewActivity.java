@@ -588,6 +588,8 @@ public class SalesOrderViewActivity extends AppCompatActivity {
                     mHolder.labelnilstock = (TextView)convertView.findViewById(R.id.labelnilstock);
                     mHolder.labelstockunit = (TextView)convertView.findViewById(R.id.labelstockunit);
                     mHolder.listdiscount = (TextView)convertView.findViewById(R.id.listdiscount);
+                    mHolder.schemecount = (TextView)convertView.findViewById(R.id.schemecount);
+                    mHolder.dummycount = (TextView)convertView.findViewById(R.id.dummycount);
 
                     convertView.setTag(mHolder);
                     convertView.setTag(R.id.listitemname, mHolder.listitemname);
@@ -597,6 +599,8 @@ public class SalesOrderViewActivity extends AppCompatActivity {
                     convertView.setTag(R.id.listitemtotal, mHolder.listitemtotal);
                     convertView.setTag(R.id.labelhsntax, mHolder.labelhsntax);
                     convertView.setTag(R.id.labelstockunit, mHolder.labelstockunit);
+                    convertView.setTag(R.id.schemecount, mHolder.schemecount);
+                    convertView.setTag(R.id.dummycount, mHolder.dummycount);
                 } catch (Exception e) {
                     Log.i("Route", e.toString());
                     DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -616,6 +620,8 @@ public class SalesOrderViewActivity extends AppCompatActivity {
             mHolder.listitemtotal.setTag(position);
             mHolder.labelstockunit.setTag(position);
             mHolder.labelhsntax.setTag(position);
+            mHolder.schemecount.setTag(position);
+            mHolder.dummycount.setTag(position);
             try {
                 DecimalFormat df;
                 DecimalFormat dft=new DecimalFormat("0.00");
@@ -655,21 +661,13 @@ public class SalesOrderViewActivity extends AppCompatActivity {
                 mHolder.listitemtotal.setText(dft.format(Double.parseDouble(salesItemList.get(position).getAmount())));
                 mHolder.labelstockunit.setText(salesItemList.get(position).getUnitname());
 
-                if(!salesItemList.get(position).getDiscount().equals("")
-                        && !salesItemList.get(position).getDiscount().equals(null)
-                        && !salesItemList.get(position).getDiscount().equals("0.0")
-                        && !salesItemList.get(position).getDiscount().equals("0")){
-                    if(Double.parseDouble(salesItemList.get(position).getDiscount()) > 0) {
-                        /*mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
-                        mHolder.listdiscount.setText("Disc " + dft.format(Double.parseDouble(salesItemList.get(position).getDiscount())));*/
-                       // mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightpink));
-                        mHolder.listdiscount.setText("");
-                    }else{
-                       // mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightpink));
-                        mHolder.listdiscount.setText("");
-                    }
+                if(!Utilities.isNullOrEmpty(salesItemList.get(position).getDiscount())
+                        && Double.parseDouble(salesItemList.get(position).getDiscount()) > 0){
+
+                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
+                    mHolder.listdiscount.setText("Disc: " + dft.format(Double.parseDouble(salesItemList.get(position).getDiscount())));
                 }else{
-                   // mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightpink));
+                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
                     mHolder.listdiscount.setText("");
                 }
 
@@ -678,8 +676,24 @@ public class SalesOrderViewActivity extends AppCompatActivity {
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightblue));
                     mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightblue));
                     mHolder.listdiscount.setText("");
+
+                    mHolder.schemecount.setVisibility(View.VISIBLE);
+                    mHolder.schemecount.setText("F");
+                    mHolder.dummycount.setVisibility(View.GONE);
+                } else if(salesItemList.get(position).getFreeitemstatus().equals("freerate")) {
+                    mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
+                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
+
+                    mHolder.schemecount.setVisibility(View.VISIBLE);
+                    mHolder.schemecount.setText("R");
+                    mHolder.dummycount.setVisibility(View.GONE);
                 }else{
-                    mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
+                    mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
+                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
+
+                    mHolder.schemecount.setVisibility(View.GONE);
+                    mHolder.schemecount.setText("");
+                    mHolder.dummycount.setVisibility(View.VISIBLE);
                 }
 
             } catch (Exception e) {
@@ -692,7 +706,7 @@ public class SalesOrderViewActivity extends AppCompatActivity {
         private class ViewHolder1 {
             private TextView listitemname,labelnilstock;
             private TextView listitemcode,listitemqty,listitemrate;
-            private TextView listitemtotal,labelhsntax,labelstockunit,listdiscount;
+            private TextView listitemtotal,labelhsntax,labelstockunit,listdiscount, schemecount, dummycount;
             private LinearLayout itemLL,stockvalueLL;
         }
 

@@ -2994,7 +2994,7 @@ public class DataBaseAdapter
                     ",COALESCE(schedulestartdate,'') AS schedulestartdate,COALESCE(schedulestartflag,0) AS schedulestartflag," +
                     "   schedulestartdate  AS  schedulestartdatetime "+
                     "from tblsalesschedule as a where   (datetime('"+getschedulecode+"') BETWEEN scheduledate AND scheduletodate)    " +
-                    " and vancode='"+ preferenceMangr.pref_getString("getvancode") +"' ORDER BY scheduledate DESC ";
+                    " and vancode='"+ preferenceMangr.pref_getString("getvancode") +"' ORDER BY createddate DESC ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -3910,11 +3910,26 @@ public class DataBaseAdapter
     {
         Cursor mCur = null;
         try{
+//            String sql ="select companycode,vancode,transactionno,billno,refno,prefix,suffix," +
+//                    "strftime('%d-%m-%Y',billdate) as billdate,customercode," +
+//                    " billtypecode,gstin,schedulecode," +
+//                    "subtotal," +
+//                    "(case when discount>0 then (select sum(amount) from tblsalesitemdetails where transactionno = '"+gettransactionno+"' and financialyearcode = '"+getfinancialyr+"' and companycode='"+getcompanycode+"' and freeitemstatus='freeitem') else 0 end) as discount," +
+//                    "(case when discount>0 then subtotal else grandtotal end) as grandtotal,billcopystatus,cashpaidstatus,financialyearcode,bookingno,flag," +
+//                    "(select customername from tblcustomer where customercode=a.customercode) as customername," +
+//                    "(select customernametamil from tblcustomer where customercode=a.customercode) as customernametamil ," +
+//                    "(select areanametamil from tblareamaster where areacode=(select areacode from tblcustomer where customercode=a.customercode ))" +
+//                    "  as areaname," +
+//                    "(select citynametamil from tblcitymaster where citycode=(select citycode from tblareamaster where areacode=" +
+//                    "(select areacode from tblcustomer where customercode=a.customercode ))) as cityname," +
+//                    "(select shortname from tblcompanymaster where companycode=a.companycode) as shortname,bitmapimage," +
+//                    " (select sum(grandtotal) from tblsales as b where transactionno = '"+gettransactionno+"' and financialyearcode = '"+getfinancialyr+"' ) as totalamt" +
+//                    " ,a.pdflocalpath,a.einvoiceurl,a.ack_no,a.irn_no from tblsales as a where transactionno = '"+gettransactionno+"' " +
+//                    " and financialyearcode = '"+getfinancialyr+"' and companycode='"+getcompanycode+"'  ";
             String sql ="select companycode,vancode,transactionno,billno,refno,prefix,suffix," +
                     "strftime('%d-%m-%Y',billdate) as billdate,customercode," +
                     " billtypecode,gstin,schedulecode," +
-                    "subtotal," +
-                    "(case when discount>0 then (select sum(amount) from tblsalesitemdetails where transactionno = '"+gettransactionno+"' and financialyearcode = '"+getfinancialyr+"' and companycode='"+getcompanycode+"' and freeitemstatus='freeitem') else 0 end) as discount," +
+                    "subtotal, discount," +
                     "(case when discount>0 then subtotal else grandtotal end) as grandtotal,billcopystatus,cashpaidstatus,financialyearcode,bookingno,flag," +
                     "(select customername from tblcustomer where customercode=a.customercode) as customername," +
                     "(select customernametamil from tblcustomer where customercode=a.customercode) as customernametamil ," +
@@ -5563,7 +5578,7 @@ public class DataBaseAdapter
             if(arr.length>0) {
                 for (int i = 0; i < arr.length; i++) {
                     if(arr[i].equals("2")){
-                        getbusinesstype="  (','||b.business_type||',') LIKE '%,2,%' or (','||b.business_type||',') LIKE '%,3,%') ";
+                        getbusinesstype="  ((','||b.business_type||',') LIKE '%,2,%' or (','||b.business_type||',') LIKE '%,3,%') ";
                     }else if(arr[i].equals("1")){
                         getbusinesstype=" ((','||b.business_type||',') LIKE '%,1,%' or (','||b.business_type||',') LIKE '%,3,%') ";
                     }else{
@@ -5607,7 +5622,7 @@ public class DataBaseAdapter
             if(arr.length>0) {
                 for (int i = 0; i < arr.length; i++) {
                     if(arr[i].equals("2")){
-                        getbusinesstype=" (','||b.business_type||',') LIKE '%,2,%' or (','||b.business_type||',') LIKE '%,3,%') ";
+                        getbusinesstype=" ((','||b.business_type||',') LIKE '%,2,%' or (','||b.business_type||',') LIKE '%,3,%') ";
                     }else if(arr[i].equals("1")){
                         getbusinesstype=" ((','||b.business_type||',') LIKE '%,1,%' or (','||b.business_type||',') LIKE '%,3,%') ";
                     }else{
@@ -5841,7 +5856,7 @@ public class DataBaseAdapter
         Cursor mCur = null;
         try{
             String sql ="select coalesce(itemqty,0),coalesce(newprice,0) " +
-                    " from tblsalescartdatas where itemcode = '"+getitemcode+"' and freeflag='' ";
+                    " from tblsalescartdatas where itemcode = '"+getitemcode+"' and (freeflag='' OR freeflag='freerate')";
             mCur = mDb.rawQuery(sql, null);
             String getqty = "0";
             if (mCur.getCount() > 0)
@@ -8802,7 +8817,7 @@ public class DataBaseAdapter
                 if (arr.length > 0) {
                     for (int i = 0; i < arr.length; i++) {
                         if (arr[i].equals("2")) {
-                            getbusinesstype = " (','||c.business_type||',') LIKE '%,2,%' or (','||c.business_type||',') LIKE '%,3,%') ";
+                            getbusinesstype = " ((','||c.business_type||',') LIKE '%,2,%' or (','||c.business_type||',') LIKE '%,3,%') ";
                         } else if (arr[i].equals("1")) {
                             getbusinesstype = " ((','||c.business_type||',') LIKE '%,1,%' or (','||c.business_type||',') LIKE '%,3,%') ";
                         } else {
@@ -14013,8 +14028,9 @@ public class DataBaseAdapter
 
 
 
-            String sql ="select (b.itemnametamil || CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN ' (Free)' ELSE '' END) AS itemnametamil ,a.qty ,a.amount,a.price,c.unitname as unit," +
-                    "d.hsn,a.cgst+a.sgst+a.igst as tax,printf('%.2f',coalesce(((CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN 0 ELSE amount END)-cgstamt-sgstamt-igstamt),0))" +
+            String sql ="select (b.itemnametamil || CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN ' (Free)' WHEN COALESCE(freeitemstatus,'')='freerate' THEN ' (Rate)' ELSE '' END) AS itemnametamil ," +
+                    " a.qty ,a.amount,a.price,c.unitname as unit," +
+                    " d.hsn,a.cgst+a.sgst+a.igst as tax,printf('%.2f',coalesce(((CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN 0 ELSE amount END)-cgstamt-sgstamt-igstamt),0))" +
                     " as taxableamount,printf('%.2f',coalesce((cgstamt+sgstamt+igstamt),0)) as taxvalue," +
                     " printf('%.2f',(printf('%.2f',coalesce(((CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN 0 ELSE amount END)-cgstamt-sgstamt-igstamt),0))/a.qty)) as unittaxableamount " +
                     " from tblsalesitemdetails as a inner join tblitemmaster " +
@@ -14039,7 +14055,8 @@ public class DataBaseAdapter
         Cursor mCur=null;
         try{
 
-            String sql ="select b.itemnametamil,a.qty ,a.amount,a.price,c.unitname as unit," +
+            String sql ="select (b.itemnametamil || CASE WHEN COALESCE(freeitemstatus,'')='freeitem'  THEN ' (Free)' WHEN COALESCE(freeitemstatus,'')='freerate' THEN ' (Rate)' ELSE '' END) AS itemnametamil," +
+                    " a.qty ,a.amount,a.price,c.unitname as unit," +
                     "d.hsn,a.cgst+a.sgst+a.igst as tax from tblsalesorderitemdetails as a inner join tblitemmaster " +
                     "as b on a.itemcode=b.itemcode  inner join tblunitmaster as c on b.unitcode=c.unitcode  " +
                     " inner join tblitemsubgroupmaster as d on  d.itemsubgroupcode=b.itemsubgroupcode " +
@@ -14397,10 +14414,10 @@ public class DataBaseAdapter
         double getcount = 0;
         try{
             // String sql ="select coalesce(discount,0) from tblsales as a where a.transactionno='"+ gettransactionno +"' and a.financialyearcode='"+ getfinancialyrcode +"' and a.companycode='"+ companycode +"'";
-            String sql="select sum(a.discount) from tblsales as a " +
-                    " inner join tblsalesitemdetails as b on a.companycode=b.companycode and a.financialyearcode=b.financialyearcode and a.transactionno=b.transactionno and a.bookingno=b.bookingno" +
-                    " where a.transactionno='"+ gettransactionno +"' and a.financialyearcode='"+ getfinancialyrcode +"' and a.companycode='"+ companycode +"'" +
-                    "and b.freeitemstatus='freeitem'";
+            String sql="select sum(b.discount) from tblsales as a " +
+                    " inner join tblsalesitemdetails as b on a.companycode=b.companycode and a.financialyearcode=b.financialyearcode and a.transactionno=b.transactionno and a.bookingno=b.bookingno " +
+                    " where a.transactionno='"+ gettransactionno +"' and a.financialyearcode='"+ getfinancialyrcode +"' and a.companycode='"+ companycode +"' " +
+                    " and (b.freeitemstatus='freeitem' OR b.freeitemstatus='freerate')";
             Cursor mCur = mDb.rawQuery(sql, null);
 
             if (mCur.getCount() > 0)

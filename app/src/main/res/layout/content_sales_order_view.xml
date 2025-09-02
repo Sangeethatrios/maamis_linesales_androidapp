@@ -240,22 +240,26 @@
         </LinearLayout>
 
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/LL3"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:padding="5dp"
         android:background="@color/colorPrimaryDark"
         android:orientation="vertical"
         android:weightSum="1">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/TotalSubLinear"
             android:orientation="horizontal"
             android:gravity="right"
-            android:weightSum="1">
+            android:layout_marginTop="5dp"
+            android:weightSum="1"
+            android:visibility="gone">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -263,7 +267,7 @@
                 android:text="Cancel"
                 android:visibility="gone"
                 android:layout_gravity="center"
-                android:id="@+id/txtviewcancel"
+                android:id="@+id/txtviewcancel1"
                 android:drawableLeft="@drawable/ic_cancel_black"
                 android:drawableTint="@color/white"
                 android:background="@color/colorPrimary"
@@ -276,7 +280,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
                 android:visibility="gone"
-                android:id="@+id/txtviewcanceldummy"
+                android:id="@+id/txtviewcanceldummy1"
                 android:padding="10dp"
                 android:textSize="16sp"
                 android:textColor="@color/white"
@@ -289,6 +293,7 @@
                 android:layout_marginLeft="5dp"
                 android:background="@color/white"
                 android:orientation="vertical">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -313,6 +318,7 @@
                         android:textColor="@android:color/black"
                         android:text="₹ 000.00"/>
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -324,7 +330,7 @@
                         android:layout_weight="0.25"
                         android:gravity="left"
                         android:textSize="14sp"
-                        android:id="@+id/lblviewdiscountamt"
+                        android:id="@+id/lblviewdiscountamt1"
                         android:textColor="@android:color/black"
                         android:text="Discount "/>
                     <TextView
@@ -334,7 +340,7 @@
                         android:gravity="right"
                         android:layout_gravity="right"
                         android:textSize="14sp"
-                        android:id="@+id/txtviewdiscountamt"
+                        android:id="@+id/txtviewdiscountamt1"
                         android:textColor="@android:color/black"
                         android:text="₹ 000.00"/>
                 </LinearLayout>
@@ -342,6 +348,7 @@
             </LinearLayout>
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -350,53 +357,131 @@
             android:layout_marginTop="5dp"
             android:weightSum="1">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3"
-                android:text="Print"
-                android:id="@+id/txtviewSalesprint"
-                android:drawableLeft="@drawable/ic_print"
-                android:drawableTint="@color/white"
-                android:background="@color/colorPrimary"
-                android:padding="10dp"
-                android:textSize="15sp"
-                android:textColor="@color/white"
-                android:gravity="center"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3"
-                android:visibility="gone"
-                android:id="@+id/txtviewSalesprintdummy"
-                android:textColor="@color/white"
-                android:gravity="center"/>
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="0.7"
-                android:layout_marginLeft="5dp"
-                android:padding="10dp"
-                android:background="@color/white"
-                android:weightSum="1">
-                <TextView android:layout_width="0dp"
+                android:layout_weight="0.3"
+                android:orientation="vertical"
+                android:layout_gravity="bottom">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cancel"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    android:id="@+id/txtviewcancel"
+                    android:drawableLeft="@drawable/ic_cancel_black"
+                    android:drawableTint="@color/white"
+                    android:background="@color/colorPrimary"
+                    android:padding="10dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:layout_marginBottom="5dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.25"
-                    android:id="@+id/lblviewcarttotalamt"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
+                    android:visibility="gone"
+                    android:id="@+id/txtviewcanceldummy"
+                    android:padding="10dp"
                     android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:text="Net "/>
-                <TextView android:layout_width="0dp"
-                    android:layout_weight="0.75"
-                    android:id="@+id/txtviewcarttotalamt"
+                    android:textColor="@color/white"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:text="₹ 000.00"/>
+                    android:text="Print"
+                    android:id="@+id/txtviewSalesprint"
+                    android:drawableLeft="@drawable/ic_print"
+                    android:drawableTint="@color/white"
+                    android:background="@color/colorPrimary"
+                    android:padding="10dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:visibility="gone"
+                    android:id="@+id/txtviewSalesprintdummy"
+                    android:textColor="@color/white"
+                    android:gravity="center"/>
+
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:padding="3dp"
+                android:layout_marginLeft="5dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:background="@color/white"
+                    android:weightSum="1">
+
+                    <TextView android:layout_width="0dp"
+                        android:layout_weight="0.25"
+                        android:id="@+id/lblviewdiscountamt"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black"
+                        android:text="Savings "/>
+
+                    <TextView android:layout_width="0dp"
+                        android:layout_weight="0.75"
+                        android:id="@+id/txtviewdiscountamt"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black"
+                        android:text="₹ 000.00"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:background="@color/white"
+                    android:weightSum="1">
+
+                    <TextView android:layout_width="0dp"
+                        android:layout_weight="0.25"
+                        android:id="@+id/lblviewcarttotalamt"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/black"
+                        android:text="Net "/>
+
+                    <TextView android:layout_width="0dp"
+                        android:layout_weight="0.75"
+                        android:id="@+id/txtviewcarttotalamt"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/black"
+                        android:text="₹ 000.00"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
 
         </LinearLayout>
 

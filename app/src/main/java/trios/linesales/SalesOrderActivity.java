@@ -1657,6 +1657,9 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                                             }
                                             salesItemList.get(pos1).setItemqty("");
                                             salesItemList.get(pos1).setNewprice("");
+                                            salesitems.get(pos1).setDiscount("");
+                                            mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
+                                            mHolder.listdiscount.setText("");
                                         }
                                     } catch (Exception e) {
                                         DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -1700,7 +1703,10 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                                                 salesItemList.get(pos1).setNewprice("");
                                                 salesitems.get(pos1).setItemqty("");
                                                 salesitems.get(pos1).setNewprice("");
+                                                salesitems.get(pos1).setDiscount("");
                                                 mHolder.listitemqty.setText("");
+                                                mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
+                                                mHolder.listdiscount.setText("");
 
                                             }
                                         } catch (Exception e) {
@@ -1718,6 +1724,12 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                                         }
                                     }
                                 }
+                            }
+                            if(!Utilities.isNullOrEmpty(salesItemList.get(position).getNewprice()) &&
+                                    Double.parseDouble(salesItemList.get(position).getNewprice()) > 0){
+                                mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getNewprice())));
+                            } else {
+                                mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getDumyprice())));
                             }
 
                         }
@@ -2290,9 +2302,18 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                                         salesItemList.get(pos).setNewprice(dft.format(getnewrate));
                                         Double getres = getnewrate * Double.parseDouble(varQty);
                                         mHolder.listitemtotal.setText(dft.format(getres));
-                                        mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
-                                        mHolder.listdiscount.setText("");
-                                        salesItemList.get(pos).setDiscount("");
+                                        if (freeitemstatus.equals("freerate")) {
+                                            double withoutDiscAmt = newrate * Double.parseDouble(varQty);
+                                            double discount = withoutDiscAmt - getres;
+                                            DecimalFormat df = new DecimalFormat("0.00");
+                                            mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
+                                            mHolder.listdiscount.setText("Disc: " + df.format(discount));
+                                            salesItemList.get(pos).setDiscount(df.format(discount));
+                                        } else {
+                                            mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
+                                            mHolder.listdiscount.setText("");
+                                            salesItemList.get(pos).setDiscount("");
+                                        }
 
                                     } else {
                                         mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
@@ -2446,12 +2467,12 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                                             if (Double.parseDouble(salesitems.get(i).getNewprice()) > 0) {
                                                 double getsubtotal = Double.parseDouble(salesitems.get(i).getNewprice()) *
                                                         Double.parseDouble(salesitems.get(i).getItemqty());
-                                                if (!salesitems.get(i).getDiscount().equals("") && !salesitems.get(i).getDiscount().equals("0")
-                                                        && !salesitems.get(i).getDiscount().equals(null)) {
-                                                    getsubtotal = getsubtotal - Double.parseDouble(salesitems.get(i).getDiscount());
-                                                } else {
-                                                    getsubtotal = getsubtotal;
-                                                }
+//                                                if (!salesitems.get(i).getDiscount().equals("") && !salesitems.get(i).getDiscount().equals("0")
+//                                                        && !salesitems.get(i).getDiscount().equals(null)) {
+//                                                    getsubtotal = getsubtotal - Double.parseDouble(salesitems.get(i).getDiscount());
+//                                                } else {
+//                                                    getsubtotal = getsubtotal;
+//                                                }
 
                                                 salesitems.get(i).setSubtotal(String.valueOf(getsubtotal));
                                                 double totalschemediscount=0;

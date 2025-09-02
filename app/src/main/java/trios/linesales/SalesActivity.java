@@ -2181,6 +2181,9 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                             salesItemList.get(pos1).setItemqty("");
                                             salesItemList.get(pos1).setNewprice("");
                                             //salesItemList.get(pos1).getminprice();
+                                            salesitems.get(pos1).setDiscount("");
+                                            mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
+                                            mHolder.listdiscount.setText("");
 
                                         }
                                     } catch (Exception e) {
@@ -2226,7 +2229,10 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                 salesItemList.get(pos1).setNewprice("");
                                                 salesitems.get(pos1).setItemqty("");
                                                 salesitems.get(pos1).setNewprice("");
+                                                salesitems.get(pos1).setDiscount("");
                                                 mHolder.listitemqty.setText("");
+                                                mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
+                                                mHolder.listdiscount.setText("");
 
                                             }
                                         } catch (Exception e) {
@@ -2244,6 +2250,12 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                         }
                                     }
                                 }
+                            }
+                            if(!Utilities.isNullOrEmpty(salesItemList.get(position).getNewprice()) &&
+                                    Double.parseDouble(salesItemList.get(position).getNewprice()) > 0){
+                                mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getNewprice())));
+                            } else {
+                                mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getDumyprice())));
                             }
 
                         }
@@ -3051,9 +3063,19 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                             /*mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
                                             mHolder.listdiscount.setText("Disc " + dft.format(getactucaldiscount));
                                             salesItemList.get(pos).setDiscount(dft.format(getactucaldiscount));*/
-                                        mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
-                                        mHolder.listdiscount.setText("");
-                                        salesItemList.get(pos).setDiscount("");
+
+                                        if (freeitemstatus.equals("freerate")) {
+                                            double withoutDiscAmt = newrate * Double.parseDouble(varQty);
+                                            double discount = withoutDiscAmt - getres;
+                                            DecimalFormat df = new DecimalFormat("0.00");
+                                            mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
+                                            mHolder.listdiscount.setText("Disc: " + df.format(discount));
+                                            salesItemList.get(pos).setDiscount(df.format(discount));
+                                        } else {
+                                            mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
+                                            mHolder.listdiscount.setText("");
+                                            salesItemList.get(pos).setDiscount("");
+                                        }
 
                                     } else {
                                         mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
@@ -3182,12 +3204,12 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                             if (Double.parseDouble(salesitems.get(i).getNewprice()) > 0) {
                                                 double getsubtotal = Double.parseDouble(salesitems.get(i).getNewprice()) *
                                                         Double.parseDouble(salesitems.get(i).getItemqty());
-                                                if (!salesitems.get(i).getDiscount().equals("") && !salesitems.get(i).getDiscount().equals("0")
-                                                        && !salesitems.get(i).getDiscount().equals(null)) {
-                                                    getsubtotal = getsubtotal - Double.parseDouble(salesitems.get(i).getDiscount());
-                                                } else {
-                                                    getsubtotal = getsubtotal;
-                                                }
+//                                                if (!salesitems.get(i).getDiscount().equals("") && !salesitems.get(i).getDiscount().equals("0")
+//                                                        && !salesitems.get(i).getDiscount().equals(null)) {
+//                                                    getsubtotal = getsubtotal - Double.parseDouble(salesitems.get(i).getDiscount());
+//                                                } else {
+//                                                    getsubtotal = getsubtotal;
+//                                                }
                                                 salesitems.get(i).setSubtotal(String.valueOf(getsubtotal));
                                                 double totalschemediscount=0;
 
@@ -3198,7 +3220,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                     if(Double.parseDouble(salesItemList.get(position).getRatecount()) >0 && schemeratestatus.equals("yes")) {
                                                         // totalschemediscount = Double.parseDouble(salesitems.get(i).getItemqty()) * Double.parseDouble(schemeitemdiscount);
                                                         //schemeitemdiscount = String.valueOf(totalschemediscount);
-                                                        schemeitemdiscount="0";
+                                                        schemeitemdiscount = salesitems.get(i).getDiscount();
                                                     }else{
                                                         schemeitemdiscount="0";
                                                     }
@@ -3435,7 +3457,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                                     newPrice
                                                                                     , getFreeStock.getString(21), getFreeStock.getString(22)
                                                                                     , getFreeStock.getString(23), String.valueOf(getactualqtyvalue), String.valueOf(getsubtotal),
-                                                                                    getFreeStock.getString(24), String.valueOf(getsubtotal),
+                                                                                    getFreeStock.getString(24), "0",
                                                                                     "freeitem", getpurchaseitemforcart, getfreeitemcode, getFreeStock.getString(20),
                                                                                     "", "", getFreeStock.getString(28), "", "", "", itemschemeapplicable, "", getFreeStock.getString(29), "", 0, "no"));
 

@@ -1306,12 +1306,14 @@ public class ReviewActivity extends AppCompatActivity {
                 mHolder.listitemtotal.setText(dft.format(Double.parseDouble(salesItemList.get(position).getSubtotal())));
                 mHolder.labelstockunit.setText(salesItemList.get(position).getUnitname());
 
-                if(!salesItemList.get(position).getDiscount().equals("")
-                        && !salesItemList.get(position).getDiscount().equals(null)){
+                if(salesItemList.get(position).getFreeflag().equals("freerate") &&
+                        !Utilities.isNullOrEmpty(salesItemList.get(position).getDiscount()) &&
+                        Double.parseDouble(salesItemList.get(position).getDiscount()) > 0) {
                    /* mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
                     mHolder.listdiscount.setText("Disc " + dft.format(Double.parseDouble(salesItemList.get(position).getDiscount())));*/
-                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
-                    mHolder.listdiscount.setText("");
+                    DecimalFormat df = new DecimalFormat("0.00");
+                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
+                    mHolder.listdiscount.setText("Disc: " + df.format(Double.parseDouble(salesItemList.get(position).getDiscount())));
                 }else{
                     mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
                     mHolder.listdiscount.setText("");
@@ -1320,11 +1322,20 @@ public class ReviewActivity extends AppCompatActivity {
                 //Check Free Item
                 if(salesItemList.get(position).getFreeflag().equals("freeitem")){
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightblue));
-//                    mHolder.deleteitem.setVisibility(View.GONE);
                     mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightblue));
                     mHolder.listdiscount.setText("");
-//                    mHolder.dummydeleteitem.setVisibility(View.VISIBLE);
+
                     mHolder.schemecount.setText("F");
+                    mHolder.dummycount.setVisibility(View.GONE);
+                    mHolder.schemecount.setVisibility(View.VISIBLE);
+
+                    mHolder.deleteitem.setVisibility(View.VISIBLE);
+                    mHolder.dummydeleteitem.setVisibility(View.GONE);
+                } else if(salesItemList.get(position).getFreeflag().equals("freerate")) {
+                    mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
+                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
+
+                    mHolder.schemecount.setText("R");
                     mHolder.dummycount.setVisibility(View.GONE);
                     mHolder.schemecount.setVisibility(View.VISIBLE);
 
@@ -1332,10 +1343,13 @@ public class ReviewActivity extends AppCompatActivity {
                     mHolder.dummydeleteitem.setVisibility(View.GONE);
                 }else{
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
-                    mHolder.deleteitem.setVisibility(View.VISIBLE);
-                    mHolder.dummydeleteitem.setVisibility(View.GONE);
+                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
+
                     mHolder.dummycount.setVisibility(View.VISIBLE);
                     mHolder.schemecount.setVisibility(View.GONE);
+
+                    mHolder.deleteitem.setVisibility(View.VISIBLE);
+                    mHolder.dummydeleteitem.setVisibility(View.GONE);
                 }
 
 
@@ -1483,10 +1497,11 @@ public class ReviewActivity extends AppCompatActivity {
         double res2 = 0;
         double res3 = 0;
         double res4 = 0;
+        double discoutAmt = 0;
         for (int i = 0; i < salesItemList.size(); i++) {
             String salessubtotal = salesItemList.get(i).getSubtotal();
             String salesweight = salesItemList.get(i).getUnitweight();
-            String salesdiscounttotal = salesItemList.get(i).getSubtotal();
+            String salesdiscounttotal = salesItemList.get(i).getDiscount();
             String salesqty = salesItemList.get(i).getItemqty();
 
             String getsalessubtotal;
@@ -1516,6 +1531,10 @@ public class ReviewActivity extends AppCompatActivity {
             if(salesItemList.get(i).getFreeflag().equals("freeitem")){
                 res3 = res3 + Double.parseDouble(getdiscount);
             }
+            if(salesItemList.get(i).getFreeflag().equals("freerate")){
+                discoutAmt = discoutAmt + Double.parseDouble(getdiscount);
+            }
+
             res1 = res1 + Double.parseDouble(getsalessubtotal);
             res2 = res2 + (Double.parseDouble(getqty)*Double.parseDouble(getsalesweight));
             res4 = res1 - res3;
@@ -1523,9 +1542,9 @@ public class ReviewActivity extends AppCompatActivity {
         getsubtotalamount = dft.format( Math.round(res1));
         getdiscountamt = dft.format( Math.round(res3));
         getgrandtotal =dft.format( Math.round(res4));
-        txtsubtotalamt.setText("Total    ₹  "+dft.format( Math.round(res1)));
+        txtsubtotalamt.setText("₹  "+dft.format( Math.round(res1)));
         txtreviewweight.setText(String.valueOf(dft.format(res2)));
-        txtdiscountamt.setText("Discount ₹  "+dft.format(Math.round(res3)));
+        txtdiscountamt.setText("₹  "+dft.format(Math.round(discoutAmt)));
         txtcarttotalamt.setText(dft.format(Math.round(res4)));
 
         reviewitems.setText(String.valueOf(salesItemList.size()));
