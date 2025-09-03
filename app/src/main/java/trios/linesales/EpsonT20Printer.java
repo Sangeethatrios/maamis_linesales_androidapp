@@ -767,23 +767,11 @@ public class EpsonT20Printer implements ReceiveListener {
                     mPrinter.addTextFont(Printer.FONT_A);
                     mPrinter.addText(" Tax value " + " : "+ Util.rightJustify( dft.format(gettotaltaxvalue),11) + "\n");
 
-                    double discunt= mDbHelper.GetSalesDiscount(gettransactiono,getfinancialyearcode,mCur.getString(17));
-                    String discount=dft.format(discunt);
-
                     double roundoff= mDbHelper.GetSalesroundoffPrint(gettransactiono,getfinancialyearcode,mCur.getString(17));
                     String roundoffs=dft.format(roundoff);
 
                     double getgrandtotal= mDbHelper.GetSalesTotalforbill(gettransactiono,getfinancialyearcode,mCur.getString(17));
                     String grandtotal=dft.format(getgrandtotal);
-                    if(!discount.equals("") && !discount.equals("0") && !discount.equals("0.00")) {
-
-                        mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
-                        mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
-                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                        mPrinter.addTextFont(Printer.FONT_A);
-                        int valuediscunt = (int)discunt;
-                        mPrinter.addText(" Savings " + " : " + Util.rightJustify(dft.format(discunt), 11) + "\n");
-                    }
 
                     mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
                     mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
@@ -804,6 +792,20 @@ public class EpsonT20Printer implements ReceiveListener {
                     mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
 
                     String line_space14 = "--------------------------------\n";
+                    mPrinter.addText(line_space14);
+
+                    double discunt= mDbHelper.GetSalesDiscount(gettransactiono,getfinancialyearcode,mCur.getString(17));
+                    String discount=dft.format(discunt);
+                    if(!discount.equals("") && !discount.equals("0") && !discount.equals("0.00")) {
+
+                        mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+                        mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextFont(Printer.FONT_A);
+                        int valuediscunt = (int)discunt;
+                        mPrinter.addText(" Savings " + " : " + Util.rightJustify(dft.format(discunt), 11) + "\n");
+                    }
+
                     mPrinter.addText(line_space14);
 
                    /* double net=gettotal-discunt;
@@ -2606,18 +2608,6 @@ public class EpsonT20Printer implements ReceiveListener {
                 mPrinter.addTextFont(Printer.FONT_A);
                 mPrinter.addText(getitemcount + "      Total " + " : "+ Util.rightJustify( dft.format(Math.round(gettotal)),11) + "\n");
 
-                double discunt= mDbHelper.GetSalesOrderDiscount(gettransactiono,getfinancialyearcode,mCur.getString(17));
-                String discount=dft.format(discunt);
-
-                if(!discount.equals("") && !discount.equals("0") && !discount.equals("0.00")) {
-                    mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
-                    mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
-                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                    mPrinter.addTextFont(Printer.FONT_A);
-                    int valuediscunt = (int)discunt;
-                    mPrinter.addText(" Savings " + " : " + Util.rightJustify(dft.format(discunt), 11) + "\n");
-                }
-
                 mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
                 String line_space145 = "--------------------------------\n";
                 mPrinter.addText(line_space145);
@@ -2634,10 +2624,24 @@ public class EpsonT20Printer implements ReceiveListener {
                 mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
                 mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
                 mPrinter.addTextFont(Printer.FONT_A);
-                mPrinter.addText(" Nett Amount " + " : "+ Util.rightJustify( dft.format(Math.round(net1)),11) + "\n");
+                mPrinter.addText(" Net Amount " + " : "+ Util.rightJustify( dft.format(Math.round(net1)),11) + "\n");
 
                 mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
                 String line_space14 = "--------------------------------\n";
+                mPrinter.addText(line_space14);
+
+                double discunt= mDbHelper.GetSalesOrderDiscount(gettransactiono,getfinancialyearcode,mCur.getString(17));
+                String discount=dft.format(discunt);
+
+                if(!discount.equals("") && !discount.equals("0") && !discount.equals("0.00")) {
+                    mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+                    mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                    mPrinter.addTextFont(Printer.FONT_A);
+                    int valuediscunt = (int)discunt;
+                    mPrinter.addText(" Savings " + " : " + Util.rightJustify(dft.format(discunt), 11) + "\n");
+                }
+
                 mPrinter.addText(line_space14);
 
                 String transportmode = "-";
