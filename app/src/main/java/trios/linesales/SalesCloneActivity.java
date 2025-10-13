@@ -220,6 +220,7 @@ public class SalesCloneActivity extends AppCompatActivity {
                 objdatabaseadapter = new DataBaseAdapter(context);
 
                 objdatabaseadapter.open();
+                objdatabaseadapter.DeleteSalesItemCart();
                 Cursor getcartdatas = null;
                 Cursor insertcart = null;
                 getcartdatas = objdatabaseadapter.GetSalesCloneDatasDB(TRANSACTIONNO,
