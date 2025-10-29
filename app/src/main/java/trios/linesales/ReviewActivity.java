@@ -1376,6 +1376,7 @@ public class ReviewActivity extends AppCompatActivity {
                                     String getitemcode = salesItemList.get(position).getItemcode();
                                     String getparentitemcode=salesItemList.get(position).getParentitemcode();
                                     String getfreeflag=salesItemList.get(position).getFreeflag();
+                                    String getNoOfDecimal = salesItemList.get(position).getNoofdecimals();
                                     DataBaseAdapter objdatabaseadapter = null;
                                     Cursor getcartdatas = null;
                                     try {
@@ -1383,7 +1384,7 @@ public class ReviewActivity extends AppCompatActivity {
                                         //Order item details
                                         objdatabaseadapter = new DataBaseAdapter(context);
                                         objdatabaseadapter.open();
-                                        String getresult = objdatabaseadapter.DeleteItemInCart(getitemcode, getfreeflag);
+                                        String getresult = objdatabaseadapter.DeleteItemInCart(getitemcode, getfreeflag, getNoOfDecimal);
                                         String getresult1 = objdatabaseadapter.DeleteItemInStockConversion(getitemcode,getparentitemcode);
                                         if(getresult.equals("Success") && getresult1.equals("Success")){
                                             SalesActivity.gblitemcount=0;

@@ -5799,8 +5799,8 @@ public class DataBaseAdapter
             }
             String GenDate= GenCreatedDate();
 
-            String sql="SELECT *,(cast(totalweight as INTEGER)/cast(purchaseqty as INTEGER)) as flag from (SELECT " +
-                    "group_concat(itemcode,',') as multipleitemcode,cast(sum(itemweight) as INTEGER) as totalweight,*" +
+            String sql="SELECT *,(cast(totalweight as double)/cast(purchaseqty as double)) as flag from (SELECT " +
+                    "group_concat(itemcode,',') as multipleitemcode,cast(sum(itemweight) as double) as totalweight,*" +
                     " from (SELECT (select (a.purchaseqty) from tblscheme as a  inner join tblschemeitemdetails " +
                     "as b on a.schemecode=b.schemecode  where purchaseitemcode='"+getitemcode+"' and a.status='"+statusvar+"' " +
                     " and schemetype='item' and "+getbusinesstype+" and (','||multipleroutecode||',') LIKE '%,"+getroutecode+",%' and (validityfrom<=datetime('"+GenDate+"')) " +
@@ -8643,7 +8643,7 @@ public class DataBaseAdapter
 
     }
     //Check customer already exists
-    public String DeleteItemInCart(String getitemcode, String getfreeflag)
+    public String DeleteItemInCart(String getitemcode, String getfreeflag, String noOfDecimal)
     {
         Cursor mCur = null;
         try{
@@ -8669,8 +8669,12 @@ public class DataBaseAdapter
                         }
                     }
                 }
+                String castType = "INTEGER";
+                if (!Utilities.isNullOrEmpty(noOfDecimal) && Integer.parseInt(noOfDecimal) > 0) {
+                    castType = "double";
+                }
                 String GenDate = GenCreatedDate();
-                String sql = "SELECT ((cast(itemweight as INTEGER)/cast(purchaseqty as INTEGER))*cast(freeqty as INTEGER)) as" +
+                String sql = "SELECT ((cast(itemweight as " + castType + ")/cast(purchaseqty as " + castType + "))*cast(freeqty as INTEGER)) as" +
                         "  freeitemqty,(select purchaseitemcode  from tblsalescartdatas  where  freeitemcode =dev.freeitemcode " +
                         "and freeflag='freeitem') as apcitemcode,(select newprice  from tblsalescartdatas  where " +
                         " freeitemcode =dev.freeitemcode and freeflag='freeitem')" +
@@ -8706,7 +8710,7 @@ public class DataBaseAdapter
                     String getfreeitemcode = (mCur.moveToFirst()) ? mCur.getString(8) : "0";
                     if (getapcitemcode != null && getapcitemcode != "null") {
                         String apcitemcodearr = getapcitemcode.replace(",", "', '");
-                        if (getfreecount.equals("0")) {
+                        if (Double.parseDouble(getfreecount) <=0) {
 //                        String sql1= "delete from tblsalescartdatas   where" +
 //                                " '"+getitemcode+"' in  ('"+apcitemcodearr+"')  and  freeflag='freeitem' ";
 //                        mDb.execSQL(sql1);
@@ -8787,7 +8791,7 @@ public class DataBaseAdapter
     }
 
     //Check customer already exists
-    public String DeleteOrderItemInCart(String getitemcode, String getfreeflag)
+    public String DeleteOrderItemInCart(String getitemcode, String getfreeflag, String noOfDecimal)
     {
         try{
             mDb = mDbHelper.getReadableDatabase();
@@ -8825,8 +8829,12 @@ public class DataBaseAdapter
                         }
                     }
                 }
+                String castType = "INTEGER";
+                if (!Utilities.isNullOrEmpty(noOfDecimal) && Integer.parseInt(noOfDecimal) > 0) {
+                    castType = "double";
+                }
                 String GenDate = GenCreatedDate();
-                String sql = "SELECT ((cast(itemweight as INTEGER)/cast(purchaseqty as INTEGER))*cast(freeqty as INTEGER)) as" +
+                String sql = "SELECT ((cast(itemweight as " + castType + ")/cast(purchaseqty as " + castType + "))*cast(freeqty as INTEGER)) as" +
                         "  freeitemqty,(select purchaseitemcode  from tblsalesordercartdatas  where  freeitemcode =dev.freeitemcode " +
                         " and freeflag='freeitem') as apcitemcode,(select newprice  from tblsalesordercartdatas  where " +
                         " freeitemcode =dev.freeitemcode and freeflag='freeitem')" +
@@ -8866,7 +8874,7 @@ public class DataBaseAdapter
                     String getfreeitemcode = (mCur.moveToFirst()) ? mCur.getString(8) : "0";
                     if (getapcitemcode != null && getapcitemcode != "null") {
                         String apcitemcodearr = getapcitemcode.replace(",", "', '");
-                        if (getfreecount.equals("0")) {
+                        if (Double.parseDouble(getfreecount) <=0) {
 //                        String sql1= "delete from tblsalescartdatas   where" +
 //                                " '"+getitemcode+"' in  ('"+apcitemcodearr+"')  and  freeflag='freeitem' ";
 //                        mDb.execSQL(sql1);

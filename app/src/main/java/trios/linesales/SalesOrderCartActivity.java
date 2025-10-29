@@ -857,13 +857,14 @@ public class SalesOrderCartActivity extends AppCompatActivity    {
                                     int getpurchasitemposition = 011111111222;
                                     String getitemcode = salesItemList.get(position).getItemcode();
                                     String getfreeflag=salesItemList.get(position).getFreeflag();
+                                    String getNoOfDecimal=salesItemList.get(position).getNoofdecimals();
                                     DataBaseAdapter objdatabaseadapter = null;
                                     Cursor getcartdatas = null;
                                     try {
                                         //Order item details
                                         objdatabaseadapter = new DataBaseAdapter(context);
                                         objdatabaseadapter.open();
-                                        String getresult = objdatabaseadapter.DeleteOrderItemInCart(getitemcode, getfreeflag);
+                                        String getresult = objdatabaseadapter.DeleteOrderItemInCart(getitemcode, getfreeflag, getNoOfDecimal);
                                         if(getresult.equals("Success")){
                                             Toast toast = Toast.makeText(getApplicationContext(),"Item removed from cart", Toast.LENGTH_LONG);
                                             toast.setGravity(Gravity.CENTER, 0, 0);

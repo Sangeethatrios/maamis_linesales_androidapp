@@ -23,7 +23,6 @@ import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.multidex.BuildConfig;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -5498,7 +5497,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                         if(!Utilities.isNullOrEmpty(custMobilenoForPDFShare)){
                             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
                                 File sourceFile =  new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + File.separator + Uri.decode(downloadFileName) );
-                                filePathURI = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID , new File(sourceFile.getPath()));
+                                filePathURI = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", new File(sourceFile.getPath()));
                                 Utilities.sharePDFToWhatsapp_Above_Android9(SalesListActivity.this, custMobilenoForPDFShare, filePathURI,context,downloadFileName);
                             }else{
                                 filePathURI = Uri.parse(decodedPath);

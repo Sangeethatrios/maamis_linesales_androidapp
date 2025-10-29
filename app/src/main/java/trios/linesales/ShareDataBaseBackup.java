@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
-import androidx.multidex.BuildConfig;
 
 import android.util.Log;
 
@@ -113,7 +112,7 @@ public class ShareDataBaseBackup {
     public static  void ShareToAll_Above_Android7(Activity activity, Context context, String filePath){
         try {
             File sourceFile = new File(Uri.decode(filePath));
-            Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, new File(sourceFile.getPath()));
+            Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", new File(sourceFile.getPath()));
 
             String decodedURIString = Uri.decode(uri.toString());
             Uri decodedURI = Uri.parse(decodedURIString);

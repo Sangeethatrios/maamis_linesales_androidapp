@@ -114,7 +114,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
     public static final String GSTN_CODEPOINT_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public static String getitemsfromcode = "0",getscheduleroutecode;
     boolean networkstate;
-    boolean isopenshowpopup=false;
+    public static boolean isopenshowpopup=false;
     boolean cartflag =false;
     boolean cartpriceflag =false;
     ImageView btnaddcustomer;
@@ -1270,9 +1270,6 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                 CalculateTotal();
 
 
-                SalesItemAdapter adapter = new SalesItemAdapter(context,salesitems);
-                lv_sales_items.setAdapter(adapter);
-                isopenshowpopup=false;
                 //Set ITEMQTY PRICE AND TOTAL
                 for (int i = 0; i < staticreviewsalesorderitems.size(); i++) {
                     for (int j = 0; j < salesitems.size();j++) {
@@ -1285,6 +1282,11 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                         }
                     }
                 }
+
+                SalesItemAdapter adapter = new SalesItemAdapter(context,salesitems);
+                lv_sales_items.setAdapter(adapter);
+                isopenshowpopup=false;
+
 
 
             }else{
@@ -1544,6 +1546,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
     public class SalesItemAdapter extends BaseAdapter {
 
         private Context context;
+        boolean skipAddTextChange = false;
         private LayoutInflater layoutInflater;
         ArrayList<SalesOrderItemDetails> salesItemList;
         String isparentopen="";
@@ -1620,142 +1623,145 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                     mHolder.schemecount = (TextView)convertView.findViewById(R.id.schemecount);
                     mHolder.dummycount = (TextView)convertView.findViewById(R.id.dummycount);
                 //Item PRice text change Listner
-                    mHolder.listitemqty.addTextChangedListener(new TextWatcher() {
-                        public void onTextChanged(CharSequence s, int start, int before,
-                                                  int count) {
-                            if (!(mHolder.listitemqty.getText().toString()).equals("") &&
-                                    !(mHolder.listitemqty.getText().toString()).equals(" ")
-                                    && !(mHolder.listitemqty.getText().toString()).equals("0")
-                                    && !(mHolder.listitemqty.getText().toString()).equals("0.0")
-                                    && !(mHolder.listitemqty.getText().toString()).equals(null)
-                                    && !(mHolder.listitemrate.getText().toString()).equals("")
-                                    && !(mHolder.listitemrate.getText().toString()).equals(0)
-                                    && !(mHolder.listitemqty.getText().toString()).equals(".")
-                                    && !(mHolder.listitemrate.getText().toString()).equals(".")) {
-                                final int pos1 = (Integer) mHolder.listitemrate.getTag();
-                                String getqtyval = mHolder.listitemqty.getText().toString();
+                    mHolder.qtyWatcher = new QuantityTextWatcher(mHolder);
+                    mHolder.listitemqty.addTextChangedListener(mHolder.qtyWatcher);
 
-                                if(Double.parseDouble(mHolder.listitemtotal.getText().toString()) >0){
-                                    mHolder.listitemtotal.setText("0.00");
-                                    mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
-                                    mHolder.listitemtotal.setText("0.00");
-                                    mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
-                                    DataBaseAdapter objdatabaseadapter = null;
-                                    Cursor getcartdatas = null;
-                                    try {
-                                        //Order item details
-                                        objdatabaseadapter = new DataBaseAdapter(context);
-                                        objdatabaseadapter.open();
-                                        String getresult = objdatabaseadapter.DeleteItemOrderInCart(salesItemList.get(pos1).getItemcode());
-                                        if (getresult.equals("Success")) {
-                                            getcartdatas = objdatabaseadapter.GetSalesOrderItemsCarts();
-                                            if(getcartdatas.getCount()>0){
-                                                totalcartitems.setText(String.valueOf(getcartdatas.getCount()));
-                                            }else{
-                                                staticreviewsalesorderitems.clear();
-                                                totalcartitems.setText(String.valueOf("0"));
-                                            }
-                                            salesItemList.get(pos1).setItemqty("");
-                                            salesItemList.get(pos1).setNewprice("");
-                                            salesitems.get(pos1).setDiscount("");
-                                            mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
-                                            mHolder.listdiscount.setText("");
-                                        }
-                                    } catch (Exception e) {
-                                        DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-                                        mDbErrHelper.open();
-                                        String geterrror = e.toString();
-                                        mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-                                        mDbErrHelper.close();
-                                    } finally {
-                                        if (objdatabaseadapter != null)
-                                            objdatabaseadapter.close();
-                                        if (getcartdatas != null)
-                                            getcartdatas.close();
-
-                                    }
-                                }
-                            }
-                            else{
-                                final int pos1 = (Integer) mHolder.listitemrate.getTag();
-                                mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
-                                if(!mHolder.listitemtotal.getText().toString().equals("")
-                                        && !mHolder.listitemtotal.getText().toString().equals(null)) {
-                                    if (Double.parseDouble(mHolder.listitemtotal.getText().toString()) > 0) {
-                                        mHolder.listitemtotal.setText("0.00");
-                                        mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
-                                        DataBaseAdapter objdatabaseadapter = null;
-                                        Cursor getcartdatas = null;
-                                        try {
-                                            //Order item details
-                                            objdatabaseadapter = new DataBaseAdapter(context);
-                                            objdatabaseadapter.open();
-                                            String getresult = objdatabaseadapter.DeleteItemOrderInCart(salesItemList.get(pos1).getItemcode());
-                                            if (getresult.equals("Success")) {
-                                                getcartdatas = objdatabaseadapter.GetSalesOrderItemsCarts();
-                                                if(getcartdatas.getCount()>0){
-                                                    totalcartitems.setText(String.valueOf(getcartdatas.getCount()));
-                                                }else{
-                                                    staticreviewsalesorderitems.clear();
-                                                    totalcartitems.setText(String.valueOf("0"));
-                                                }
-                                                salesItemList.get(pos1).setItemqty("");
-                                                salesItemList.get(pos1).setNewprice("");
-                                                salesitems.get(pos1).setItemqty("");
-                                                salesitems.get(pos1).setNewprice("");
-                                                salesitems.get(pos1).setDiscount("");
-                                                mHolder.listitemqty.setText("");
-                                                mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
-                                                mHolder.listdiscount.setText("");
-
-                                            }
-                                        } catch (Exception e) {
-                                            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-                                            mDbErrHelper.open();
-                                            String geterrror = e.toString();
-                                            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-                                            mDbErrHelper.close();
-                                        } finally {
-                                            if (objdatabaseadapter != null)
-                                                objdatabaseadapter.close();
-                                            if (getcartdatas != null)
-                                                getcartdatas.close();
-
-                                        }
-                                    }
-                                }
-                            }
-                            if(!Utilities.isNullOrEmpty(salesItemList.get(position).getNewprice()) &&
-                                    Double.parseDouble(salesItemList.get(position).getNewprice()) > 0){
-                                mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getNewprice())));
-                            } else {
-                                mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getDumyprice())));
-                            }
-
-                        }
-                        public void beforeTextChanged(CharSequence s, int start, int count,
-                                                      int after) {
-                        }
-                        public void afterTextChanged(Editable s) {
-
-                        }
-                    });
+//                    mHolder.listitemqty.addTextChangedListener(new TextWatcher() {
+//                        public void onTextChanged(CharSequence s, int start, int before,
+//                                                  int count) {
+//                            if (!(mHolder.listitemqty.getText().toString()).equals("") &&
+//                                    !(mHolder.listitemqty.getText().toString()).equals(" ")
+//                                    && !(mHolder.listitemqty.getText().toString()).equals("0")
+//                                    && !(mHolder.listitemqty.getText().toString()).equals("0.0")
+//                                    && !(mHolder.listitemqty.getText().toString()).equals(null)
+//                                    && !(mHolder.listitemrate.getText().toString()).equals("")
+//                                    && !(mHolder.listitemrate.getText().toString()).equals(0)
+//                                    && !(mHolder.listitemqty.getText().toString()).equals(".")
+//                                    && !(mHolder.listitemrate.getText().toString()).equals(".")) {
+//                                final int pos1 = (Integer) mHolder.listitemrate.getTag();
+//                                String getqtyval = mHolder.listitemqty.getText().toString();
+//
+//                                if(Double.parseDouble(mHolder.listitemtotal.getText().toString()) >0){
+//                                    mHolder.listitemtotal.setText("0.00");
+//                                    mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+//                                    mHolder.listitemtotal.setText("0.00");
+//                                    mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+//                                    DataBaseAdapter objdatabaseadapter = null;
+//                                    Cursor getcartdatas = null;
+//                                    try {
+//                                        //Order item details
+//                                        objdatabaseadapter = new DataBaseAdapter(context);
+//                                        objdatabaseadapter.open();
+//                                        String getresult = objdatabaseadapter.DeleteItemOrderInCart(salesItemList.get(pos1).getItemcode());
+//                                        if (getresult.equals("Success")) {
+//                                            getcartdatas = objdatabaseadapter.GetSalesOrderItemsCarts();
+//                                            if(getcartdatas.getCount()>0){
+//                                                totalcartitems.setText(String.valueOf(getcartdatas.getCount()));
+//                                            }else{
+//                                                staticreviewsalesorderitems.clear();
+//                                                totalcartitems.setText(String.valueOf("0"));
+//                                            }
+//                                            salesItemList.get(pos1).setItemqty("");
+//                                            salesItemList.get(pos1).setNewprice("");
+//                                            salesitems.get(pos1).setDiscount("");
+//                                            mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
+//                                            mHolder.listdiscount.setText("");
+//                                        }
+//                                    } catch (Exception e) {
+//                                        DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+//                                        mDbErrHelper.open();
+//                                        String geterrror = e.toString();
+//                                        mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+//                                        mDbErrHelper.close();
+//                                    } finally {
+//                                        if (objdatabaseadapter != null)
+//                                            objdatabaseadapter.close();
+//                                        if (getcartdatas != null)
+//                                            getcartdatas.close();
+//
+//                                    }
+//                                }
+//                            }
+//                            else{
+//                                final int pos1 = (Integer) mHolder.listitemrate.getTag();
+//                                mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+//                                if(!mHolder.listitemtotal.getText().toString().equals("")
+//                                        && !mHolder.listitemtotal.getText().toString().equals(null)) {
+//                                    if (Double.parseDouble(mHolder.listitemtotal.getText().toString()) > 0) {
+//                                        mHolder.listitemtotal.setText("0.00");
+//                                        mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+//                                        DataBaseAdapter objdatabaseadapter = null;
+//                                        Cursor getcartdatas = null;
+//                                        try {
+//                                            //Order item details
+//                                            objdatabaseadapter = new DataBaseAdapter(context);
+//                                            objdatabaseadapter.open();
+//                                            String getresult = objdatabaseadapter.DeleteItemOrderInCart(salesItemList.get(pos1).getItemcode());
+//                                            if (getresult.equals("Success")) {
+//                                                getcartdatas = objdatabaseadapter.GetSalesOrderItemsCarts();
+//                                                if(getcartdatas.getCount()>0){
+//                                                    totalcartitems.setText(String.valueOf(getcartdatas.getCount()));
+//                                                }else{
+//                                                    staticreviewsalesorderitems.clear();
+//                                                    totalcartitems.setText(String.valueOf("0"));
+//                                                }
+//                                                salesItemList.get(pos1).setItemqty("");
+//                                                salesItemList.get(pos1).setNewprice("");
+//                                                salesitems.get(pos1).setItemqty("");
+//                                                salesitems.get(pos1).setNewprice("");
+//                                                salesitems.get(pos1).setDiscount("");
+//                                                mHolder.listitemqty.setText("");
+//                                                mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
+//                                                mHolder.listdiscount.setText("");
+//
+//                                            }
+//                                        } catch (Exception e) {
+//                                            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+//                                            mDbErrHelper.open();
+//                                            String geterrror = e.toString();
+//                                            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+//                                            mDbErrHelper.close();
+//                                        } finally {
+//                                            if (objdatabaseadapter != null)
+//                                                objdatabaseadapter.close();
+//                                            if (getcartdatas != null)
+//                                                getcartdatas.close();
+//
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                            if(!Utilities.isNullOrEmpty(salesItemList.get(position).getNewprice()) &&
+//                                    Double.parseDouble(salesItemList.get(position).getNewprice()) > 0){
+//                                mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getNewprice())));
+//                            } else {
+//                                mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getDumyprice())));
+//                            }
+//
+//                        }
+//                        public void beforeTextChanged(CharSequence s, int start, int count,
+//                                                      int after) {
+//                        }
+//                        public void afterTextChanged(Editable s) {
+//
+//                        }
+//                    });
 
                     convertView.setTag(mHolder);
-                    convertView.setTag(R.id.listitemname, mHolder.listitemname);
-                    convertView.setTag(R.id.listitemcode, mHolder.listitemcode);
-                    convertView.setTag(R.id.listitemqty, mHolder.listitemqty);
-                    convertView.setTag(R.id.listitemrate, mHolder.listitemrate);
-                    convertView.setTag(R.id.listitemtotal, mHolder.listitemtotal);
-                    convertView.setTag(R.id.listitemtax, mHolder.listitemtax);
-                    convertView.setTag(R.id.labelstock, mHolder.labelstock);
-                    convertView.setTag(R.id.labelhsntax, mHolder.labelhsntax);
-                    convertView.setTag(R.id.labelstockunit, mHolder.labelstockunit);
-                    convertView.setTag(R.id.schemecount, mHolder.schemecount);
-                    convertView.setTag(R.id.dummycount, mHolder.dummycount);
-                    convertView.setTag(R.id.listdiscount, mHolder.listdiscount);
-                    convertView.setTag(R.id.itemLL, mHolder.itemLL);
-                    convertView.setTag(R.id.pricearrow, mHolder.pricearrow);
+//                    convertView.setTag(R.id.listitemname, mHolder.listitemname);
+//                    convertView.setTag(R.id.listitemcode, mHolder.listitemcode);
+//                    convertView.setTag(R.id.listitemqty, mHolder.listitemqty);
+//                    convertView.setTag(R.id.listitemrate, mHolder.listitemrate);
+//                    convertView.setTag(R.id.listitemtotal, mHolder.listitemtotal);
+//                    convertView.setTag(R.id.listitemtax, mHolder.listitemtax);
+//                    convertView.setTag(R.id.labelstock, mHolder.labelstock);
+//                    convertView.setTag(R.id.labelhsntax, mHolder.labelhsntax);
+//                    convertView.setTag(R.id.labelstockunit, mHolder.labelstockunit);
+//                    convertView.setTag(R.id.schemecount, mHolder.schemecount);
+//                    convertView.setTag(R.id.dummycount, mHolder.dummycount);
+//                    convertView.setTag(R.id.listdiscount, mHolder.listdiscount);
+//                    convertView.setTag(R.id.itemLL, mHolder.itemLL);
+//                    convertView.setTag(R.id.pricearrow, mHolder.pricearrow);
                 } catch (Exception e) {
                     Log.i("Route", e.toString());
                     DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -1764,21 +1770,22 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                     mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
                     mDbErrHelper.close();
                 }
-                convertView.setTag(mHolder);
+//                convertView.setTag(mHolder);
             } else {
                 mHolder = (ViewHolder1) convertView.getTag();
             }
-            mHolder.listitemname.setTag(position);
-            mHolder.listitemcode.setTag(position);
-            mHolder.listitemqty.setTag(position);
-            mHolder.listitemrate.setTag(position);
-            mHolder.listitemtotal.setTag(position);
-            mHolder.listitemtax.setTag(position);
-            mHolder.labelstock.setTag(position);
-            mHolder.labelhsntax.setTag(position);
-            mHolder.labelstockunit.setTag(position);
-            mHolder.schemecount.setTag(position);
-            mHolder.dummycount.setTag(position);
+            mHolder.qtyWatcher.updatePosition(position);
+//            mHolder.listitemname.setTag(position);
+//            mHolder.listitemcode.setTag(position);
+//            mHolder.listitemqty.setTag(position);
+//            mHolder.listitemrate.setTag(position);
+//            mHolder.listitemtotal.setTag(position);
+//            mHolder.listitemtax.setTag(position);
+//            mHolder.labelstock.setTag(position);
+//            mHolder.labelhsntax.setTag(position);
+//            mHolder.labelstockunit.setTag(position);
+//            mHolder.schemecount.setTag(position);
+//            mHolder.dummycount.setTag(position);
             try {
 
                 String getdecimalvalue  = salesItemList.get(position).getNoofdecimals();
@@ -1908,31 +1915,76 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
             //Set Quantity,price
             if (!salesItemList.get(position).getItemqty().equals("") &&
                     !salesItemList.get(position).getItemqty().equals("0")
-                    && !salesItemList.get(position).getItemqty().equals(null) &&  isopenshowpopup) {
-                DataBaseAdapter objdatabaseadapter = null;
-                Cursor getItemCur = null;
-                try {
-                    //Get Stock for parent item
-                    objdatabaseadapter = new DataBaseAdapter(context);
-                    objdatabaseadapter.open();
-                    getItemCur = objdatabaseadapter.GetCartOrderItemQtyAndPrice(salesItemList.get(position).getItemcode());
-                    if (getItemCur.getCount() > 0) {
-                        mHolder.listitemrate.setText(String.valueOf(getItemCur.getString(1)));
-                        mHolder.listitemqty.setText(String.valueOf(getItemCur.getString(0)));
-                        mHolder.listitemtotal.callOnClick();
-                    }
+                    && !salesItemList.get(position).getItemqty().equals(null)) {
 
-                }catch (Exception e) {
-                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
-                    mDbErrHelper.open();
-                    String geterrror = e.toString();
-                    mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
-                    mDbErrHelper.close();
-                } finally {
-                    if (objdatabaseadapter != null)
-                        objdatabaseadapter.close();
-                    if (getItemCur != null)
-                        getItemCur.close();
+                if (!isopenshowpopup && !Utilities.isNullOrEmpty(salesItemList.get(position).getSubtotal()) &&
+                        Double.parseDouble(salesItemList.get(position).getSubtotal()) > 0) {
+                    // After the item added to cart to open the same item subgroup to show the qty,total,stock
+                    skipAddTextChange = true;
+                    mHolder.listitemqty.setText(salesItemList.get(position).getItemqty());
+                    mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.darkblue));
+                    mHolder.listitemtotal.setText(dft.format(Double.parseDouble(salesItemList.get(position).getSubtotal())));
+                    if(salesItemList.get(position).getStockqty().equals("0") || salesItemList.get(position).getStockqty().equals("null")
+                            ||  salesItemList.get(position).getStockqty().equals(null) || salesItemList.get(position).getStockqty().equals("") ||
+                            Double.parseDouble(salesItemList.get(position).getStockqty())<=0) {
+                        mHolder.labelstock.setText("0");
+                    } else {
+                        DecimalFormat defor = null;
+                        String getdecimalvalue = salesItemList.get(position).getNoofdecimals();
+                        String getnoofdigits = "0";
+                        if (getdecimalvalue.equals("0")) {
+                            getnoofdigits = "";
+                        }
+                        if (getdecimalvalue.equals("1")) {
+                            getnoofdigits = "0";
+                        }
+                        if (getdecimalvalue.equals("2")) {
+                            getnoofdigits = "00";
+                        }
+                        if (getdecimalvalue.equals("3")) {
+                            getnoofdigits = "000";
+                        }
+
+                        if (Utilities.isNullOrEmpty(getnoofdigits))
+                            defor = new DecimalFormat("0");
+                        else
+                            defor = new DecimalFormat("0." + getnoofdigits );
+
+                        mHolder.labelstock.setText(defor.format(Double.parseDouble(salesItemList.get(position).getStockqty()) - Double.parseDouble(salesItemList.get(position).getItemqty())));
+                    }
+                    mHolder.listitemtotal.setEnabled(false);
+                }
+                else {
+
+                    mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.darkblue));
+                    DataBaseAdapter objdatabaseadapter = null;
+                    Cursor getItemCur = null;
+                    try {
+                        //Get Stock for parent item
+                        objdatabaseadapter = new DataBaseAdapter(context);
+                        objdatabaseadapter.open();
+                        getItemCur = objdatabaseadapter.GetCartOrderItemQtyAndPrice(salesItemList.get(position).getItemcode());
+                        if (getItemCur.getCount() > 0) {
+                            skipAddTextChange = true;
+                            mHolder.listitemrate.setText(String.valueOf(getItemCur.getString(1)));
+                            mHolder.listitemqty.setText(String.valueOf(getItemCur.getString(0)));
+                            mHolder.listitemtotal.callOnClick();
+                        } else {
+                            mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+                        }
+
+                    }catch (Exception e) {
+                        DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                        mDbErrHelper.open();
+                        String geterrror = e.toString();
+                        mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                        mDbErrHelper.close();
+                    } finally {
+                        if (objdatabaseadapter != null)
+                            objdatabaseadapter.close();
+                        if (getItemCur != null)
+                            getItemCur.close();
+                    }
                 }
 
 
@@ -1957,7 +2009,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                             && !(mHolder.listitemrate.getText().toString()).equals(0)
                             && !(mHolder.listitemqty.getText().toString()).equals(".")
                             && !(mHolder.listitemrate.getText().toString()).equals(".")) {
-                        final int pos1 = (Integer) mHolder.listitemrate.getTag();
+                        final int pos1 = position;//(Integer) mHolder.listitemrate.getTag();
                         String getqtyval = salesItemList.get(pos1).getItemqty();
                         // mHolder.listitemqty.setText(getqtyval);
                         //  mHolder.listitemtotal.callOnClick();
@@ -1996,7 +2048,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                         double getdiscount = 0;
                         double getparentstock = 0;
 
-                        final int pos = (Integer) mHolder.listitemtotal.getTag();
+                        final int pos = position;//(Integer) mHolder.listitemtotal.getTag();
 
                         if (!mHolder.listitemqty.getText().toString().equals("")) {
                             if (Double.parseDouble(mHolder.listitemqty.getText().toString()) >0  ) {
@@ -2580,7 +2632,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                             totalcartitems.setText(String.valueOf(staticreviewsalesorderitems.size()));
                         }
                     } else {
-                        final int pos = (Integer) mHolder.listitemqty.getTag();
+                        final int pos = position;//(Integer) mHolder.listitemqty.getTag();
                         mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
                         mHolder.listdiscount.setText("");
                         isparentopen = "";
@@ -2596,13 +2648,14 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                         toast.show();
                         String getitemcode = salesItemList.get(position).getItemcode();
                         String getfreeflag = salesItemList.get(position).getFreeflag();
+                        String getnoOfDecimal = salesItemList.get(position).getNoofdecimals();
                         DataBaseAdapter objdatabaseadapter = null;
                         Cursor getcartdatas = null;
                         try {
                             //Order item details
                             objdatabaseadapter = new DataBaseAdapter(context);
                             objdatabaseadapter.open();
-                            String getresult = objdatabaseadapter.DeleteOrderItemInCart(getitemcode, getfreeflag);
+                            String getresult = objdatabaseadapter.DeleteOrderItemInCart(getitemcode, getfreeflag, getnoOfDecimal);
                             if(getresult.equals("Success")){
 
                                 //Get cart datas from database temp table
@@ -2678,7 +2731,148 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
             private TextView listitemtotal,listitemtax,labelstock,labelhsntax,labelstockunit,listdiscount;
             private LinearLayout itemLL,stockvalueLL;
             private  ImageView pricearrow;
+            private QuantityTextWatcher qtyWatcher;
 
+        }
+
+        class QuantityTextWatcher implements TextWatcher {
+            private int position;
+            private ViewHolder1 mHolder;
+
+            public QuantityTextWatcher(ViewHolder1 mHolder) {
+                this.mHolder = mHolder;
+            }
+
+            public void updatePosition(int position) {
+                this.position = position;
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mHolder.listitemtotal.setEnabled(true);
+                /* ** when the item is already exist in cart and its price was edited then tha cart data delete skiped ** */
+                if (skipAddTextChange) {
+                    skipAddTextChange = false;
+                    return;
+                }
+                if(!Utilities.isNullOrEmpty(salesItemList.get(position).getNewprice()) && Double.parseDouble(salesItemList.get(position).getNewprice()) > 0){
+                    mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getNewprice())));
+                }
+                else{
+                    mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getDumyprice())));
+                }
+                if (!(mHolder.listitemqty.getText().toString()).equals("") &&
+                        !(mHolder.listitemqty.getText().toString()).equals(" ")
+                        && !(mHolder.listitemqty.getText().toString()).equals("0")
+                        && !(mHolder.listitemqty.getText().toString()).equals("0.0")
+                        && !(mHolder.listitemqty.getText().toString()).equals(null)
+                        && !(mHolder.listitemrate.getText().toString()).equals("")
+                        && !(mHolder.listitemrate.getText().toString()).equals(0)
+                        && !(mHolder.listitemqty.getText().toString()).equals(".")
+                        && !(mHolder.listitemrate.getText().toString()).equals(".")) {
+                    final int pos1 = position;//(Integer) mHolder.listitemrate.getTag();
+                    String getqtyval = mHolder.listitemqty.getText().toString();
+
+                    if(Double.parseDouble(mHolder.listitemtotal.getText().toString()) >0){
+                        mHolder.listitemtotal.setText("0.00");
+                        mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+                        mHolder.listitemtotal.setText("0.00");
+                        mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+                        DataBaseAdapter objdatabaseadapter = null;
+                        Cursor getcartdatas = null;
+                        try {
+                            //Order item details
+                            objdatabaseadapter = new DataBaseAdapter(context);
+                            objdatabaseadapter.open();
+                            String getresult = objdatabaseadapter.DeleteItemOrderInCart(salesItemList.get(pos1).getItemcode());
+                            if (getresult.equals("Success")) {
+                                getcartdatas = objdatabaseadapter.GetSalesOrderItemsCarts();
+                                if(getcartdatas.getCount()>0){
+                                    totalcartitems.setText(String.valueOf(getcartdatas.getCount()));
+                                }else{
+                                    staticreviewsalesorderitems.clear();
+                                    totalcartitems.setText(String.valueOf("0"));
+                                }
+                                salesItemList.get(pos1).setItemqty("");
+                                salesItemList.get(pos1).setNewprice("");
+                                salesitems.get(pos1).setDiscount("");
+                                mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
+                                mHolder.listdiscount.setText("");
+                            }
+                        } catch (Exception e) {
+                            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                            mDbErrHelper.open();
+                            String geterrror = e.toString();
+                            mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                            mDbErrHelper.close();
+                        } finally {
+                            if (objdatabaseadapter != null)
+                                objdatabaseadapter.close();
+                            if (getcartdatas != null)
+                                getcartdatas.close();
+
+                        }
+                    }
+                }
+                else{
+                    final int pos1 = position;//(Integer) mHolder.listitemrate.getTag();
+                    mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+                    if(!mHolder.listitemtotal.getText().toString().equals("")
+                            && !mHolder.listitemtotal.getText().toString().equals(null)) {
+                        if (Double.parseDouble(mHolder.listitemtotal.getText().toString()) > 0) {
+                            mHolder.listitemtotal.setText("0.00");
+                            mHolder.listitemtotal.setBackground(ContextCompat.getDrawable(context, R.color.colorPrimaryDark));
+                            DataBaseAdapter objdatabaseadapter = null;
+                            Cursor getcartdatas = null;
+                            try {
+                                //Order item details
+                                objdatabaseadapter = new DataBaseAdapter(context);
+                                objdatabaseadapter.open();
+                                String getresult = objdatabaseadapter.DeleteItemOrderInCart(salesItemList.get(pos1).getItemcode());
+                                if (getresult.equals("Success")) {
+                                    getcartdatas = objdatabaseadapter.GetSalesOrderItemsCarts();
+                                    if(getcartdatas.getCount()>0){
+                                        totalcartitems.setText(String.valueOf(getcartdatas.getCount()));
+                                    }else{
+                                        staticreviewsalesorderitems.clear();
+                                        totalcartitems.setText(String.valueOf("0"));
+                                    }
+                                    salesItemList.get(pos1).setItemqty("");
+                                    salesItemList.get(pos1).setNewprice("");
+                                    salesitems.get(pos1).setItemqty("");
+                                    salesitems.get(pos1).setNewprice("");
+                                    salesitems.get(pos1).setDiscount("");
+                                    mHolder.listitemqty.setText("");
+                                    mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.lightvoilet));
+                                    mHolder.listdiscount.setText("");
+
+                                }
+                            } catch (Exception e) {
+                                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                                mDbErrHelper.open();
+                                String geterrror = e.toString();
+                                mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                                mDbErrHelper.close();
+                            } finally {
+                                if (objdatabaseadapter != null)
+                                    objdatabaseadapter.close();
+                                if (getcartdatas != null)
+                                    getcartdatas.close();
+
+                            }
+                        }
+                    }
+                }
+                if(!Utilities.isNullOrEmpty(salesItemList.get(position).getNewprice()) &&
+                        Double.parseDouble(salesItemList.get(position).getNewprice()) > 0){
+                    mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getNewprice())));
+                } else {
+                    mHolder.listitemrate.setText(dft.format(Double.parseDouble(salesItemList.get(position).getDumyprice())));
+                }
+            }
+
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
         }
     }
 

@@ -24,7 +24,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AlertDialog;
-import androidx.multidex.BuildConfig;
 
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
@@ -156,7 +155,7 @@ public class Utilities {
         if (downloadFileName.contains("file://"))
             downloadFileName = downloadFileName.replace("file://","");
         File sourceFile =  new File(Uri.decode(downloadFileName));
-        Uri uri = FileProvider.getUriForFile(context,  BuildConfig.APPLICATION_ID , new File(sourceFile.getPath()));
+        Uri uri = FileProvider.getUriForFile(context,  BuildConfig.APPLICATION_ID + ".provider" , new File(sourceFile.getPath()));
 
         String decodedURIString = Uri.decode(uri.toString());
         Uri decodedURI = Uri.parse(decodedURIString);
@@ -263,7 +262,7 @@ public class Utilities {
 
         File sourceFile =  new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + File.separator + Uri.decode(downloadFileName) );
 
-        Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID , new File(sourceFile.getPath()));
+        Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider" , new File(sourceFile.getPath()));
         String decodedURIString = Uri.decode(uri.toString());
         Uri decodedURI = Uri.parse(decodedURIString);
 
