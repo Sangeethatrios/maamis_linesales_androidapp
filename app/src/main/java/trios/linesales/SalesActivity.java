@@ -785,13 +785,14 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                             return;
                         }
                     }
-                    if(mobilenoverificationstatus==0){
-                        Toast toast = Toast.makeText(getApplicationContext(),"Please verify Mobile No.", Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
-                        //Toast.makeText(getApplicationContext(), "Mobile No. should contain 10 digits", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+//                    if(mobilenoverificationstatus==0){
+//                    if(mobilenoverificationstatus==0){
+//                        Toast toast = Toast.makeText(getApplicationContext(),"Please verify Mobile No.", Toast.LENGTH_LONG);
+//                        toast.setGravity(Gravity.CENTER, 0, 0);
+//                        toast.show();
+//                        //Toast.makeText(getApplicationContext(), "Mobile No. should contain 10 digits", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
                     if(!getwhatsappno.equals("") && !getwhatsappno.equals("null")
                             && !getwhatsappno.equals(null) ) {
                         if (getwhatsappno.length() < 10) {

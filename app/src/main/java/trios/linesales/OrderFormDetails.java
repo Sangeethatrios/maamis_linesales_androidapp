@@ -15,6 +15,7 @@ class OrderFormDetails {
     public String sno;
     public String uppweight;
     public String status;
+    public String noofdeciaml;
 
     public String getItemcode() {
         return itemcode;
@@ -80,10 +81,17 @@ class OrderFormDetails {
         this.status = status;
     }
 
+    public String getNoofdeciaml() {
+        return noofdeciaml;
+    }
+
+    public void setNoofdeciaml(String noofdeciaml) {
+        this.noofdeciaml = noofdeciaml;
+    }
 
     public OrderFormDetails(String itemcode, String itemname, String itemnametamil, String unitweight,
                             String companycode, String colourcode, String unitname, String hsn, String tax,
-                            String closingstk, String qty, String sno,String uppweight,String status) {
+                            String closingstk, String qty, String sno, String uppweight, String status, String noofdecimal) {
         this.itemcode = itemcode;
         this.itemname = itemname;
         this.itemnametamil = itemnametamil;
@@ -98,5 +106,6 @@ class OrderFormDetails {
         this.sno = sno;
         this.uppweight = uppweight;
         this.status = status;
+        this.noofdeciaml = noofdecimal;
     }
 }

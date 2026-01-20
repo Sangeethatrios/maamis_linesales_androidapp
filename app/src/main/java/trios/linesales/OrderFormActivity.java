@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -176,8 +177,9 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                         String getitemlistname = getlistname.getText().toString().trim();
 
                         String itemcode="0";
-                        if(!getitemlistqty.equals("") && !getitemlistqty.equals("null") && !getitemlistqty.equals(null)){
-                            if(Integer.parseInt(getitemlistqty)>0){
+                        if(!getitemlistqty.equals("") && !getitemlistqty.equals("null") && !getitemlistqty.equals(null) &&
+                                !getitemlistqty.equals(".")){
+                            if(Double.parseDouble(getitemlistqty)>0){
                                 // itemcodes.add(orderFormDetails.get(i).getItemcode());
                                 itemcode=orderFormDetails.get(i).getItemcode();
                             }
@@ -197,14 +199,15 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                                     qtyflag = qtyflag +1;
                                 }
                             }else{
-                                if(Integer.parseInt(getitemlistqty)>0){
+                                if(Double.parseDouble(getitemlistqty)>0){
                                     qtyflag = qtyflag +1;
                                 }
                             }
                         }
 
 
-                        if(!getitemlistqty.equals("") && !getitemlistqty.equals(null)){
+                        if(!getitemlistqty.equals("") && !getitemlistqty.equals("null") && !getitemlistqty.equals(null) &&
+                                !getitemlistqty.equals(".")){
                             if(getitemlisttotal.trim().equals("") || getitemlisttotal.trim().equals("null")){
                                 getitemlisttotal = "0";
                             }
@@ -350,7 +353,8 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                                             orderFormDetails.get(i).getUnitname(), orderFormDetails.get(i).getHsn(),
                                             orderFormDetails.get(i).getTax(), orderFormDetails.get(i).getClosingstk(),
                                             orderFormDetails.get(i).getQty(), String.valueOf(i + 1),
-                                            orderFormDetails.get(i).getUppweight(),orderFormDetails.get(i).getStatus()));
+                                            orderFormDetails.get(i).getUppweight(),orderFormDetails.get(i).getStatus(),
+                                            orderFormDetails.get(i).getNoofdeciaml()));
                                     iscart = true;
                                 }
                             }
@@ -471,8 +475,9 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                     String getitemlistname = getlistname.getText().toString().trim();
 
                     String itemcode="0";
-                    if(!getitemlistqty.equals("") && !getitemlistqty.equals("null") && !getitemlistqty.equals(null)){
-                        if(Integer.parseInt(getitemlistqty)>0){
+                    if(!getitemlistqty.equals("") && !getitemlistqty.equals("null") && !getitemlistqty.equals(null) &&
+                        !getitemlistqty.equals(".")){
+                        if(Double.parseDouble(getitemlistqty)>0){
                            // itemcodes.add(orderFormDetails.get(i).getItemcode());
                             itemcode=orderFormDetails.get(i).getItemcode();
                         }
@@ -492,14 +497,15 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                                 qtyflag = qtyflag +1;
                             }
                         }else{
-                           if(Integer.parseInt(getitemlistqty)>0){
+                           if(Double.parseDouble(getitemlistqty)>0){
                                qtyflag = qtyflag +1;
                            }
                        }
                     }
 
 
-                    if(!getitemlistqty.equals("") && !getitemlistqty.equals(null)){
+                    if(!getitemlistqty.equals("") && !getitemlistqty.equals("null") && !getitemlistqty.equals(null) &&
+                            !getitemlistqty.equals(".")){
                         if(getitemlisttotal.trim().equals("") || getitemlisttotal.trim().equals("null")){
                             getitemlisttotal = "0";
                         }
@@ -1194,7 +1200,7 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                             Cur.getString(2),Cur.getString(3),Cur.getString(4),
                             Cur.getString(5),Cur.getString(6),
                             Cur.getString(7),Cur.getString(8),Cur.getString(9),
-                            "", String.valueOf(i+1),Cur.getString(10),"" ));
+                            "", String.valueOf(i+1),Cur.getString(10),"", Cur.getString(11) ));
                     Cur.moveToNext();
                 }
                 //Set ITEMQTY
@@ -1441,6 +1447,7 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
         Context context;
         ArrayList<OrderFormDetails> myList;
         DecimalFormat dft = new DecimalFormat("0.00");
+        DecimalFormat defor = null;
 
         public OrderListBaseAdapter( Context context,ArrayList<OrderFormDetails> myList) {
             this.myList = myList;
@@ -1494,6 +1501,10 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                     mHolder.orderunit = (TextView)convertView.findViewById(R.id.orderunit);
                     // mHolder.itemdelete = (ImageView)convertView.findViewById(R.id.itemdelete);
                     mHolder.ordertotalstock = (TextView)convertView.findViewById(R.id.ordertotalstock);
+                    mHolder.qtyWatcher = new QuantityTextWatcher(mHolder);
+                    mHolder.orderqty.addTextChangedListener(mHolder.qtyWatcher);
+
+                    convertView.setTag(mHolder);
                 } catch (Exception e) {
                     Log.i("Orderitem", e.toString());
                     DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -1502,11 +1513,12 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                     mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
                     mDbErrHelper.close();
                 }
-                convertView.setTag(mHolder);
+
             } else {
                 mHolder = (ViewHolder) convertView.getTag();
             }
             try {
+                mHolder.qtyWatcher.updatePosition(position);
                 final OrderFormDetails currentListData = getItem(position);
                 mHolder.ordersno.setText(currentListData.getSno());
                 if (!(currentListData.getItemnametamil().equals(""))
@@ -1533,6 +1545,36 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
 
                 // mHolder.orderunit.setText(currentListData.getUnitname());
 
+                String noOfDecimal = currentListData.getNoofdeciaml();
+
+                if (Integer.parseInt(noOfDecimal) > 0) {
+                    // Allow decimals
+                    mHolder.orderqty.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                } else {
+                    // Disallow decimals — only integers
+                    mHolder.orderqty.setInputType(InputType.TYPE_CLASS_NUMBER);
+                }
+
+
+                String getnoofdigits = "0";
+                if (noOfDecimal.equals("0")) {
+                    getnoofdigits = "";
+                }
+                if (noOfDecimal.equals("1")) {
+                    getnoofdigits = "0";
+                }
+                if (noOfDecimal.equals("2")) {
+                    getnoofdigits = "00";
+                }
+                if (noOfDecimal.equals("3")) {
+                    getnoofdigits = "000";
+                }
+
+                if (Utilities.isNullOrEmpty(getnoofdigits))
+                    defor = new DecimalFormat("0");
+                else
+                    defor = new DecimalFormat("0." + getnoofdigits );
+
                 //Set Quantity
                 if (!currentListData.getQty().equals("") && !currentListData.getQty().equals("0")
                         && !currentListData.getQty().equals(null) && !currentListData.getQty().equals("null")) {
@@ -1542,7 +1584,7 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                     double b = Double.parseDouble(mHolder.orderqty.getText().toString());
                     double c=a+b;
                     int getval = (int) c;
-                    mHolder.ordertotalstock.setText(String.valueOf(getval));
+                    mHolder.ordertotalstock.setText(defor.format(c));
                     currentListData.setQty( mHolder.orderqty.getText().toString());
                     mHolder.ordertotalstock.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 }
@@ -1559,41 +1601,7 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                     }
 
                     public void afterTextChanged(Editable s) {
-                        if( !mHolder.orderqty.getText().toString().equals("") &&
-                                !mHolder.orderqty.getText().toString().equals(null) &&
-                                !mHolder.orderqty.getText().toString().equals("null") &&
-                                !mHolder.orderqty.getText().toString().equals("0")){
-                            double a = Double.parseDouble(currentListData.getClosingstk());
-                            double b = Double.parseDouble(mHolder.orderqty.getText().toString());
-                            double c=a+b;
-                            int getval = (int) c;
-                            mHolder.ordertotalstock.setText(String.valueOf(getval));
 
-                            mHolder.ordertotalstock.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
-                            for (int j = 0; j < OrderFormActivity.cartorderFormDetails.size(); j++) {
-                                if (myList.get(position).getItemcode().equals
-                                        (OrderFormActivity.cartorderFormDetails.get(j).getItemcode())) {
-                                    if(Integer.parseInt(mHolder.orderqty.getText().toString()) !=
-                                            Integer.parseInt(OrderFormActivity.cartorderFormDetails.get(j).getQty())){
-                                        OrderFormActivity.cartorderFormDetails.remove(j);
-                                    }
-
-                                }
-                            }
-                            OrderFormActivity.carttotamount.setText(String.valueOf(OrderFormActivity.cartorderFormDetails.size()));
-
-                        }else{
-                            for (int j = 0; j < OrderFormActivity.cartorderFormDetails.size(); j++) {
-                                if (myList.get(position).getItemcode().equals
-                                        (OrderFormActivity.cartorderFormDetails.get(j).getItemcode())) {
-                                    OrderFormActivity.cartorderFormDetails.remove(j);
-                                }
-                            }
-                            OrderFormActivity.carttotamount.setText(String.valueOf(OrderFormActivity.cartorderFormDetails.size()));
-                            mHolder.ordertotalstock.setText("");
-                            currentListData.setQty("0");
-                            mHolder.ordertotalstock.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
-                        }
                     }
                 });
 
@@ -1645,13 +1653,15 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                         if (!mHolder.orderqty.getText().toString().equals("") &&
                                 !mHolder.orderqty.getText().toString().equals(null) &&
                                 !mHolder.orderqty.getText().toString().equals("null") &&
-                                !mHolder.orderqty.getText().toString().equals("0") ) {
+                                !mHolder.orderqty.getText().toString().equals("0") &&
+                                !mHolder.orderqty.getText().toString().equals(".") &&
+                                Double.parseDouble(mHolder.orderqty.getText().toString()) > 0) {
                             //calculate total
                             double a = Double.parseDouble(currentListData.getClosingstk());
                             double b = Double.parseDouble(mHolder.orderqty.getText().toString());
                             double c=a+b;
                             int getval = (int) c;
-                            mHolder.ordertotalstock.setText(String.valueOf(getval));
+                            mHolder.ordertotalstock.setText(defor.format(c));
 
                             currentListData.setQty( mHolder.orderqty.getText().toString());
                             boolean iscart = false;
@@ -1676,7 +1686,8 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                                                     orderFormDetails.get(i).getUnitname(), orderFormDetails.get(i).getHsn(),
                                                     orderFormDetails.get(i).getTax(), orderFormDetails.get(i).getClosingstk(),
                                                     orderFormDetails.get(i).getQty(), String.valueOf(i + 1),
-                                                    orderFormDetails.get(i).getUppweight(), orderFormDetails.get(i).getStatus()));
+                                                    orderFormDetails.get(i).getUppweight(), orderFormDetails.get(i).getStatus(),
+                                                    orderFormDetails.get(i).getNoofdeciaml()));
                                             iscart = true;
                                         }
                                     }
@@ -1705,6 +1716,8 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                 mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
                 mDbErrHelper.close();
             }
+            mHolder.orderqty.setTag(position);
+            mHolder.ordertotalstock.setTag(position);
             return convertView;
         }
         private class ViewHolder {
@@ -1712,7 +1725,67 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
             LinearLayout listLL;
             CardView card_view;
             ImageView itemdelete;
+            private QuantityTextWatcher qtyWatcher;
 
+        }
+
+        class QuantityTextWatcher implements TextWatcher {
+            private int position;
+            private ViewHolder mHolder;
+
+            public QuantityTextWatcher(ViewHolder mHolder) {
+                this.mHolder = mHolder;
+            }
+
+            public void updatePosition(int position) {
+                this.position = position;
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {
+                if( !mHolder.orderqty.getText().toString().equals("") &&
+                        !mHolder.orderqty.getText().toString().equals(null) &&
+                        !mHolder.orderqty.getText().toString().equals("null") &&
+                        !mHolder.orderqty.getText().toString().equals("0") &&
+                        !mHolder.orderqty.getText().toString().equals(".") &&
+                        Double.parseDouble(mHolder.orderqty.getText().toString()) > 0) {
+                    double a = Double.parseDouble(myList.get(position).getClosingstk());
+                    double b = Double.parseDouble(mHolder.orderqty.getText().toString());
+                    double c=a+b;
+                    int getval = (int) c;
+                    mHolder.ordertotalstock.setText(defor.format(c));
+
+                    mHolder.ordertotalstock.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+                    for (int j = 0; j < OrderFormActivity.cartorderFormDetails.size(); j++) {
+                        if (myList.get(position).getItemcode().equals
+                                (OrderFormActivity.cartorderFormDetails.get(j).getItemcode())) {
+                            if(Double.parseDouble(mHolder.orderqty.getText().toString()) !=
+                                    Double.parseDouble(OrderFormActivity.cartorderFormDetails.get(j).getQty())){
+                                OrderFormActivity.cartorderFormDetails.remove(j);
+                            }
+
+                        }
+                    }
+                    OrderFormActivity.carttotamount.setText(String.valueOf(OrderFormActivity.cartorderFormDetails.size()));
+
+                }else{
+                    for (int j = 0; j < OrderFormActivity.cartorderFormDetails.size(); j++) {
+                        if (myList.get(position).getItemcode().equals
+                                (OrderFormActivity.cartorderFormDetails.get(j).getItemcode())) {
+                            OrderFormActivity.cartorderFormDetails.remove(j);
+                        }
+                    }
+                    OrderFormActivity.carttotamount.setText(String.valueOf(OrderFormActivity.cartorderFormDetails.size()));
+                    mHolder.ordertotalstock.setText("");
+                    myList.get(position).setQty("0");
+                    mHolder.ordertotalstock.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+                }
+            }
         }
 
     }
@@ -1726,7 +1799,8 @@ public class OrderFormActivity extends AppCompatActivity  implements View.OnClic
                 TextView getlisttotal = (TextView) listRow.findViewById(R.id.ordertotalstock);
                 String getitemlistqty = getlistqty.getText().toString();
                 String getitemlisttotal = getlisttotal.getText().toString();
-                if(!getitemlistqty.equals("") && !getitemlistqty.equals(null)){
+                if(!getitemlistqty.equals("") && !getitemlistqty.equals(null) && !getitemlistqty.equals("null") &&
+                        !getitemlistqty.equals(".")){
                     if(getitemlisttotal.trim().equals("") || getitemlisttotal.trim().equals("null")){
                         getitemlisttotal = "0";
                     }

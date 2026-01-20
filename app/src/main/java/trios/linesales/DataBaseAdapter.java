@@ -1766,7 +1766,8 @@ public class DataBaseAdapter
                     "(select hsn from tblitemsubgroupmaster where itemsubgroupcode=a.itemsubgroupcode) as hsn," +
                     "(select tax from tblitemsubgroupmaster where itemsubgroupcode=a.itemsubgroupcode) as tax " +
                     ",(select coalesce(sum(op)+sum(inward)-sum(outward),0) from tblstocktransaction" +
-                    " where itemcode=a.itemcode and flag!=3) as stock,a.uppweight" +
+                    " where itemcode=a.itemcode and flag!=3) as stock,a.uppweight," +
+                    " coalesce((Select noofdecimals from tblunitmaster where unitcode=a.unitcode),0) as noofdecimals " +
                     " from tblitemmaster as a inner join tblitemsubgroupmaster as c on a.itemsubgroupcode=c.itemsubgroupcode " +
                     " inner join tblbrandmaster as d on a.brandcode=d.brandcode INNER JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode" +
                     " where a.status='"+statusvar+"' and "+itemgroupcode+" and "+itemsubgroupcode+" group  by a.itemcode,a.companycode,a.brandcode,a.manualitemcode," +
@@ -1895,7 +1896,8 @@ public class DataBaseAdapter
                     "(select hsn from tblitemsubgroupmaster where itemsubgroupcode=a.itemsubgroupcode) as hsn," +
                     "(select tax from tblitemsubgroupmaster where itemsubgroupcode=a.itemsubgroupcode) as tax " +
                     ",(select coalesce(sum(op)+sum(inward)-sum(outward),0) from tblstocktransaction" +
-                    " where itemcode=a.itemcode and flag!=3) as stock,a.uppweight,d.qty" +
+                    " where itemcode=a.itemcode and flag!=3) as stock,a.uppweight,d.qty," +
+                    " coalesce((Select noofdecimals from tblunitmaster where unitcode=a.unitcode),0) as noofdecimals " +
                     " from tblitemmaster as a inner join tblitemsubgroupmaster as c on" +
                     "  a.itemsubgroupcode=c.itemsubgroupcode inner join tblorderdetails as d on d.itemcode=a.itemcode  " +
                     "where a.status='"+statusvar+"' and  "+itemgroupcode+" and "+itemsubgroupcode+"" +

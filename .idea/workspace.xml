@@ -61,30 +61,20 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eba3b10e-7bfe-4158-9e30-b5e35257d56a" name="Changes" comment="Build v1_1_0 (sales_with_clone)&#10; - Code changes for max receipt amount validation&#10; - Code changes for added the traget and achieved amount in denomination print">
+    <list default="true" id="eba3b10e-7bfe-4158-9e30-b5e35257d56a" name="Changes" comment="Build v1_15 (sales_with_clone)&#10; - Fixed the free item multiple items adding issue &#10; - Fixed the scroll the item list to free item multiple times adding issue">
       <change beforePath="$PROJECT_DIR$/.gradle/8.4/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.4/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.4/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.4/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.4/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.4/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.4/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.4/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.4/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.4/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/dblinesales.db" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/dblinesales.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/EpsonT20Printer.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/EpsonT20Printer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/PrintData.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/PrintData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/ReceiptActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/ReceiptActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/ReturnReviewActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/ReturnReviewActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/ReviewActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/ReviewActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/CustomerActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/CustomerActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/LoginActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/LoginActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesCloneActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesCloneActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesOrderActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesOrderActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesOrderCartActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesOrderCartActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesOrderViewActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesOrderViewActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesReturnActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesReturnActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesReturnViewActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesReturnViewActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +90,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[RZ8M902KQHW]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[345b84a0]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -316,6 +306,76 @@
           <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/SalesActivity.java</url>
           <line>5944</line>
           <option name="timeStamp" value="56" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/SyncActivity.java</url>
+          <line>3256</line>
+          <option name="timeStamp" value="57" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java</url>
+          <line>10674</line>
+          <option name="timeStamp" value="58" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java</url>
+          <line>10677</line>
+          <option name="timeStamp" value="59" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/SyncActivity.java</url>
+          <line>1718</line>
+          <option name="timeStamp" value="61" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/SyncActivity.java</url>
+          <line>1716</line>
+          <option name="timeStamp" value="62" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java</url>
+          <line>10682</line>
+          <option name="timeStamp" value="63" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java</url>
+          <line>10683</line>
+          <option name="timeStamp" value="64" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java</url>
+          <line>10718</line>
+          <option name="timeStamp" value="65" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java</url>
+          <line>10707</line>
+          <option name="timeStamp" value="66" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java</url>
+          <line>10694</line>
+          <option name="timeStamp" value="67" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java</url>
+          <line>10685</line>
+          <option name="timeStamp" value="68" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java</url>
+          <line>10702</line>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java</url>
+          <line>10715</line>
+          <option name="timeStamp" value="70" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/trios/linesales/DataBaseAdapter.java</url>
+          <line>10692</line>
+          <option name="timeStamp" value="71" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

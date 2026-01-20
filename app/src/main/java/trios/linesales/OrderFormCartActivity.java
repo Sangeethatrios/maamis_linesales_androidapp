@@ -219,7 +219,7 @@ public class OrderFormCartActivity extends AppCompatActivity {
                             Cur.getString(2),Cur.getString(3),Cur.getString(4),
                             Cur.getString(5),Cur.getString(6),
                             Cur.getString(7),Cur.getString(8),Cur.getString(9),
-                            Cur.getString(11), String.valueOf(i+1),Cur.getString(10),"" ));
+                            Cur.getString(11), String.valueOf(i+1),Cur.getString(10),"", Cur.getString(12) ));
                     Cur.moveToNext();
                 }
 
