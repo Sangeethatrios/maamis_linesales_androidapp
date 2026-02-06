@@ -112,6 +112,7 @@ public class Constants {
     public static final String SYNC_TYPE_TRANSACTION = "transaction";
     public static final String SYNC_TYPE_SALESCASH = "salescash";
     public static final String SYNC_TYPE_SCHEME = "scheme";
+    public static final String SYNC_TYPE_DOWNLOAD_UPI_IMAGE = "downloadUPIImage";
 
     public static final String CLONE_TRANSACTIONNO = "transactionno";
     public static final String CLONE_FINANICIAL = "finanicialyear";

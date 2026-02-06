@@ -53,7 +53,6 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.goodiebag.pinview.Pinview;
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -1573,10 +1572,12 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                                 } else {
                                     radio_upi.setVisibility(View.VISIBLE);
                                     LL_UPI.setVisibility(View.VISIBLE);
-
-                                    Picasso.with(context)
-                                            .load(getupiimageurl)
-                                            .into(upiImage);
+                                    if (!Utilities.isNullOrEmpty(getupiimageurl)) {
+                                        File file = new File(getupiimageurl);
+                                        Picasso.with(context)
+                                                .load(file)
+                                                .into(upiImage);
+                                    }
                                 }
 
                                 txtupivendername.setOnClickListener(new View.OnClickListener() {
@@ -2121,11 +2122,14 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                                                     radio_upi.setVisibility(View.VISIBLE);
                                                     LL_UPI.setVisibility(View.VISIBLE);
 
-                                                    Picasso.with(getApplicationContext())
-                                                            .load(getimageurl)
-                                                            .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                                                            .stableKey(getimageurl)
-                                                            .into(upiImage);
+                                                    if (!Utilities.isNullOrEmpty(getimageurl)) {
+                                                        File file = new File(getimageurl);
+                                                        Picasso.with(getApplicationContext())
+                                                                .load(file)
+//                                                            .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                                                                .stableKey(getimageurl)
+                                                                .into(upiImage);
+                                                    }
                                                 }
 
                                                 txtupivendername.setOnClickListener(new View.OnClickListener() {
@@ -5923,9 +5927,12 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                 } else {
                     radio_upi.setVisibility(View.VISIBLE);
                     LL_UPI.setVisibility(View.VISIBLE);
-                    Picasso.with(context)
-                            .load(getimageurl)
-                            .into(imageView);
+                    if (!Utilities.isNullOrEmpty(getimageurl)) {
+                        File file = new File(getimageurl);
+                        Picasso.with(context)
+                                .load(file)
+                                .into(imageView);
+                    }
                 }
 
                 txtupivendername.setOnClickListener(new View.OnClickListener() {
@@ -6522,9 +6529,12 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                                     } else {
                                         radio_upi.setVisibility(View.VISIBLE);
                                         LL_UPI.setVisibility(View.VISIBLE);
-                                        Picasso.with(context)
-                                                .load(getimageurl)
-                                                .into(upiImage);
+                                        if (!Utilities.isNullOrEmpty(getimageurl)) {
+                                            File file = new File(getimageurl);
+                                            Picasso.with(context)
+                                                    .load(file)
+                                                    .into(upiImage);
+                                        }
                                     }
 
                                     txtupivendername.setOnClickListener(new View.OnClickListener() {

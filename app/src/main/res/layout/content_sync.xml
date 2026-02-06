@@ -219,6 +219,35 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="15dp"
+            android:id="@+id/downloadUpiImage_Layout"
+            android:layout_margin="5dp"
+            android:background="@android:color/white">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/downloadUpiImageLL"
+                android:background="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/DownloadUpiImageHead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="10dp"
+                    android:gravity="center|left"
+                    android:text="Download UPI Image"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

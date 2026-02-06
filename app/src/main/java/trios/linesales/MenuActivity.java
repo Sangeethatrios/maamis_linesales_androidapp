@@ -1947,6 +1947,7 @@ public class MenuActivity extends AppCompatActivity {
                     objdatabaseadapter.close();
                 }
             }
+            downloadUpiImage();
             loading.dismiss();
         }
     }
@@ -4322,5 +4323,10 @@ public class MenuActivity extends AppCompatActivity {
             mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
             mDbErrHelper.close();
         }
+    }
+
+    public void downloadUpiImage() {
+        AsyncTaskClass asyncTaskClass = new AsyncTaskClass(context,dropboxlistener,null,Constants.DOWNLOAD_VENDER_IMAGE);
+        asyncTaskClass.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 }

@@ -18,6 +18,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.os.BuildCompat;
+import androidx.multidex.BuildConfig;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -41,7 +42,7 @@ import java.util.HashMap;
 
 public class SyncActivity extends AppCompatActivity {
     LinearLayout sync_allLL,sync_itemll,sync_customerLL,sync_scheduleLL,sync_transactionLL,sync_salescashcloshLL,
-            sync_transportLL,sync_settingsLL,sync_schemeLL;
+            sync_transportLL,sync_settingsLL,sync_schemeLL, downloadUpiImageLL;
     boolean clickitem = true,clickcustomer = true,clickschedule = true;
     TextView syncitemHead,synccustomerHead,syncscheduleHead;
 
@@ -75,6 +76,7 @@ public class SyncActivity extends AppCompatActivity {
         syncgoback = (ImageView) findViewById(R.id.syncgoback);
         synclogout = (ImageView) findViewById(R.id.synclogout);
         sync_schemeLL = (LinearLayout) findViewById(R.id.syncschemeLL);
+        downloadUpiImageLL = (LinearLayout) findViewById(R.id.downloadUpiImageLL);
 
 
         syncitemHead = (TextView) findViewById(R.id.syncitemHead);
@@ -208,6 +210,24 @@ public class SyncActivity extends AppCompatActivity {
                 networkstate = isNetworkAvailable();
                 if (networkstate == true) {
                     new AsyncServer().execute(Constants.SYNC_TYPE_SALESCASH);
+                }else{
+                    Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
+                    //toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                    return;
+                    //Toast.makeText(getApplicationContext(),"Please check internet connection",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        downloadUpiImageLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                networkstate = isNetworkAvailable();
+                //networkstate = true;
+                if (networkstate == true) {
+
+                    new AsyncServer().execute(Constants.SYNC_TYPE_DOWNLOAD_UPI_IMAGE);
                 }else{
                     Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
                     //toast.setGravity(Gravity.CENTER, 0, 0);
@@ -387,6 +407,9 @@ public class SyncActivity extends AppCompatActivity {
                             break;
                         case Constants.SYNC_TYPE_SCHEME:
                             new AsyncSchemeDetails().execute();
+                            break;
+                        case Constants.SYNC_TYPE_DOWNLOAD_UPI_IMAGE:
+                            new AsyncSyncCompanyUPIDetails().execute();
                             break;
 
                     }
@@ -1274,52 +1297,7 @@ public class SyncActivity extends AppCompatActivity {
                     objdatabaseadapter.close();
                 }
             }
-            try {
-                objdatabaseadapter.open();
-                networkstate = isNetworkAvailable();
-                if (networkstate == true) {
-
-
-                    Cursor mCur2 = objdatabaseadapter.GetCompanyVenderDetails();
-                    /*if (mCur2 != null && mCur2.getCount() > 0){
-                        File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + File.separator + Constants.FOLDER_UPI_IMAGES);
-                        if (file.exists()) {
-                            File[] existingFiles = file.listFiles();
-                            if (existingFiles != null && existingFiles.length > 0) {
-                                for (int i=0; i<existingFiles.length; i++) {
-                                    existingFiles[i].delete();
-                                }
-                            }
-                        }
-                    }*/
-                    for (int i = 0; i < mCur2.getCount(); i++) {
-                        downloadUPIData = new ArrayList<>();
-                        downloadUPIData.add(Constants.KEY_INDEX_0,mCur2.getString(0));
-                        downloadUPIData.add(Constants.KEY_INDEX_1,mCur2.getString(1));
-                        downloadUPIData.add(Constants.KEY_INDEX_2,mCur2.getString(2));
-
-                        AsyncTaskClass asyncTaskClass = new AsyncTaskClass(context,dropboxlistener,downloadUPIData,Constants.DOWNLOAD_VENDER_IMAGE);
-                        asyncTaskClass.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-                        mCur2.moveToNext();
-                    }
-
-                }else{
-                    Toast toast = Toast.makeText(getApplicationContext(),"Please check internet connection", Toast.LENGTH_LONG);
-                    //toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
-                }
-            }catch (Exception e){
-                Log.e("AsyncSyncAllDetails Download UPI Image : " , e.getLocalizedMessage());
-                if(objdatabaseadapter != null)
-                    objdatabaseadapter.close();
-                InsertError(e.toString(),"SYNC ALL Post Download UPI Image");
-            }
-            finally{
-                if(objdatabaseadapter!=null){
-                    objdatabaseadapter.close();
-                }
-            }
+            downloadUpiImage();
             loading.dismiss();
         }
     }
@@ -2754,7 +2732,70 @@ public class SyncActivity extends AppCompatActivity {
         }
     }
 
+    protected  class AsyncSyncCompanyUPIDetails extends
+            AsyncTask<String, JSONObject, String> {
+        String List = "Success";
+        JSONObject jsonObj = null;
+        ProgressDialog loading;
 
+        @SuppressLint("LongLogTag")
+        @Override
+        protected  String doInBackground(String... params) {
+
+            RestAPI api = new RestAPI();
+            DataBaseAdapter dataBaseAdapter =null;
+            try {
+                dataBaseAdapter = new DataBaseAdapter(context);
+                dataBaseAdapter.open();
+                networkstate = isNetworkAvailable();
+                if (networkstate == true) {
+
+                    if(androidx.multidex.BuildConfig.DEBUG)
+                        Log.w("---> Sync Activity : "," Sync company UPI image Started");
+
+                    //brand master
+                    if(androidx.multidex.BuildConfig.DEBUG)
+                        Log.w("Sync Activity : "," Sync company UPI : Company Vender Master");
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"), "synccompanyvenderdetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.synccompanyvenderdetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "companyvendermaster", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+
+                    }
+
+                    if(BuildConfig.DEBUG)
+                        Log.w("---> Sync Activity : "," Sync company UPI image Completed");
+                }
+
+
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                Log.e("AsyncSyncItemandPriceDetails DIB", e.getMessage());
+                if(dataBaseAdapter != null)
+                    dataBaseAdapter.close();
+                InsertError(e.toString(),"SYNC Item and price DIB");
+            }
+            finally {
+                if(dataBaseAdapter != null)
+                    dataBaseAdapter.close();
+            }
+            return List;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = ProgressDialog.show(context, "Downloading", "Please wait...", true, true);
+            loading.setCancelable(false);
+            loading.setCanceledOnTouchOutside(false);
+        }
+        @SuppressLint("LongLogTag")
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            downloadUpiImage();
+            loading.dismiss();
+        }
+    }
 
 
     @SuppressLint("LongLogTag")
@@ -4975,7 +5016,7 @@ public class SyncActivity extends AppCompatActivity {
     public void onReceiveAsyncResult(Object response, int requestType) {
         switch (requestType) {
             case Constants.DOWNLOAD_VENDER_IMAGE:
-                try{
+                /*try{
                     if(response == null)
                         return;
                     downloadFileID = (long) response;
@@ -4993,7 +5034,7 @@ public class SyncActivity extends AppCompatActivity {
                     mDbErrHelper.insertErrorLog(geterrror.replace("'", " "),
                             this.getClass().getSimpleName()+" - onReceiveAsyncResult", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
                     mDbErrHelper.close();
-                }
+                }*/
 
                 break;
 
@@ -5187,6 +5228,11 @@ public class SyncActivity extends AppCompatActivity {
             mDbErrHelper.insertErrorLog(geterrror.replace("'"," "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
             mDbErrHelper.close();
         }
+    }
+
+    public void downloadUpiImage() {
+        AsyncTaskClass asyncTaskClass = new AsyncTaskClass(context,dropboxlistener,downloadUPIData,Constants.DOWNLOAD_VENDER_IMAGE);
+        asyncTaskClass.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 }

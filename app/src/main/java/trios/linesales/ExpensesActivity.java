@@ -44,6 +44,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -1941,10 +1942,12 @@ public class ExpensesActivity extends AppCompatActivity {
                 paymentbookingno.setText("BK.NO. "+getbookingno);
                 paymentbillno.setText("Bill No. "+getbillno);
 
-
-                Picasso.with(context)
-                        .load(getimageurl)
-                        .into(imageView);
+                if (!Utilities.isNullOrEmpty(getimageurl)) {
+                    File file = new File(getimageurl);
+                    Picasso.with(context)
+                            .load(file)
+                            .into(imageView);
+                }
 
                 txtupivendername.setOnClickListener(new View.OnClickListener() {
                     @Override
