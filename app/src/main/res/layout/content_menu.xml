@@ -122,6 +122,26 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="Stock Return"
+                        android:padding="10dp"
+                        android:id="@+id/StockReturn"
+                        android:gravity="center|left"
+                        android:drawableTint="@color/colorPrimary"
+                        android:drawableLeft="@drawable/ic_keyboard_arrow_right"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp"
+                        android:background="?android:attr/selectableItemBackground"
+                        />
+                    <View
+                        android:id="@+id/StockReturnview"
+                        android:layout_below="@+id/llay"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimaryDark" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:text="Cash Close"
                         android:padding="10dp"
                         android:id="@+id/cashreport"

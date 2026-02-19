@@ -431,4 +431,34 @@ class JSONParser {
 
         return varianceDatas;
     }
+
+    public ArrayList<StockReturnDatas> parseStockReturnDataList(JSONObject object) {
+
+        ArrayList<StockReturnDatas> varianceDatas = new ArrayList<StockReturnDatas>();
+
+        try {
+            JSONArray jsonArray = object.getJSONArray("TransactionDetails");
+            JSONObject jsonObj = null;
+            JSONArray dataArr = null;
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObj = jsonArray.getJSONObject(i);
+                if(jsonObj.has("StockReturnTransactionDetails")){
+                    dataArr=jsonObj.getJSONArray("StockReturnTransactionDetails");
+
+                    for(int j=0;j<dataArr.length();j++){
+                        JSONObject jsonObject = dataArr.getJSONObject(j);
+                        varianceDatas.add(new StockReturnDatas(jsonObject.getString("schedulecode"),
+                                jsonObject.getString("stocktransferno")));
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParserTransList", e.getMessage());
+        }
+
+        return varianceDatas;
+    }
 }

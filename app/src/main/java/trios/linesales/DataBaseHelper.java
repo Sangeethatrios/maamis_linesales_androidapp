@@ -20,7 +20,7 @@ import android.util.Log;
 
 public class DataBaseHelper extends SQLiteOpenHelper
 {
-    private static int DbVersion = 6;
+    private static int DbVersion = 7;
     private static String DB_PATH;
     private static String DB_NAME = "dblinesales.db";
     private static SQLiteDatabase mDataBase;
@@ -237,6 +237,9 @@ public class DataBaseHelper extends SQLiteOpenHelper
         if(oldVersion < 6){
             addMaxReceiptAmtInGeneralSettings(db);
         }
+        if (oldVersion < 7) {
+            CreateStockReturnTable(db);
+        }
     }
     private void addLocationforcustomer(SQLiteDatabase db) {
         String querytblsales = "ALTER TABLE " + Constants.TBLSALES +
@@ -298,5 +301,22 @@ public class DataBaseHelper extends SQLiteOpenHelper
         db.execSQL(query3);
         String query4 = "ALTER TABLE tblsalesordercartdatas ADD COLUMN orgprice TEXT default null;";
         db.execSQL(query4);
+    }
+
+    private void CreateStockReturnTable(SQLiteDatabase db) {
+        String query = "CREATE TABLE IF NOT EXISTS tblstockreturn (" +
+                " autonum INTEGER NOT NULL," +
+                " stocktransferno INTEGER NOT NULL," +
+                " transactiondate datetime," +
+                " vancode INTEGER NOT NULL," +
+                " schedulecode TEXT NOT NULL," +
+                " itemcode INTEGER NOT NULL," +
+                " qty REAL NOT NULL," +
+                " makerid INTEGER DEFAULT NULL," +
+                " createddate datetime," +
+                " flag INTEGER," +
+                " status INTEGER" +
+                ")";
+        db.execSQL(query);
     }
 }

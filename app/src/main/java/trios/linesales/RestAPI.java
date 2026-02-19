@@ -1317,4 +1317,55 @@ public class RestAPI {
         return myResponse;
     }
 
+    public JSONObject StockReturnDetails(String parastockreturndetails,Context ctx) throws Exception {
+        String url;
+        preferenceMangr = new PreferenceMangr(ctx);
+        url = urlString + "insertstockreturn.php";
+
+        JSONObject myResponse = null;
+
+        String data = "&" + "parastockreturndetails" + "="
+                + parastockreturndetails;
+        data +="&" +  URLEncoder.encode("paravancode", "UTF-8")
+                + "=" + URLEncoder.encode(preferenceMangr.pref_getString("getvancode"), "UTF-8");
+        data +="&" +  URLEncoder.encode("paraimeino", "UTF-8")
+                + "=" + URLEncoder.encode(preferenceMangr.pref_getString("deviceid"), "UTF-8");
+        // Send data
+        try {
+            //Read JSON response and print
+            myResponse = new JSONObject(GetJSONResponse(url, data));
+            //Log.i("LoginException",myResponse.getString("UserID"));
+        } catch (JSONException ex) {
+            Log.e("StockReturnDetails", "Exception in StockReturnDetails : " +ex.toString());
+        }
+        return myResponse;
+    }
+
+    public JSONObject CheckStockReturn(Context ctx, String vancode,String schedulecode, String transactiondate) throws Exception {
+        String url;
+
+        url = urlString + "checkstockreturnstatus.php";
+
+        JSONObject myResponse = null;
+
+        String data = "&" +URLEncoder.encode("paravancode", "UTF-8") + "="
+                + URLEncoder.encode(vancode, "UTF-8");
+
+        data +="&" +  URLEncoder.encode("paraschedulecode", "UTF-8")
+                + "=" + URLEncoder.encode(schedulecode, "UTF-8");
+
+        data +="&" +  URLEncoder.encode("paratransactiondate", "UTF-8")
+                + "=" + URLEncoder.encode(transactiondate, "UTF-8");
+        // Send data
+        try {
+            //Read JSON response and print
+            myResponse = new JSONObject(GetJSONResponse(url, data));
+            //Log.i("LoginException",myResponse.getString("UserID"));
+        } catch (JSONException ex) {
+            Log.i("LoginException", ex.toString());
+        }
+
+        return myResponse;
+    }
+
 }

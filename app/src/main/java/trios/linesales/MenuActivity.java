@@ -2,6 +2,7 @@ package trios.linesales;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -65,14 +66,14 @@ public class MenuActivity extends AppCompatActivity {
     TextView SalesHead,ReportsHead,Sales,salesitemwise,
             cashreport,expensereport,salesbillwise,SalesReturn,
             PriceListHead,salesreturnitemwise,cashsummaryreport,salesreturnbillwise,salesorderbillwise,salesorderitemwise;
-    public static TextView OrderForm;
+    public static TextView OrderForm, StockReturn;
     boolean networkstate;
     static public String getschedulecode="",getroutecode="",getroutename="",gettripadvance="",
         getroutenametamil="",getcapacity="",getcashclosecount="0",getsalesclosecount="0",getwishmsg="";
     static double  getdenominationcount = 0;
     public static final String UPLOAD_URL = RestAPI.urlString+"syncimage.php";
     String lunch_start_time = "",lunch_end_time="";
-    View cashcloseview;
+    View cashcloseview, StockReturnview;
     LinearLayout Sales_Layout,ReportsOrderChildLL;
     Handler handler = new Handler();
     Runnable runnable;
@@ -135,6 +136,8 @@ public class MenuActivity extends AppCompatActivity {
         generatePDF = (TextView) findViewById(R.id.generatepdf);
         SettingsLL =(LinearLayout) findViewById(R.id.SettingsLL);
         AdditionStocktLL = (LinearLayout) findViewById(R.id.AdditionStocktLL);
+        StockReturn = (TextView)findViewById(R.id.StockReturn);
+        StockReturnview = (View) findViewById(R.id.StockReturnview);
         LoginActivity.iscash =false;
         getschedulecode="";getwishmsg="";
 
@@ -162,6 +165,8 @@ public class MenuActivity extends AppCompatActivity {
 
         OrderForm.setVisibility(View.GONE);
         cashcloseview.setVisibility(View.GONE);
+        StockReturn.setVisibility(View.GONE);
+        StockReturnview.setVisibility(View.GONE);
         menusyncall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -534,6 +539,46 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
+        StockReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!Utilities.isNetworkAvailable(context, false)) {
+                    Toast.makeText(context, "Internet is required for this transaction", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                //Get Current date
+                DataBaseAdapter objdatabaseadapter1 = null;
+                try{
+                    objdatabaseadapter1 = new DataBaseAdapter(context);
+                    objdatabaseadapter1.open();
+                    String  getschedulecode = objdatabaseadapter1.GetScheduleCode();
+                    String getstockreturncount = objdatabaseadapter1.GetStockReturnCount(getschedulecode);
+                    if(!getstockreturncount.equals("") && !getstockreturncount.equals("0") && !getstockreturncount.equals("null")){
+                        if(Double.parseDouble(getstockreturncount) >0) {
+                            Intent i = new Intent(context, StockReturnCartActivity.class);
+                            startActivity(i);
+                        }else{
+                            showConfirmationForStockReturn();
+                        }
+                    }else{
+                        showConfirmationForStockReturn();
+                    }
+                }catch (Exception e){
+                    DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                    mDbErrHelper.open();
+                    String geterrror = e.toString();
+                    mDbErrHelper.insertErrorLog(geterrror.replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                    mDbErrHelper.close();
+                }finally {
+                    // this gets called even if there is an exception somewhere above
+                    if (objdatabaseadapter1 != null)
+                        objdatabaseadapter1.close();
+                }
+            }
+        });
+
 
 
         /***** SCHEDULE DETAILES************/
@@ -583,12 +628,16 @@ public class MenuActivity extends AppCompatActivity {
                     if(getordercount.equals("") || getordercount.equals("0") || getordercount.equals("null")){*/
                         OrderForm.setVisibility(View.VISIBLE);
                     cashcloseview.setVisibility(View.VISIBLE);
+                    StockReturn.setVisibility(View.VISIBLE);
+                    StockReturnview.setVisibility(View.VISIBLE);
                    /* }else{
                         OrderForm.setVisibility(View.GONE);
                     }*/
                 }else{
                     OrderForm.setVisibility(View.GONE);
                     cashcloseview.setVisibility(View.GONE);
+                    StockReturn.setVisibility(View.GONE);
+                    StockReturnview.setVisibility(View.GONE);
                 }
             }
         } catch (Exception e) {
@@ -1231,6 +1280,7 @@ public class MenuActivity extends AppCompatActivity {
                             AsyncSalesOrderDetails();
                             AsyncSalesOrderCancelDetails();
                             AsyncNotPurchasedDetails();
+                            AsyncStockReturnDetails();
                         }catch (Exception e) {
                             // TODO Auto-generated catch block
                             Log.e("AsyncSyncAllDetails DIB", e.getMessage());
@@ -1779,6 +1829,13 @@ public class MenuActivity extends AppCompatActivity {
                         api.udfnSyncDetails(preferenceMangr.pref_getString(Constants.KEY_DEVICEID), "receiptremarks", preferenceMangr.pref_getString(Constants.KEY_GETVANCODE), preferenceMangr.pref_getString(Constants.KEY_GET_SCHEDULE_SCHEDULECODE));
                     }
 
+                    Log.w("Menu Activity : "," Sync All : Stock Return");
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncstockreturndetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.syncstockreturndetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "stockreturndetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
                     new UploadImage().execute();
                 }
 
@@ -1909,8 +1966,10 @@ public class MenuActivity extends AppCompatActivity {
                 if(!preferenceMangr.pref_getString("getsalesclosecount").equals("0") && !preferenceMangr.pref_getString("getsalesclosecount").equals("null") &&
                         !preferenceMangr.pref_getString("getsalesclosecount").equals("") && !preferenceMangr.pref_getString("getsalesclosecount").equals(null)){
                     MenuActivity.OrderForm.setVisibility(View.VISIBLE);
+                    MenuActivity.StockReturn.setVisibility(View.VISIBLE);
                 }else{
                     MenuActivity.OrderForm.setVisibility(View.GONE);
+                    MenuActivity.StockReturn.setVisibility(View.GONE);
                 }
 
             }catch (Exception e) {
@@ -4328,5 +4387,97 @@ public class MenuActivity extends AppCompatActivity {
     public void downloadUpiImage() {
         AsyncTaskClass asyncTaskClass = new AsyncTaskClass(context,dropboxlistener,null,Constants.DOWNLOAD_VENDER_IMAGE);
         asyncTaskClass.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public void showConfirmationForStockReturn(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Confirmation");
+        builder.setMessage("Are you sure you want to stock return?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (!Utilities.isNetworkAvailable(context))
+                            return;
+                        Intent i = new Intent(context, StockReturnActivity.class);
+                        startActivity(i);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public void AsyncStockReturnDetails(){
+        ArrayList<StockReturnDatas> List = null;
+        JSONObject jsonObj = null;
+        RestAPI api = new RestAPI();
+        DataBaseAdapter dbadapter = new DataBaseAdapter(context);
+        try {
+            JSONObject js_obj = new JSONObject();
+            try {
+
+                dbadapter.open();
+                Cursor mCur2 = dbadapter.GetStockReturnDetailsDatasDB();
+                JSONArray js_array2 = new JSONArray();
+                for (int i = 0; i < mCur2.getCount(); i++) {
+                    JSONObject obj = new JSONObject();
+                    obj.put("autonum", mCur2.getString(0));
+                    obj.put("stocktransferno", mCur2.getString(1));
+                    obj.put("transactiondate", mCur2.getString(2));
+                    obj.put("vancode", mCur2.getString(3));
+                    obj.put("schedulecode", mCur2.getString(4));
+                    obj.put("itemcode", mCur2.getString(5));
+                    obj.put("qty", mCur2.getString(6));
+                    obj.put("makerid", mCur2.getString(7));
+                    obj.put("createddate", mCur2.getString(8));
+                    obj.put("flag", mCur2.getString(9));
+                    obj.put("status", mCur2.getString(10));
+                    js_array2.put(obj);
+                    mCur2.moveToNext();
+                }
+                js_obj.put("JSonObject", js_array2);
+
+                jsonObj =  api.StockReturnDetails(js_obj.toString(),context);
+                //Call Json parser functionality
+                JSONParser parser = new JSONParser();
+                //parse the json object to boolean
+                List = parser.parseStockReturnDataList(jsonObj);
+                dbadapter.close();
+                if (List.size() > 0) {
+                    for (int j = 0; j < List.size(); j++) {
+                        DataBaseAdapter dataBaseAdapter = new DataBaseAdapter(context);
+                        dataBaseAdapter.open();
+                        dataBaseAdapter.UpdateStockReturnFlag(List.get(j).getScheduleCode(), List.get(j).getStockTransferno());
+                        dataBaseAdapter.close();
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                Log.e("AsyncStockReturnDetails : ", e.getMessage());
+                if(dbadapter != null)
+                    dbadapter.close();
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog("Exception in AsyncStockReturnDetails : " + geterrror.replace("'"," "), this.getClass().getSimpleName() + " - AsyncStockReturnDetails", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            Log.e("AsyncStockReturnDetails : ", e.getMessage());
+            if(dbadapter != null)
+                dbadapter.close();
+            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+            mDbErrHelper.open();
+            String geterrror = e.toString();
+            mDbErrHelper.insertErrorLog("Exception in AsyncStockReturnDetails : " + geterrror.replace("'"," "), this.getClass().getSimpleName() + " - AsyncStockReturnDetails", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            mDbErrHelper.close();
+        }
     }
 }

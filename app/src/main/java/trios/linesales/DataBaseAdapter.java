@@ -16351,4 +16351,248 @@ public class DataBaseAdapter
         return achievedAmt;
     }
 
+    public Cursor GetStockReturnItemDB(String getitemgroupcode,String getsubitemgroupcode)
+    {
+        Cursor mCur = null;
+        try{
+            String itemsubgroupcode="";
+            if(getsubitemgroupcode.equals("0") || getsubitemgroupcode.equals("")){
+                itemsubgroupcode = "1=1";
+            }else{
+                itemsubgroupcode = "a.displaygroupcode='"+getsubitemgroupcode+"'";
+            }
+            String itemgroupcode="";
+            if(getitemgroupcode.equals("0")){
+                itemgroupcode = "1=1";
+            }else{
+                itemgroupcode = "c.itemgroupcode='"+getitemgroupcode+"'";
+            }
+            String sql ="select a.itemcode,a.itemname,a.itemnametamil,a.unitweight," +
+                    "a.companycode,CASE WHEN itemtype=2 then (SELECT freeitemcolor from tblgeneralsettings) else" +
+                    " (select colourcode from tblcompanymaster where companycode=a.companycode) END as colourcode," +
+                    "(select unitname from tblunitmaster where unitcode=a.unitcode) as unitname," +
+                    "(select hsn from tblitemsubgroupmaster where itemsubgroupcode=a.itemsubgroupcode) as hsn," +
+                    "(select tax from tblitemsubgroupmaster where itemsubgroupcode=a.itemsubgroupcode) as tax " +
+                    ",(select coalesce(sum(op)+sum(inward)-sum(outward),0) from tblstocktransaction" +
+                    " where itemcode=a.itemcode and flag!=3) as stock,a.uppweight," +
+                    " coalesce((Select noofdecimals from tblunitmaster where unitcode=a.unitcode),0) as noofdecimals, " +
+                    " case when parentitemcode=0 then a.itemcode else parentitemcode end as parentcode " +
+                    " from tblitemmaster as a " +
+                    " inner join tblitemsubgroupmaster as c on a.itemsubgroupcode=c.itemsubgroupcode " +
+                    " inner join tblbrandmaster as d on a.brandcode=d.brandcode " +
+                    " INNER JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode" +
+                    " where a.status='"+statusvar+"' and "+itemgroupcode+" and "+itemsubgroupcode+" AND " +
+                    " (a.itemcode in (select itemcode from tblstocktransaction where  flag!=3) " +
+                    " or parentcode in (select itemcode from tblstocktransaction where  flag!=3)) " +
+                    " and a.companycode in (select companycode from tblcompanymaster where status='Active') " +
+                    " and stock>0 "+
+                    " group  by a.itemcode,a.companycode,a.brandcode,a.manualitemcode," +
+                    " a.itemname,a.itemnametamil,a.unitcode,a.unitweightunitcode,a.unitweight,a.uppunitcode,a.uppweight," +
+                    " a.itemcategory,a.parentitemcode,a.allowpriceedit,a.allownegativestock,a.allowdiscount" +
+                    " order by itemtype,c.itemsubgroupname,d.brandname,a.itemcategory desc";
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog(ex.toString(), this.getClass().getSimpleName()  + "GetOrderItemDB", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+
+        return mCur;
+    }
+
+    public String GetStockReturnCount(String getschedulecode)
+    {
+        String getordercount = "0";
+        try{
+            String sql ="select coalesce(count(*),0) from tblstockreturn" +
+                    "  where schedulecode='"+getschedulecode+"' " +
+                    "  limit 1 ";
+            Cursor mCur = mDb.rawQuery(sql, null);
+
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+                getordercount = mCur.getString(0);
+            }else{
+                getordercount = "0";
+            }
+        }catch (Exception ex){
+            insertErrorLog(ex.toString(), this.getClass().getSimpleName() + "GetOrderFormCount", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+
+        return getordercount;
+    }
+
+    public Cursor GetStockReturnItemDB(String getitemgroupcode,String getsubitemgroupcode,String Schedulecode) {
+        Cursor mCur = null;
+        try{
+            String itemsubgroupcode="";
+            if(getsubitemgroupcode.equals("0")){
+                itemsubgroupcode = "1=1";
+            }else{
+                itemsubgroupcode = "a.itemsubgroupcode='"+getsubitemgroupcode+"'";
+            }
+            String itemgroupcode="";
+            if(getitemgroupcode.equals("0")){
+                itemgroupcode = "1=1";
+            }else{
+                itemgroupcode = "c.itemgroupcode='"+getitemgroupcode+"'";
+            }
+            String sql ="select a.itemcode,a.itemname,a.itemnametamil,a.unitweight," +
+                    "a.companycode,(select colourcode from tblcompanymaster where companycode=a.companycode) as colourcode," +
+                    "(select unitname from tblunitmaster where unitcode=a.unitcode) as unitname," +
+                    "(select hsn from tblitemsubgroupmaster where itemsubgroupcode=a.itemsubgroupcode) as hsn," +
+                    "(select tax from tblitemsubgroupmaster where itemsubgroupcode=a.itemsubgroupcode) as tax " +
+                    ",(select coalesce(sum(op)+sum(inward)-sum(outward),0) from tblstocktransaction" +
+                    " where itemcode=a.itemcode and flag!=3) as stock,a.uppweight,d.qty," +
+                    " coalesce((Select noofdecimals from tblunitmaster where unitcode=a.unitcode),0) as noofdecimals " +
+                    " from tblitemmaster as a " +
+                    " inner join tblitemsubgroupmaster as c on a.itemsubgroupcode=c.itemsubgroupcode " +
+                    " inner join tblstockreturn as d on d.itemcode=a.itemcode  " +
+                    " where a.status='"+statusvar+"' and  "+itemgroupcode+" and "+itemsubgroupcode+"" +
+                    " and d.schedulecode='"+Schedulecode+"' and itemtype=1 ";
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0) {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog("Exception in GetStockReturnItemDB : " + ex.toString(), this.getClass().getSimpleName() + " - GetStockReturnItemDB", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+        return mCur;
+    }
+
+    public void DeleteStockReturn(){
+        try{
+            String sql1 = "delete from tblstockreturn " +
+                    " where transactiondate=datetime('"+ preferenceMangr.pref_getString("getformatdate") +"') " +
+                    " and schedulecode='"+preferenceMangr.pref_getString("getschedulecode")+"'  and vancode='"+preferenceMangr.pref_getString("getvancode")+"' ";
+            mDb.execSQL(sql1);
+        }catch (Exception ex){
+            insertErrorLog("Exception in DeleteStockReturn : " + ex.toString(), this.getClass().getSimpleName() + " - DeleteStockReturn", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+    }
+
+    public String InsertStockReturn(String itemcode,String qty,String status) {
+        try{
+            mDb = mDbHelper.getReadableDatabase();
+
+            String sql1 = "select COALESCE(count(*),0) from tblstockreturn where " +
+                    " transactiondate=datetime('"+ preferenceMangr.pref_getString("getformatdate") +"') and  itemcode='"+itemcode+"'" +
+                    "  and schedulecode='"+preferenceMangr.pref_getString("getschedulecode")+"' ";
+            Cursor mCur = mDb.rawQuery(sql1, null);
+            mCur.moveToFirst();
+            String getcount= (mCur.moveToFirst())?mCur.getString(0):"0";
+            if(getcount.equals("0")) {
+                String sql = "insert into tblstockreturn (autonum,stocktransferno,vancode,schedulecode,itemcode,qty,makerid,createddate,transactiondate,flag,status) " +
+                        "select coalesce(max(autonum),0)+1 ,0,'" + preferenceMangr.pref_getString("getvancode") + "','" + preferenceMangr.pref_getString("getschedulecode") + "','" + itemcode + "','" + Double.parseDouble(qty) + "'," +
+                        "'0',datetime('now', 'localtime'),datetime('" + preferenceMangr.pref_getString("getformatdate") + "'),0 ,'"+status+"' from tblstockreturn";
+                mDb.execSQL(sql);
+            }
+        }catch (Exception ex){
+            insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+        return "success";
+    }
+
+    public Cursor GetStockReturnDetailsDatasDB() {
+        Cursor mCur = null;
+        try{
+            String sql ="select * from tblstockreturn where flag=0 ";
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog("Exception in GetStockReturnDetailsDatasDB : " +ex.toString(), this.getClass().getSimpleName() + " - GetStockReturnDetailsDatasDB", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+
+        return mCur;
+    }
+
+    public void UpdateStockReturnFlag(String getschedulecode, String stocktransferno)
+    {
+        try{
+            String Getdate= GenCreatedDate();
+            String sql = "update tblstockreturn set flag=1, stocktransferno='" + stocktransferno + "' where schedulecode='"+getschedulecode+"' " +
+                    " and vancode='"+preferenceMangr.pref_getString("getvancode")+"' and transactiondate=datetime('"+Getdate+"') ";
+            mDb.execSQL(sql);
+        }catch (Exception ex){
+            insertErrorLog("Exception in UpdateStockReturnFlag : " + ex.toString(), this.getClass().getSimpleName() + " - UpdateStockReturnFlag", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+    }
+
+    public void syncstockreturndetails (JSONObject object) {
+        if(object!=null)
+        {
+            JSONArray json_category = null;
+            Cursor cursor = null;
+
+            try {
+                String success = object.getString("success");
+                if(success.equals("1"))
+                {
+                    json_category = object.getJSONArray("Value");
+                    for(int i=0;i<json_category.length();i++)
+                    {
+                        try {
+                            JSONObject obj = (JSONObject) json_category.get(i);
+                            String sql = "SELECT * FROM 'tblstockreturn' " +
+                                    " WHERE schedulecode='" + obj.getString("schedulecode")+"' and vancode='" + obj.getString("vancode") + "' and " +
+                                    " date(transactiondate)=date('" + obj.getString("transactiondate") + "') and itemcode='" + obj.getString("itemcode") + "'";
+                            cursor = mDb.rawQuery(sql, null);
+                            if (!cursor.moveToFirst()) {
+                                int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
+
+                                sql = "INSERT INTO 'tblstockreturn' (autonum,stocktransferno,transactiondate, vancode,schedulecode,itemcode,qty," +
+                                        " makerid,createddate,flag,status)" +
+                                        " VALUES('" + gc +"', '" + obj.getString("stocktransferno")+"'," +
+                                        "'" + obj.getString("transactiondate")+"', '" + obj.getString("vancode")+"', " +
+                                        "'" + obj.getString("schedulecode")+"', '" + obj.getString("itemcode")+"'," +
+                                        "'" + obj.getString("qty")+"','" + obj.getString("makerid")+"'," +
+                                        "'" + obj.getString("createddate")+"',1," +
+                                        "'" + obj.getString("status")+"') ";
+                                mDb.execSQL(sql);
+                            }
+                            else {
+                                int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
+                                String sql1 = "UPDATE 'tblstockreturn' SET autonum='" + gc +"'," +
+                                        "stocktransferno='" + obj.getString("stocktransferno")+"'," +
+                                        "transactiondate='" + obj.getString("transactiondate")+"'," +
+                                        "vancode='" + obj.getString("vancode")+"'," +
+                                        "schedulecode='" + obj.getString("schedulecode")+"'," +
+                                        "itemcode='" + obj.getString("itemcode")+"'," +
+                                        "qty='" + obj.getString("qty")+"'," +
+                                        "makerid='" + obj.getString("makerid")+"'," +
+                                        "createddate='" + obj.getString("createddate")+"'," +
+                                        "flag=1," +
+                                        "status='" + obj.getString("status")+"' "+
+                                        " WHERE schedulecode='" + obj.getString("schedulecode")+"' and vancode='" + obj.getString("vancode") + "' and " +
+                                        " date(transactiondate)=date('" + obj.getString("transactiondate") + "') and itemcode='" + obj.getString("itemcode") + "'";
+                                mDb.execSQL(sql1);
+                            }
+                        } catch (JSONException ex) {
+                            if(cursor != null)
+                                cursor.close();
+                            insertErrorLog("Exception in syncstockreturndetails : " + ex.toString(), this.getClass().getSimpleName() + " - syncstockreturndetails", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                        } finally {
+                            if(cursor != null)
+                                cursor.close();
+                        }
+                    }
+                }
+            } catch (JSONException ex) {
+                // TODO Auto-generated catch block
+                if(cursor != null)
+                    cursor.close();
+                insertErrorLog("Exception in syncstockreturndetails : " + ex.toString(), this.getClass().getSimpleName() + " - syncstockreturndetails", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            } finally {
+                if(cursor != null)
+                    cursor.close();
+            }
+        }
+    }
+
 }

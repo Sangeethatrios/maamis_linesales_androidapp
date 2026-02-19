@@ -54,7 +54,7 @@ public class Utilities {
         return false;
     }
 
-    public static boolean isServerAvailable(Context context) {
+    public static boolean isServerAvailable(Context context, boolean showToast) {
         int code;
         Boolean result=false;
         try {
@@ -77,7 +77,7 @@ public class Utilities {
             result=false;
 
         }
-        if(!result){
+        if(!result && showToast){
             Toast.makeText(context,"Server not reachable",Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -85,18 +85,22 @@ public class Utilities {
         return result;
     }
 
-    public static boolean isNetworkAvailable(Context context) {
+    public static boolean isNetworkAvailable(Context context, boolean ...isShowToast) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         boolean result = activeNetworkInfo != null && activeNetworkInfo.isConnected();
 
-        if(!result){
+        boolean showToast = true;
+        if (isShowToast != null && isShowToast.length > 0)
+            showToast = isShowToast[0];
+
+        if(!result && showToast){
             Toast.makeText(context,"Please check internet connection",Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        result = isServerAvailable(context);
+        result = isServerAvailable(context, showToast);
 
         return  result;
     }

@@ -561,6 +561,7 @@ public class SyncActivity extends AppCompatActivity {
                             AsyncSalesOrderDetails();
                             AsyncSalesOrderCancelDetails();
                             AsyncNotPurchasedDetails();
+                            AsyncStockReturnDetails();
 
                         }catch (Exception e) {
                             // TODO Auto-generated catch block
@@ -1137,6 +1138,14 @@ public class SyncActivity extends AppCompatActivity {
                         dataBaseAdapter.syncNotPurchasedRemarks(jsonObj);
                         api.udfnSyncDetails(preferenceMangr.pref_getString(Constants.KEY_DEVICEID), "receiptremarks", preferenceMangr.pref_getString(Constants.KEY_GETVANCODE), preferenceMangr.pref_getString(Constants.KEY_GET_SCHEDULE_SCHEDULECODE));
                     }
+
+                    Log.w("Sync Activity : "," Sync All : Stock Return");
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncstockreturndetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.syncstockreturndetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "stockreturndetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
                     new UploadImage().execute();
 
                     ////if(BuildConfig.DEBUG)
@@ -1267,8 +1276,10 @@ public class SyncActivity extends AppCompatActivity {
                 if(!preferenceMangr.pref_getString("getsalesclosecount").equals("0") && !preferenceMangr.pref_getString("getsalesclosecount").equals("null") &&
                         !preferenceMangr.pref_getString("getsalesclosecount").equals("") && !preferenceMangr.pref_getString("getsalesclosecount").equals(null)){
                     MenuActivity.OrderForm.setVisibility(View.VISIBLE);
+                    MenuActivity.StockReturn.setVisibility(View.VISIBLE);
                 }else{
                     MenuActivity.OrderForm.setVisibility(View.GONE);
+                    MenuActivity.StockReturn.setVisibility(View.GONE);
                 }
 
             }catch (Exception e) {
@@ -2247,6 +2258,7 @@ public class SyncActivity extends AppCompatActivity {
                             AsyncSalesOrderDetails();
                             AsyncSalesOrderCancelDetails();
                             AsyncNotPurchasedDetails();
+                            AsyncStockReturnDetails();
                             if(ScheduleActivity.isFromschedule.equals("yes")) {
                                 jsonObj = api.GetscheduleDetails(preferenceMangr.pref_getString("deviceid"), ScheduleActivity.scheduledate.getText().toString(), "syncdeliverynotescheduledetails.php", context);
                                 if (isSuccessful(jsonObj)) {
@@ -2391,11 +2403,20 @@ public class SyncActivity extends AppCompatActivity {
 
                         api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "itempricelisttransaction", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
                     }
+
                     //Not Purchased
+                    Log.w("Sync Activity : "," Sync Transaction : Not Purchased");
                     jsonObj = api.GetNotPurchasedDetails(preferenceMangr.pref_getString(Constants.KEY_DEVICEID),"syncnotpurchaseddetails.php",context);
                     if (isSuccessful(jsonObj)) {
                         dataBaseAdapter.syncnotpurchaseddetails(jsonObj);
                         api.udfnSyncDetails(preferenceMangr.pref_getString(Constants.KEY_DEVICEID), "notpurchased", preferenceMangr.pref_getString(Constants.KEY_GETVANCODE), preferenceMangr.pref_getString(Constants.KEY_GET_SCHEDULE_SCHEDULECODE));
+                    }
+
+                    Log.w("Sync Activity : "," Sync Transaction : Stock Return");
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncstockreturndetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.syncstockreturndetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "stockreturndetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
                     }
 
                     //if(BuildConfig.DEBUG)
@@ -5233,6 +5254,76 @@ public class SyncActivity extends AppCompatActivity {
     public void downloadUpiImage() {
         AsyncTaskClass asyncTaskClass = new AsyncTaskClass(context,dropboxlistener,downloadUPIData,Constants.DOWNLOAD_VENDER_IMAGE);
         asyncTaskClass.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public void AsyncStockReturnDetails(){
+        ArrayList<StockReturnDatas> List = null;
+        JSONObject jsonObj = null;
+        RestAPI api = new RestAPI();
+        DataBaseAdapter dbadapter = new DataBaseAdapter(context);
+        try {
+            JSONObject js_obj = new JSONObject();
+            try {
+
+                dbadapter.open();
+                Cursor mCur2 = dbadapter.GetStockReturnDetailsDatasDB();
+                JSONArray js_array2 = new JSONArray();
+                for (int i = 0; i < mCur2.getCount(); i++) {
+                    JSONObject obj = new JSONObject();
+                    obj.put("autonum", mCur2.getString(0));
+                    obj.put("stocktransferno", mCur2.getString(1));
+                    obj.put("transactiondate", mCur2.getString(2));
+                    obj.put("vancode", mCur2.getString(3));
+                    obj.put("schedulecode", mCur2.getString(4));
+                    obj.put("itemcode", mCur2.getString(5));
+                    obj.put("qty", mCur2.getString(6));
+                    obj.put("makerid", mCur2.getString(7));
+                    obj.put("createddate", mCur2.getString(8));
+                    obj.put("flag", mCur2.getString(9));
+                    obj.put("status", mCur2.getString(10));
+                    js_array2.put(obj);
+                    mCur2.moveToNext();
+                }
+                js_obj.put("JSonObject", js_array2);
+
+                jsonObj =  api.StockReturnDetails(js_obj.toString(),context);
+                //Call Json parser functionality
+                JSONParser parser = new JSONParser();
+                //parse the json object to boolean
+                List = parser.parseStockReturnDataList(jsonObj);
+                dbadapter.close();
+                if (List.size() > 0) {
+                    for (int j = 0; j < List.size(); j++) {
+                        DataBaseAdapter dataBaseAdapter = new DataBaseAdapter(context);
+                        dataBaseAdapter.open();
+                        dataBaseAdapter.UpdateStockReturnFlag(List.get(j).getScheduleCode(), List.get(j).getStockTransferno());
+                        dataBaseAdapter.close();
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                Log.e("AsyncStockReturnDetails : ", e.getMessage());
+                if(dbadapter != null)
+                    dbadapter.close();
+                DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+                mDbErrHelper.open();
+                String geterrror = e.toString();
+                mDbErrHelper.insertErrorLog("Exception in AsyncStockReturnDetails : " + geterrror.replace("'"," "), this.getClass().getSimpleName() + " - AsyncStockReturnDetails", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                mDbErrHelper.close();
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            Log.e("AsyncStockReturnDetails : ", e.getMessage());
+            if(dbadapter != null)
+                dbadapter.close();
+            DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
+            mDbErrHelper.open();
+            String geterrror = e.toString();
+            mDbErrHelper.insertErrorLog("Exception in AsyncStockReturnDetails : " + geterrror.replace("'"," "), this.getClass().getSimpleName() + " - AsyncStockReturnDetails", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            mDbErrHelper.close();
+        }
     }
 
 }
