@@ -10,8 +10,9 @@ public class SalesItemDetails {
     String subtotal;String routeallowpricedit;String discount;String freeflag;String purchaseitemcode;String freeitemcode;
     String dumyprice;String ratecount;String freecount;String applyitemscheme;String applyratescheme;String minsalesqty;
     String upp;String itemtype;String ratediscount;String schemeapplicable;String orgprice;String itemsubgroupcode;String minprice;
-    String schemeitem  ;
+    String schemeitem; String billScheme, bill_scheme_disc_amount, bill_scheme_disc_removed;
 double budgetutilize=0;
+
     public SalesItemDetails(String itemcode, String companycode, String brandcode, String manualitemcode,
                             String itemname, String itemnametamil, String unitcode, String unitweightunitcode,
                             String unitweight, String uppunitcode, String uppweight, String itemcategory,
@@ -21,7 +22,8 @@ double budgetutilize=0;
                             String itemqty,String subtotal,String routeallowpricedit,String discount,String freeflag,
                             String purchaseitemcode,String freeitemcode,String dumyprice,String ratecount,
                             String freecount,String minsalesqty,String upp,String itemtype,String ratediscount,String schemeapplicable,
-                            String orgprice,String itemsubgroupcode,String minprice,double budgetutilize,String schemeitem) {
+                            String orgprice,String itemsubgroupcode,String minprice,double budgetutilize,String schemeitem,
+                            String billScheme) {
         this.itemcode = itemcode;
         this.companycode = companycode;
         this.brandcode = brandcode;
@@ -66,6 +68,67 @@ double budgetutilize=0;
         this.minprice = minprice;
         this.budgetutilize=budgetutilize;
         this.schemeitem=schemeitem;
+        this.billScheme = billScheme;
+    }
+
+    public SalesItemDetails(String itemcode, String companycode, String brandcode, String manualitemcode,
+                            String itemname, String itemnametamil, String unitcode, String unitweightunitcode,
+                            String unitweight, String uppunitcode, String uppweight, String itemcategory,
+                            String parentitemcode, String allowpriceedit, String allownegativestock,
+                            String allowdiscount, String stockqty, String unitname, String noofdecimals,
+                            String oldprice, String newprice, String colourcode, String hsn, String tax,
+                            String itemqty,String subtotal,String routeallowpricedit,String discount,String freeflag,
+                            String purchaseitemcode,String freeitemcode,String dumyprice,String ratecount,
+                            String freecount,String minsalesqty,String upp,String itemtype,String ratediscount,String schemeapplicable,
+                            String orgprice,String itemsubgroupcode,String minprice,double budgetutilize,String schemeitem,
+                            String billScheme, String bill_scheme_disc_amount, String bill_scheme_disc_removed) {
+        this.itemcode = itemcode;
+        this.companycode = companycode;
+        this.brandcode = brandcode;
+        this.manualitemcode = manualitemcode;
+        this.itemname = itemname;
+        this.itemnametamil = itemnametamil;
+        this.unitcode = unitcode;
+        this.unitweightunitcode = unitweightunitcode;
+        this.unitweight = unitweight;
+        this.uppunitcode = uppunitcode;
+        this.uppweight = uppweight;
+        this.itemcategory = itemcategory;
+        this.parentitemcode = parentitemcode;
+        this.allowpriceedit = allowpriceedit;
+        this.allownegativestock = allownegativestock;
+        this.allowdiscount = allowdiscount;
+        this.stockqty = stockqty;
+        this.unitname = unitname;
+        this.noofdecimals = noofdecimals;
+        this.oldprice = oldprice;
+        this.newprice = newprice;
+        this.colourcode = colourcode;
+        this.hsn = hsn;
+        this.tax = tax;
+        this.itemqty = itemqty;
+        this.subtotal = subtotal;
+        this.routeallowpricedit = routeallowpricedit;
+        this.discount = discount;
+        this.freeflag = freeflag;
+        this.purchaseitemcode = purchaseitemcode;
+        this.freeitemcode = freeitemcode;
+        this.dumyprice = dumyprice;
+        this.ratecount = ratecount;
+        this.freecount = freecount;
+        this.minsalesqty = minsalesqty;
+        this.upp = upp;
+        this.itemtype = itemtype;
+        this.ratediscount = ratediscount;
+        this.schemeapplicable = schemeapplicable;
+        this.orgprice=orgprice;
+        this.itemsubgroupcode = itemsubgroupcode;
+        this.minprice = minprice;
+        this.budgetutilize=budgetutilize;
+        this.schemeitem=schemeitem;
+        this.billScheme = billScheme;
+        this.bill_scheme_disc_amount = bill_scheme_disc_amount;
+        this.bill_scheme_disc_removed = bill_scheme_disc_removed;
     }
 
     public String getItemcode() {
@@ -304,6 +367,18 @@ double budgetutilize=0;
 
     public void setschemeapplicable(String schemeapplicable) {
         this.schemeapplicable = schemeapplicable;
+    }
+
+    public String getBillScheme() {
+        return billScheme;
+    }
+
+    public String getBill_scheme_disc_amount() {
+        return bill_scheme_disc_amount;
+    }
+
+    public String getBill_scheme_disc_removed() {
+        return bill_scheme_disc_removed;
     }
 
     static class SortbyPurchaseItemDesc implements Comparator<SalesItemDetails>

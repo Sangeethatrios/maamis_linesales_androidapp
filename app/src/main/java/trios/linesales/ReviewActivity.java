@@ -28,6 +28,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -58,7 +60,8 @@ public class ReviewActivity extends AppCompatActivity {
     public static ArrayList<String> companyCodeList = new ArrayList<>();
     public  TextView paymenttypeinvoice,txtcustomername,txtareacity,
             txtcarttotalamt,txtreviewweight,reviewitems,
-            txtdiscountamt,txtsubtotalamt,cartgstnnumber,txtbookingno,txtreviewdate,hidedummy;
+            txtdiscountamt,txtsubtotalamt,cartgstnnumber,txtbookingno,txtreviewdate,hidedummy,
+            txtcashdiscountamt;
     public DecimalFormat df;
     Button txtSalesprint,imgcamera;
     EditText txtremarks;
@@ -86,6 +89,10 @@ public class ReviewActivity extends AppCompatActivity {
     String orderTransNo="",orderFinancialyear="",orderCompanyCode="";
     ReceiveListener receiveListener = null;
     ProgressDialog loaderPrint;
+    CheckBox chkremovecashdiscount;
+    public static String cust_bill_scheme_disc_percentage="0";
+    boolean cash_discount_applied = false;
+    boolean skipChxBoxListener = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,8 +119,11 @@ public class ReviewActivity extends AppCompatActivity {
             txtremarks = (EditText)findViewById(R.id.txtremarks);
             imgcamera = (Button)findViewById(R.id.imgcamera);
             hidedummy = (TextView)findViewById(R.id.hidedummy);
+            txtcashdiscountamt = (TextView) findViewById(R.id.txtcashdiscountamt);
+            chkremovecashdiscount = (CheckBox) findViewById(R.id.chkremovecashdiscount);
             SalesViewActivity.isduplicate = false;
 
+            cust_bill_scheme_disc_percentage = SalesActivity.cust_bill_scheme_disc_percentage;
             imgcamera.setVisibility(View.GONE);
             hidedummy.setVisibility(View.VISIBLE);
 
@@ -307,6 +317,59 @@ public class ReviewActivity extends AppCompatActivity {
 
             }
 
+            chkremovecashdiscount.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (skipChxBoxListener) {
+                        skipChxBoxListener = false;
+                        return;
+                    }
+
+                    if (isChecked) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Confirmation");
+                        builder.setMessage("Are you sure you want to remove the bill scheme discount?")
+                                .setCancelable(false)
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        cust_bill_scheme_disc_percentage = "0";
+                                        CalculateTotal();
+                                        chkremovecashdiscount.setVisibility(View.VISIBLE);
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        skipChxBoxListener = true;
+                                        chkremovecashdiscount.setChecked(!chkremovecashdiscount.isChecked());
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Confirmation");
+                        builder.setMessage("Are you sure you want to apply the bill scheme discount?")
+                                .setCancelable(false)
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        cust_bill_scheme_disc_percentage = SalesActivity.cust_bill_scheme_disc_percentage;
+                                        CalculateTotal();
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        skipChxBoxListener = true;
+                                        chkremovecashdiscount.setChecked(!chkremovecashdiscount.isChecked());
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                }
+            });
+
             //Sales save functionality
             txtSalesprint.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -340,7 +403,8 @@ public class ReviewActivity extends AppCompatActivity {
                                             salesItemList.get(i).getDiscount(), salesItemList.get(i).getSubtotal(), salesItemList.get(i).getFreeflag(),
                                             salesItemList.get(i).getTax(), SalesActivity.gstnnumber, getmaxrefno,
                                             (Double.parseDouble(salesItemList.get(i).getUnitweight()) * (Double.parseDouble(salesItemList.get(i).getItemqty()))),
-                                            i + 1, salesItemList.get(i).getratediscount(),salesItemList.get(i).getschemeapplicable(),salesItemList.get(i).getOrgprice(),salesItemList.get(i).getBudgetUtilize(),salesItemList.get(i).getSchemeItem());
+                                            i + 1, salesItemList.get(i).getratediscount(),salesItemList.get(i).getschemeapplicable(),salesItemList.get(i).getOrgprice(),
+                                            salesItemList.get(i).getBudgetUtilize(),salesItemList.get(i).getSchemeItem(), salesItemList.get(i).getBillScheme());
 
                                     if(totalbudgetutilize == 0){
                                         totalbudgetutilize=salesItemList.get(i).getBudgetUtilize() ;
@@ -390,12 +454,23 @@ public class ReviewActivity extends AppCompatActivity {
                                     objdatabaseadapter.insertErrorLog("ReviewActivity : Exception in getLatLong value : " + String.valueOf(e).replace("'", " "), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
                                 }
 
+                                double bill_scheme_disc_percentage = 0;
+                                if (!Utilities.isNullOrEmpty(cust_bill_scheme_disc_percentage) &&
+                                        Double.parseDouble(cust_bill_scheme_disc_percentage) > 0)
+                                    bill_scheme_disc_percentage = Double.parseDouble(cust_bill_scheme_disc_percentage) / 100;
+
+                                String bill_scheme_disc_removed = "";
+                                if (cash_discount_applied){
+                                    bill_scheme_disc_removed = chkremovecashdiscount.isChecked() ? "Yes" : "No";
+                                }
+
                                 getsalestransactionno = objdatabaseadapter.InsertSales(preferenceMangr.pref_getString("getvancode"), getsalesdate, SalesActivity.customercode,
                                         getbilltypecode, SalesActivity.gstnnumber, preferenceMangr.pref_getString("getschedulecode"), getsubtotalamount,
                                         getdiscountamt, getgrandtotal, preferenceMangr.pref_getString("getfinanceyrcode"),
                                         txtremarks.getText().toString(), getbookingno, gettransactionno,
                                         getmaxrefno, getbillcopystatus, getcashpaidstatus,latLong,latitude,longtitude,
-                                        orderTransNo,orderFinancialyear,orderCompanyCode,totalbudgetutilize);
+                                        orderTransNo,orderFinancialyear,orderCompanyCode,totalbudgetutilize, bill_scheme_disc_percentage,
+                                        bill_scheme_disc_removed);
                                 //Get General settings
                                 if (!getsalestransactionno.equals("") && !getsalestransactionno.equals(null)
                                         && !getsalestransactionno.equals("null")) {
@@ -1046,7 +1121,8 @@ public class ReviewActivity extends AppCompatActivity {
                                 getcartdatas.getString(30), getcartdatas.getString(31), getcartdatas.getString(21),
                                 "", "", getcartdatas.getString(32),"","",
                                 getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",
-                                getcartdatas.getDouble( getcartdatas.getColumnIndex("budget_utilize")),getcartdatas.getString( getcartdatas.getColumnIndex("schemeitem")) ));
+                                getcartdatas.getDouble( getcartdatas.getColumnIndex("budget_utilize")),getcartdatas.getString( getcartdatas.getColumnIndex("schemeitem")),
+                                getcartdatas.getString(getcartdatas.getColumnIndex("bill_scheme"))));
                         getcartdatas.moveToNext();
                     }
                     //Adapter
@@ -1370,6 +1446,7 @@ public class ReviewActivity extends AppCompatActivity {
                     builder.setMessage("Are you sure you want to delete ?")
                             .setCancelable(false)
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @SuppressLint("Range")
                                 public void onClick(DialogInterface dialog, int id) {
                                     boolean deletefree = false;
                                     int getpurchasitemposition = 011111111222;
@@ -1413,7 +1490,8 @@ public class ReviewActivity extends AppCompatActivity {
                                                             , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
                                                             getcartdatas.getString(30), getcartdatas.getString(31) ,getcartdatas.getString(21),
                                                             "","",getcartdatas.getString(32),"","",getcartdatas.getString(34),
-                                                            getcartdatas.getString(35),getcartdatas.getString(36),"","",0,"no"));
+                                                            getcartdatas.getString(35),getcartdatas.getString(36),"","",0,"no",
+                                                            getcartdatas.getString(getcartdatas.getColumnIndex("bill_scheme"))));
                                                     getcartdatas.moveToNext();
                                                 }
                                             }
@@ -1499,6 +1577,7 @@ public class ReviewActivity extends AppCompatActivity {
         double res3 = 0;
         double res4 = 0;
         double discoutAmt = 0;
+        double valueDiscountTotal = 0;
         for (int i = 0; i < salesItemList.size(); i++) {
             String salessubtotal = salesItemList.get(i).getSubtotal();
             String salesweight = salesItemList.get(i).getUnitweight();
@@ -1539,7 +1618,38 @@ public class ReviewActivity extends AppCompatActivity {
             res1 = res1 + Double.parseDouble(getsalessubtotal);
             res2 = res2 + (Double.parseDouble(getqty)*Double.parseDouble(getsalesweight));
             res4 = res1 - res3;
+
+            if (!Utilities.isNullOrEmpty(salesItemList.get(i).getBillScheme()) &&
+                (salesItemList.get(i).getBillScheme().equals("YES") || salesItemList.get(i).getBillScheme().equals("Yes") ||
+                        salesItemList.get(i).getBillScheme().equals("yes"))) {
+                valueDiscountTotal = valueDiscountTotal + Double.parseDouble(getsalessubtotal);
+            }
         }
+
+        double valueDiscAmt = 0;
+        if (valueDiscountTotal > 0) {
+            cash_discount_applied = true;
+            String cust_bill_scheme_disc_perc = cust_bill_scheme_disc_percentage;
+            if (!Utilities.isNullOrEmpty(cust_bill_scheme_disc_perc) && Double.parseDouble(cust_bill_scheme_disc_perc) > 0) {
+                valueDiscAmt = valueDiscountTotal * Double.parseDouble(cust_bill_scheme_disc_perc) / 100;
+            }
+            if (valueDiscAmt > 0) {
+                chkremovecashdiscount.setVisibility(View.VISIBLE);
+            } else {
+                chkremovecashdiscount.setVisibility(View.INVISIBLE);
+//                skipChxBoxListener = true;
+//                chkremovecashdiscount.setChecked(false);
+            }
+        } else {
+            chkremovecashdiscount.setVisibility(View.INVISIBLE);
+            skipChxBoxListener = true;
+            chkremovecashdiscount.setChecked(false);
+        }
+
+        txtcashdiscountamt.setText("₹  "+ dft.format(valueDiscAmt));
+
+        res4 = res4 - valueDiscAmt;
+
         getsubtotalamount = dft.format( Math.round(res1));
         getdiscountamt = dft.format( Math.round(res3));
         getgrandtotal =dft.format( Math.round(res4));
@@ -1708,6 +1818,8 @@ public class ReviewActivity extends AppCompatActivity {
                         obj.put("ordertransactionno", orderTransNo);
 
                         obj.put("budget_utilize", mCursales.getString(mCursales.getColumnIndex("total_budget_utilize")));
+                        obj.put("bill_scheme_disc_amount", mCursales.getString(mCursales.getColumnIndex("bill_scheme_disc_amount")));
+                        obj.put("bill_scheme_disc_removed", mCursales.getString(mCursales.getColumnIndex("bill_scheme_disc_removed")));
 
                         js_array2.put(obj);
                         mCursales.moveToNext();

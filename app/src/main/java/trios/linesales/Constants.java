@@ -135,6 +135,9 @@ public class Constants {
     public static final String CLONE_BILLTYPECODE = "clonebilltypecode";
     public static final String SALES_BILLTYPECODE = "salesbilltypecode";
 
+    public static final String SALES_CUST_BILL_SCHEME = "sales_cust_bill_scheme";
+    public static final String SALES_CUST_BILL_SCHEME_DISC_PERCENTAGE = "sales_cust_bill_scheme_disc_percentage";
+
 //    public static final String SALES_AREACODE = "salesareacode";
 
 }

@@ -219,7 +219,8 @@ public class ReturnReviewActivity extends AppCompatActivity {
                                     salesItemList.get(i).getDiscount(),salesItemList.get(i).getSubtotal(),salesItemList.get(i).getFreeflag(),
                                     salesItemList.get(i).getTax(),SalesReturnActivity.gstnnumber,getmaxrefno,
                                     (Double.parseDouble(salesItemList.get(i).getUnitweight())*(Double.parseDouble(salesItemList.get(i).getItemqty()))
-                                    ),i+1,salesItemList.get(i).getratediscount(),salesItemList.get(i).getschemeapplicable(),salesItemList.get(i).getOrgprice(),0,"no");
+                                    ),i+1,salesItemList.get(i).getratediscount(),salesItemList.get(i).getschemeapplicable(),salesItemList.get(i).getOrgprice(),
+                                    0,"no","no");
                         }
 
 

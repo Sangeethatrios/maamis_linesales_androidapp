@@ -38,6 +38,7 @@ import android.widget.Toast;
 import com.epson.epos2.printer.Printer;
 import com.epson.epos2.printer.PrinterStatusInfo;
 import com.epson.epos2.printer.ReceiveListener;
+import com.itextpdf.text.pdf.parser.Line;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,7 +56,7 @@ public class SalesViewActivity extends AppCompatActivity {
     TextView txtviewbookingno,txtviewreviewdate,viewpaymenttypeinvoice,txtviewcustomername,txtviewareacity,
             viewcartgstnnumber,txtviewsubtotalamt,txtviewdiscountamt,txtviewcancel,txtviewcarttotalamt,
             txtviewSalesprint,reviewitems,txtreviewweight,txtviewcanceldummy,hidedummy,hidedummy1,txtbillno
-            ,txtviewshortname,txtviewtotamt,  txtviewSalesDCprint;
+            ,txtviewshortname,txtviewtotamt,  txtviewSalesDCprint, txtviewcashdiscountamt ;
     ListView viewSalesListview;
     Context context;
     ImageView cameraview,imgcamera;
@@ -82,6 +83,8 @@ public class SalesViewActivity extends AppCompatActivity {
 
     public static ArrayList<String> companyCodeList = new ArrayList<>();
     ProgressDialog loaderPrint;
+    LinearLayout LLCashDiscount;
+    @SuppressLint("Range")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +116,8 @@ public class SalesViewActivity extends AppCompatActivity {
         txtviewshortname = (TextView)findViewById(R.id.txtviewshortname);
         txtviewtotamt = (TextView)findViewById(R.id.txtviewtotamt);
         txtviewSalesDCprint = (TextView)findViewById(R.id.txtviewSalesDCprint);
+        txtviewcashdiscountamt = (TextView)findViewById(R.id.txtviewcashdiscountamt);
+        LLCashDiscount = (LinearLayout) findViewById(R.id.LLCashDiscount);
 
         isduplicate = false;
 
@@ -211,6 +216,12 @@ public class SalesViewActivity extends AppCompatActivity {
                 txtviewcarttotalamt.setText("₹ "+dft.format(Math.round(totalAmount)));
                 txtviewsubtotalamt.setText("₹ "+dft.format(Math.round(Double.parseDouble(getsalesmaindetails.getString(12)))));
                 txtviewdiscountamt.setText("₹ "+dft.format(Math.round(Double.parseDouble(getsalesmaindetails.getString(13)))));
+                double bill_scheme_disc_amount = getsalesmaindetails.getDouble(getsalesmaindetails.getColumnIndex("bill_scheme_disc_amount"));
+                LLCashDiscount.setVisibility(View.GONE);
+                if (bill_scheme_disc_amount > 0) {
+                    LLCashDiscount.setVisibility(View.VISIBLE);
+                    txtviewcashdiscountamt.setText("₹ " + dft.format(bill_scheme_disc_amount));
+                }
                 if(getsalesmaindetails.getString(19).equals("3")
                         || getsalesmaindetails.getString(19).equals("6")){
                     txtviewcancel.setVisibility(View.GONE);

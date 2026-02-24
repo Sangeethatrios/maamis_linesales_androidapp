@@ -24,7 +24,7 @@ class SalesListDetails {
     public int syncstatus;
     public int upipaidcount;
     public String discount;
-
+    public String bill_scheme, bill_scheme_disc_percentage;
     public int areacode;
 
     public String getBillcode() {
@@ -122,13 +122,22 @@ class SalesListDetails {
         return areacode;
     }
 
+    public String getBill_scheme() {
+        return bill_scheme;
+    }
+
+    public String getBill_scheme_disc_percentage() {
+        return bill_scheme_disc_percentage;
+    }
+
     public SalesListDetails(String billcode, String voucherdate, String retailercode,
                             String retailername, String retailernametamil, String paymenttype,
                             String grandtotal, String sno, String schedulecode, String retailercity, String flag,
                             String area, String gstinumber, String bookingno,
                             String companyshortname, String billcopystatus, String cashpaidstatus,
                             String transactionno, String financialyearcode, String companycode,
-                            int syncstatus, int upipaidcount, String discount, int areacode ) {
+                            int syncstatus, int upipaidcount, String discount, int areacode,
+                            String bill_scheme, String bill_scheme_disc_percentage) {
         this.billcode = billcode;
         this.voucherdate = voucherdate;
         this.retailercode = retailercode;
@@ -153,5 +162,7 @@ class SalesListDetails {
         this.upipaidcount = upipaidcount;
         this.discount = discount;
         this.areacode = areacode;
+        this.bill_scheme = bill_scheme;
+        this.bill_scheme_disc_percentage = bill_scheme_disc_percentage;
      }
 }

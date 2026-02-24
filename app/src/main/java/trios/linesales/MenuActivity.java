@@ -2662,6 +2662,9 @@ public class MenuActivity extends AppCompatActivity {
                     obj.put("ordertransactionno", orderTransNo);
 
                     obj.put("budget_utilize", mCursales.getString(mCursales.getColumnIndex("total_budget_utilize")));
+                    obj.put("bill_scheme_disc_amount", mCursales.getString(mCursales.getColumnIndex("bill_scheme_disc_amount")));
+                    obj.put("bill_scheme_disc_removed", mCursales.getString(mCursales.getColumnIndex("bill_scheme_disc_removed")));
+
                     js_array2.put(obj);
                     mCursales.moveToNext();
                 }

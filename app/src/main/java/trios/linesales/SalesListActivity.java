@@ -92,7 +92,8 @@ public class SalesListActivity extends AppCompatActivity {
             getsalesreviewtbilldate="",geteinvoicepending="0", geteinvoicegenerated="0",
             gettotaleinvoicebills="0", getsalesreviewtcityareaname = "" ,
             getsalesreviewtcustomername = "", getsalesreviewcustomercode="0", getsalesreviewtareaname = ""
-            , getsalesreviewbilltypecode = "", getsalesreviewtcityname = "";
+            , getsalesreviewbilltypecode = "", getsalesreviewtcityname = "", getsalesreviewbillscheme = "no",
+            getsalesreviewbillscheme_disc_percentage=  "0";
     public static Integer geteinvoicestatus=0 ,
             getsalesreviewareacode = 0;
     Spinner selectpaymenttype,selectpaymentstatus;
@@ -1352,6 +1353,8 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                         getsalesreviewtareaname = currentListDatareview.get(position).getArea();
                         getsalesreviewareacode = currentListDatareview.get(position).getAreacode();
                         getsalesreviewbilltypecode = currentListDatareview.get(position).getPaymenttype();
+                        getsalesreviewbillscheme = currentListDatareview.get(position).getBill_scheme();
+                        getsalesreviewbillscheme_disc_percentage = currentListDatareview.get(position).getBill_scheme_disc_percentage();
 
                             final String listschedulecode = currentListDatareview.get(position).getSchedulecode();
                         String listsalescount = "";
@@ -1400,6 +1403,8 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                             i.putExtra(Constants.CLONE_AREANAME,getsalesreviewtareaname);
                             i.putExtra(Constants.CLONE_BILLTYPECODE,getsalesreviewbilltypecode);
                             i.putExtra(Constants.CLONE_CITYNAME,getsalesreviewtcityname);
+                            i.putExtra(Constants.SALES_CUST_BILL_SCHEME,getsalesreviewbillscheme);
+                            i.putExtra(Constants.SALES_CUST_BILL_SCHEME_DISC_PERCENTAGE,getsalesreviewbillscheme_disc_percentage);
 
                             startActivity(i);
 
@@ -4058,6 +4063,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
         return result;
     }
     //Sales List
+    @SuppressLint("Range")
     public  void GetSalesList(){
         DataBaseAdapter objdatabaseadapter = null;
         Cursor Cur=null;
@@ -4078,7 +4084,8 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                             Cur.getString(18),Cur.getString(24),Cur.getString(15)
                             ,Cur.getString(16),Cur.getString(2),Cur.getString(17),
                             Cur.getString(0),Cur.getInt(29),Cur.getInt(30),Cur.getString(13),
-                            Cur.getInt(31)));
+                            Cur.getInt(31), Cur.getString(Cur.getColumnIndex("bill_scheme")),
+                            Cur.getString(Cur.getColumnIndex("bill_scheme_disc_percentage"))));
                     Cur.moveToNext();
                 }
                 getdata = saleslist;

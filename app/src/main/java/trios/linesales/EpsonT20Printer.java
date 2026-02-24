@@ -398,7 +398,7 @@ public class EpsonT20Printer implements ReceiveListener {
     }
 
     //SAles Print
-    @SuppressLint("LongLogTag")
+    @SuppressLint({"LongLogTag", "Range"})
     @SuppressWarnings("rawtypes")
     public boolean GetSalesBillPrint(String gettransactiono,String getfinancialyearcode,Activity objActivity, boolean printDC, String companyCode, String printNetAmount) {
 
@@ -767,32 +767,86 @@ public class EpsonT20Printer implements ReceiveListener {
                     mPrinter.addTextFont(Printer.FONT_A);
                     mPrinter.addText(" Tax value " + " : "+ Util.rightJustify( dft.format(gettotaltaxvalue),11) + "\n");
 
-                    double roundoff= mDbHelper.GetSalesroundoffPrint(gettransactiono,getfinancialyearcode,mCur.getString(17));
-                    String roundoffs=dft.format(roundoff);
+                    String line_space142 = "--------------------------------\n";
+                    mPrinter.addText(line_space142);
 
-                    double getgrandtotal= mDbHelper.GetSalesTotalforbill(gettransactiono,getfinancialyearcode,mCur.getString(17));
-                    String grandtotal=dft.format(getgrandtotal);
+                    double bill_scheme_disc_amount = mCur.getDouble(mCur.getColumnIndex("bill_scheme_disc_amount"));
+                    if (bill_scheme_disc_amount > 0) {
 
-                    mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
-                    mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
-                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                    mPrinter.addTextFont(Printer.FONT_A);
-                    int valueroundoff = (int)roundoff;
-                    mPrinter.addText(" Round Off " + " : " + Util.rightJustify(dft.format(roundoff), 11) + "\n");
-                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+                        double totAmt = gettotaltaxablevalue + gettotaltaxvalue;
+                        mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+                        mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextFont(Printer.FONT_A);
+                        mPrinter.addText(" Amount : " + Util.rightJustify(dft.format(totAmt), 11) + "\n");
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
 
-                    String line_space141 = "--------------------------------\n";
-                    mPrinter.addText(line_space141);
+                        mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+                        mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextFont(Printer.FONT_A);
+                        mPrinter.addText(" Cash Discount " + " : " + Util.rightJustify(dft.format(bill_scheme_disc_amount), 11) + "\n");
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
 
-                    mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
-                    mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
-                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
-                    mPrinter.addTextFont(Printer.FONT_A);
-                    mPrinter.addText(" Total " + " : " + Util.rightJustify(dft.format(getgrandtotal), 11) + "\n");
-                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+                        String line_space143 = "--------------------------------\n";
+                        mPrinter.addText(line_space143);
 
-                    String line_space14 = "--------------------------------\n";
-                    mPrinter.addText(line_space14);
+                        double totalAmt = totAmt - bill_scheme_disc_amount;
+                        mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+                        mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextFont(Printer.FONT_A);
+                        mPrinter.addText(" Total : " + Util.rightJustify(dft.format(totalAmt), 11) + "\n");
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+
+                        double roundOff = Math.round(totalAmt) - totalAmt;
+                        mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+                        mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextFont(Printer.FONT_A);
+                        mPrinter.addText(" Round Off " + " : " + Util.rightJustify(dft.format(roundOff), 11) + "\n");
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+
+                        String line_space14 = "--------------------------------\n";
+                        mPrinter.addText(line_space14);
+
+                        mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+                        mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextFont(Printer.FONT_A);
+                        mPrinter.addText(" Net Total " + " : " + Util.rightJustify(dft.format(Math.round(totalAmt)), 11) + "\n");
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+
+                        mPrinter.addText(line_space14);
+
+                    } else {
+
+                        double roundoff = mDbHelper.GetSalesroundoffPrint(gettransactiono, getfinancialyearcode, mCur.getString(17));
+                        String roundoffs = dft.format(roundoff);
+
+                        double getgrandtotal = mDbHelper.GetSalesTotalforbill(gettransactiono, getfinancialyearcode, mCur.getString(17));
+                        String grandtotal = dft.format(getgrandtotal);
+
+                        mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+                        mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextFont(Printer.FONT_A);
+                        int valueroundoff = (int)roundoff;
+                        mPrinter.addText(" Round Off " + " : " + Util.rightJustify(dft.format(roundoff), 11) + "\n");
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+
+                        String line_space14 = "--------------------------------\n";
+                        mPrinter.addText(line_space14);
+
+                        mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+                        mPrinter.addTextSize(Printer.PARAM_DEFAULT, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.TRUE, Printer.PARAM_DEFAULT);
+                        mPrinter.addTextFont(Printer.FONT_A);
+                        mPrinter.addText(" Total " + " : " + Util.rightJustify(dft.format(getgrandtotal), 11) + "\n");
+                        mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.PARAM_DEFAULT);
+
+                        mPrinter.addText(line_space14);
+                    }
 
                     double discunt= mDbHelper.GetSalesDiscount(gettransactiono,getfinancialyearcode,mCur.getString(17));
                     String discount=dft.format(discunt);
@@ -804,9 +858,10 @@ public class EpsonT20Printer implements ReceiveListener {
                         mPrinter.addTextFont(Printer.FONT_A);
                         int valuediscunt = (int)discunt;
                         mPrinter.addText(" Savings " + " : " + Util.rightJustify(dft.format(discunt), 11) + "\n");
-                    }
 
-                    mPrinter.addText(line_space14);
+                        String line_space15 = "--------------------------------\n";
+                        mPrinter.addText(line_space15);
+                    }
 
                    /* double net=gettotal-discunt;
                     String nettotal = dft.format(net);

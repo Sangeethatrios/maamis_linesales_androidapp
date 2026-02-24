@@ -20,7 +20,7 @@ import android.util.Log;
 
 public class DataBaseHelper extends SQLiteOpenHelper
 {
-    private static int DbVersion = 7;
+    private static int DbVersion = 8;
     private static String DB_PATH;
     private static String DB_NAME = "dblinesales.db";
     private static SQLiteDatabase mDataBase;
@@ -240,6 +240,10 @@ public class DataBaseHelper extends SQLiteOpenHelper
         if (oldVersion < 7) {
             CreateStockReturnTable(db);
         }
+
+        if (oldVersion < 8) {
+            addProduct_Bill_Scheme(db);
+        }
     }
     private void addLocationforcustomer(SQLiteDatabase db) {
         String querytblsales = "ALTER TABLE " + Constants.TBLSALES +
@@ -318,5 +322,24 @@ public class DataBaseHelper extends SQLiteOpenHelper
                 " status INTEGER" +
                 ")";
         db.execSQL(query);
+    }
+
+    private void addProduct_Bill_Scheme(SQLiteDatabase db) {
+        String query = "ALTER TABLE tblitemmaster ADD COLUMN product_scheme TEXT default null;";
+        db.execSQL(query);
+        String query1 = "ALTER TABLE tblitemmaster ADD COLUMN bill_scheme TEXT default null;";
+        db.execSQL(query1);
+        String query2 = "ALTER TABLE tblcustomer ADD COLUMN bill_scheme TEXT default null;";
+        db.execSQL(query2);
+        String query3 = "ALTER TABLE tblcustomer ADD COLUMN bill_scheme_disc_percentage TEXT default null;";
+        db.execSQL(query3);
+        String query4 = "ALTER TABLE tblsalescartdatas ADD COLUMN bill_scheme TEXT default null;";
+        db.execSQL(query4);
+        String query5 = "ALTER TABLE tbltempsalesitemdetails ADD COLUMN bill_scheme TEXT default null;";
+        db.execSQL(query5);
+        String query6 = "ALTER TABLE tblsales ADD COLUMN bill_scheme_disc_amount REAL default null;";
+        db.execSQL(query6);
+        String query7 = "ALTER TABLE tblsales ADD COLUMN bill_scheme_disc_removed TEXT default null;";
+        db.execSQL(query7);
     }
 }

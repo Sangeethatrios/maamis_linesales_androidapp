@@ -103,7 +103,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
     String[] SubGroupCode,SubGroupName,SubGroupNameTamil;
     String[] CustomerCode,CustomerCategory,CustomerName,CustomerNameTamil,Address,CustomerAreaCode,MobileNo,
             TelephoneNo,GSTN,SchemeApplicable,customertypecode,CustomerCityName,CustomerAreaName,CustomerTotalOrder,
-            Customerbillcount, CusNotPurchasedCount,DayWiseSalesamt,AnnualSalesamt,BillWiseBudget,cusLatitude,cusLongitude,Gstinverificationstatus;
+            Customerbillcount, CusNotPurchasedCount,DayWiseSalesamt,AnnualSalesamt,BillWiseBudget,cusLatitude,cusLongitude,
+            Gstinverificationstatus, BillScheme, BillSchemeDiscPercentage;
 
     String[] FreeItemName,FreeItemOp,FreeItemHandover,FreeItemDistributed,FreeItemBalance,
             FreeItemCode,FreeItemSNO;
@@ -112,7 +113,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             getschemeapplicable="",getstaticsubcode="",getstaticchilditemcode="",getstaticgetchildqty="",
             getlabelchildqty="",customercityname="",customerareaname="",customername="",customercityarea="",fromcustomer="",
             otptimevalidity="",otptimevaliditybackend="",getmobilenoverifycount="",orderbillno="",
-            ordertransactionno="",orderfinancialyearcode="" ;
+            ordertransactionno="",orderfinancialyearcode="", cust_bill_scheme, cust_bill_scheme_disc_percentage;
     static public double budgetutilize=0,totalbudgetutilize=0,total = 0  ;
     public static ArrayList<SalesItemDetails> salesitems = new ArrayList<SalesItemDetails>();
     ArrayList<SalesItemDetails> freeitems = new ArrayList<SalesItemDetails>();
@@ -256,6 +257,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     customercode = getIntent().getStringExtra(Constants.SALES_CUSTOMERCODE );
                     txtcustomername.setText(getIntent().getStringExtra(Constants.SALES_CUSTOMERNAME));
                     txtareaname.setText(getIntent().getStringExtra(Constants.SALES_AREANAME));
+                    cust_bill_scheme = getIntent().getStringExtra(Constants.SALES_CUST_BILL_SCHEME);
+                    cust_bill_scheme_disc_percentage = getIntent().getStringExtra(Constants.SALES_CUST_BILL_SCHEME_DISC_PERCENTAGE);
 
                     if(getpaymenttypecode.equals("1")) {
                         radio_cash.setChecked(true);
@@ -888,6 +891,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                 txtareaname.setText(LoginActivity.getareaname);
                                 txtcustomername.setText(getcustomernametamil);
                                 customercode = getresult;
+                                cust_bill_scheme = "";
+                                cust_bill_scheme_disc_percentage = "";
                                 gstnnumber = getgstin.trim();
 
                                 if(getcustomertypecode.equals("1")){
@@ -1288,6 +1293,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                 cusLatitude= new String[Cur.getCount()];
                 cusLongitude= new String[Cur.getCount()];
                 Gstinverificationstatus= new String[Cur.getCount()];
+                BillScheme= new String[Cur.getCount()];
+                BillSchemeDiscPercentage= new String[Cur.getCount()];
                 for(int i=0;i<Cur.getCount();i++){
                     CustomerCode[i] = Cur.getString(0);
                     CustomerName[i] = Cur.getString(1);
@@ -1311,6 +1318,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     cusLatitude[i]=Cur.getString(Cur.getColumnIndex("latitude"));
                     cusLongitude[i]=Cur.getString(Cur.getColumnIndex("longitude"));
                     Gstinverificationstatus[i]=Cur.getString(Cur.getColumnIndex("gstinverificationstatus"));
+                    BillScheme[i] = Cur.getString(Cur.getColumnIndex("bill_scheme"));
+                    BillSchemeDiscPercentage[i] = Cur.getString(Cur.getColumnIndex("bill_scheme_disc_percentage"));
                     Cur.moveToNext();
                 }
 
@@ -1481,7 +1490,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                             "","","0","",Cur.getString(20),
                             Cur.getString(29),Cur.getString(30),Cur.getString(32),Cur.getString(33),
                             Cur.getString(34) ,"","",Cur.getString(20),""
-                            ,Cur.getString(Cur.getColumnIndex("minprice")),0,"no")
+                            ,Cur.getString(Cur.getColumnIndex("minprice")),0,"no",
+                            Cur.getString(Cur.getColumnIndex("bill_scheme")))
                     );
                     Cur.moveToNext();
                 }
@@ -3322,7 +3332,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                         , String.valueOf(salesitems.get(i).getRouteallowpricedit()), schemeitemdiscount, freeitemstatus,
                                                         String.valueOf(salesitems.get(i).getPurchaseitemcode()), String.valueOf(salesitems.get(i).getFreeitemcode()),
                                                         String.valueOf(salesitems.get(i).getMinsalesqty()),String.valueOf(salesitems.get(i).getDumyprice()),String.valueOf(salesitems.get(i).getratediscount())
-                                                        ,itemschemeapplicable,String.valueOf(salesitems.get(i).getOrgprice()),budgetutilize,salesitems.get(i).getSchemeItem(), "sales");
+                                                        ,itemschemeapplicable,String.valueOf(salesitems.get(i).getOrgprice()),budgetutilize,salesitems.get(i).getSchemeItem(), "sales",
+                                                        salesitems.get(i).getBillScheme());
 
                                                 //txtareaname.setEnabled(false);
                                                 //txtcustomername.setEnabled(false);
@@ -3517,7 +3528,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                                     , getFreeStock.getString(23), String.valueOf(getactualqtyvalue), String.valueOf(getsubtotal),
                                                                                     getFreeStock.getString(24), "0",
                                                                                     "freeitem", getpurchaseitemforcart, getfreeitemcode, getFreeStock.getString(20),
-                                                                                    "", "", getFreeStock.getString(28), "", "", "", itemschemeapplicable, "", getFreeStock.getString(29), "", 0, "no"));
+                                                                                    "", "", getFreeStock.getString(28), "", "", "", itemschemeapplicable,
+                                                                                    "", getFreeStock.getString(29), "", 0, "no", "no"));
 
 
                                                                         }
@@ -3656,7 +3668,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                             String.valueOf(freeitems.get(k).getFreeitemcode()),
                                             String.valueOf(freeitems.get(k).getMinsalesqty()),
                                             preferenceMangr.pref_getString("getroutecode"),getpurchaseitemcode1,"",
-                                            String.valueOf(freeitems.get(k).getschemeapplicable()),String.valueOf(freeitems.get(k).getNewprice()));
+                                            String.valueOf(freeitems.get(k).getschemeapplicable()),String.valueOf(freeitems.get(k).getNewprice()), "no");
 
                                     checkfreeitem = true;
                                 }
@@ -3686,7 +3698,9 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                 , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
                                                 getcartdatas.getString(30), getcartdatas.getString(31) ,getcartdatas.getString(21),
                                                 "","", getcartdatas.getString(32),"","",
-                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",getcartdatas.getDouble(getcartdatas.getColumnIndex("budget_utilize")),"no"));
+                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",
+                                                getcartdatas.getDouble(getcartdatas.getColumnIndex("budget_utilize")),"no",
+                                                getcartdatas.getString(getcartdatas.getColumnIndex("bill_scheme"))));
                                         getcartdatas.moveToNext();
                                     }
                                 }
@@ -3764,7 +3778,9 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                 getcartdatas.getString(30), getcartdatas.getString(31),
                                                 getcartdatas.getString(21),"","" ,
                                                 getcartdatas.getString(32),"","",
-                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",getcartdatas.getDouble(getcartdatas.getColumnIndex("budget_utilize")),"no"));
+                                                getcartdatas.getString(34),getcartdatas.getString(35),getcartdatas.getString(36),"","",
+                                                getcartdatas.getDouble(getcartdatas.getColumnIndex("budget_utilize")),"no",
+                                                getcartdatas.getString(getcartdatas.getColumnIndex("bill_scheme"))));
                                         getcartdatas.moveToNext();
                                     }
                                 }
@@ -4833,6 +4849,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                         togglegstin.setTextOn("GSTIN \n ");
                                         togglegstin.setTextOff("GSTIN \n ");
                                         txtcustomername.setHint("Customer Name");
+                                        cust_bill_scheme = "";
+                                        cust_bill_scheme_disc_percentage = "";
                                         staticreviewsalesitems.clear();
                                         //Set total cart item value
                                         totalcartitems.setText(String.valueOf(staticreviewsalesitems.size()));
@@ -4871,6 +4889,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                         togglegstin.setText("GSTIN \n "+gstnnumber);
                         togglegstin.setTextOn("GSTIN \n "+gstnnumber);
                         togglegstin.setTextOff("GSTIN \n "+gstnnumber);
+                        cust_bill_scheme = "";
+                        cust_bill_scheme_disc_percentage = "";
                         salesitems.clear();
                         SalesItemAdapter adapter = new SalesItemAdapter(context,salesitems,"0");
                         lv_sales_items.setAdapter(adapter);
@@ -5059,6 +5079,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     customerareaname = CustomerAreaName[position];
                     customername = CustomerNameTamil[position];
                     customercityarea= CustomerCityName[position] + ',' + CustomerAreaName[position];
+                    cust_bill_scheme = BillScheme[position];
+                    cust_bill_scheme_disc_percentage = BillSchemeDiscPercentage[position];
                     if(gstnnumber.equals("")||gstnnumber.equals(null)||gstnnumber.equals("0")){
                         togglegstin.setBackgroundColor(getResources().getColor(R.color.graycolor));
                     }else{
@@ -5304,6 +5326,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
         customercode = CustomerCode[position];
         gstnnumber = GSTN[position];
         getschemeapplicable = SchemeApplicable[position];
+        cust_bill_scheme = BillScheme[position];
+        cust_bill_scheme_disc_percentage = BillSchemeDiscPercentage[position];
 
         // check mobile number is verified
         DataBaseAdapter objdatabaseadapter = null;
@@ -5519,6 +5543,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             SalesActivity.orderbillno = headertitle.split("#")[1];
             TextView buttonview = (TextView) view.findViewById(R.id.converttosales);
             buttonview.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("Range")
                 @Override
                 public void onClick(View v) {
 
@@ -5582,6 +5607,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                 String freecount = Cur2.getString(30);
                                 String orgprice = Cur2.getString(20);
                                 String itemsubgroupcode = Cur2.getString(32);
+                                String bill_scheme = Cur2.getString(Cur2.getColumnIndex("bill_scheme"));
 
                                 String orderqty = Cur1.getString(2);
                                 String itemrate = Cur1.getString(4);
@@ -5904,7 +5930,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                 String.valueOf(tax), String.valueOf(itemqty), String.valueOf(getsubtotal)
                                                                 , String.valueOf(routeallowpricedit), String.valueOf(discount), freeflag,
                                                                 String.valueOf(purchaseitemcode), String.valueOf(freeitemcode),"","","","",
-                                                                String.valueOf(orgprice),0,"no","ordertosales");
+                                                                String.valueOf(orgprice),0,"no","ordertosales", bill_scheme);
                                                     }
                                                 }else{
                                                     try{
@@ -5940,7 +5966,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                                         String.valueOf(tax), String.valueOf(itemqty), String.valueOf(getsubtotal)
                                                                         , String.valueOf(routeallowpricedit), String.valueOf(discount), freeflag,
                                                                         String.valueOf(purchaseitemcode), String.valueOf(freeitemcode),"","","","",String.valueOf(orgprice),0,"no",
-                                                                        "ordertosales");
+                                                                        "ordertosales", bill_scheme);
                                                             }
                                                         }
 
@@ -6225,7 +6251,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                         getcartdatas.getString(24), getcartdatas.getString(25), getcartdatas.getString(26)
                                                         , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
                                                         getcartdatas.getString(30), getcartdatas.getString(31) ,getcartdatas.getString(21),"","",getcartdatas.getString(32),"","",
-                                                        "","",getcartdatas.getString(36),"","",0,"no"));
+                                                        "","",getcartdatas.getString(36),"","",0,"no",
+                                                        getcartdatas.getString(getcartdatas.getColumnIndex("bill_scheme"))));
                                                 getcartdatas.moveToNext();
                                             }
                                         }
@@ -6276,7 +6303,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                                             , getcartdatas.getString(27), getcartdatas.getString(28), getcartdatas.getString(29),
                                                             getcartdatas.getString(30), getcartdatas.getString(31),getcartdatas.getString(21),
                                                             "","",getcartdatas.getString(32),"","","",
-                                                            "",getcartdatas.getString(32),"","",0,"no"));
+                                                            "",getcartdatas.getString(32),"","",0,"no",
+                                                            getcartdatas.getString(getcartdatas.getColumnIndex("bill_scheme"))));
                                                     getcartdatas.moveToNext();
                                                 }
                                             }

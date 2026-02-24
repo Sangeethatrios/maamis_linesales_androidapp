@@ -10,8 +10,9 @@
 
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical">
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:layout_above="@+id/LL3">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -183,42 +184,80 @@
         android:divider="@color/graycolor"
         android:background="@color/lightpink"
         android:dividerHeight="1dip"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="100dp">
+        android:layout_marginLeft="5dp">
 
     </ListView>
   </LinearLayout>
   <LinearLayout
       android:id="@+id/LL3"
       android:layout_width="match_parent"
-      android:layout_height="100dp"
+      android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
       android:padding="5dp"
       android:background="@color/colorPrimaryDark"
       android:orientation="vertical"
       android:weightSum="1">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Remove Bill Scheme Discount"
+        android:layout_gravity="center"
+        android:id="@+id/txtremovebillschemediscount"
+        android:drawableLeft="@drawable/ic_cancel_black"
+        android:drawableTint="@color/white"
+        android:background="@color/red"
+        android:padding="10dp"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:layout_marginBottom="6dp"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/TotalSubLinear"
         android:orientation="horizontal"
-        android:gravity="right"
+        android:gravity="center"
+        android:layout_gravity="center"
         android:weightSum="1">
-      <EditText android:layout_width="0dp"
-          android:layout_weight="0.5"
-          android:padding="14dp"
-          android:id="@+id/txtremarks"
-          android:layout_height="45dp"
-          android:gravity="left"
-          android:background="@drawable/editbackground"
-          android:textSize="14sp"
-          android:textColor="@android:color/black"
-          android:hint="Remarks"
-          android:maxLength="100"
-          android:maxLines="1"
-          android:ellipsize="end"
-          android:textColorHint="@color/graycolor"
-          android:text=""/>
+
+      <LinearLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:layout_weight="0.5">
+
+        <CheckBox
+            android:id="@+id/chkremovecashdiscount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Remove Cash Discount"
+            android:textColor="@color/red"
+            android:textStyle="bold"
+            android:layout_weight="0.5"
+            android:buttonTint="@color/red"
+            android:background="@color/lightcolorred"/>
+
+          <EditText android:layout_width="match_parent"
+              android:padding="14dp"
+              android:id="@+id/txtremarks"
+              android:layout_height="45dp"
+              android:gravity="left"
+              android:background="@drawable/editbackground"
+              android:textSize="14sp"
+              android:textColor="@android:color/black"
+              android:hint="Remarks"
+              android:maxLength="100"
+              android:maxLines="1"
+              android:ellipsize="end"
+              android:textColorHint="@color/graycolor"
+              android:text=""/>
+
+      </LinearLayout>
+
+
 
       <LinearLayout
           android:layout_width="0dp"
@@ -255,6 +294,18 @@
               android:textColor="@android:color/black"
               android:text="Savings "/>
 
+          <TextView
+              android:id="@+id/txtcashdiscount"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_weight="0.5"
+              android:gravity="right"
+              android:layout_gravity="right"
+              android:textSize="14sp"
+              android:padding="2dp"
+              android:textColor="@android:color/black"
+              android:text="Cash Discount "/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -282,6 +333,17 @@
               android:textSize="14sp"
               android:padding="2dp"
               android:id="@+id/txtdiscountamt"
+              android:textColor="@android:color/black"
+              android:text="\u20B9 000.00"/>
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_weight="0.5"
+              android:gravity="right"
+              android:layout_gravity="right"
+              android:textSize="14sp"
+              android:padding="2dp"
+              android:id="@+id/txtcashdiscountamt"
               android:textColor="@android:color/black"
               android:text="\u20B9 000.00"/>
 

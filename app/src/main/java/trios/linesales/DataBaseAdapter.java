@@ -3105,7 +3105,9 @@ public class DataBaseAdapter
                     "einvoiceurl,irn_no,ack_no,einvoice_status,syncstatus,(SELECT count(voucherno) FROM " +
                     " tblreceipt where voucherno in  (SELECT billno FROM tblsales WHERE a.transactionno " +
                     "= transactionno AND financialyearcode = a.financialyearcode) AND type = 'Sales') " +
-                    "AS upipaid, (select areacode from tblcustomer where customercode=a.customercode ) AS areacode " +
+                    "AS upipaid, (select areacode from tblcustomer where customercode=a.customercode ) AS areacode," +
+                    "(select bill_scheme from tblcustomer where customercode=a.customercode) as bill_scheme," +
+                    "(select bill_scheme_disc_percentage from tblcustomer where customercode=a.customercode) as bill_scheme_disc_percentage " +
                     "from tblsales as a where billdate = datetime('" + getdate + "') " +
                     "and vancode = '" + preferenceMangr.pref_getString("getvancode") + "'  and " +
                     " "+getcompany+" and "+getbilltype+" and  "+getpaymentstaus+"" +
@@ -3941,7 +3943,8 @@ public class DataBaseAdapter
                     "(select areacode from tblcustomer where customercode=a.customercode ))) as cityname," +
                     "(select shortname from tblcompanymaster where companycode=a.companycode) as shortname,bitmapimage," +
                     " (select sum(grandtotal) from tblsales as b where transactionno = '"+gettransactionno+"' and financialyearcode = '"+getfinancialyr+"' ) as totalamt" +
-                    " ,a.pdflocalpath,a.einvoiceurl,a.ack_no,a.irn_no from tblsales as a where transactionno = '"+gettransactionno+"' " +
+                    " ,a.pdflocalpath,a.einvoiceurl,a.ack_no,a.irn_no, coalesce(a.bill_scheme_disc_amount , 0) as bill_scheme_disc_amount " +
+                    " from tblsales as a where transactionno = '"+gettransactionno+"' " +
                     " and financialyearcode = '"+getfinancialyr+"' and companycode='"+getcompanycode+"'  ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
@@ -5105,7 +5108,8 @@ public class DataBaseAdapter
                         ""+billqry+",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt ," +
                         "(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 AND    flag<>6 ) AS daywisesalesamt," +
                         "(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' AND    flag<>3 AND    flag<>6) AS billwisebudget, " +
-                        " COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude ,COALESCE(gstinverificationstatus,0) AS gstinverificationstatus" +
+                        " COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude ,COALESCE(gstinverificationstatus,0) AS gstinverificationstatus," +
+                        " COALESCE(a.bill_scheme,'') as bill_scheme, COALESCE(a.bill_scheme_disc_percentage,'') as bill_scheme_disc_percentage " +
                         " from tblcustomer" +
                         " as a inner join tblareamaster as b on a.areacode=b.areacode inner join tblcitymaster as c " +
                         " on b.citycode=c.citycode" +
@@ -5127,7 +5131,9 @@ public class DataBaseAdapter
                         "date(billdate)=  date('now') AND    flag<>3 AND    flag<>6) AS daywisesalesamt," +
                         "(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  " +
                         "schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3  AND    flag<>6) AS billwisebudget," +
-                        " COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude,COALESCE(gstinverificationstatus,0) AS gstinverificationstatus from tblcustomer " +
+                        " COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude,COALESCE(gstinverificationstatus,0) AS gstinverificationstatus," +
+                        " COALESCE(a.bill_scheme,'') as bill_scheme, COALESCE(a.bill_scheme_disc_percentage,'') as bill_scheme_disc_percentage " +
+                        " from tblcustomer " +
                         " as a inner join tblareamaster as b on a.areacode=b.areacode inner join tblcitymaster as c on b.citycode=c.citycode" +
                         " where a.areacode = '" + areacode + "' and a.status='" + statusvar + "' and (business_type='1' or business_type='3') " +
                         " order by customernametamil" +
@@ -5148,8 +5154,12 @@ public class DataBaseAdapter
                 sql = "select * from (select customercode,customername,customernametamil,address,a.areacode,emailid,mobileno,telephoneno," +
                         " aadharno,gstin,schemeapplicable,coalesce(customertypecode,'1'),areanametamil,citynametamil," +
                         " (select count(*) from tblsalesorder where status = '1' and flag<>3 and flag<>6 and customercode=a.customercode) as orderCount " +
-                        ""+billqry+",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt,(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 AND    flag<>6 ) AS daywisesalesamt,(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3 AND    flag<>6) AS billwisebudget, COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude,COALESCE(gstinverificationstatus,0) AS gstinverificationstatus  from" +
-                        " tblcustomer as a inner join tblareamaster as b on a.areacode=b.areacode inner " +
+                        ""+billqry+",COALESCE(categorycode,0) AS CustomerCategory,COALESCE(annualsalesamt,0) AS annualsalesamt," +
+                        "(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 AND    flag<>6 ) AS daywisesalesamt," +
+                        "(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3 AND    flag<>6) AS billwisebudget, " +
+                        "COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude,COALESCE(gstinverificationstatus,0) AS gstinverificationstatus, " +
+                        " COALESCE(a.bill_scheme,'') as bill_scheme, COALESCE(a.bill_scheme_disc_percentage,'') as bill_scheme_disc_percentage " +
+                        " from tblcustomer as a inner join tblareamaster as b on a.areacode=b.areacode inner " +
                         " join tblcitymaster as c on b.citycode=c.citycode where a.areacode = '" + areacode + "' and" +
                         " a.status='" + statusvar + "' and " + varBusinessType +
                         " order by customernametamil)  as dev order by billcount asc,notpurchasedcount asc ";
@@ -5493,7 +5503,8 @@ public class DataBaseAdapter
                     " and vancode='"+preferenceMangr.pref_getString("getvancode")+"'  ),0),0) " +
                     " as parentstockqty,(case when(a.minimumsalesqty<>'null' or a.minimumsalesqty<>null) then a.minimumsalesqty else 0 end) as minimumsalesqty,"+
                     " case when parentitemcode=0 then upp else (Select upp from tblitemmaster where itemcode=a.parentitemcode) end as upp,itemtype ,coalesce((select newprice from tblitempricelisttransaction  where itemcode=a.itemcode " +
-                    " AND customertype = 1 order by autonum desc limit 1),0) as minprice "+
+                    " AND customertype = 1 order by autonum desc limit 1),0) as minprice," +
+                    " coalesce(a.bill_scheme,'') as bill_scheme "+
                     " from tblitemmaster as a  " +
                     "inner join tblitemsubgroupmaster as c on c.itemsubgroupcode=a.itemsubgroupcode " +
                     "inner join tblbrandmaster as d on a.brandcode=d.brandcode " +
@@ -6752,7 +6763,7 @@ public class DataBaseAdapter
                                   String routeallowpricedit, String discount, String freeflag,
                                   String purchaseitemcode, String freeitemcode,String minstockqty,
                                   String actualprice,String ratediscount,String itemschemeapplicable,String orgprice,double budgetutilize,String schemeitem,
-                                  String from)
+                                  String from, String bill_scheme)
     {
         try{
             String GenDate= GenCreatedDate();
@@ -6791,7 +6802,8 @@ public class DataBaseAdapter
                         " '" + itemqty + "','" + subtotal + "','" + routeallowpricedit + "'," +
                         " '" + discount + "','" + freeflag + "','" + purchaseitemcode + "'," +
                         " '" + freeitemcode + "', '" + minstockqty + "','"+ actualprice +"','"+ratediscount+"'," +
-                        " '" + itemschemeapplicable + "','" + orgprice + "','"+budgetutilize+"','"+varschemeitem+"'  )";
+                        " '" + itemschemeapplicable + "','" + orgprice + "','"+budgetutilize+"','"+varschemeitem+"'," +
+                        " '" + bill_scheme + "' )";
                 mDb.execSQL(sqlcart);
             }else if(Integer.parseInt(getcount) > 0){
                 if(getfreeflag.equals("")){
@@ -6808,7 +6820,8 @@ public class DataBaseAdapter
                             " discount='" + discount + "',freeflag='" + freeflag + "',purchaseitemcode='" + purchaseitemcode + "'," +
                             " freeitemcode='" + freeitemcode + "',minimumsalesqty='" + minstockqty + "'" +
                             ",actualamount='"+actualprice+"',ratediscount='"+ ratediscount +"'  " +
-                            " , schemeapplicable =  '" + itemschemeapplicable + "',orgprice='" + orgprice + "' , budget_utilize='"+budgetutilize+"',schemeitem='"+varschemeitem+"' " +
+                            " , schemeapplicable =  '" + itemschemeapplicable + "',orgprice='" + orgprice + "' , budget_utilize='"+budgetutilize+"'," +
+                            "schemeitem='"+varschemeitem+"', bill_scheme='" + bill_scheme + "' " +
                             " where  cartcode='"+getcartcode+"'" +
                             " and itemcode='"+itemcode+"' and  freeflag='' ";
                     mDb.execSQL(sqlcart);
@@ -6826,7 +6839,8 @@ public class DataBaseAdapter
                             " discount='" + discount + "',freeflag='" + freeflag + "',purchaseitemcode='" + purchaseitemcode + "'," +
                             " freeitemcode='" + freeitemcode + "',minimumsalesqty='" + minstockqty + "'," +
                             "actualamount='"+ actualprice +"',ratediscount='"+ ratediscount +"'," +
-                            " schemeapplicable =  '" + itemschemeapplicable + "' ,orgprice='" + orgprice + "' , budget_utilize='"+budgetutilize+"',schemeitem='"+varschemeitem+"' " +
+                            " schemeapplicable =  '" + itemschemeapplicable + "' ,orgprice='" + orgprice + "' , budget_utilize='"+budgetutilize+"'," +
+                            "schemeitem='"+varschemeitem+"', bill_scheme='" + bill_scheme + "' " +
                             "  where  cartcode='"+getcartcode+"'" +
                             " and itemcode='"+itemcode+"' and  freeflag='freerate' ";
                     mDb.execSQL(sqlcart);
@@ -6987,7 +7001,7 @@ public class DataBaseAdapter
                                       String itemqty, String subtotal,
                                       String routeallowpricedit, String discount, String freeflag,
                                       String purchaseitemcode, String freeitemcode,String minimumsalesqty
-            ,String getroutecode,String curitemcode,String ratediscount,String getschemeapplicable,String orgprice)
+            ,String getroutecode,String curitemcode,String ratediscount,String getschemeapplicable,String orgprice, String billScheme)
     {
         Cursor mCur = null;
         Cursor mCur1 = null;
@@ -7115,7 +7129,7 @@ public class DataBaseAdapter
                         " '" + itemqty + "',0,'" + routeallowpricedit + "'," +
                         " '" + itemdiscountAmount + "','" + freeflag + "','" + purchaseitemcode + "'," +
                         " '" + freeitemcode + "', '" + minimumsalesqty + "','" + newprice +"','" + ratediscount +"'" +
-                        ",'" + getschemeapplicable + "','" + orgprice + "',0,0  )";
+                        ",'" + getschemeapplicable + "','" + orgprice + "',0,0,'" + billScheme + "' )";
                 mDb.execSQL(sqlcart);
             }else if(Integer.parseInt(getfreecount) > 0){
 //                String sqlcart = "UPDATE   'tblsalescartdatas' SET " +
@@ -7145,7 +7159,8 @@ public class DataBaseAdapter
                         " discount='" + itemdiscountAmount + "',freeflag='" + freeflag + "',purchaseitemcode='" + purchaseitemcode + "'," +
                         " freeitemcode='" + freeitemcode + "',minimumsalesqty='"+minimumsalesqty+"'" +
                         ",actualamount='"+ newprice +"',ratediscount='"+ ratediscount +"' " +
-                        ",schemeapplicable='" + getschemeapplicable + "',orgprice='" + orgprice + "'" +
+                        ",schemeapplicable='" + getschemeapplicable + "',orgprice='" + orgprice + "'," +
+                        " bill_scheme='" + billScheme + "' " +
                         " where  cartcode='"+getfreecartcode+"'" +
                         " and freeitemcode='"+freeitemcode+"' and '"+curitemcode+"' in" +
                         " (SELECT purchaseitemcode from tblschemeitemdetails where schemecode=(select DISTINCT a.schemecode from tblscheme as a " +
@@ -7620,7 +7635,8 @@ public class DataBaseAdapter
     public void  InsertTempSalesItemDetails(String itemcode,String companycode,String qty,String price,
                                             String discount,String amount,String freeitemstatus,String tax,
                                             String gstin,String getrefno,double getweight,int autonum,
-                                            String ratediscount,String schemeapplicable,String orgprice,double budgetutilize,String schemeitem) {
+                                            String ratediscount,String schemeapplicable,String orgprice,
+                                            double budgetutilize,String schemeitem, String bill_scheme) {
         try{
             mDb = mDbHelper.getReadableDatabase();
             double cgst,sgst,igst,cgstamt,sgstamt,igstamt;
@@ -7685,11 +7701,11 @@ public class DataBaseAdapter
 
 
             String sql="INSERT INTO tbltempsalesitemdetails(autonum,refno,companycode,itemcode,qty,price,discount," +
-                    "amount,cgst,sgst,igst,cgstamt,sgstamt,igstamt,freeitemstatus,weight,ratediscount,schemeapplicable,orgprice,budget_utilize,schemeitem) " +
+                    "amount,cgst,sgst,igst,cgstamt,sgstamt,igstamt,freeitemstatus,weight,ratediscount,schemeapplicable,orgprice,budget_utilize,schemeitem, bill_scheme) " +
                     "values ('"+autonum+"','"+ getrefno +"','"+ companycode +"','"+ itemcode +"','"+ Double.parseDouble(qty) +"','"+ Double.parseDouble(price) +"'," +
                     "'"+ discount +"','"+ amount +"','"+ dft.format(cgst) +"','"+ dft.format(sgst) +"','"+ dft.format(igst)+"'," +
                     "'"+ dft.format(cgstamt) +"','"+ dft.format(sgstamt) +"','"+ dft.format(igstamt) +"'," +
-                    "'"+ freeitemstatus +"','"+getweight+"','"+ratediscount+"','"+schemeapplicable+"','"+orgprice+"','"+budgetutilize+"','"+varschemeitem+"')";
+                    "'"+ freeitemstatus +"','"+getweight+"','"+ratediscount+"','"+schemeapplicable+"','"+orgprice+"','"+budgetutilize+"','"+varschemeitem+"','" + bill_scheme + "')";
             mDb.execSQL(sql);
         }catch (Exception ex){
             insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
@@ -7779,7 +7795,8 @@ public class DataBaseAdapter
                                       grandtotal,String financialyearcode,String remarks,String bookingno,
                               String Transactionno,String getrefno,String billcopystatus,String getcashpaidstatus,
                               String billLatLong,String billlatitute,String billLongtitude,
-                              String orderTransNo,String orderFinancialyearcode,String orderCompanycode,double totalbudgetutilize)
+                              String orderTransNo,String orderFinancialyearcode,String orderCompanycode,double totalbudgetutilize,
+                              double bill_scheme_disc_percentage, String bill_scheme_disc_removed)
     {
         try{
             String Gencode= GenCreatedDate();
@@ -7836,7 +7853,7 @@ public class DataBaseAdapter
                         " on a.itemcode=b.itemcode  ) ";
                 mDb.execSQL(sqldeletestockconversion1);
             }
-            String sql="INSERT INTO tblsales(autonum,companycode,vancode,transactionno,billno,refno,bookingno,prefix,suffix,billdate,customercode," +
+            /*String sql="INSERT INTO tblsales(autonum,companycode,vancode,transactionno,billno,refno,bookingno,prefix,suffix,billdate,customercode," +
                     "billtypecode,gstin," +
                     "schedulecode,subtotal,discount,grandtotal,flag,makerid,createddate,financialyearcode,remarks,syncstatus," +
                     "billcopystatus,cashpaidstatus,salestime,beforeroundoff,lunchflag,ratediscount,schemeapplicable,latlong,ordertransactionno,total_budget_utilize)" +
@@ -7892,7 +7909,78 @@ public class DataBaseAdapter
                     ",(SELECT CASE WHEN (SELECT count(*) as count FROM tblsalescartdatas where schemeapplicable='yes') > 0  " +
                     "then 'yes' else CASE WHEN (SELECT count(*) as count FROM tblsalescartdatas where schemeapplicable='no')" +
                     "then 'no' else 'not applicable' end end as scheme),'" + billLatLong + "','" + orderTransNo + "','" + totalbudgetutilize + "' "  +
-                    " from tbltempsalesitemdetails as  a where refno='"+ getrefno +"' group by companycode";
+                    " from tbltempsalesitemdetails as  a where refno='"+ getrefno +"' group by companycode";*/
+
+            String sql="INSERT INTO tblsales(autonum,companycode,vancode,transactionno,billno,refno,bookingno,prefix,suffix,billdate,customercode," +
+                    "billtypecode,gstin, schedulecode,subtotal,discount,grandtotal,flag,makerid,createddate,financialyearcode,remarks,syncstatus," +
+                    "billcopystatus,cashpaidstatus,salestime,beforeroundoff,lunchflag,ratediscount,schemeapplicable,latlong,ordertransactionno,total_budget_utilize," +
+                    "bill_scheme_disc_amount, bill_scheme_disc_removed)" +
+                    " select autonum, companycode, '"+ vancode +"' as vancode,'"+ Transactionno +"' as transactionno, billno, refno, '" + bookingno + "' as bookingno, prefix, suffix, billdate," +
+                    " '" + customercode + "' as customercode, '" + billtypecode + "' as billtypcode, '" + gstin + "' as gstin,'" + schedulecode + "' as schedulecode, " +
+                    " round((subtotal - billdiscount), 0) as subtotal, discount, round((grandtotal - billdiscount), 0) as grandtotal," +
+                    " '1' as flag,'1' as markerid, createddate, '" + financialyearcode + "' as financialyearcode, '" + remarks + "' as remarks, 0 as syncstatus," +
+                    "'" + billcopystatus + "' as billcopystatus,'" + getcashpaidstatus + "' as cashpaidstatus,'" + getcurtime + "' as salestime," +
+                    "round((beforeroundoff - billdiscount), 0) as beforeroundoff, '" + lunchflag + "' as lunchflag, ratediscount, schemeapplicable, " +
+                    "'" + billLatLong + "' as latlng,'" + orderTransNo + "' as ordertransactionno,'" + totalbudgetutilize + "' as total_budget_utilize," +
+                    " CAST(billdiscount as numeric(32,2)) as billdiscount, '" + bill_scheme_disc_removed + "' as bill_scheme_disc_removed " +
+                    " from (" +
+
+                    " select (select coalesce(max(autonum),0)+1 from tblsales) as autonum,companycode," +
+                    " case when (select Count(*) from tblsales where  companycode=a.companycode  and billtypecode = "+billtypecode+" )=0 " +
+                    " then " +
+                    "   case when (select coalesce(max(refno),0)+1 from tblmaxcode where code=222 and companycode=a.companycode and billtypecode = "+billtypecode+" )=1 " +
+                    "   then " +
+                    "       (select prefix || printf('%0'||noofdigit||'d', startingno)||suffix FROM tblvouchersettings where type='sales' and billtypecode='"+ billtypecode +"' and vancode='"+ vancode +"' and companycode=a.companycode and financialyearcode='"+ financialyearcode +"')" +
+                    "   else" +
+                    "       (select prefix || printf('%0'||noofdigit||'d', (select coalesce(max(refno),0)+1 from " +
+                    "           tblmaxcode where code=222 and companycode=a.companycode and billtypecode = "+billtypecode+" ))||suffix FROM tblvouchersettings where type='sales' and " +
+                    "           billtypecode='"+ billtypecode +"' and vancode='"+ vancode +"' and companycode=a.companycode " +
+                    "           and financialyearcode='"+ financialyearcode +"')" +
+                    "   end " +
+                    " else" +
+                    " (select prefix || printf('%0'||noofdigit||'d', (select coalesce(max(refno),0)+1 from tblsales " +
+                    "   where  companycode=a.companycode and billtypecode = "+billtypecode+"  and financialyearcode='"+ financialyearcode +"'))||suffix " +
+                    "   FROM tblvouchersettings where type='sales' and billtypecode='"+ billtypecode +"' and " +
+                    "   vancode='"+ vancode +"' and companycode=a.companycode and financialyearcode='"+ financialyearcode +"')" +
+                    " end as billno," +
+                    "case when (select Count(*) from tblsales  where  companycode=a.companycode" +
+                    " and billtypecode = "+billtypecode+"  )=0 then case when (select coalesce(max(refno),0)+1 from " +
+                    " tblmaxcode where  code=222 and companycode=a.companycode and billtypecode = "+billtypecode+"  )=1 then " +
+                    " (select  printf('%0'||noofdigit||'d', startingno) FROM tblvouchersettings where type='sales' " +
+                    " and billtypecode='"+billtypecode+"' and vancode='"+vancode+"' and companycode=a.companycode" +
+                    " and financialyearcode='"+financialyearcode+"')" +
+                    " else " +
+                    " (select printf('%0'||noofdigit||'d', (select coalesce(max(refno),0)+1 from tblmaxcode where " +
+                    " code=222 and companycode=a.companycode and billtypecode = "+billtypecode+"  ))" +
+                    " FROM tblvouchersettings where type='sales' and billtypecode='"+ billtypecode +"' and " +
+                    " vancode='"+ vancode +"' and companycode=a.companycode and financialyearcode='"+ financialyearcode +"')" +
+                    " end else" +
+                    " (select printf('%0'||noofdigit||'d', (select coalesce(max(refno),0)+1 from tblsales " +
+                    " where  companycode=a.companycode and billtypecode = "+billtypecode+"  and financialyearcode='"+ financialyearcode +"')) FROM tblvouchersettings " +
+                    " where type='sales' and billtypecode='"+ billtypecode +"' and vancode='"+ vancode +"' and" +
+                    " companycode=a.companycode and financialyearcode='"+ financialyearcode +"')" +
+                    " end as refno," +
+                    " (select prefix FROM tblvouchersettings where type='sales' " +
+                    "   and billtypecode='"+ billtypecode +"' and vancode='"+ vancode +"' and " +
+                    "   companycode=a.companycode and financialyearcode='"+ financialyearcode +"') as prefix," +
+                    " (select suffix FROM tblvouchersettings where type='sales' and billtypecode='"+ billtypecode +"'" +
+                    "   and vancode='"+ vancode+"' and companycode=a.companycode and " +
+                    "   financialyearcode='"+ financialyearcode +"') as suffix, " +
+                    " datetime('"+ billdate +"') as billdate, sum(amount) as subtotal," +
+                    " coalesce((select sum(discount) from tbltempsalesitemdetails where refno='"+ getrefno +"' and companycode=a.companycode and freeitemstatus<>''),0) as discount," +
+                    " sum(amount)-coalesce((select sum(discount) from tbltempsalesitemdetails where refno='"+ getrefno +"' " +
+                    "   and companycode=a.companycode and freeitemstatus='freeitem'),0) as grandtotal," +
+                    " datetime('now', 'localtime') as createddate," +
+                    "sum(amount)-coalesce((select sum(discount) from tbltempsalesitemdetails where refno='"+ getrefno +"' " +
+                    "and companycode=a.companycode and freeitemstatus<>''),0) as beforeroundoff,coalesce(sum(ratediscount),0) as ratediscount, " +
+                    "(SELECT CASE WHEN (SELECT count(*) as count FROM tblsalescartdatas where schemeapplicable='yes') > 0  " +
+                    "then 'yes' else CASE WHEN (SELECT count(*) as count FROM tblsalescartdatas where schemeapplicable='no')" +
+                    "then 'no' else 'not applicable' end end as scheme) as schemeapplicable, "  +
+                    " coalesce((select sum(amount)*" + bill_scheme_disc_percentage + " from tbltempsalesitemdetails where refno='1' and companycode=a.companycode and bill_scheme='yes' and freeitemstatus=''),0) as billdiscount " +
+                    " from tbltempsalesitemdetails as a " +
+                    " where refno='"+ getrefno +"' " +
+                    " group by companycode" +
+                    ") as dev";
             Log.i("sql", sql);
             mDb.execSQL(sql);
 
@@ -10360,6 +10448,15 @@ public class DataBaseAdapter
                     {
                         try {
                             JSONObject obj = (JSONObject) json_category.get(i);
+
+                            String bill_scheme = obj.getString("bill_scheme");
+                            if (Utilities.isNullOrEmpty(bill_scheme) || bill_scheme.equals("NULL") || bill_scheme.equals(null))
+                                bill_scheme = "no";
+
+                            String bill_scheme_disc_percentage = obj.getString("bill_scheme_disc_percentage");
+                            if (Utilities.isNullOrEmpty(bill_scheme_disc_percentage) || bill_scheme_disc_percentage.equals("NULL") || bill_scheme_disc_percentage.equals(null))
+                                bill_scheme_disc_percentage = "0";
+
                             if (obj.getString("process").equals("Insert")) {
                                 String sql = "SELECT * FROM 'tblcustomer' WHERE customercode='" + obj.getString("customercode")+"' ";
                                 cursor = mDb.rawQuery(sql, null);
@@ -10368,7 +10465,8 @@ public class DataBaseAdapter
 
                                     sql = "INSERT INTO 'tblcustomer' (autonum,customercode,refno, customername,customernametamil,address,areacode,emailid,mobileno,telephoneno," +
                                             "aadharno,gstin,status,makerid,createddate,updateddate,latitude,longitude,flag,schemeapplicable,uploaddocument,gstinverificationstatus," +
-                                            "customertypecode,business_type,whatsappno,mobilenoverificationstatus,categorycode,erpitemcode,annualsalesamt)" +
+                                            "customertypecode,business_type,whatsappno,mobilenoverificationstatus,categorycode,erpitemcode,annualsalesamt, bill_scheme," +
+                                            "bill_scheme_disc_percentage)" +
                                             " VALUES('" + gc +"','" + obj.getString("customercode")+"'," +
                                             "'" + obj.getString("refno")+"'," +
                                             "'" + obj.getString("customername").replaceAll("'","''")+"'," +
@@ -10383,7 +10481,9 @@ public class DataBaseAdapter
                                             "'" + obj.getString("schemeapplicable")+"','" + obj.getString("uploaddocument")+"'," +
                                             "'" + obj.getString("gstinverificationstatus")+"','" + obj.getString("customertypecode")+"'," +
                                             " '"+obj.getString("business_type")+"','"+obj.getString("whatsappno")+"'," +
-                                            "'"+obj.getString("mobilenoverificationstatus")+"','"+obj.getString("categorycode")+"','"+obj.getString("erpitemcode")+"','"+obj.getString("annualamount")+"') ";
+                                            "'"+obj.getString("mobilenoverificationstatus")+"','"+obj.getString("categorycode")+"'," +
+                                            "'"+obj.getString("erpitemcode")+"','"+obj.getString("annualamount")+"'," +
+                                            "'" + bill_scheme + "','" + bill_scheme_disc_percentage + "') ";
                                     mDb.execSQL(sql);
                                 }
                                 else {
@@ -10409,14 +10509,11 @@ public class DataBaseAdapter
                                             " whatsappno =  '" + obj.getString("whatsappno")+"', " +
                                             "categorycode = '"+obj.getString("categorycode")+"',"+
                                             "erpitemcode = '"+obj.getString("erpitemcode")+"'," +
-                                            "annualsalesamt = '"+obj.getString("annualamount")+"' "+
+                                            "annualsalesamt = '"+obj.getString("annualamount")+"', "+
+                                            "bill_scheme = '"+ bill_scheme +"', "+
+                                            "bill_scheme_disc_percentage = '"+ bill_scheme_disc_percentage + "' "+
                                             " WHERE customercode='" + obj.getString("customercode")+"' ";
                                     mDb.execSQL(sql1);
-                                    if(obj.getString("mobileno").equals("9025097211"))
-                                    {
-                                        Log.e( "synccustomer: ",sql1 );
-                                    }
-
                                 }
                             }
                             else {
@@ -10443,18 +10540,16 @@ public class DataBaseAdapter
                                         " whatsappno =  '" + obj.getString("whatsappno")+"', " +
                                         "categorycode = '"+obj.getString("categorycode")+"',"+
                                         "erpitemcode = '"+obj.getString("erpitemcode")+"'," +
-                                        "annualsalesamt = '"+obj.getString("annualamount")+"' "+
+                                        "annualsalesamt = '"+obj.getString("annualamount")+"', "+
+                                        "bill_scheme = '"+ bill_scheme +"', "+
+                                        "bill_scheme_disc_percentage = '"+ bill_scheme_disc_percentage +"' "+
                                         " WHERE customercode='" + obj.getString("customercode")+"' ";
-                                if(obj.getString("mobileno").equals("9025097211"))
-                                {
-                                    Log.e( "synccustomer: ",sql1 );
-                                }
                                          mDb.execSQL(sql1);
                             }
                         } catch (JSONException ex) {
                             if(cursor != null)
                                 cursor.close();
-                            insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                            insertErrorLog("Exception in synccustomer : " + ex.toString(), this.getClass().getSimpleName() + " - synccustomer", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
                         } finally {
                             if(cursor != null)
                                 cursor.close();
@@ -10465,7 +10560,7 @@ public class DataBaseAdapter
                 // TODO Auto-generated catch block
                 if(cursor != null)
                     cursor.close();
-                insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                insertErrorLog("Exception in synccustomer : " + ex.toString(), this.getClass().getSimpleName() + " - synccustomer", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
             } finally {
                 if(cursor != null)
                     cursor.close();
@@ -11081,6 +11176,15 @@ public class DataBaseAdapter
                     {
                         try {
                             JSONObject obj = (JSONObject) json_category.get(i);
+
+                            String product_scheme = obj.getString("product_scheme");
+                            if (Utilities.isNullOrEmpty(product_scheme) || product_scheme.equals("NULL") || product_scheme.equals(null))
+                                product_scheme = "no";
+
+                            String bill_scheme = obj.getString("bill_scheme");
+                            if (Utilities.isNullOrEmpty(bill_scheme) || bill_scheme.equals("NULL") || bill_scheme.equals(null))
+                                bill_scheme = "no";
+
                             if (obj.getString("process").equals("Insert")) {
                                 String sql = "SELECT * FROM 'tblitemmaster' WHERE itemcode=" + obj.getString("itemcode");
                                 cursor = mDb.rawQuery(sql, null);
@@ -11101,7 +11205,8 @@ public class DataBaseAdapter
                                             "'" + obj.getString("uppweightunitcode")+"','" + obj.getString("offset")+"'," +
                                             "'" + obj.getString("orderstatus")+"','" + obj.getString("maxorderqty")+"' ," +
                                             "'" + obj.getString("business_type")+"','" + obj.getString("minimumsalesqty")+"'," +
-                                            " '" + obj.getString("itemtype")+"','"+obj.getString("erpitemcode")+"','"+obj.getString("displaygroupcode")+"')";
+                                            " '" + obj.getString("itemtype")+"','"+obj.getString("erpitemcode")+"','"+obj.getString("displaygroupcode")+"'," +
+                                            "'" + product_scheme + "','" + bill_scheme + "')";
                                     mDb.execSQL(sql);
                                 } else {
                                     int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
@@ -11127,7 +11232,9 @@ public class DataBaseAdapter
                                             " minimumsalesqty='" + obj.getString("minimumsalesqty")+"', " +
                                             " itemtype='"+ obj.getString("itemtype") +"'," +
                                             "erpitemcode='"+obj.getString("erpitemcode")+"',"+
-                                            "displaygroupcode='"+obj.getString("displaygroupcode")+"'"+
+                                            "displaygroupcode='"+obj.getString("displaygroupcode")+"', " +
+                                            "bill_scheme = '" + bill_scheme + "'," +
+                                            "product_scheme = '" + product_scheme + "' "+
                                             " WHERE itemcode=" + obj.getString("itemcode");
                                     mDb.execSQL(sql1);
                                 }
@@ -11157,14 +11264,16 @@ public class DataBaseAdapter
                                         " minimumsalesqty='" + obj.getString("minimumsalesqty")+"' , " +
                                         " itemtype='"+ obj.getString("itemtype") +"'," +
                                         "erpitemcode='"+obj.getString("erpitemcode")+"',"+
-                                        "displaygroupcode='"+obj.getString("displaygroupcode")+"'"+
+                                        "displaygroupcode='"+obj.getString("displaygroupcode")+"', " +
+                                        "bill_scheme = '" + bill_scheme + "'," +
+                                        "product_scheme = '" + product_scheme + "' "+
                                         " WHERE itemcode=" + obj.getString("itemcode");
                                 mDb.execSQL(sql1);
                             }
                         } catch (JSONException ex) {
                             if(cursor != null)
                                 cursor.close();
-                            insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                            insertErrorLog("Exception in syncitemmaster : " + ex.toString(), this.getClass().getSimpleName() + " - syncitemmaster", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
                         } finally{
                             if(cursor != null)
                                 cursor.close();
@@ -11175,7 +11284,7 @@ public class DataBaseAdapter
                 // TODO Auto-generated catch block
                 if(cursor != null)
                     cursor.close();
-                insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                insertErrorLog("Exception in syncitemmaster : " + ex.toString(), this.getClass().getSimpleName() + " - syncitemmaster", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
             } finally {
                 if(cursor != null)
                     cursor.close();
@@ -13000,7 +13109,9 @@ public class DataBaseAdapter
                                 String sql = "INSERT INTO 'tblsales' (autonum,companycode,vancode,transactionno,billno,refno,prefix,suffix,billdate,customercode,billtypecode,gstin," +
                                         "schedulecode,subtotal,discount,totaltaxamount,grandtotal,billcopystatus,cashpaidstatus,flag,makerid,createddate,updateddate,bitmapimage," +
                                         "financialyearcode,remarks,bookingno,syncstatus,imgflag,salestime,beforeroundoff,lunchflag,einvoiceurl,irn_no,ack_no,ackdate" +
-                                        ",einvoice_status,einvoiceresponse,einvoiceqrcodeurl,ratediscount,schemeapplicable,total_budget_utilize) VALUES('" + gc + "','" + obj.getString("companycode") + "'," +
+                                        ",einvoice_status,einvoiceresponse,einvoiceqrcodeurl,ratediscount,schemeapplicable,total_budget_utilize, " +
+                                        "bill_scheme_disc_amount, bill_scheme_disc_removed) " +
+                                        " VALUES('" + gc + "','" + obj.getString("companycode") + "'," +
                                         "'" + obj.getString("vancode") + "','" + obj.getString("transactionno") + "'," +
                                         "'" + obj.getString("billno") + "','" + obj.getString("refno") + "'," +
                                         "'" + obj.getString("prefix") + "','" + obj.getString("suffix") + "'," +
@@ -13014,7 +13125,8 @@ public class DataBaseAdapter
                                         "'" + obj.getString("lunchflag") + "','" + obj.getString("einvoiceurl") + "','" + obj.getString("irn_no") + "'" +
                                         ",'" + obj.getString("ack_no") + "','" + obj.getString("ackdate") + "'," + obj.getInt("einvoice_status") + "," +
                                         "'" + obj.getString("einvoiceresponse") + "','" + obj.getString("einvoiceqrcodeurl") + "'," +
-                                        "'" + obj.getString("ratediscount") + "','" +obj.getString("schemeapplicable")+ "','"+obj.getString("total_budget_utilize")+"'  )";
+                                        "'" + obj.getString("ratediscount") + "','" +obj.getString("schemeapplicable")+ "','"+obj.getString("total_budget_utilize")+"'," +
+                                        "'"+obj.getString("bill_scheme_disc_amount")+"','"+obj.getString("bill_scheme_disc_removed")+"'  )";
 
                                 mDb.execSQL(sql);
 
@@ -13033,7 +13145,9 @@ public class DataBaseAdapter
                                         " irn_no='"+obj.getString("irn_no")+"', ack_no='"+obj.getString("ack_no")+"',ackdate='"+obj.getString("ackdate")+"'" +
                                         ", einvoice_status='"+obj.getInt("einvoice_status")+"',einvoiceresponse='"+obj.getString("einvoiceresponse")+"'" +
                                         ",einvoiceqrcodeurl='"+obj.getString("einvoiceqrcodeurl")+"',ratediscount='"+ obj.getString("ratediscount")+"'," +
-                                        "schemeapplicable='" +obj.getString("schemeapplicable")+ "',total_budget_utilize = '"+obj.getString("total_budget_utilize")+"' " +
+                                        "schemeapplicable='" +obj.getString("schemeapplicable")+ "',total_budget_utilize = '"+obj.getString("total_budget_utilize")+"'," +
+                                        " bill_scheme_disc_amount='" + obj.getString("bill_scheme_disc_amount") + "', " +
+                                        " bill_scheme_disc_removed='" + obj.getString("bill_scheme_disc_removed") + "' " +
                                         " where transactionno='"+obj.getString("transactionno")+"' and" +
                                         " financialyearcode ='"+obj.getString("financialyearcode")+"' and companycode='"+obj.getString("companycode")+"' ";
                                 mDb.execSQL(exequery);
@@ -13048,7 +13162,7 @@ public class DataBaseAdapter
                 }
             } catch (JSONException ex) {
                 // TODO Auto-generated catch block
-                insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                insertErrorLog("Exception in syncsales : " + ex.toString(), this.getClass().getSimpleName() + " - syncsales", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
             }
         }
     }
@@ -13743,7 +13857,8 @@ public class DataBaseAdapter
                     "   a.billtypecode,a.salestime , g.citynametamil as custcityname,f.pincode as custpincode, "+
                     "   h.statenametamil as custstatename,h.gststatecode as custgststatecode, "+
                     "   (select statename from tblstatemaster as aa where aa.gststatecode=b.gststatecode ) as compstatename," +
-                    " b.gststatecode as compgststatecode,a.einvoice_status,a.irn_no,a.ack_no,a.einvoiceurl" +
+                    " b.gststatecode as compgststatecode,a.einvoice_status,a.irn_no,a.ack_no,a.einvoiceurl, " +
+                    " coalesce(a.bill_scheme_disc_amount, 0) as bill_scheme_disc_amount " +
                     " from tblsales AS a "+
                     " inner join tblcompanymaster as b on a.companycode=b.companycode "+
                     " inner join tblvanmaster as c on a.vancode=c.vancode "+
@@ -15517,7 +15632,7 @@ public class DataBaseAdapter
                     " and vancode='"+preferenceMangr.pref_getString(Constants.KEY_GETVANCODE)+"' and flag!=3),0) + " +
                     " coalesce((select sum(inward)-Sum(outward) from tblstockconversion where itemcode=a.parentitemcode " +
                     " and vancode='"+preferenceMangr.pref_getString(Constants.KEY_GETVANCODE)+"'  ),0),0) " +
-                    " as parentstockqty, a.itemsubgroupcode "+
+                    " as parentstockqty, a.itemsubgroupcode, coalesce(a.bill_scheme, '') as bill_scheme "+
                     " from tblitemmaster as a  inner join tblitemsubgroupmaster as c on " +
                     " c.itemsubgroupcode=a.itemsubgroupcode inner join tblbrandmaster as d on a.brandcode=d.brandcode " +
                     " where  a.itemcode ='"+itemcode+"' and a.status='"+statusvar+"'  " +
@@ -16230,7 +16345,8 @@ public class DataBaseAdapter
                     "purchaseitemcode,  freeitemcode,  '0' as dumyprice,  ratecount, " +
                     "freecount,  minsalesqty,  upp,  itemtype,  ratediscount,  schemeapplicable, " +
                     "orgprice,  itemsubgroupcode,  minprice, budget_utilize as budget_utilize,  " +
-                    "schemeitem from (" +
+                    "schemeitem, bill_scheme, bill_scheme_disc_amount, bill_scheme_disc_removed " +
+                    " from (" +
                     " select a.itemcode,a.companycode,a.brandcode,a.manualitemcode,a.itemname,a.itemnametamil,a.unitcode," +
                     " a.unitweightunitcode,a.unitweight,a.uppunitcode,a.uppweight,a.itemcategory,a.parentitemcode, " +
                     " a.allowpriceedit,a.allownegativestock,a.allowdiscount,  " +
@@ -16258,7 +16374,9 @@ public class DataBaseAdapter
                     "itemtype ,coalesce((select newprice from tblitempricelisttransaction  where itemcode=a.itemcode  AND customertype = 1 order by autonum desc limit 1),0)" +
                     " as minprice,budget_utilize ,schemeitem ,minimumsalesqty as minsalesqty,e.qty as itemqty ,e.discount,e.amount AS subtotal,freeitemstatus as freeflag," +
                     "e.itemcode as purchaseitemcode, case when e.freeitemstatus <> '' then e.itemcode else '' end as freeitemcode," +
-                    "e.schemeapplicable,e.orgprice,e.ratediscount,a.itemsubgroupcode,f.customernametamil,(select areanametamil from tblareamaster where areacode=f.areacode )  as areaname  " +
+                    "e.schemeapplicable,e.orgprice,e.ratediscount,a.itemsubgroupcode,f.customernametamil,(select areanametamil from tblareamaster where areacode=f.areacode )  as areaname," +
+                    " coalesce(a.bill_scheme, '') as bill_scheme, coalesce(g.bill_scheme_disc_amount, 0) as bill_scheme_disc_amount," +
+                    " coalesce(g.bill_scheme_disc_removed, '') as bill_scheme_disc_removed " +
                     " from tblitemmaster as a  " +
                     " inner join tblitemsubgroupmaster as c on c.itemsubgroupcode=a.itemsubgroupcode " +
                     " inner join tblbrandmaster as d on a.brandcode=d.brandcode " +
