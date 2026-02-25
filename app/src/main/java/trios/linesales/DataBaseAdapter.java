@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -4296,8 +4297,14 @@ public class DataBaseAdapter
         Cursor mCur = null;
         try{
             String getdate = GenCreatedDate();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH, -1);
+            long date = calendar.getTimeInMillis();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            getdate = sdf.format(date);
             //and syncstatus=0
-            String sql ="select * from tblsales where (flag in (1,3,4)) and syncstatus=0 and date(billdate)=date('"+getdate+"')";
+            String sql ="select * from tblsales where (flag in (1,3,4)) and syncstatus=0 and date(billdate)>=date('"+getdate+"')";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
             {
@@ -4369,8 +4376,14 @@ public class DataBaseAdapter
         Cursor mCur = null;
         try{
             String getdate = GenCreatedDate();
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH, -1);
+            long date = calendar.getTimeInMillis();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            getdate = sdf.format(date);
+
             String sql = "select * from tblsalesitemdetails where flag in (1,3) " +
-                    "and date(createddate)=date('"+getdate+"')";
+                    "and date(createddate)>=date('"+getdate+"')";
 
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
@@ -4450,7 +4463,13 @@ public class DataBaseAdapter
 
         try{
             getdate = GenCreatedDate();
-            String sql ="select * from tblsalesstockconversion as a   where  strftime('%Y-%m-%d',a.transactiondate) ='"+getdate+"' and " +
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH, -1);
+            long date = calendar.getTimeInMillis();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            getdate = sdf.format(date);
+
+            String sql ="select * from tblsalesstockconversion as a   where  strftime('%Y-%m-%d',a.transactiondate) >='"+getdate+"' and " +
                     " financialyearcode='"+preferenceMangr.pref_getString("getfinanceyrcode") +"' ";
             mCur = mDb.rawQuery(sql, null);
             if (mCur.getCount() > 0)
@@ -7976,7 +7995,7 @@ public class DataBaseAdapter
                     "(SELECT CASE WHEN (SELECT count(*) as count FROM tblsalescartdatas where schemeapplicable='yes') > 0  " +
                     "then 'yes' else CASE WHEN (SELECT count(*) as count FROM tblsalescartdatas where schemeapplicable='no')" +
                     "then 'no' else 'not applicable' end end as scheme) as schemeapplicable, "  +
-                    " coalesce((select sum(amount)*" + bill_scheme_disc_percentage + " from tbltempsalesitemdetails where refno='1' and companycode=a.companycode and bill_scheme='yes' and freeitemstatus=''),0) as billdiscount " +
+                    " coalesce((select sum(amount)*" + bill_scheme_disc_percentage + " from tbltempsalesitemdetails where refno='"+ getrefno +"' and companycode=a.companycode and bill_scheme='yes' and (freeitemstatus='' OR freeitemstatus='freerate')),0) as billdiscount " +
                     " from tbltempsalesitemdetails as a " +
                     " where refno='"+ getrefno +"' " +
                     " group by companycode" +
@@ -8002,9 +8021,11 @@ public class DataBaseAdapter
             mDb.execSQL(sqlcustomeramount);
 
             String sqlitem="INSERT INTO tblsalesitemdetails(autonum,transactionno,bookingno,financialyearcode,companycode,itemcode,qty,price,discount,amount,cgst,sgst,igst," +
-                    "cgstamt,sgstamt,igstamt,freeitemstatus,makerid,createddate,vancode,flag,weight,ratediscount,schemeapplicable,orgprice,budget_utilize,schemeitem,schemedisc )" +
+                    "cgstamt,sgstamt,igstamt,freeitemstatus,makerid,createddate,vancode,flag,weight,ratediscount,schemeapplicable,orgprice,budget_utilize,schemeitem,schemedisc, bill_scheme )" +
                     "SELECT (select coalesce(max(autonum),0)+1 from tblsalesitemdetails)+autonum,'"+ Transactionno +"','"+ bookingno +"','"+ financialyearcode +"',companycode,itemcode,qty,price,discount,amount,cgst,sgst,igst,cgstamt,sgstamt,igstamt," +
-                    "freeitemstatus,'1',datetime('now', 'localtime'),'"+vancode+"',1,weight,ratediscount,schemeapplicable,orgprice,budget_utilize,schemeitem,CASE WHEN COALESCE(freeitemstatus,'')='freeitem' THEN 100 ELSE 0 END AS freepercentage from tbltempsalesitemdetails as  a where refno='"+ getrefno +"'";
+                    "freeitemstatus,'1',datetime('now', 'localtime'),'"+vancode+"',1,weight,ratediscount,schemeapplicable,orgprice,budget_utilize,schemeitem," +
+                    "CASE WHEN COALESCE(freeitemstatus,'')='freeitem' THEN 100 ELSE 0 END AS freepercentage, COALESCE(bill_scheme,'') as bill_scheme " +
+                    " from tbltempsalesitemdetails as  a where refno='"+ getrefno +"'";
             mDb.execSQL(sqlitem);
 
             String sqlstock="INSERT INTO tblstocktransaction(transactionno,transactiondate,vancode,itemcode,inward,outward,type,refno,createddate,flag,companycode,op,financialyearcode,autonum)" +
@@ -11001,7 +11022,8 @@ public class DataBaseAdapter
                                 String sql = "INSERT INTO 'tblgeneralsettings' (autonum,restrictmobileappdays,allowedithsn,allowedittax,enablebillwisediscount,enablegpstracking" +
                                         " ,enableallcustomersmobileapp,salesschedulemobileapp,billcopypopup,drilldownitem,wishmsg,drilldownorder,jurisdiction,printheader," +
                                         " showcashpaidpopup,freeitemcolor,item_disc_efrom,zro_price_item_disc,cash_item_disc,otp_time_validity," +
-                                        "otp_time_validity_backend,orderautoapproval,maxbillannualamount,maxbillamount,geofencing,geometer,maxreceiptamt) VALUES('" + gc +"'," +
+                                        "otp_time_validity_backend,orderautoapproval,maxbillannualamount,maxbillamount,geofencing,geometer,maxreceiptamt, cash_disc_applicable)" +
+                                        " VALUES('" + gc +"'," +
                                         "'" + obj.getString("restrictmobileappdays")+"','" + obj.getString("allowedithsn")+"'," +
                                         "'" + obj.getString("allowedittax")+"','" + obj.getString("enablebillwisediscount")+"'," +
                                         "'" + obj.getString("enablegpstracking")+"','" + obj.getString("enableallcustomersmobileapp")+"'," +
@@ -11017,7 +11039,8 @@ public class DataBaseAdapter
                                         "'"+obj.getString("otp_time_validity")+"'," +
                                         "'"+obj.getString("otp_time_validity_backend")+"',"+
                                         "'"+obj.getString("orderautoapproval")+"','"+obj.getString("maxbillannualamount")+"','"+obj.getString("maxbillamount")+"'," +
-                                        "'"+obj.getString("geofencing")+"','"+obj.getString("geometer")+"','"+obj.optString("maxreceiptamt")+"' ) ";
+                                        "'"+obj.getString("geofencing")+"','"+obj.getString("geometer")+"','"+obj.optString("maxreceiptamt")+"'," +
+                                        "'" + obj.optString("cash_disc_applicable") + "' ) ";
                                 mDb.execSQL(sql);
                             }else{
                                 int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
@@ -11047,19 +11070,20 @@ public class DataBaseAdapter
                                         "maxbillannualamount='"+obj.getString("maxbillannualamount")+"'," +
                                         "geofencing='"+obj.getString("geofencing")+"'," +
                                         "geometer='"+obj.getString("geometer")+"'," +
-                                        "maxreceiptamt='"+obj.optString("maxreceiptamt")+"' ";
+                                        "maxreceiptamt='"+obj.optString("maxreceiptamt")+"'," +
+                                        "cash_disc_applicable='" + obj.optString("cash_disc_applicable") + "' ";
                                 mDb.execSQL(sql);
                             }
 
 
                         } catch (JSONException ex) {
-                            insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                            insertErrorLog("Exception in syncgeneralsettings : " + ex.toString(), this.getClass().getSimpleName() + " - syncgeneralsettings", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
                         }
                     }
                 }
             } catch (JSONException ex) {
                 // TODO Auto-generated catch block
-                insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                insertErrorLog("Exception in syncgeneralsettings : " + ex.toString(), this.getClass().getSimpleName() + " - syncgeneralsettings", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
             }
         }
     }
@@ -13305,7 +13329,8 @@ public class DataBaseAdapter
                                         "'" + obj.getString("makerid") + "','" + obj.getString("createddate") + "','" + obj.getString("updateddate") + "'" +
                                         ",'" + obj.getString("bookingno") + "','" + obj.getString("financialyearcode") + "','"+obj.getString("vancode")+"'" +
                                         ",2,'" + obj.getString("ratediscount") + "','" +obj.getString("schemeapplicable")+ "','"+obj.getString("orgprice")+"'" +
-                                        ",'"+obj.getString("schemeitem")+"','"+obj.getString("budget_utilize")+"','"+obj.getString("schemedisc")+"' )";
+                                        ",'"+obj.getString("budget_utilize")+"','"+obj.getString("schemeitem")+"','"+obj.getString("schemedisc")+"'," +
+                                        "'"+obj.getString("bill_scheme")+"' )";
                                 mDb.execSQL(sql);
 
                             } catch (JSONException ex) {
@@ -16350,8 +16375,8 @@ public class DataBaseAdapter
                     " select a.itemcode,a.companycode,a.brandcode,a.manualitemcode,a.itemname,a.itemnametamil,a.unitcode," +
                     " a.unitweightunitcode,a.unitweight,a.uppunitcode,a.uppweight,a.itemcategory,a.parentitemcode, " +
                     " a.allowpriceedit,a.allownegativestock,a.allowdiscount,  " +
-                    " coalesce(coalesce((select sum(op)+sum(inward)-Sum(outward) from tblstocktransaction where itemcode=a.itemcode and vancode='1060' and flag!=3),0) +" +
-                    " coalesce((select sum(inward)-Sum(outward) from tblstockconversion where itemcode=a.itemcode  and vancode='1060'  ),0),0) as stockqty," +
+                    " coalesce(coalesce((select sum(op)+(sum(inward)-Sum(outward)) from tblstocktransaction where itemcode=a.itemcode and vancode='"+preferenceMangr.pref_getString("getvancode")+"' and flag!=3),0) +" +
+                    " coalesce((select sum(inward)-Sum(outward) from tblstockconversion where itemcode=a.itemcode  and vancode='"+preferenceMangr.pref_getString("getvancode")+"'  ),0),0) as stockqty," +
                     " (Select unitname  from tblunitmaster where unitcode=a.unitcode) as unitname, " +
                     " coalesce((Select noofdecimals from tblunitmaster where unitcode=a.unitcode),0) as noofdecimals, " +
                     " coalesce((select oldprice from tblitempricelisttransaction where itemcode=a.itemcode AND customertype = f.categorycode  order by autonum desc limit 1),0) as oldprice,  " +
@@ -16367,8 +16392,8 @@ public class DataBaseAdapter
                     " on ab.schemecode=b.schemecode where ab.purchaseitemcode=a.itemcode and b.status='"+statusvar+"'and (','||multipleroutecode||',')   " +
                     " and (','||multipleareacode||',')    and(validityfrom<=datetime( "+getdate+")) and (ifnull(validityto,'')='' or (validityfrom<=datetime( "+getdate+") " +
                     " and  validityto>=datetime( "+getdate+")))     ) as freecount," +
-                    "  coalesce(coalesce((select sum(op)+sum(inward)-Sum(outward) from tblstocktransaction where itemcode=a.parentitemcode  and vancode='1060' and flag!=3)," +
-                    "0) +  coalesce((select sum(inward)-Sum(outward) from tblstockconversion where itemcode=a.parentitemcode  and vancode='1060'  ),0),0) " +
+                    "  coalesce(coalesce((select sum(op)+sum(inward)-Sum(outward) from tblstocktransaction where itemcode=a.parentitemcode  and vancode='"+preferenceMangr.pref_getString("getvancode")+"' and flag!=3)," +
+                    "0) +  coalesce((select sum(inward)-Sum(outward) from tblstockconversion where itemcode=a.parentitemcode  and vancode='"+preferenceMangr.pref_getString("getvancode")+"'  ),0),0) " +
                     " as parentstockqty,(case when(a.minimumsalesqty<>'null' or a.minimumsalesqty<>null) then a.minimumsalesqty else 0 end) as minimumsalesqty," +
                     " case when parentitemcode=0 then upp else (Select upp from tblitemmaster where itemcode=a.parentitemcode) end as upp," +
                     "itemtype ,coalesce((select newprice from tblitempricelisttransaction  where itemcode=a.itemcode  AND customertype = 1 order by autonum desc limit 1),0)" +
@@ -16387,7 +16412,10 @@ public class DataBaseAdapter
                     " where " + getitembusinesstype + " and g.transactionno="+gettransactionno+" and g.bookingno="+bookingno+" and a.status='"+statusvar+"' " +
                     " and (a.itemcode in (select itemcode from tblstocktransaction where  flag!=3)  or parentcode in" +
                     " (select itemcode from tblstocktransaction where  flag!=3)) and  a.companycode in (select companycode from tblcompanymaster where  " +
-                    "status='"+statusvar+"' ) ) as dec order by   itemtype,itemcategory desc,uppweight desc";
+                    "status='"+statusvar+"' ) ) as dec " +
+                    " where stockqty>0 " +
+                    " order by itemtype";
+//                    "order by   itemtype,itemcategory desc,uppweight desc";
 
 
             mCur = mDb.rawQuery(sql, null);
@@ -16711,6 +16739,27 @@ public class DataBaseAdapter
                     cursor.close();
             }
         }
+    }
+
+    public String GetCashDiscountApplicable()
+    {
+        String cash_disc_applicable="0";
+        try{
+            String sql ="select coalesce(cash_disc_applicable,'') as cash_disc_applicable from tblgeneralsettings  ";
+            Cursor mCur = mDb.rawQuery(sql, null);
+
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+                cash_disc_applicable = mCur.getString(0);
+            }else{
+                cash_disc_applicable = "0";
+            }
+        }catch (Exception ex){
+            insertErrorLog("Exception in GetCashDiscountApplicable : " + ex.toString(), this.getClass().getSimpleName() + " - GetCashDiscountApplicable", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+
+        return cash_disc_applicable;
     }
 
 }

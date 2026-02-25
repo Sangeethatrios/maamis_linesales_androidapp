@@ -96,7 +96,9 @@ public class SalesCloneActivity extends AppCompatActivity {
     int AREACODE = 0;
     CheckBox chkremovecashdiscount;
     boolean cash_discount_applied = false;
-    boolean skipChxBoxListener = false, cashDiscountRemoved = false;;
+    boolean skipChxBoxListener = false, cashDiscountRemoved = false;
+    public static String cash_discount_applicable = "";
+    boolean isCashDiscountApplicable = false;
 
     @SuppressLint("Range")
     @Override
@@ -190,6 +192,7 @@ public class SalesCloneActivity extends AppCompatActivity {
                 objdatabaseadapter.open();
                 Cursor getcartdatas = null;
                 getcartdatas = objdatabaseadapter.GetCustomerAnualAmt(CUSTOMERCODE);
+                cash_discount_applicable = objdatabaseadapter.GetCashDiscountApplicable();
                 SalesActivity.getmobilenoverifycount = objdatabaseadapter.Checkemobilenoverify(CUSTOMERCODE, preferenceMangr.pref_getString("getroutecode"));
 
                 if (getcartdatas != null && getcartdatas.getCount() > 0) {
@@ -222,6 +225,14 @@ public class SalesCloneActivity extends AppCompatActivity {
 
                     }
 
+                }
+
+                if (!Utilities.isNullOrEmpty(cash_discount_applicable)) {
+                    String[] arr = cash_discount_applicable.split(",");
+                    for (int i = 0; i < arr.length; i++) {
+                        if (getbilltypecode.equals(arr[i]))
+                            isCashDiscountApplicable = true;
+                    }
                 }
 
 
@@ -374,8 +385,8 @@ public class SalesCloneActivity extends AppCompatActivity {
                             }
                         } else {
                             chkremovecashdiscount.setVisibility(View.INVISIBLE);
-                            skipChxBoxListener = true;
-                            chkremovecashdiscount.setChecked(false);
+//                            skipChxBoxListener = true;
+//                            chkremovecashdiscount.setChecked(false);
                             cashDiscountRemoved = false;
 //                            BILL_SCHEME_DISC_PERCENTAGE = SalesActivity.cust_bill_scheme_disc_percentage;
                         }
@@ -638,7 +649,8 @@ public class SalesCloneActivity extends AppCompatActivity {
                                     bill_scheme_disc_removed = "Yes";
                                 } else {
                                     if (!Utilities.isNullOrEmpty(BILL_SCHEME_DISC_PERCENTAGE) &&
-                                            Double.parseDouble(BILL_SCHEME_DISC_PERCENTAGE) > 0)
+                                            Double.parseDouble(BILL_SCHEME_DISC_PERCENTAGE) > 0 &&
+                                            isCashDiscountApplicable)
                                         bill_scheme_disc_percentage = Double.parseDouble(BILL_SCHEME_DISC_PERCENTAGE) / 100;
 
                                     if (cash_discount_applied) {
@@ -1377,7 +1389,9 @@ public class SalesCloneActivity extends AppCompatActivity {
 
                     mHolder.deleteitem.setVisibility(View.VISIBLE);
                     mHolder.dummydeleteitem.setVisibility(View.GONE);
-                } else if(salesItemList.get(position).getFreeflag().equals("freerate")) {
+                } else if(salesItemList.get(position).getFreeflag().equals("freerate") &&
+                        !Utilities.isNullOrEmpty(salesItemList.get(position).getDiscount()) &&
+                        Double.parseDouble(salesItemList.get(position).getDiscount()) > 0) {
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
                     mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
 
@@ -1573,28 +1587,30 @@ public class SalesCloneActivity extends AppCompatActivity {
         }
 
         double valueDiscAmt = 0;
-        if (!cashDiscountRemoved) {
-            if (valueDiscountTotal > 0) {
-                cash_discount_applied = true;
-                String cust_bill_scheme_disc_perc = BILL_SCHEME_DISC_PERCENTAGE;
-                if (!Utilities.isNullOrEmpty(cust_bill_scheme_disc_perc) && Double.parseDouble(cust_bill_scheme_disc_perc) > 0) {
-                    valueDiscAmt = valueDiscountTotal * Double.parseDouble(cust_bill_scheme_disc_perc) / 100;
-                }
-                if (valueDiscAmt > 0) {
-                    chkremovecashdiscount.setVisibility(View.VISIBLE);
+        if (isCashDiscountApplicable) {
+            if (!cashDiscountRemoved) {
+                if (valueDiscountTotal > 0) {
+                    cash_discount_applied = true;
+                    String cust_bill_scheme_disc_perc = BILL_SCHEME_DISC_PERCENTAGE;
+                    if (!Utilities.isNullOrEmpty(cust_bill_scheme_disc_perc) && Double.parseDouble(cust_bill_scheme_disc_perc) > 0) {
+                        valueDiscAmt = valueDiscountTotal * Double.parseDouble(cust_bill_scheme_disc_perc) / 100;
+                    }
+                    if (valueDiscAmt > 0) {
+                        chkremovecashdiscount.setVisibility(View.VISIBLE);
+                    } else {
+                        chkremovecashdiscount.setVisibility(View.INVISIBLE);
+                    }
                 } else {
                     chkremovecashdiscount.setVisibility(View.INVISIBLE);
+                    skipChxBoxListener = true;
+                    chkremovecashdiscount.setChecked(false);
                 }
-            } else {
-                chkremovecashdiscount.setVisibility(View.INVISIBLE);
-                skipChxBoxListener = true;
-                chkremovecashdiscount.setChecked(false);
             }
-        } /*else {
-            chkremovecashdiscount.setVisibility(View.VISIBLE);
+        } else {
+            chkremovecashdiscount.setVisibility(View.INVISIBLE);
 //            skipChxBoxListener = true;
-            chkremovecashdiscount.setChecked(true);
-        }*/
+//            chkremovecashdiscount.setChecked(false);
+        }
 
 
         txtcashdiscountamt.setText("Cash Discount ₹  " + dft.format(valueDiscAmt));
@@ -1815,6 +1831,8 @@ public class SalesCloneActivity extends AppCompatActivity {
                         obj.put("orgprice", mCursalesitems.getString(25));
                         obj.put("budget_utilize", mCursalesitems.getString(mCursalesitems.getColumnIndex("budget_utilize")));
                         obj.put("schemedisc", mCursalesitems.getString(mCursalesitems.getColumnIndex("schemedisc")));
+                        obj.put("bill_scheme", mCursalesitems.getString(mCursalesitems.getColumnIndex("bill_scheme")));
+
                         js_array3.put(obj);
                         mCursalesitems.moveToNext();
                     }

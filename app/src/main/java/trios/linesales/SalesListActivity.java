@@ -3101,6 +3101,7 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
         ArrayList<SalesSyncDatas> List = null;
         JSONObject jsonObj = null;
         ProgressDialog loading;
+        @SuppressLint("Range")
         @Override
         protected  ArrayList<SalesSyncDatas> doInBackground(String... params) {
             RestAPI api = new RestAPI();
@@ -3195,6 +3196,20 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
                         if (!mCursales.isNull(41))
                             schemeapplicable = mCursales.getString(41);
                         obj.put("schemeapplicable", schemeapplicable);
+                        String latlong = "";
+                        if (!mCursales.isNull(42))
+                            latlong = mCursales.getString(42);
+                        obj.put("latlong", latlong);
+
+                        String orderTransNo = "";
+                        if (!mCursales.isNull(43))
+                            orderTransNo = mCursales.getString(43);
+                        obj.put("ordertransactionno", orderTransNo);
+
+                        obj.put("budget_utilize", mCursales.getString(mCursales.getColumnIndex("total_budget_utilize")));
+                        obj.put("bill_scheme_disc_amount", mCursales.getString(mCursales.getColumnIndex("bill_scheme_disc_amount")));
+                        obj.put("bill_scheme_disc_removed", mCursales.getString(mCursales.getColumnIndex("bill_scheme_disc_removed")));
+
                         js_array2.put(obj);
                         mCursales.moveToNext();
                     }
@@ -3236,6 +3251,10 @@ if(getactiveschedule.equals("0") || Utilities.isNullOrEmpty(getactiveschedule) )
 
                         obj.put("schemeapplicable", schemeapplicable);
                         obj.put("orgprice", mCursalesitems.getString(25));
+                        obj.put("budget_utilize", mCursalesitems.getString(mCursalesitems.getColumnIndex("budget_utilize")));
+                        obj.put("schemedisc", mCursalesitems.getString(mCursalesitems.getColumnIndex("schemedisc")));
+                        obj.put("bill_scheme", mCursalesitems.getString(mCursalesitems.getColumnIndex("bill_scheme")));
+
                         js_array3.put(obj);
                         mCursalesitems.moveToNext();
                     }

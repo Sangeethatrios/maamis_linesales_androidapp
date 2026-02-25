@@ -503,6 +503,19 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                 }
             });
 
+            radio_cash.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(radio_cash.isChecked()){
+                       if (!validateAnnualBillAmount()) {
+                           Toast.makeText(getApplicationContext(),"The total bill amount for this customer has exceeded the daily limit.", Toast.LENGTH_LONG).show();
+                           radio_cash.setChecked(!radio_cash.isChecked());
+                           return;
+                       }
+                    }
+                }
+            });
+
             /*radio_cash.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -5018,8 +5031,11 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     }
 
                 }
-                if((!Utilities.isNullOrEmpty(Customerbillcount[position]) && Integer.parseInt(Customerbillcount[position]) > 0) ||
-                        (!Utilities.isNullOrEmpty(CusNotPurchasedCount[position]) && Integer.parseInt(CusNotPurchasedCount[position]) > 0)) {
+                if(!Utilities.isNullOrEmpty(CusNotPurchasedCount[position]) && Integer.parseInt(CusNotPurchasedCount[position]) > 0) {
+                    mHolder.LLL.setBackgroundColor(getResources().getColor(R.color.notpurchasedcustomer));
+                }
+
+                if(!Utilities.isNullOrEmpty(Customerbillcount[position]) && Integer.parseInt(Customerbillcount[position]) > 0) {
                     mHolder.LLL.setBackgroundColor(getResources().getColor(R.color.billedcustomer));
                 }
 
@@ -9466,6 +9482,53 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
             }
             return getcount;
         }
+
+    }
+
+    public boolean validateAnnualBillAmount() {
+        if (staticreviewsalesitems == null || staticreviewsalesitems.size() <= 0) {
+            return true;
+        }
+
+        String maxbillamount = preferenceMangr.pref_getString("getmaxbillamount");
+        String maxbillannualamount = preferenceMangr.pref_getString("getmaxbillannualamount");
+        if(Utilities.isNullOrEmpty(maxbillamount) || Double.parseDouble(maxbillamount) <= 0 ||
+                Utilities.isNullOrEmpty(maxbillannualamount) || Double.parseDouble(maxbillannualamount) <= 0){
+            return true;
+        }
+
+        final DecimalFormat dft = new DecimalFormat("0.00");
+        double res1 = 0;
+        double res2 = 0;
+
+        for (int i = 0; i < staticreviewsalesitems.size(); i++) {
+            String saleseqty = staticreviewsalesitems.get(i).getItemqty();
+            String salessubtotal = staticreviewsalesitems.get(i).getSubtotal();
+            String getsaleseqty;
+            if (saleseqty.equals("")) {
+                getsaleseqty = "0";
+            } else {
+                getsaleseqty = saleseqty;
+            }
+            String getsalessubtotal;
+            if (salessubtotal.equals("")) {
+                getsalessubtotal = "0";
+            } else {
+                getsalessubtotal = salessubtotal;
+            }
+
+            res1 = res1 + Double.parseDouble(getsalessubtotal);
+            res2 = res2 + Double.parseDouble(getsaleseqty);
+        }
+
+        if (res1 + Double.parseDouble(annualsalesamt) <=  Double.parseDouble(maxbillannualamount)){
+            //if (amount + res1 + Double.parseDouble(daywisesalesamt) <=  Double.parseDouble(maxbillamount)){
+            if (res1 <=  Double.parseDouble(maxbillamount)){
+                return true;
+            }
+        }
+
+        return false;
 
     }
 }

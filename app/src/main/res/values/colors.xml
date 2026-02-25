@@ -39,6 +39,7 @@
     <color name="gray_color_dot">#585858</color>
     <color name="colorPrimary1">#0081d6</color>
     <color name="billedcustomer">#DCF4FB</color>
+    <color name="notpurchasedcustomer">#F8D4D4</color>
     <color name="login_dial_paid_number_blue">#2F01CA</color>
     <color name="disable_password">#161453</color>
     <color name="payment_upi">#A31FC8</color>

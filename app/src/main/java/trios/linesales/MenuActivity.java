@@ -2703,6 +2703,7 @@ public class MenuActivity extends AppCompatActivity {
 
                     obj.put("budget_utilize", mCursalesitems.getString(mCursalesitems.getColumnIndex("budget_utilize")));
                     obj.put("schemedisc", mCursalesitems.getString(mCursalesitems.getColumnIndex("schemedisc")));
+                    obj.put("bill_scheme", mCursalesitems.getString(mCursalesitems.getColumnIndex("bill_scheme")));
 
                     js_array3.put(obj);
                     mCursalesitems.moveToNext();

@@ -93,6 +93,9 @@ public class ReviewActivity extends AppCompatActivity {
     public static String cust_bill_scheme_disc_percentage="0";
     boolean cash_discount_applied = false;
     boolean skipChxBoxListener = false;
+    public static String cash_discount_applicable = "";
+    boolean isCashDiscountApplicable = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,32 +150,6 @@ public class ReviewActivity extends AppCompatActivity {
                 Log.d("PreferenceMangr : ",e.toString());
             }
 
-            if(getIntent().hasExtra("Payment_Type")){
-                //set Invoice heading
-                boolean b = getIntent().getBooleanExtra("Payment_Type", false);
-
-                if(b){
-                    paymenttypeinvoice.setText("CASH");
-                    getbilltypecode = "1";
-
-                }else{
-                    gstnLL.setVisibility(View.VISIBLE);
-                    paymenttypeinvoice.setText("CREDIT");
-                    if(!SalesActivity.gstnnumber.equals("")){
-                        getbilltypecode = "2";
-                    }
-                    if(SalesActivity.gstnnumber.equals("")){
-                        getbilltypecode = "3";
-                    }
-                }
-
-            } else {
-                Toast toast = Toast.makeText(getApplicationContext(), "Please check the payment type", Toast.LENGTH_LONG);
-                //toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
-                return;
-            }
-
             try{
                 orderTransNo = preferenceMangr.pref_getString(Constants.KEY_ORDER_TO_SALES_TRANS_NO);
                 orderFinancialyear = preferenceMangr.pref_getString(Constants.KEY_ORDER_TO_SALES_FINANCIALYEAR);
@@ -202,6 +179,7 @@ public class ReviewActivity extends AppCompatActivity {
                 //LoginActivity.getcurrentdatetime = objdatabaseadapter1.GenCurrentCreatedDate();
                 preferenceMangr.pref_putString("getformatdate",objdatabaseadapter1.GenCreatedDate());
                 preferenceMangr.pref_putString("getcurrentdatetime",objdatabaseadapter1.GenCurrentCreatedDate());
+                cash_discount_applicable = objdatabaseadapter1.GetCashDiscountApplicable();
             }catch (Exception e){
                 DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
                 mDbErrHelper.open();
@@ -215,6 +193,40 @@ public class ReviewActivity extends AppCompatActivity {
                     objdatabaseadapter1.close();
             }
 
+
+            if(getIntent().hasExtra("Payment_Type")){
+                //set Invoice heading
+                boolean b = getIntent().getBooleanExtra("Payment_Type", false);
+
+                if(b){
+                    paymenttypeinvoice.setText("CASH");
+                    getbilltypecode = "1";
+
+                }else{
+                    gstnLL.setVisibility(View.VISIBLE);
+                    paymenttypeinvoice.setText("CREDIT");
+                    if(!SalesActivity.gstnnumber.equals("")){
+                        getbilltypecode = "2";
+                    }
+                    if(SalesActivity.gstnnumber.equals("")){
+                        getbilltypecode = "3";
+                    }
+                }
+
+                if (!Utilities.isNullOrEmpty(cash_discount_applicable)) {
+                    String[] arr = cash_discount_applicable.split(",");
+                    for (int i = 0; i < arr.length; i++) {
+                        if (getbilltypecode.equals(arr[i]))
+                            isCashDiscountApplicable = true;
+                    }
+                }
+
+            } else {
+                Toast toast = Toast.makeText(getApplicationContext(), "Please check the payment type", Toast.LENGTH_LONG);
+                //toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                return;
+            }
 
             imgcamera.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -456,7 +468,8 @@ public class ReviewActivity extends AppCompatActivity {
 
                                 double bill_scheme_disc_percentage = 0;
                                 if (!Utilities.isNullOrEmpty(cust_bill_scheme_disc_percentage) &&
-                                        Double.parseDouble(cust_bill_scheme_disc_percentage) > 0)
+                                        Double.parseDouble(cust_bill_scheme_disc_percentage) > 0 &&
+                                        isCashDiscountApplicable)
                                     bill_scheme_disc_percentage = Double.parseDouble(cust_bill_scheme_disc_percentage) / 100;
 
                                 String bill_scheme_disc_removed = "";
@@ -1407,7 +1420,9 @@ public class ReviewActivity extends AppCompatActivity {
 
                     mHolder.deleteitem.setVisibility(View.VISIBLE);
                     mHolder.dummydeleteitem.setVisibility(View.GONE);
-                } else if(salesItemList.get(position).getFreeflag().equals("freerate")) {
+                } else if(salesItemList.get(position).getFreeflag().equals("freerate") &&
+                        !Utilities.isNullOrEmpty(salesItemList.get(position).getDiscount()) &&
+                        Double.parseDouble(salesItemList.get(position).getDiscount()) > 0) {
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
                     mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
 
@@ -1627,7 +1642,7 @@ public class ReviewActivity extends AppCompatActivity {
         }
 
         double valueDiscAmt = 0;
-        if (valueDiscountTotal > 0) {
+        if (valueDiscountTotal > 0 && isCashDiscountApplicable) {
             cash_discount_applied = true;
             String cust_bill_scheme_disc_perc = cust_bill_scheme_disc_percentage;
             if (!Utilities.isNullOrEmpty(cust_bill_scheme_disc_perc) && Double.parseDouble(cust_bill_scheme_disc_perc) > 0) {
@@ -1863,6 +1878,8 @@ public class ReviewActivity extends AppCompatActivity {
                         obj.put("orgprice", mCursalesitems.getString(25));
                         obj.put("budget_utilize", mCursalesitems.getString(mCursalesitems.getColumnIndex("budget_utilize")));
                         obj.put("schemedisc", mCursalesitems.getString(mCursalesitems.getColumnIndex("schemedisc")));
+                        obj.put("bill_scheme", mCursalesitems.getString(mCursalesitems.getColumnIndex("bill_scheme")));
+
                         js_array3.put(obj);
                         mCursalesitems.moveToNext();
                     }

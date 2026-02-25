@@ -1063,7 +1063,8 @@ public class SalesViewActivity extends AppCompatActivity {
                 mHolder.listitemtotal.setText(dft.format(Double.parseDouble(salesItemList.get(position).getAmount())));
                 mHolder.labelstockunit.setText(salesItemList.get(position).getUnitname());
 
-                if(!Utilities.isNullOrEmpty(salesItemList.get(position).getDiscount()) &&
+                if(salesItemList.get(position).getFreeitemstatus().equals("freerate") &&
+                        !Utilities.isNullOrEmpty(salesItemList.get(position).getDiscount()) &&
                         Double.parseDouble(salesItemList.get(position).getDiscount()) > 0) {
                     mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
                     mHolder.listdiscount.setText("Disc: " + dft.format(Double.parseDouble(salesItemList.get(position).getDiscount())));
@@ -1080,7 +1081,9 @@ public class SalesViewActivity extends AppCompatActivity {
 
                     mHolder.dummycount.setVisibility(View.GONE);
                     mHolder.schemecount.setVisibility(View.VISIBLE);
-                }else if(salesItemList.get(position).getFreeitemstatus().equals("freerate")){
+                }else if(salesItemList.get(position).getFreeitemstatus().equals("freerate") &&
+                        !Utilities.isNullOrEmpty(salesItemList.get(position).getDiscount()) &&
+                        Double.parseDouble(salesItemList.get(position).getDiscount()) > 0){
                     mHolder.itemLL.setBackgroundColor(getResources().getColor(R.color.lightbiscuit));
                     mHolder.listdiscount.setBackgroundColor(getResources().getColor(R.color.orangecolor));
 

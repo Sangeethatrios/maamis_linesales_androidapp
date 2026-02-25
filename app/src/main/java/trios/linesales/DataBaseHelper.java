@@ -341,5 +341,9 @@ public class DataBaseHelper extends SQLiteOpenHelper
         db.execSQL(query6);
         String query7 = "ALTER TABLE tblsales ADD COLUMN bill_scheme_disc_removed TEXT default null;";
         db.execSQL(query7);
+        String query8 = "ALTER TABLE tblgeneralsettings ADD COLUMN cash_disc_applicable TEXT default null;";
+        db.execSQL(query8);
+        String query9 = "ALTER TABLE tblsalesitemdetails ADD COLUMN bill_scheme TEXT default null;";
+        db.execSQL(query9);
     }
 }
