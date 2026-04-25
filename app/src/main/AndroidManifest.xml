@@ -64,6 +64,21 @@
         android:debuggable="false"
         tools:ignore="HardcodedDebugMode"
         android:preserveLegacyExternalStorage="true">
+
+        <activity
+            android:name="trios.linesales.PremiumCustomerOrderViewActivity"
+            android:label="@string/title_activity_premium_customer_order_view"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
+
+        <activity
+            android:name="trios.linesales.PremiumCustomerOrderListActivity"
+            android:label="@string/title_activity_premium_customer_order"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="false" />
+
         <activity
             android:name="trios.linesales.PrinterSettingsActivity"
             android:label="@string/title_activity_printer_Settings"

@@ -45,5 +45,6 @@
     <color name="payment_upi">#A31FC8</color>
     <color name="payment_notpaid">#CA1919</color>
     <color name="stockreturn">#F7C4A4</color>
+    <color name="badge_premium">#A567C3</color>
 
 </resources>

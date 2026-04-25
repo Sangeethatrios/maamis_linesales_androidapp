@@ -94,7 +94,8 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
 
     String[] SubGroupCode,SubGroupName,SubGroupNameTamil;
     String[] CustomerCode,CustomerCategory,CustomerName,CustomerNameTamil,Address,CustomerAreaCode,MobileNo,
-            TelephoneNo,GSTN,SchemeApplicable,customertypecode,CustomerCityName,CustomerAreaName,CustomerTotalOrder,Customerbillcount;
+            TelephoneNo,GSTN,SchemeApplicable,customertypecode,CustomerCityName,CustomerAreaName,CustomerTotalOrder,Customerbillcount,
+            CustomerCategoryCode;
     Dialog areadialog,customerdialog,routedialog;
     static public String  customercode="",customercategory = "",gstnnumber="",
             getschemeapplicable="",getstaticsubcode="",getstaticchilditemcode="",getstaticgetchildqty="";
@@ -948,6 +949,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                 CustomerAreaName = new String[Cur.getCount()];
                 CustomerTotalOrder = new String[Cur.getCount()];
                 Customerbillcount = new String[Cur.getCount()];
+                CustomerCategoryCode = new String[Cur.getCount()];
                 for(int i=0;i<Cur.getCount();i++){
                     CustomerCode[i] = Cur.getString(0);
                     CustomerName[i] = Cur.getString(1);
@@ -964,6 +966,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                     CustomerTotalOrder[i]=Cur.getString(14);
                     Customerbillcount[i]=Cur.getString(15);
                     CustomerCategory[i]=Cur.getString(Cur.getColumnIndex("CustomerCategory"));
+                    CustomerCategoryCode[i]=Cur.getString(Cur.getColumnIndex("customercategorycode"));
 
                     Cur.moveToNext();
                 }
@@ -2830,6 +2833,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                                 objdatabaseadapter.open();
                                 String getresult = objdatabaseadapter.DeleteItemOrderInCart(salesItemList.get(pos1).getItemcode());
                                 if (getresult.equals("Success")) {
+                                    staticreviewsalesorderitems.removeIf(item -> item.getItemcode().equals(salesItemList.get(pos1).getItemcode()));
                                     getcartdatas = objdatabaseadapter.GetSalesOrderItemsCarts();
                                     if(getcartdatas.getCount()>0){
                                         totalcartitems.setText(String.valueOf(getcartdatas.getCount()));
@@ -3319,6 +3323,7 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                     mHolder.listTotalOrder = (TextView) convertView.findViewById(R.id.listTotalOrder);
                     mHolder.LLTotalOrder = (CardView) convertView.findViewById(R.id.LLTotalOrder);
                     mHolder.listordercount=(TextView) convertView.findViewById(R.id.listordercount);
+                    mHolder.txtPremiumBadge=(TextView) convertView.findViewById(R.id.txtPremiumBadge);
                 } catch (Exception e) {
                     Log.i("Customer", e.toString());
                     DataBaseAdapter mDbErrHelper = new DataBaseAdapter(context);
@@ -3367,6 +3372,10 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
                 }
                 if(Utilities.isNullOrEmpty(Customerbillcount[position]) || !Customerbillcount[position].equals("0")) {
                     mHolder.LLL.setBackgroundColor(getResources().getColor(R.color.billedcustomer));
+                }
+
+                if (!Utilities.isNullOrEmpty(CustomerCategoryCode[position]) && Integer.parseInt(CustomerCategoryCode[position]) == 2) {
+                    mHolder.txtPremiumBadge.setVisibility(View.VISIBLE);
                 }
 
             } catch (Exception e) {
@@ -3460,7 +3469,8 @@ public class SalesOrderActivity extends AppCompatActivity  implements View.OnCli
         }
 
         private class ViewHolder {
-            private TextView listcustomername,listgstin,listcustomertype,listTotalOrder,listordercount;
+            private TextView listcustomername,listgstin,listcustomertype,listTotalOrder,listordercount,
+                    txtPremiumBadge;
             private CardView LLTotalOrder;
             private  LinearLayout LLL;
         }

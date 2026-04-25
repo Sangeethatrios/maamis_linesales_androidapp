@@ -20,7 +20,7 @@ import android.util.Log;
 
 public class DataBaseHelper extends SQLiteOpenHelper
 {
-    private static int DbVersion = 8;
+    private static int DbVersion = 9;
     private static String DB_PATH;
     private static String DB_NAME = "dblinesales.db";
     private static SQLiteDatabase mDataBase;
@@ -244,6 +244,11 @@ public class DataBaseHelper extends SQLiteOpenHelper
         if (oldVersion < 8) {
             addProduct_Bill_Scheme(db);
         }
+
+        if (oldVersion < 9) {
+            addCustomerCategory(db);
+            addSecondaryCustomerOrderTables(db);
+        }
     }
     private void addLocationforcustomer(SQLiteDatabase db) {
         String querytblsales = "ALTER TABLE " + Constants.TBLSALES +
@@ -345,5 +350,72 @@ public class DataBaseHelper extends SQLiteOpenHelper
         db.execSQL(query8);
         String query9 = "ALTER TABLE tblsalesitemdetails ADD COLUMN bill_scheme TEXT default null;";
         db.execSQL(query9);
+    }
+
+    private void addCustomerCategory(SQLiteDatabase db) {
+        String query = "ALTER TABLE tblcustomer ADD COLUMN customercategorycode INT DEFAULT null;";
+        db.execSQL(query);
+    }
+
+    private void addSecondaryCustomerOrderTables(SQLiteDatabase db) {
+        String query = "CREATE TABLE IF NOT EXISTS tblsecondarycustomerorder (" +
+                " autonum INTEGER NOT NULL," +
+                " companycode INTEGER DEFAULT NULL," +
+                " transactionno INTEGER DEFAULT NULL," +
+                " orderno TEXT," +
+                " refno INTEGER DEFAULT NULL," +
+                " shortcode TEXT," +
+                " orderdate datetime DEFAULT NULL," +
+                " customercode TEXT DEFAULT NULL," +
+                " gstin TEXT," +
+                " subtotal REAL DEFAULT NULL," +
+                " discount REAL DEFAULT NULL," +
+                " totaltaxamount REAL DEFAULT NULL," +
+                " grandtotal REAL DEFAULT NULL," +
+                " flag INTEGER," +
+                " makerid INTEGER DEFAULT NULL," +
+                " createddate datetime DEFAULT NULL," +
+                " updateddate datetime DEFAULT NULL," +
+                " bitmapimage blob," +
+                " financialyearcode INTEGER DEFAULT NULL," +
+                " remarks TEXT,"+
+                " bookingno INTEGER," +
+                " syncstatus INTEGER," +
+                " ordertime TEXT," +
+                " beforeroundoff REAL," +
+                " roundoff REAL," +
+                " transportid INTEGER," +
+                " status TEXT," +
+                " transportmode INTEGER DEFAULT NULL," +
+                " latlong TEXT DEFAULT NULL" +
+                ")";
+        db.execSQL(query);
+
+        String query1 = "CREATE TABLE IF NOT EXISTS tblsecondarycustomerorderitemdetails (" +
+                " autonum INTEGER NOT NULL," +
+                " transactionno INTEGER DEFAULT NULL," +
+                " companycode INTEGER DEFAULT NULL," +
+                " customercode TEXT DEFAULT NULL," +
+                " itemcode INTEGER DEFAULT NULL," +
+                " qty REAL DEFAULT NULL," +
+                " weight REAL," +
+                " price REAL DEFAULT NULL," +
+                " discount REAL DEFAULT NULL," +
+                " amount REAL DEFAULT NULL," +
+                " cgst REAL DEFAULT NULL," +
+                " sgst REAL DEFAULT NULL," +
+                " igst REAL DEFAULT NULL," +
+                " cgstamt REAL DEFAULT NULL," +
+                " sgstamt REAL DEFAULT NULL," +
+                " igstamt REAL DEFAULT NULL," +
+                " freeitemstatus TEXT," +
+                " makerid INTEGER DEFAULT NULL," +
+                " createddate datetime DEFAULT NULL," +
+                " updateddate datetime DEFAULT NULL," +
+                " bookingno INTEGER," +
+                " financialyearcode INTEGER," +
+                " flag INTEGER " +
+                ")";
+        db.execSQL(query1);
     }
 }

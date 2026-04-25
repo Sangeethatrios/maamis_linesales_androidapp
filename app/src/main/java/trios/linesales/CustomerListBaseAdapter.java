@@ -57,6 +57,10 @@ class CustomerListBaseAdapter  extends BaseAdapter {
             return super.getViewTypeCount();
         }
     }
+    
+    public void updateList(ArrayList<CustomerDetails> myList) {
+        this.myList = myList;
+    }
 
     @Override
     public int getItemViewType(int position) {
@@ -84,6 +88,7 @@ class CustomerListBaseAdapter  extends BaseAdapter {
                 mHolder.RetailerArea = (TextView)convertView.findViewById(R.id.RetailerArea);
                 mHolder.Retailertelephoneno = (TextView)convertView.findViewById(R.id.Retailertelephoneno);
                 mHolder.Verifiedstatus =(TextView)convertView.findViewById(R.id.Verifiedstatus);
+                mHolder.txtPremiumBadge = (TextView) convertView.findViewById(R.id.txtPremiumBadge);
 
 
                 convertView.setTag(mHolder);
@@ -97,6 +102,7 @@ class CustomerListBaseAdapter  extends BaseAdapter {
                 convertView.setTag(R.id.RetailerArea,mHolder.RetailerArea);
                 convertView.setTag(R.id.Retailertelephoneno,mHolder.Retailertelephoneno);
                 convertView.setTag(R.id.Verifiedstatus,mHolder.Verifiedstatus);
+                convertView.setTag(R.id.txtPremiumBadge,mHolder.txtPremiumBadge);
 
                 mHolder.Retailermobileno.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -169,6 +175,11 @@ class CustomerListBaseAdapter  extends BaseAdapter {
                 mHolder.Retailergstin.setText("");
             }
 
+            if ((!Utilities.isNullOrEmpty(currentListData.getCustomercategorycode()) &&
+                    Integer.parseInt(currentListData.getCustomercategorycode()) == 2)) {
+                mHolder.txtPremiumBadge.setVisibility(View.VISIBLE);
+            }
+
 
             mHolder.RetailerlistSno.setTag(position);
             mHolder.Retailerlistretailername.setTag(position);
@@ -178,6 +189,7 @@ class CustomerListBaseAdapter  extends BaseAdapter {
             mHolder.RetailerArea.setTag(position);
             mHolder.Retailertelephoneno.setTag(position);
             mHolder.Verifiedstatus.setTag(position);
+            mHolder.txtPremiumBadge.setTag(position);
 
 
             if (position % 2 == 1) {
@@ -198,7 +210,8 @@ class CustomerListBaseAdapter  extends BaseAdapter {
     }
     private class ViewHolder {
         TextView RetailerlistSno, RetailerArea
-                ,Retailergstin,Retailerlistretailername,Retailercity,Retailermobileno,Retailertelephoneno,Verifiedstatus;
+                ,Retailergstin,Retailerlistretailername,Retailercity,Retailermobileno,Retailertelephoneno,Verifiedstatus,
+                txtPremiumBadge;
         LinearLayout listLL;
         CardView retailercard_view;
 

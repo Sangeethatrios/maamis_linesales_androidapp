@@ -5128,7 +5128,8 @@ public class DataBaseAdapter
                         "(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 AND    flag<>6 ) AS daywisesalesamt," +
                         "(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' AND    flag<>3 AND    flag<>6) AS billwisebudget, " +
                         " COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude ,COALESCE(gstinverificationstatus,0) AS gstinverificationstatus," +
-                        " COALESCE(a.bill_scheme,'') as bill_scheme, COALESCE(a.bill_scheme_disc_percentage,'') as bill_scheme_disc_percentage " +
+                        " COALESCE(a.bill_scheme,'') as bill_scheme, COALESCE(a.bill_scheme_disc_percentage,'') as bill_scheme_disc_percentage, " +
+                        " COALESCE(a.customercategorycode, 0) as customercategorycode " +
                         " from tblcustomer" +
                         " as a inner join tblareamaster as b on a.areacode=b.areacode inner join tblcitymaster as c " +
                         " on b.citycode=c.citycode" +
@@ -5151,7 +5152,8 @@ public class DataBaseAdapter
                         "(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  " +
                         "schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3  AND    flag<>6) AS billwisebudget," +
                         " COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude,COALESCE(gstinverificationstatus,0) AS gstinverificationstatus," +
-                        " COALESCE(a.bill_scheme,'') as bill_scheme, COALESCE(a.bill_scheme_disc_percentage,'') as bill_scheme_disc_percentage " +
+                        " COALESCE(a.bill_scheme,'') as bill_scheme, COALESCE(a.bill_scheme_disc_percentage,'') as bill_scheme_disc_percentage, " +
+                        " COALESCE(a.customercategorycode, 0) as customercategorycode " +
                         " from tblcustomer " +
                         " as a inner join tblareamaster as b on a.areacode=b.areacode inner join tblcitymaster as c on b.citycode=c.citycode" +
                         " where a.areacode = '" + areacode + "' and a.status='" + statusvar + "' and (business_type='1' or business_type='3') " +
@@ -5177,7 +5179,8 @@ public class DataBaseAdapter
                         "(SELECT COALESCE(SUM(grandtotal),0) AS daywisesalesamt FROM tblsales WHERE customercode = a.customercode AND date(billdate)=  date('now') AND    flag<>3 AND    flag<>6 ) AS daywisesalesamt," +
                         "(SELECT COALESCE(SUM(total_budget_utilize),0) AS  billwisebudget FROM tblsales WHERE  schedulecode = '"+preferenceMangr.pref_getString("getschedulecode")+"' and  flag<>3 AND    flag<>6) AS billwisebudget, " +
                         "COALESCE(longitude,0) AS longitude, COALESCE(latitude,0) AS latitude,COALESCE(gstinverificationstatus,0) AS gstinverificationstatus, " +
-                        " COALESCE(a.bill_scheme,'') as bill_scheme, COALESCE(a.bill_scheme_disc_percentage,'') as bill_scheme_disc_percentage " +
+                        " COALESCE(a.bill_scheme,'') as bill_scheme, COALESCE(a.bill_scheme_disc_percentage,'') as bill_scheme_disc_percentage, " +
+                        " COALESCE(a.customercategorycode, 0) as customercategorycode " +
                         " from tblcustomer as a inner join tblareamaster as b on a.areacode=b.areacode inner " +
                         " join tblcitymaster as c on b.citycode=c.citycode where a.areacode = '" + areacode + "' and" +
                         " a.status='" + statusvar + "' and " + varBusinessType +
@@ -5190,7 +5193,7 @@ public class DataBaseAdapter
                 mCur.moveToFirst();
             }
         }catch (Exception ex){
-            insertErrorLog(ex.toString(), this.getClass().getSimpleName(), String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            insertErrorLog("Exception in GetCustomerDB : " + ex.toString(), this.getClass().getSimpleName() + " - GetCustomerDB", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
         }
 
         return mCur;
@@ -5529,10 +5532,10 @@ public class DataBaseAdapter
                     "inner join tblbrandmaster as d on a.brandcode=d.brandcode " +
                     " INNER JOIN tbldisplaygroup on a.displaygroupcode=dgroupcode" +
                     " where " + getitembusinesstype + " and a.displaygroupcode ='"+itemsubgroupcode+"' and a.status='"+statusvar+"'  " +
-                    " and (a.itemcode in (select itemcode from tblstocktransaction where  flag!=3) " +
-                    " or parentcode in (select itemcode from tblstocktransaction where  flag!=3)) and " +
-                    " a.companycode in (select companycode from tblcompanymaster where status='"+statusvar+"' ) ) as dec " +
-                    " where ((itemcategory='child'  and (parentstockqty>0 or stockqty>0) ) or (itemcategory= 'parent' and stockqty>0 ) ) AND   newprice <> 0  " +
+//                    " and (a.itemcode in (select itemcode from tblstocktransaction where  flag!=3) or parentcode in (select itemcode from tblstocktransaction where  flag!=3)) " +
+                    " and a.companycode in (select companycode from tblcompanymaster where status='"+statusvar+"' ) ) as dec " +
+//                    " where ((itemcategory='child'  and (parentstockqty>0 or stockqty>0) ) or (itemcategory= 'parent' and stockqty>0 ) ) AND   newprice <> 0  " +
+                    " where newprice <> 0  " +
                     " order by   itemtype,itemcategory desc,uppweight desc";
 
             //brandname
@@ -6137,7 +6140,8 @@ public class DataBaseAdapter
                     "b.areanametamil,b.citycode,(select citynametamil from tblcitymaster where citycode=(" +
                     "select citycode from tblareamaster where areacode=b.areacode)) as citynametamil,emailid,aadharno," +
                     "a.customertypecode,a.business_type,coalesce(whatsappno,'') as whatsappno," +
-                    "coalesce(mobilenoverificationstatus,0) as mobilenoverificationstatus " +
+                    "coalesce(mobilenoverificationstatus,0) as mobilenoverificationstatus," +
+                    "coalesce(a.customercategorycode, 0) as customercategorycode " +
                     "from tblcustomer as a inner join tblareamaster as b on a.areacode=b.areacode " +
                     " left outer join tblroutedetails as c on c.areacode=b.areacode where "+areacode+" " +
                     " and "+routecode+" and a.status='"+statusvar+"' and "+getbusinesstype+"" +
@@ -10487,7 +10491,7 @@ public class DataBaseAdapter
                                     sql = "INSERT INTO 'tblcustomer' (autonum,customercode,refno, customername,customernametamil,address,areacode,emailid,mobileno,telephoneno," +
                                             "aadharno,gstin,status,makerid,createddate,updateddate,latitude,longitude,flag,schemeapplicable,uploaddocument,gstinverificationstatus," +
                                             "customertypecode,business_type,whatsappno,mobilenoverificationstatus,categorycode,erpitemcode,annualsalesamt, bill_scheme," +
-                                            "bill_scheme_disc_percentage)" +
+                                            "bill_scheme_disc_percentage, customercategorycode)" +
                                             " VALUES('" + gc +"','" + obj.getString("customercode")+"'," +
                                             "'" + obj.getString("refno")+"'," +
                                             "'" + obj.getString("customername").replaceAll("'","''")+"'," +
@@ -10504,7 +10508,7 @@ public class DataBaseAdapter
                                             " '"+obj.getString("business_type")+"','"+obj.getString("whatsappno")+"'," +
                                             "'"+obj.getString("mobilenoverificationstatus")+"','"+obj.getString("categorycode")+"'," +
                                             "'"+obj.getString("erpitemcode")+"','"+obj.getString("annualamount")+"'," +
-                                            "'" + bill_scheme + "','" + bill_scheme_disc_percentage + "') ";
+                                            "'" + bill_scheme + "','" + bill_scheme_disc_percentage + "','" + obj.getString("customercategorycode") + "') ";
                                     mDb.execSQL(sql);
                                 }
                                 else {
@@ -10532,7 +10536,8 @@ public class DataBaseAdapter
                                             "erpitemcode = '"+obj.getString("erpitemcode")+"'," +
                                             "annualsalesamt = '"+obj.getString("annualamount")+"', "+
                                             "bill_scheme = '"+ bill_scheme +"', "+
-                                            "bill_scheme_disc_percentage = '"+ bill_scheme_disc_percentage + "' "+
+                                            "bill_scheme_disc_percentage = '"+ bill_scheme_disc_percentage + "', "+
+                                            "customercategorycode='" + obj.getString("customercategorycode") + "' "+
                                             " WHERE customercode='" + obj.getString("customercode")+"' ";
                                     mDb.execSQL(sql1);
                                 }
@@ -10563,7 +10568,8 @@ public class DataBaseAdapter
                                         "erpitemcode = '"+obj.getString("erpitemcode")+"'," +
                                         "annualsalesamt = '"+obj.getString("annualamount")+"', "+
                                         "bill_scheme = '"+ bill_scheme +"', "+
-                                        "bill_scheme_disc_percentage = '"+ bill_scheme_disc_percentage +"' "+
+                                        "bill_scheme_disc_percentage = '"+ bill_scheme_disc_percentage +"', "+
+                                        "customercategorycode='" + obj.getString("customercategorycode") + "' "+
                                         " WHERE customercode='" + obj.getString("customercode")+"' ";
                                          mDb.execSQL(sql1);
                             }
@@ -16760,6 +16766,297 @@ public class DataBaseAdapter
         }
 
         return cash_disc_applicable;
+    }
+
+    public void syncsecondarycustomerorder (JSONObject object) {
+        if(object!=null)
+        {
+            JSONArray json_category = null;
+
+            try {
+                String success = object.getString("success");
+                if(success.equals("1"))
+                {
+                    json_category = object.getJSONArray("Value");
+                    String deletesql = "DELETE FROM 'tblsecondarycustomerorder'";
+                    mDb.execSQL(deletesql);
+                    String sqlcount = "SELECT coalesce(count(*),0) FROM 'tblsecondarycustomerorder'";
+                    Cursor mCur = mDb.rawQuery(sqlcount, null);
+                    if (mCur.getCount() > 0)
+                    {
+                        mCur.moveToFirst();
+                    }
+                    if (mCur.getInt(0) == 0) {
+                        for(int i=0;i<json_category.length();i++) {
+                            try {
+                                JSONObject obj = (JSONObject) json_category.get(i);
+
+                                int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
+
+                                String sql = "INSERT INTO 'tblsecondarycustomerorder' (autonum,companycode,transactionno,orderno,refno,shortcode,orderdate,customercode,gstin," +
+                                        "subtotal,discount,totaltaxamount,grandtotal,flag,makerid,createddate,updateddate,bitmapimage,financialyearcode,remarks,bookingno,syncstatus," +
+                                        "ordertime,beforeroundoff,roundoff,transportid,status,transportmode,latlong) " +
+                                        " VALUES('" + gc + "','" + obj.getString("companycode") + "'," +
+                                        "'" + obj.getString("transactionno") + "'," +
+                                        "'" + obj.getString("orderno") + "','" + obj.getString("refno") + "'," +
+                                        "'" + obj.getString("shortcode") + "'," +
+                                        "'" + obj.getString("orderdate") + "','" + obj.getString("customercode") + "'," +
+                                        "'" + obj.getString("gstin") + "'," +
+                                        "'" + obj.getString("subtotal") + "','" + obj.getString("discount") + "','" + obj.getString("totaltaxamount") + "'," +
+                                        "'" + obj.getString("grandtotal") + "'," +
+                                        "'" + obj.getString("flag") + "','" + obj.getString("makerid") + "','" + obj.getString("createddate") + "'," +
+                                        "'" + obj.getString("updateddate") + "','" + obj.getString("bitmapimage") + "','" + obj.getString("financialyearcode") + "'," +
+                                        "'" + obj.getString("remarks") + "'," +
+                                        "'" + obj.getString("bookingno") + "',1," +
+                                        "'" + obj.getString("ordertime") + "'," +
+                                        "'" + obj.getString("beforeroundoff") + "','" + obj.getString("roundoff") + "'," +
+                                        "'" + obj.getString("transportid") + "','" + obj.getString("status") + "'," +
+                                        "'" + obj.getString("transportmode") + "','" + obj.getString("latlong") + "')";
+                                mDb.execSQL(sql);
+                            } catch (JSONException ex) {
+                                insertErrorLog("Exception in syncsecondarycustomerorder : insert : " + ex.toString(), this.getClass().getSimpleName() + " - syncsecondarycustomerorder", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                            }
+                        }
+                    }else{
+                        for(int i=0;i<json_category.length();i++) {
+                            try {
+                                JSONObject obj = (JSONObject) json_category.get(i);
+
+                                String sql="UPDATE tblsecondarycustomerorder set flag='"+obj.getString("flag")+"',status='" + obj.getString("status") + "' " +
+                                        "where customercode='"+ obj.getString("customercode") +"' " +
+                                        " and transactionno='"+obj.getString("transactionno")+"' and financialyearcode = '" + obj.getString("financialyearcode") + "' ";
+                                mDb.execSQL(sql);
+                            } catch (JSONException ex) {
+                                insertErrorLog("Exception in syncsecondarycustomerorder : update : " + ex.toString(), this.getClass().getSimpleName() + " - syncsecondarycustomerorder", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                            }
+                        }
+                    }
+                }
+            } catch (JSONException ex) {
+                insertErrorLog("Exception in syncsecondarycustomerorder : " + ex.toString(), this.getClass().getSimpleName() + " - syncsecondarycustomerorder", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            }
+        }
+    }
+
+    public void syncsecondarycustomerorderitemdetails (JSONObject object)
+    {
+        if(object!=null)
+        {
+            JSONArray json_category = null;
+
+            try {
+                String success = object.getString("success");
+                if(success.equals("1"))
+                {
+                    json_category = object.getJSONArray("Value");
+                    String deletesql = "DELETE FROM 'tblsecondarycustomerorderitemdetails'";
+                    mDb.execSQL(deletesql);
+                    String sqlcount = "SELECT coalesce(count(*),0) FROM 'tblsecondarycustomerorderitemdetails'";
+                    Cursor mCur = mDb.rawQuery(sqlcount, null);
+                    if (mCur.getCount() > 0)
+                    {
+                        mCur.moveToFirst();
+                    }
+                    if (mCur.getInt(0) == 0) {
+                        for(int i=0;i<json_category.length();i++) {
+                            try {
+                                JSONObject obj = (JSONObject) json_category.get(i);
+
+                                int gc = obj.isNull("autonum") ? 0 : obj.getInt("autonum");
+
+                                String sql = "INSERT INTO 'tblsecondarycustomerorderitemdetails' VALUES('" + gc + "'," +
+                                        "'" + obj.getString("transactionno") + "','" + obj.getString("companycode") + "','" + obj.getString("customercode") + "'," +
+                                        "'" + obj.getString("itemcode") + "', '" + obj.getString("qty") + "','" + obj.getString("weight") + "','" + obj.getString("price") + "'," +
+                                        "'" + obj.getString("discount") + "','" + obj.getString("amount") + "','" + obj.getString("cgst") + "'," +
+                                        "'" + obj.getString("sgst") + "','" + obj.getString("igst") + "','" + obj.getString("cgstamt") + "'," +
+                                        "'" + obj.getString("sgstamt") + "','" + obj.getString("igstamt") + "','" + obj.getString("freeitemstatus") + "'," +
+                                        "'" + obj.getString("makerid") + "','" + obj.getString("createddate") + "','" + obj.getString("updateddate") + "'" +
+                                        ",'" + obj.getString("bookingno") + "','" + obj.getString("financialyearcode") + "',2)";
+                                mDb.execSQL(sql);
+
+
+                            } catch (JSONException ex) {
+                                insertErrorLog("Exception in syncsecondarycustomerorderitemdetails : insert :" + ex.toString(), this.getClass().getSimpleName() + " - syncsecondarycustomerorderitemdetails", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+                            }
+                        }
+                    }
+                }
+            } catch (JSONException ex) {
+                // TODO Auto-generated catch block
+                insertErrorLog("Exception in syncsecondarycustomerorderitemdetails : " + ex.toString(), this.getClass().getSimpleName() + " - syncsecondarycustomerorderitemdetails", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+            }
+        }
+    }
+
+    public Cursor GetPremiumCustomersOrderListDB(String getdate,String getRouteCode, String getCustomerCode) {
+        Cursor mCur=null;
+        try{
+            String sql="";
+            String getroute = "", getcustomer = "";
+
+            if(getRouteCode.equals("0") || getRouteCode.equals("")) {
+                getroute = "1=1";
+            }else{
+                getroute="r.routecode='"+getRouteCode+"'";
+            }
+
+            if(getCustomerCode.equals("0") || getCustomerCode.equals("")) {
+                getcustomer = "1=1";
+            }else{
+                getcustomer="cus.customercode='"+getCustomerCode+"'";
+            }
+            String startDate = "", toDate = "";
+
+            if (!Utilities.isNullOrEmpty(getdate)) {
+                String[] arrOfStr = getdate.split(" to ");
+
+                startDate = arrOfStr[0];
+                toDate = arrOfStr[1];
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat reverseSdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date sdate = sdf.parse(startDate);
+                startDate = reverseSdf.format(sdate);
+
+                Date tdate = sdf.parse(toDate);
+                toDate = reverseSdf.format(tdate);
+            }
+
+            sql = "SELECT DISTINCT companycode,transactionno,orderno,a.refno,shortcode," +
+                    " strftime('%d-%m-%Y',orderdate) as orderdate,a.customercode," +
+                    " a.gstin,subtotal,discount,grandtotal,financialyearcode,bookingno,a.flag," +
+                    " (select customername from tblcustomer where customercode=a.customercode) as customername," +
+                    " (select customernametamil from tblcustomer where customercode=a.customercode) as customernametamil ," +
+                    " (select areanametamil from tblareamaster where areacode=(select areacode from tblcustomer where customercode=a.customercode )) as areaname," +
+                    " (select citynametamil from tblcitymaster where citycode=(select citycode from tblareamaster where areacode=" +
+                    " (select areacode from tblcustomer where customercode=a.customercode ))) as cityname," +
+                    " (select shortname from tblcompanymaster where companycode=a.companycode) as shortname," +
+                    " coalesce(a.ordertime,'') as ordertime, coalesce(a.status,'') as status " +
+                    "FROM tblsecondarycustomerorder as a " +
+                    "INNER JOIN tblcustomer as cus on cus.customercode=a.customercode " +
+                    "INNER JOIN tblroutedetails as rd on rd.areacode=cus.areacode " +
+                    "INNER JOIN tblroute as r on r.routecode=rd.routecode " +
+                    "WHERE date(orderdate) between date('" + startDate + "') and date('" + toDate + "') and " + getroute + " and " + getcustomer +
+                    " ORDER BY transactionno desc ";
+
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog("Exception in GetPremiumCustomersOrderListDB : " + ex.toString(), this.getClass().getSimpleName()  + " - GetPremiumCustomersOrderListDB", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+        return mCur;
+    }
+
+    public Cursor GetPremiumCustomerOrderListDatasDB(String gettransactionno,String getfinancialyr,String getcompanycode)
+    {
+        Cursor mCur = null;
+        try{
+            String sql ="select companycode,transactionno,orderno,refno,shortcode," +
+                    " strftime('%d-%m-%Y',orderdate) as orderdate,customercode," +
+                    " gstin,subtotal,discount,grandtotal,financialyearcode,bookingno,flag," +
+                    "(select customername from tblcustomer where customercode=a.customercode) as customername," +
+                    "(select customernametamil from tblcustomer where customercode=a.customercode) as customernametamil ," +
+                    "(select areanametamil from tblareamaster where areacode=(select areacode from tblcustomer where customercode=a.customercode )) as areaname," +
+                    "(select citynametamil from tblcitymaster where citycode=(select citycode from tblareamaster where areacode=" +
+                    "(select areacode from tblcustomer where customercode=a.customercode ))) as cityname," +
+                    "(select shortname from tblcompanymaster where companycode=a.companycode) as shortname,bitmapimage," +
+                    " (select sum(grandtotal) from tblsecondarycustomerorder as b where transactionno = '"+gettransactionno+"' and financialyearcode = '"+getfinancialyr+"' ) as totalamt, " +
+                    " case when a.transportid!='0' then   (select transportname || ' - ' || (select day_of_dispatch from tbltransportcitymapping " +
+                    " where citycode= (select citycode from tblareamaster where areacode =(select areacode from tblcustomer where customercode=a.customercode)) )" +
+                    "  from tbltransportmaster where transportid= a.transportid) else  " +
+                    " (select transportmodetype from tbltransportmode where transportmodecode=a.transportmode ) end  as transport" +
+                    " from tblsecondarycustomerorder as a where transactionno = '"+gettransactionno+"' " +
+                    " and financialyearcode = '"+getfinancialyr+"'     ";
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog("Exception in GetPremiumCustomerOrderListDatasDB : " + ex.toString(), this.getClass().getSimpleName() + " - GetPremiumCustomerOrderListDatasDB", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+        return mCur;
+    }
+
+    public Cursor GetPremiumCustomerOrderListItemDatasDB(String gettransactionno,String getfinancialyr,String getcompanycode)
+    {
+        Cursor mCur = null;
+        try{
+            String sql ="select a.itemcode,b.itemnametamil,a.qty,a.weight,a.price,a.discount,a.amount,a.freeitemstatus ," +
+                    " (select unitname from tblunitmaster where unitcode=b.unitcode) as unitname," +
+                    " (select hsn from tblitemsubgroupmaster where itemsubgroupcode=b.itemsubgroupcode) as hsn," +
+                    " (select tax from tblitemsubgroupmaster where itemsubgroupcode=b.itemsubgroupcode) as tax," +
+                    " coalesce((Select noofdecimals from tblunitmaster where unitcode=b.unitcode),0) as noofdecimals," +
+                    " CASE WHEN itemtype=2 then (SELECT freeitemcolor from tblgeneralsettings) else " +
+                    " coalesce((Select colourcode from tblcompanymaster where companycode=a.companycode),'#000000') END as colourcode," +
+                    " c.noofdecimals " +
+                    "from tblsecondarycustomerorderitemdetails as a " +
+                    "inner join tblitemmaster as b on a.itemcode=b.itemcode " +
+                    "inner join tblunitmaster as c on b.unitcode=c.unitcode " +
+                    "where a.transactionno='"+gettransactionno+"' " +
+                    " and a.financialyearcode='"+getfinancialyr+"' " +
+                    "order by itemtype ";
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog("Exception in GetPremiumCustomerOrderListItemDatasDB : " + ex.toString(), this.getClass().getSimpleName() + " - GetPremiumCustomerOrderListItemDatasDB", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+        return mCur;
+    }
+
+    public Cursor GetAllRouteListDB()
+    {
+        Cursor mCur = null;
+        try{
+            String sql ="SELECT DISTINCT b.routecode,b.routename,b.routenametamil " +
+                    " FROM  tblroute as b  " +
+                    " WHERE b.status='"+statusvar+"' " +
+                    " ORDER BY b.routenametamil ";
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog("Exception in GetAllRouteListDB : " + ex.toString(), this.getClass().getSimpleName() + " - GetAllRouteListDB", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+
+        return mCur;
+    }
+
+    public Cursor GetAllCustomerListDB(String routecode)
+    {
+        Cursor mCur = null;
+        String getroute = " 1=1 ";
+        if (!Utilities.isNullOrEmpty(routecode) && !routecode.equals("0")) {
+            getroute = " r.routecode='" + routecode + "' ";
+        }
+
+        try{
+            String sql ="SELECT DISTINCT cus.customercode,cus.customername,cus.customernametamil," +
+                    "  cus.gstin,coalesce(cus.customertypecode,'1') as customertypecode," +
+                    "  COALESCE(cus.customercategorycode, 0) as customercategorycode " +
+                    " FROM tblcustomer as cus " +
+                    " INNER JOIN tblroutedetails as rd on rd.areacode = cus.areacode " +
+                    " INNER JOIN tblroute as r on r.routecode = rd.routecode " +
+                    " WHERE cus.status='"+statusvar+"' and cus.customercategorycode=2 and " + getroute +
+                    " ORDER BY cus.customernametamil ";
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur.getCount() > 0)
+            {
+                mCur.moveToFirst();
+            }
+        }catch (Exception ex){
+            insertErrorLog("Exception in GetAllCustomerListDB : " + ex.toString(), this.getClass().getSimpleName() + " - GetAllCustomerListDB", String.valueOf(Thread.currentThread().getStackTrace()[1].getLineNumber()));
+        }
+
+        return mCur;
     }
 
 }

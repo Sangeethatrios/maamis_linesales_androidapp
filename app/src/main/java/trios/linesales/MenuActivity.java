@@ -1,8 +1,6 @@
 package trios.linesales;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -24,13 +22,10 @@ import android.os.StrictMode;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -58,7 +53,8 @@ import java.util.HashMap;
 public class MenuActivity extends AppCompatActivity {
     LinearLayout salesLL,ReportstLL,receiptLL,ExpensetLL,
             CustomertLL,VanStocktLL,SalesChildLL,ReportsChildLL,ScheduleLL,
-            SalesOrderLL,Cash_Report_LL,Sales_Return_ReporsLL,Cash_Close_LL,ReportLayout,SettingsLL,AdditionStocktLL;
+            SalesOrderLL,Cash_Report_LL,Sales_Return_ReporsLL,Cash_Close_LL,
+            ReportLayout,SettingsLL,AdditionStocktLL, PremiumCustomersOrderLL;
     public Context context;
     public static Context context1;
     boolean clicksales=true,clickreports=true;
@@ -138,6 +134,8 @@ public class MenuActivity extends AppCompatActivity {
         AdditionStocktLL = (LinearLayout) findViewById(R.id.AdditionStocktLL);
         StockReturn = (TextView)findViewById(R.id.StockReturn);
         StockReturnview = (View) findViewById(R.id.StockReturnview);
+        PremiumCustomersOrderLL = (LinearLayout) findViewById(R.id.PremiumCustomersOrderLL);
+
         LoginActivity.iscash =false;
         getschedulecode="";getwishmsg="";
 
@@ -740,6 +738,14 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context, SettingsActivity.class);
+                startActivity(i);
+            }
+        });
+
+        PremiumCustomersOrderLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context, PremiumCustomerOrderListActivity.class);
                 startActivity(i);
             }
         });
@@ -1834,6 +1840,20 @@ public class MenuActivity extends AppCompatActivity {
                     if (isSuccessful(jsonObj)) {
                         dataBaseAdapter.syncstockreturndetails(jsonObj);
                         api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "stockreturndetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    Log.w("Menu Activity : "," Sync All : Secondary Customer Order");
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsecondarycustomerorder.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.syncsecondarycustomerorder(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "syncsecondarycustomerorder", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    Log.w("Menu Activity : "," Sync All : Secondary Customer Order Items");
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsecondarycustomerorderitemdetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.syncsecondarycustomerorderitemdetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "syncsecondarycustomerorderitemdetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
                     }
 
                     new UploadImage().execute();

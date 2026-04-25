@@ -177,6 +177,30 @@
                     android:textSize="18sp"
                     />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/PremiumCustomersOrderLL"
+                android:padding="15dp"
+                android:layout_margin="5dp"
+                android:background="@android:color/white">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Premium Customers Orders"
+                    android:id="@+id/txtPremiumCustomersOrder"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawableLeft="@drawable/ic_premium_customer_order"
+                    android:drawablePadding="10dp"
+                    android:gravity="center|left"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    />
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

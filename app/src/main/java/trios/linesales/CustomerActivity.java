@@ -15,6 +15,8 @@ import android.os.CountDownTimer;
 import android.os.StrictMode;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -66,7 +68,7 @@ public class CustomerActivity extends AppCompatActivity {
     public  static TextView txtareaname;
     TextView txtcustomername,txtcustomernametamil,txtaddress,txtcityname,
             txtarea,txtphoneno,txtlandlineno,txtemailid,txtgstin,txtadhar,listtxtroute,listtxtarea,totalcustomers,
-            txtwhatsappno;
+            txtwhatsappno, txtNoDetails;
     Button btnSaveCustomer,btnGetOTPCustomer,btnUpdateCustomerLocation;
     String[] citycode,cityname,citynametamil;
     String[] areacode,areaname,areanametamil,customercount;
@@ -122,6 +124,8 @@ public class CustomerActivity extends AppCompatActivity {
     public static ArrayList<String> companyCodeList = new ArrayList<>();
     BluetoothAdapter mBluetoothAdapter = null;
     ReceiveListener receiveListener = null;
+    SearchView sv_customerName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,6 +140,8 @@ public class CustomerActivity extends AppCompatActivity {
         totalcustomers = (TextView)findViewById(R.id.totalcustomers);
         selectmobilestatus = (Spinner) findViewById(R.id.selectmobilestatus);
         arrmobilestatus = getResources().getStringArray(R.array.mobilestatus);
+        sv_customerName = (SearchView) findViewById(R.id.sv_customerName);
+        txtNoDetails = (TextView) findViewById(R.id.txtNoDetails);
 
         try {
             preferenceMangr = new PreferenceMangr(context);
@@ -174,7 +180,57 @@ public class CustomerActivity extends AppCompatActivity {
             listtxtroute.setHint("All Routes");
         }
 
+        sv_customerName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sv_customerName.setIconified(false);
+                sv_customerName.setFocusable(true);
+                sv_customerName.setFocusableInTouchMode(true);
+                sv_customerName.requestFocusFromTouch();
+            }
+        });
 
+        sv_customerName.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String searchText) {
+                if (Utilities.isNullOrEmpty(searchText)) {
+                    // User pressed X button → show full list again
+                    if (adapter != null) {
+                        adapter.updateList(customerlist);
+                        adapter.notifyDataSetChanged();
+                    }
+                } else {
+                    // Filter list
+                    ArrayList<CustomerDetails> filtered = new ArrayList<>();
+                    for (CustomerDetails customerDetails : customerlist) {
+                        if (customerDetails.getCustomername().toLowerCase().contains(searchText.toLowerCase())) {
+                            filtered.add(customerDetails);
+                        }
+                        if (customerDetails.getMobileno().toLowerCase().contains(searchText.toLowerCase())) {
+                            filtered.add(customerDetails);
+                        }
+                    }
+                    if (filtered != null && filtered.size() > 0) {
+                        listView.setVisibility(View.VISIBLE);
+                        txtNoDetails.setVisibility(View.GONE);
+                        if (adapter != null) {
+                            adapter.updateList(filtered);
+                            adapter.notifyDataSetChanged();
+                        }
+                    } else {
+                        listView.setVisibility(View.GONE);
+                        txtNoDetails.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                return true;
+            }
+        });
 
         addcustomer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1248,6 +1304,7 @@ public class CustomerActivity extends AppCompatActivity {
         dialog.show();
     }
     //Get Customer List
+    @SuppressLint("Range")
     public void GetCustomerList(){
         DataBaseAdapter objdatabaseadapter = null;
         Cursor Cur=null;
@@ -1265,7 +1322,8 @@ public class CustomerActivity extends AppCompatActivity {
                             ,Cur.getString(8),Cur.getString(9),
                             Cur.getString(10),Cur.getString(11)
                             ,Cur.getString(12),String.valueOf(i+1),Cur.getString(13),Cur.getString(14),
-                            Cur.getString(15),Cur.getString(16)));
+                            Cur.getString(15),Cur.getString(16),
+                            Cur.getString(Cur.getColumnIndex("customercategorycode"))));
                     Cur.moveToNext();
                 }
                 getdata = customerlist;
@@ -2000,6 +2058,7 @@ public class CustomerActivity extends AppCompatActivity {
             AsyncTask<String, JSONObject, ArrayList<CustomerDatas>> {
         ArrayList<CustomerDatas> List = null;
         JSONObject jsonObj = null;
+        @SuppressLint("Range")
         @Override
         protected  ArrayList<CustomerDatas> doInBackground(String... params) {
             RestAPI api = new RestAPI();

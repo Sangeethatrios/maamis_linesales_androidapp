@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PremiumCustomerOrderListActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:weightSum="1">
+
+                <ImageView
+                    android:id="@+id/saleslistgoback"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginRight="@dimen/toolbarmarright"
+                    android:src="@drawable/ic_arrow_back"
+                    android:layout_weight="0.1" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Premium Customer Order List "
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/toolbartextsize"
+                    android:layout_gravity="left"
+                    android:id="@+id/toolbar_title_username"
+                    android:layout_weight="0.8"/>
+
+                <ImageView
+                    android:id="@+id/saleslogout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginLeft="@dimen/toolbarmarleft"
+                    android:layout_marginRight="@dimen/toolbarmarright"
+                    android:padding="@dimen/toolbarpad"
+                    android:src="@drawable/ic_power_settings"
+                    android:layout_weight="0.1"
+                    android:gravity="center" />
+
+
+
+            </LinearLayout>
+
+
+
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <include layout="@layout/content_premium_customer_order_list" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -78,6 +78,20 @@
                 android:layout_gravity="right"
                 android:gravity="right"
                 android:layout_weight="0.4">
+
+                <TextView
+                    android:id="@+id/txtPremiumBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Premium"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/bg_premium_badge"
+                    android:padding="2dp"
+                    android:layout_gravity="top|end"
+                    android:visibility="gone"/>
+
+
                 <TextView
                     android:id="@+id/Retailermobileno"
                     android:layout_width="wrap_content"

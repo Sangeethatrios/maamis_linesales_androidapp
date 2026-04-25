@@ -1146,6 +1146,20 @@ public class SyncActivity extends AppCompatActivity {
                         api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "stockreturndetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
                     }
 
+                    Log.w("Sync Activity : "," Sync All : Secondary Customer Order");
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsecondarycustomerorder.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.syncsecondarycustomerorder(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "syncsecondarycustomerorder", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    Log.w("Sync Activity : "," Sync All : Secondary Customer Order Items");
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsecondarycustomerorderitemdetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.syncsecondarycustomerorderitemdetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "syncsecondarycustomerorderitemdetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
                     new UploadImage().execute();
 
                     ////if(BuildConfig.DEBUG)
@@ -2417,6 +2431,20 @@ public class SyncActivity extends AppCompatActivity {
                     if (isSuccessful(jsonObj)) {
                         dataBaseAdapter.syncstockreturndetails(jsonObj);
                         api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "stockreturndetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    Log.w("Sync Activity : "," Sync Transaction : Secondary Customer Order");
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsecondarycustomerorder.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.syncsecondarycustomerorder(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "syncsecondarycustomerorder", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
+                    }
+
+                    Log.w("Sync Activity : "," Sync Transaction : Secondary Customer Order Items");
+                    jsonObj = api.GetAllDetails(preferenceMangr.pref_getString("deviceid"),"syncsecondarycustomerorderitemdetails.php",context);
+                    if (isSuccessful(jsonObj)) {
+                        dataBaseAdapter.syncsecondarycustomerorderitemdetails(jsonObj);
+                        api.udfnSyncDetails(preferenceMangr.pref_getString("deviceid"), "syncsecondarycustomerorderitemdetails", preferenceMangr.pref_getString("getvancode"), preferenceMangr.pref_getString("getsalesschedulecode"));
                     }
 
                     //if(BuildConfig.DEBUG)

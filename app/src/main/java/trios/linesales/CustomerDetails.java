@@ -19,11 +19,19 @@ public class CustomerDetails {
     public String businesstype;
     public String whatsappno;
     public String mobilenoverificationstatus;
+    public String customercategorycode;
+
+    public CustomerDetails (String customercode, String customername, String customernametamil) {
+        this.customercode = customercode;
+        this.customername = customername;
+        this.customernametamil = customernametamil;
+    }
+
     public CustomerDetails(String customercode, String customername, String customernametamil,
                            String address, String areacode, String mobileno, String telephoneno,
                            String gstin, String areaname,String citycode,String cityname,
                            String emailid,String aadharno, String sno,String customertype, String businesstype,
-                           String whatsappno,String mobilenoverificationstatus) {
+                           String whatsappno,String mobilenoverificationstatus, String customercategorycode) {
         this.customercode = customercode;
         this.customername = customername;
         this.customernametamil = customernametamil;
@@ -42,6 +50,7 @@ public class CustomerDetails {
         this.businesstype = businesstype;
         this.whatsappno = whatsappno;
         this.mobilenoverificationstatus = mobilenoverificationstatus;
+        this.customercategorycode = customercategorycode;
     }
 
     public String getCustomercode() {
@@ -114,5 +123,9 @@ public class CustomerDetails {
 
     public String getmobilenoverificationstatus() {
         return mobilenoverificationstatus;
+    }
+
+    public String getCustomercategorycode() {
+        return customercategorycode;
     }
 }

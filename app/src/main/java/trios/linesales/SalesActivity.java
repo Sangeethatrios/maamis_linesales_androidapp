@@ -104,7 +104,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
     String[] CustomerCode,CustomerCategory,CustomerName,CustomerNameTamil,Address,CustomerAreaCode,MobileNo,
             TelephoneNo,GSTN,SchemeApplicable,customertypecode,CustomerCityName,CustomerAreaName,CustomerTotalOrder,
             Customerbillcount, CusNotPurchasedCount,DayWiseSalesamt,AnnualSalesamt,BillWiseBudget,cusLatitude,cusLongitude,
-            Gstinverificationstatus, BillScheme, BillSchemeDiscPercentage;
+            Gstinverificationstatus, BillScheme, BillSchemeDiscPercentage, CustomerCategoryCode;
 
     String[] FreeItemName,FreeItemOp,FreeItemHandover,FreeItemDistributed,FreeItemBalance,
             FreeItemCode,FreeItemSNO;
@@ -1308,6 +1308,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                 Gstinverificationstatus= new String[Cur.getCount()];
                 BillScheme= new String[Cur.getCount()];
                 BillSchemeDiscPercentage= new String[Cur.getCount()];
+                CustomerCategoryCode = new String[Cur.getCount()];
                 for(int i=0;i<Cur.getCount();i++){
                     CustomerCode[i] = Cur.getString(0);
                     CustomerName[i] = Cur.getString(1);
@@ -1333,6 +1334,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     Gstinverificationstatus[i]=Cur.getString(Cur.getColumnIndex("gstinverificationstatus"));
                     BillScheme[i] = Cur.getString(Cur.getColumnIndex("bill_scheme"));
                     BillSchemeDiscPercentage[i] = Cur.getString(Cur.getColumnIndex("bill_scheme_disc_percentage"));
+                    CustomerCategoryCode[i] = Cur.getString(Cur.getColumnIndex("customercategorycode"));
                     Cur.moveToNext();
                 }
 
@@ -2397,7 +2399,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                         ||  salesItemList.get(position).getStockqty().equals(null) || salesItemList.get(position).getStockqty().equals("") ||
                         Double.parseDouble(salesItemList.get(position).getStockqty())<=0) {
                     mHolder.labelnilstock.setVisibility(View.VISIBLE);
-                    mHolder.labelnilstock.setText("Nil Stk");
+                    mHolder.labelnilstock.setText("Nil Stock");
                     mHolder.stockvalueLL.setVisibility(View.GONE);
                     mHolder.labelstock.setText("0");
                     mHolder.labelstock.setBackgroundColor(getResources().getColor(R.color.red));
@@ -2841,7 +2843,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                                 <Double.parseDouble(mHolder.listitemqty.getText().toString()))) ||
                                 (!(Double.parseDouble(mHolder.listitemqty.getText().toString())>=
                                         Double.parseDouble(mHolder.listitemupp.getText().toString()))
-                                        && (mHolder.labelnilstock.getText().toString()).equals("Nil Stk")) ) {
+                                        && (mHolder.labelnilstock.getText().toString()).equals("Nil Stock")) ) {
                             if(salesItemList.get(pos).getItemcategory().equals("child")){
                                 gblitemcount=gblitemcount+1;
                             }
@@ -4972,6 +4974,7 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
                     mHolder.listTotalOrder = (TextView) convertView.findViewById(R.id.listTotalOrder);
                     mHolder.LLTotalOrder = (CardView) convertView.findViewById(R.id.LLTotalOrder);
                     mHolder.listordercount=(TextView) convertView.findViewById(R.id.listordercount);
+                    mHolder.txtPremiumBadge=(TextView) convertView.findViewById(R.id.txtPremiumBadge);
                     mHolder.LLMenu = (LinearLayout) convertView.findViewById(R.id.LLMenu);
                     mHolder.LLMenu.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
@@ -5037,6 +5040,10 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
 
                 if(!Utilities.isNullOrEmpty(Customerbillcount[position]) && Integer.parseInt(Customerbillcount[position]) > 0) {
                     mHolder.LLL.setBackgroundColor(getResources().getColor(R.color.billedcustomer));
+                }
+
+                if (!Utilities.isNullOrEmpty(CustomerCategoryCode[position]) && Integer.parseInt(CustomerCategoryCode[position]) == 2) {
+                    mHolder.txtPremiumBadge.setVisibility(View.VISIBLE);
                 }
 
                 
@@ -5290,7 +5297,8 @@ public class SalesActivity extends AppCompatActivity implements View.OnClickList
         }
 
         private class ViewHolder {
-            private TextView listcustomername,listgstin,listcustomertype,listTotalOrder,listordercount;
+            private TextView listcustomername,listgstin,listcustomertype,listTotalOrder,listordercount,
+                    txtPremiumBadge;
             private LinearLayout LLMenu,LLL;
             private CardView LLTotalOrder;
 

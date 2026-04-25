@@ -83,4 +83,7 @@
     <string name="billSaved_wantPrint">Bill saved, Do you want to print?</string>
     <string name="orderSaved_wantPrint">Order saved, Do you want to print?</string>
     <string name="unauthorizedDeviceID">Your device ID is not authorized. Please contact admin with this device ID %1$s</string>
+
+    <string name="title_activity_premium_customer_order">PremiumCustomerOrderActivity</string>
+    <string name="title_activity_premium_customer_order_view">PremiumCustomerOrderViewActivity</string>
 </resources>
